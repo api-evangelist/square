@@ -1,5 +1,5 @@
 # Square (square)
-Square is a financial technology company that provides software and hardware solutions for businesses of all sizes. The company's primary offering is its point-of-sale system, which allows merchants to accept payments through various channels, including in-person transactions, online, and via mobile devices. In addition to payment processing, Square also offers a range of other services such as payroll, inventory management, and marketing tools to help businesses streamline their operations and grow their sales. Square's user-friendly interface and competitive pricing have made it a popular choice among small businesses looking to modernize their payment systems and improve their overall efficiency.
+APIs for payment processing, point of sale, and business management solutions
 
 **URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/apis.yml)
 
@@ -11,7 +11,7 @@ Square is a financial technology company that provides software and hardware sol
 
 ## Tags:
 
- - Payments, Point of Sale
+ - Payments, Point of Sale, ecommerce, inventory, invoicing, payments, pos, retail
 
 ## Timestamps
 
@@ -44,10 +44,18 @@ Square is a financial technology company that provides tools and services to hel
 - [Partners](https://squareup.com/us/en/partnerships)
 - [Pricing](https://squareup.com/us/en/pricing)
 - [Support](https://squareup.com/help/us/en)
+- [Getting Started](https://developer.squareup.com/docs/get-started)
+- [Sandbox](https://developer.squareup.com/docs/devtools/sandbox/overview)
+- [Rate Limits](https://developer.squareup.com/docs/build-basics/api-rate-limits)
+- [Status Page](https://www.issquareup.com/)
+- [Terms of Service](https://squareup.com/us/en/legal/general/ua)
+- [Privacy Policy](https://squareup.com/us/en/legal/general/privacy)
 
 ## Maintainers
 
 **FN:** Kin Lane
 
 **Email:** info@apievangelist.com
+**FN:** Square, Inc.
 
+**Email:** developers@squareup.com
