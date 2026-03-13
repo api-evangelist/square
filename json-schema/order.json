@@ -1,0 +1,411 @@
+{
+  "$id": "https://github.com/api-evangelist/square/blob/main/json-schema/order.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Square Order",
+  "description": "Contains all information related to a single order to process with Square, including line items that specify the products to purchase. Order objects also include information about any associated tenders, refunds, and returns.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The order's unique ID.",
+      "readOnly": true
+    },
+    "location_id": {
+      "type": "string",
+      "description": "The ID of the seller location that this order is associated with.",
+      "minLength": 1
+    },
+    "reference_id": {
+      "type": "string",
+      "description": "A client-specified ID to associate an entity in another system with this order.",
+      "maxLength": 40
+    },
+    "source": {
+      "type": "object",
+      "description": "The origination details of the order.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name used to identify the place (application, device, etc.) that created the order."
+        }
+      }
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "The ID of the customer associated with the order.",
+      "maxLength": 191
+    },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "A unique ID that identifies the line item only within this order."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the line item."
+          },
+          "quantity": {
+            "type": "string",
+            "description": "The quantity purchased, as a string representation of a number."
+          },
+          "catalog_object_id": {
+            "type": "string",
+            "description": "The catalog object ID for the item or item variation."
+          },
+          "catalog_version": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The version of the catalog object that this line item references."
+          },
+          "variation_name": {
+            "type": "string",
+            "description": "The name of the variation applied to this line item."
+          },
+          "note": {
+            "type": "string",
+            "description": "The note of the line item."
+          },
+          "base_price_money": {
+            "$ref": "money.json",
+            "description": "The base price for a single unit of the line item."
+          },
+          "gross_sales_money": {
+            "$ref": "money.json",
+            "description": "The gross sales amount of money calculated as (item base price) * quantity.",
+            "readOnly": true
+          },
+          "total_tax_money": {
+            "$ref": "money.json",
+            "description": "The total tax amount of money to collect for the line item.",
+            "readOnly": true
+          },
+          "total_discount_money": {
+            "$ref": "money.json",
+            "description": "The total discount amount of money to collect for the line item.",
+            "readOnly": true
+          },
+          "total_money": {
+            "$ref": "money.json",
+            "description": "The total amount of money to collect for this line item.",
+            "readOnly": true
+          },
+          "applied_taxes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tax_uid": {
+                  "type": "string",
+                  "description": "The uid of the tax for which this applied tax represents."
+                },
+                "applied_money": {
+                  "$ref": "money.json",
+                  "description": "The amount of money applied by the tax to the line item."
+                }
+              }
+            },
+            "description": "The list of taxes applied to this line item."
+          },
+          "applied_discounts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "discount_uid": {
+                  "type": "string",
+                  "description": "The uid of the discount for which this applied discount represents."
+                },
+                "applied_money": {
+                  "$ref": "money.json",
+                  "description": "The amount of money applied by the discount to the line item."
+                }
+              }
+            },
+            "description": "The list of discounts applied to this line item."
+          },
+          "item_type": {
+            "type": "string",
+            "description": "The type of line item: an itemized sale, a non-itemized sale, or a custom amount.",
+            "enum": ["ITEM", "CUSTOM_AMOUNT", "GIFT_CARD"]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Application-defined data attached to this line item."
+          }
+        },
+        "required": ["quantity"]
+      },
+      "description": "The line items included in the order."
+    },
+    "taxes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "A unique ID that identifies the tax only within this order."
+          },
+          "catalog_object_id": {
+            "type": "string",
+            "description": "The catalog object ID referencing a CatalogTax."
+          },
+          "name": {
+            "type": "string",
+            "description": "The tax's name."
+          },
+          "type": {
+            "type": "string",
+            "description": "Indicates the calculation method used to apply the tax.",
+            "enum": ["INCLUSIVE", "ADDITIVE", "UNKNOWN_TAX"]
+          },
+          "percentage": {
+            "type": "string",
+            "description": "The percentage of the tax, as a string representation of a decimal number."
+          },
+          "scope": {
+            "type": "string",
+            "description": "Indicates whether the tax is scoped to the entire order or a single line item.",
+            "enum": ["OTHER_TAX_SCOPE", "ORDER", "LINE_ITEM"]
+          },
+          "applied_money": {
+            "$ref": "money.json",
+            "description": "The amount of money applied by the tax in the order.",
+            "readOnly": true
+          }
+        }
+      },
+      "description": "The list of all taxes associated with the order."
+    },
+    "discounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "A unique ID that identifies the discount only within this order."
+          },
+          "catalog_object_id": {
+            "type": "string",
+            "description": "The catalog object ID referencing a CatalogDiscount."
+          },
+          "name": {
+            "type": "string",
+            "description": "The discount's name."
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of discount.",
+            "enum": ["FIXED_PERCENTAGE", "FIXED_AMOUNT", "VARIABLE_PERCENTAGE", "VARIABLE_AMOUNT"]
+          },
+          "percentage": {
+            "type": "string",
+            "description": "The percentage of the discount, as a string representation of a decimal number."
+          },
+          "amount_money": {
+            "$ref": "money.json",
+            "description": "The fixed amount of the discount."
+          },
+          "applied_money": {
+            "$ref": "money.json",
+            "description": "The amount of money applied by the discount in the order.",
+            "readOnly": true
+          },
+          "scope": {
+            "type": "string",
+            "description": "Indicates whether the discount is scoped to the entire order or a single line item.",
+            "enum": ["OTHER_DISCOUNT_SCOPE", "ORDER", "LINE_ITEM"]
+          }
+        }
+      },
+      "description": "The list of all discounts associated with the order."
+    },
+    "service_charges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "A unique ID that identifies the service charge only within this order."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the service charge."
+          },
+          "catalog_object_id": {
+            "type": "string",
+            "description": "The catalog object ID referencing the service charge."
+          },
+          "percentage": {
+            "type": "string",
+            "description": "The service charge percentage as a string representation of a decimal number."
+          },
+          "amount_money": {
+            "$ref": "money.json",
+            "description": "The amount of a non-percentage-based service charge."
+          },
+          "total_money": {
+            "$ref": "money.json",
+            "description": "The total amount of money to collect for the service charge.",
+            "readOnly": true
+          }
+        }
+      },
+      "description": "A list of service charges applied to the order."
+    },
+    "fulfillments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "A unique ID that identifies the fulfillment only within this order."
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of fulfillment.",
+            "enum": ["PICKUP", "SHIPMENT", "DELIVERY", "DIGITAL"]
+          },
+          "state": {
+            "type": "string",
+            "description": "The current state of the fulfillment.",
+            "enum": ["PROPOSED", "RESERVED", "PREPARED", "COMPLETED", "CANCELED", "FAILED"]
+          }
+        }
+      },
+      "description": "Details about order fulfillment."
+    },
+    "returns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A collection of items from sale orders being returned."
+      },
+      "description": "A collection of items from sale orders being returned in this one.",
+      "readOnly": true
+    },
+    "return_amounts": {
+      "type": "object",
+      "description": "The rollup of the returned money amounts.",
+      "readOnly": true
+    },
+    "net_amounts": {
+      "type": "object",
+      "description": "The net money amounts (sale money - return money).",
+      "readOnly": true
+    },
+    "rounding_adjustment": {
+      "type": "object",
+      "description": "A positive rounding adjustment to the total of the order.",
+      "readOnly": true
+    },
+    "tenders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A tender represents a payment method used in a transaction."
+      },
+      "description": "The tenders that were used to pay for the order.",
+      "readOnly": true
+    },
+    "refunds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A refund associated with the order."
+      },
+      "description": "The refunds that are part of this order.",
+      "readOnly": true
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Application-defined data attached to this order. Metadata fields are intended to store descriptive references or associations with an entity in another system."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp for when the order was created, in RFC 3339 format.",
+      "readOnly": true
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp for when the order was last updated, in RFC 3339 format.",
+      "readOnly": true
+    },
+    "closed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp for when the order reached a terminal state, in RFC 3339 format.",
+      "readOnly": true
+    },
+    "state": {
+      "type": "string",
+      "description": "The current state of the order.",
+      "enum": ["OPEN", "COMPLETED", "CANCELED", "DRAFT"],
+      "readOnly": true
+    },
+    "version": {
+      "type": "integer",
+      "description": "The version number, incremented each time an update is committed to the order.",
+      "readOnly": true
+    },
+    "total_money": {
+      "$ref": "money.json",
+      "description": "The total amount of money to collect for the order.",
+      "readOnly": true
+    },
+    "total_tax_money": {
+      "$ref": "money.json",
+      "description": "The total amount of tax money to collect for the order.",
+      "readOnly": true
+    },
+    "total_discount_money": {
+      "$ref": "money.json",
+      "description": "The total amount of discount money to collect for the order.",
+      "readOnly": true
+    },
+    "total_tip_money": {
+      "$ref": "money.json",
+      "description": "The total amount of tip money to collect for the order.",
+      "readOnly": true
+    },
+    "total_service_charge_money": {
+      "$ref": "money.json",
+      "description": "The total amount of service charge money to collect for the order.",
+      "readOnly": true
+    },
+    "ticket_name": {
+      "type": "string",
+      "description": "A short-term identifier for the order used on receipts, the Seller Dashboard, and the Point of Sale device."
+    },
+    "pricing_options": {
+      "type": "object",
+      "description": "Pricing options for an order.",
+      "properties": {
+        "auto_apply_discounts": {
+          "type": "boolean",
+          "description": "Whether automatic discounts are applied."
+        },
+        "auto_apply_taxes": {
+          "type": "boolean",
+          "description": "Whether automatic taxes are applied."
+        }
+      }
+    }
+  },
+  "required": ["location_id"]
+}

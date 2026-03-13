@@ -1,0 +1,248 @@
+{
+  "$id": "https://github.com/api-evangelist/square/blob/main/json-schema/location.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Square Location",
+  "description": "Represents one of a business's locations where transactions occur, inventory is managed, and team members work.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "A short generated string of letters and numbers that uniquely identifies this location instance.",
+      "maxLength": 32,
+      "readOnly": true
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the location. This information appears in the Seller Dashboard as the nickname. A location name must be unique within a seller account.",
+      "maxLength": 255
+    },
+    "address": {
+      "type": "object",
+      "description": "The physical address of the location.",
+      "properties": {
+        "address_line_1": {
+          "type": "string",
+          "description": "The first line of the address."
+        },
+        "address_line_2": {
+          "type": "string",
+          "description": "The second line of the address, if any."
+        },
+        "address_line_3": {
+          "type": "string",
+          "description": "The third line of the address, if any."
+        },
+        "locality": {
+          "type": "string",
+          "description": "The city or town of the address."
+        },
+        "sublocality": {
+          "type": "string",
+          "description": "A civil region within the address's locality, if any."
+        },
+        "administrative_district_level_1": {
+          "type": "string",
+          "description": "A civil entity within the address's country. In the US, this is the state."
+        },
+        "postal_code": {
+          "type": "string",
+          "description": "The address's postal code."
+        },
+        "country": {
+          "type": "string",
+          "description": "The address's country, in the two-letter format of ISO 3166.",
+          "minLength": 2,
+          "maxLength": 2
+        }
+      }
+    },
+    "timezone": {
+      "type": "string",
+      "description": "The IANA time zone identifier for the time zone of the location. For example, America/Los_Angeles.",
+      "maxLength": 30
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["CREDIT_CARD_PROCESSING", "AUTOMATIC_TRANSFERS"]
+      },
+      "description": "The Square features that are enabled for the location.",
+      "readOnly": true
+    },
+    "status": {
+      "type": "string",
+      "description": "The status of the location.",
+      "enum": ["ACTIVE", "INACTIVE"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The time when the location was created, in RFC 3339 format.",
+      "readOnly": true
+    },
+    "merchant_id": {
+      "type": "string",
+      "description": "The ID of the merchant that owns the location.",
+      "maxLength": 32,
+      "readOnly": true
+    },
+    "country": {
+      "type": "string",
+      "description": "The country of the location, in the two-letter format of ISO 3166. For example, US or JP.",
+      "minLength": 2,
+      "maxLength": 2,
+      "readOnly": true
+    },
+    "language_code": {
+      "type": "string",
+      "description": "The language associated with the location, in BCP 47 format.",
+      "minLength": 2,
+      "maxLength": 5
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency used for all transactions at this location, in ISO 4217 format. For example, USD.",
+      "minLength": 3,
+      "maxLength": 3,
+      "readOnly": true
+    },
+    "phone_number": {
+      "type": "string",
+      "description": "The phone number of the location. For example, +1 855-700-6000.",
+      "maxLength": 17
+    },
+    "business_name": {
+      "type": "string",
+      "description": "The name of the location's overall business. This name is present on receipts and other customer-facing branding.",
+      "maxLength": 255
+    },
+    "type": {
+      "type": "string",
+      "description": "The type of the location.",
+      "enum": ["PHYSICAL", "MOBILE"]
+    },
+    "website_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The website URL of the location.",
+      "maxLength": 255
+    },
+    "business_hours": {
+      "type": "object",
+      "description": "The hours of operation for the location.",
+      "properties": {
+        "periods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "day_of_week": {
+                "type": "string",
+                "description": "The day of the week for this time period.",
+                "enum": ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+              },
+              "start_local_time": {
+                "type": "string",
+                "description": "The start time of a business hours period, specified in local time using partial-time RFC 3339 format. For example, 08:30:00."
+              },
+              "end_local_time": {
+                "type": "string",
+                "description": "The end time of a business hours period, specified in local time using partial-time RFC 3339 format. For example, 21:00:00."
+              }
+            }
+          },
+          "description": "The list of time periods during which the location is open."
+        }
+      }
+    },
+    "business_email": {
+      "type": "string",
+      "format": "email",
+      "description": "The email address of the location.",
+      "maxLength": 255
+    },
+    "description": {
+      "type": "string",
+      "description": "The description of the location. For example, Main Street location.",
+      "maxLength": 1024
+    },
+    "twitter_username": {
+      "type": "string",
+      "description": "The Twitter username of the location without the '@' symbol.",
+      "maxLength": 15
+    },
+    "instagram_username": {
+      "type": "string",
+      "description": "The Instagram username of the location without the '@' symbol.",
+      "maxLength": 30
+    },
+    "facebook_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The Facebook profile URL of the location.",
+      "maxLength": 255
+    },
+    "coordinates": {
+      "type": "object",
+      "description": "The physical coordinates (latitude and longitude) of the location.",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "description": "The latitude coordinate of the location."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "The longitude coordinate of the location."
+        }
+      }
+    },
+    "logo_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The URL of the logo image for the location.",
+      "readOnly": true
+    },
+    "pos_background_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The URL of the Point of Sale background image for the location.",
+      "readOnly": true
+    },
+    "mcc": {
+      "type": "string",
+      "description": "The merchant category code (MCC) of the location as standardized by ISO 18245.",
+      "minLength": 4,
+      "maxLength": 4
+    },
+    "full_format_logo_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The URL of a full-format logo image for the location.",
+      "readOnly": true
+    },
+    "tax_ids": {
+      "type": "object",
+      "description": "The tax IDs for this location.",
+      "properties": {
+        "eu_vat": {
+          "type": "string",
+          "description": "The EU VAT number for this location."
+        },
+        "fr_siret": {
+          "type": "string",
+          "description": "The SIRET number for this location (France)."
+        },
+        "fr_naf": {
+          "type": "string",
+          "description": "The NAF code for this location (France)."
+        },
+        "es_nif": {
+          "type": "string",
+          "description": "The NIF number for this location (Spain)."
+        }
+      },
+      "readOnly": true
+    }
+  }
+}

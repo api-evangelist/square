@@ -1,0 +1,205 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "square": "https://developer.squareup.com/reference/square/objects/",
+
+    "Payment": {
+      "@id": "schema:PayAction",
+      "@context": {
+        "id": "schema:identifier",
+        "created_at": "schema:dateCreated",
+        "updated_at": "schema:dateModified",
+        "amount_money": "schema:price",
+        "tip_money": "schema:tip",
+        "total_money": "schema:totalPrice",
+        "status": "schema:paymentStatus",
+        "source_type": "schema:paymentMethod",
+        "currency": "schema:priceCurrency",
+        "receipt_url": "schema:url",
+        "receipt_number": "schema:confirmationNumber",
+        "buyer_email_address": "schema:email",
+        "billing_address": "schema:billingAddress",
+        "shipping_address": "schema:deliveryAddress",
+        "note": "schema:description",
+        "location_id": "schema:locationCreated",
+        "order_id": "schema:referencesOrder",
+        "customer_id": "schema:customer",
+        "reference_id": "schema:orderNumber",
+        "card_details": "schema:paymentMethodId",
+        "refunded_money": "schema:totalPaymentDue"
+      }
+    },
+
+    "Order": {
+      "@id": "schema:Order",
+      "@context": {
+        "id": "schema:identifier",
+        "created_at": "schema:orderDate",
+        "updated_at": "schema:dateModified",
+        "closed_at": "schema:dateCompleted",
+        "location_id": "schema:seller",
+        "customer_id": "schema:customer",
+        "reference_id": "schema:orderNumber",
+        "state": "schema:orderStatus",
+        "line_items": "schema:orderedItem",
+        "taxes": "schema:taxApplied",
+        "discounts": "schema:discount",
+        "service_charges": "schema:serviceCharge",
+        "fulfillments": "schema:orderDelivery",
+        "total_money": "schema:totalPrice",
+        "total_tax_money": "schema:tax",
+        "total_discount_money": "schema:discount",
+        "total_tip_money": "schema:tip",
+        "tenders": "schema:paymentMethod",
+        "metadata": "schema:additionalProperty",
+        "ticket_name": "schema:name",
+        "returns": "schema:orderItemStatus"
+      }
+    },
+
+    "OrderLineItem": {
+      "@id": "schema:OrderItem",
+      "@context": {
+        "uid": "schema:identifier",
+        "name": "schema:name",
+        "quantity": "schema:orderQuantity",
+        "catalog_object_id": "schema:orderedItem",
+        "variation_name": "schema:additionalType",
+        "note": "schema:description",
+        "base_price_money": "schema:price",
+        "total_money": "schema:totalPrice",
+        "item_type": "schema:category"
+      }
+    },
+
+    "CatalogItem": {
+      "@id": "schema:Product",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "description_html": "schema:description",
+        "abbreviation": "schema:alternateName",
+        "categories": "schema:category",
+        "variations": "schema:hasVariant",
+        "image_ids": "schema:image",
+        "is_taxable": "schema:additionalProperty",
+        "product_type": "schema:additionalType",
+        "modifier_list_info": "schema:addOn",
+        "item_options": "schema:itemOption",
+        "sort_name": "schema:alternateName",
+        "reporting_category": "schema:category",
+        "is_archived": "schema:discontinued"
+      }
+    },
+
+    "CatalogItemVariation": {
+      "@id": "schema:ProductModel",
+      "@context": {
+        "name": "schema:name",
+        "sku": "schema:sku",
+        "upc": "schema:gtin",
+        "pricing_type": "schema:priceSpecification",
+        "price_money": "schema:price",
+        "track_inventory": "schema:inventoryLevel",
+        "sellable": "schema:availability",
+        "stockable": "schema:inventoryLevel"
+      }
+    },
+
+    "Customer": {
+      "@id": "schema:Person",
+      "@context": {
+        "id": "schema:identifier",
+        "created_at": "schema:dateCreated",
+        "updated_at": "schema:dateModified",
+        "given_name": "schema:givenName",
+        "family_name": "schema:familyName",
+        "nickname": "schema:alternateName",
+        "company_name": "schema:worksFor",
+        "email_address": "schema:email",
+        "address": "schema:address",
+        "phone_number": "schema:telephone",
+        "birthday": "schema:birthDate",
+        "note": "schema:description",
+        "reference_id": "schema:additionalName",
+        "group_ids": "schema:memberOf",
+        "segment_ids": "schema:memberOf",
+        "creation_source": "schema:additionalProperty",
+        "preferences": "schema:interactionStatistic"
+      }
+    },
+
+    "Location": {
+      "@id": "schema:LocalBusiness",
+      "@context": {
+        "id": "schema:identifier",
+        "name": "schema:name",
+        "address": "schema:address",
+        "timezone": "schema:timezone",
+        "status": "schema:eventStatus",
+        "created_at": "schema:dateCreated",
+        "merchant_id": "schema:parentOrganization",
+        "country": "schema:addressCountry",
+        "language_code": "schema:inLanguage",
+        "currency": "schema:currenciesAccepted",
+        "phone_number": "schema:telephone",
+        "business_name": "schema:legalName",
+        "type": "schema:additionalType",
+        "website_url": "schema:url",
+        "business_hours": "schema:openingHoursSpecification",
+        "business_email": "schema:email",
+        "description": "schema:description",
+        "twitter_username": "schema:sameAs",
+        "instagram_username": "schema:sameAs",
+        "facebook_url": "schema:sameAs",
+        "coordinates": "schema:geo",
+        "logo_url": "schema:logo",
+        "mcc": "schema:naics"
+      }
+    },
+
+    "Subscription": {
+      "@id": "schema:SubscribeAction",
+      "@context": {
+        "id": "schema:identifier",
+        "location_id": "schema:location",
+        "plan_variation_id": "schema:object",
+        "customer_id": "schema:agent",
+        "start_date": "schema:startDate",
+        "canceled_date": "schema:endDate",
+        "charged_through_date": "schema:validThrough",
+        "status": "schema:actionStatus",
+        "tax_percentage": "schema:taxPercentage",
+        "invoice_ids": "schema:referencesOrder",
+        "price_override_money": "schema:price",
+        "created_at": "schema:dateCreated",
+        "timezone": "schema:timezone",
+        "monthly_billing_anchor_date": "schema:billingPeriod",
+        "phases": "schema:priceSpecification"
+      }
+    },
+
+    "Money": {
+      "@id": "schema:MonetaryAmount",
+      "@context": {
+        "amount": "schema:value",
+        "currency": "schema:currency"
+      }
+    },
+
+    "Address": {
+      "@id": "schema:PostalAddress",
+      "@context": {
+        "address_line_1": "schema:streetAddress",
+        "address_line_2": "schema:streetAddress",
+        "address_line_3": "schema:streetAddress",
+        "locality": "schema:addressLocality",
+        "sublocality": "schema:addressLocality",
+        "administrative_district_level_1": "schema:addressRegion",
+        "postal_code": "schema:postalCode",
+        "country": "schema:addressCountry"
+      }
+    }
+  }
+}
