@@ -1,0 +1,786 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "Square API"
+  description: "Square's connected commerce platform providing APIs for payments, orders, catalog, inventory, customers, bookings, loyalty, gift cards, invoices, subscriptions, checkout, terminal, refunds, disputes, team, labor, locations, merchants, and more."
+  tags:
+    - Commerce
+    - Payments
+    - Point of Sale
+    - Financial Technology
+  created: "2026-04-18"
+  modified: "2026-04-18"
+
+binds:
+  - namespace: env
+    keys:
+      SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+
+capability:
+  consumes:
+    - type: http
+      namespace: square
+      baseUri: https://connect.squareup.com
+      description: "Square API for payments, commerce, and business management."
+      authentication:
+        type: bearer
+        token: "{{SQUARE_ACCESS_TOKEN}}"
+      resources:
+        - name: payments
+          path: /v2/payments
+          description: "Take and manage payments."
+          operations:
+            - name: list-payments
+              method: GET
+              description: "Retrieves a list of payments taken by the account."
+              inputParameters:
+                - name: begin_time
+                  in: query
+                  type: string
+                  required: false
+                  description: "Timestamp for the beginning of the reporting period."
+                - name: end_time
+                  in: query
+                  type: string
+                  required: false
+                  description: "Timestamp for the end of the reporting period."
+                - name: cursor
+                  in: query
+                  type: string
+                  required: false
+                  description: "Pagination cursor."
+                - name: location_id
+                  in: query
+                  type: string
+                  required: false
+                  description: "Limit results to the location."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-payment
+              method: POST
+              description: "Creates a payment using the provided source."
+              inputParameters:
+                - name: source_id
+                  in: body
+                  type: string
+                  required: true
+                  description: "The ID for the source of funds."
+                - name: idempotency_key
+                  in: body
+                  type: string
+                  required: true
+                  description: "A unique string to identify this payment."
+                - name: amount_money
+                  in: body
+                  type: object
+                  required: true
+                  description: "The amount of money to accept."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+              body:
+                type: json
+                data:
+                  source_id: "{{tools.source_id}}"
+                  idempotency_key: "{{tools.idempotency_key}}"
+                  amount_money: "{{tools.amount_money}}"
+            - name: get-payment
+              method: GET
+              description: "Retrieves details for a specific payment."
+              inputParameters:
+                - name: payment_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "A unique ID for the desired payment."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: cancel-payment
+              method: POST
+              description: "Cancels a payment."
+              inputParameters:
+                - name: payment_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the payment to cancel."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: complete-payment
+              method: POST
+              description: "Completes a payment."
+              inputParameters:
+                - name: payment_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The unique ID of the payment to complete."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: refunds
+          path: /v2/refunds
+          description: "Process refunds for payments."
+          operations:
+            - name: list-payment-refunds
+              method: GET
+              description: "Retrieves a list of refunds."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: refund-payment
+              method: POST
+              description: "Refunds a payment."
+              inputParameters:
+                - name: idempotency_key
+                  in: body
+                  type: string
+                  required: true
+                  description: "A unique string to identify the refund."
+                - name: payment_id
+                  in: body
+                  type: string
+                  required: true
+                  description: "The ID of the payment to refund."
+                - name: amount_money
+                  in: body
+                  type: object
+                  required: true
+                  description: "The amount of money to refund."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+              body:
+                type: json
+                data:
+                  idempotency_key: "{{tools.idempotency_key}}"
+                  payment_id: "{{tools.payment_id}}"
+                  amount_money: "{{tools.amount_money}}"
+
+        - name: orders
+          path: /v2/orders
+          description: "Create and manage orders."
+          operations:
+            - name: create-order
+              method: POST
+              description: "Creates a new order."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: search-orders
+              method: POST
+              description: "Search all orders for one or more locations."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-order
+              method: GET
+              description: "Retrieves an order by ID."
+              inputParameters:
+                - name: order_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the order to retrieve."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: update-order
+              method: PUT
+              description: "Updates an open order."
+              inputParameters:
+                - name: order_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the order to update."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: catalog
+          path: /v2/catalog
+          description: "Manage product catalogs."
+          operations:
+            - name: list-catalog
+              method: GET
+              description: "Returns a list of catalog objects."
+              inputParameters:
+                - name: types
+                  in: query
+                  type: string
+                  required: false
+                  description: "An optional case-insensitive, comma-separated list of object types."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: upsert-catalog-object
+              method: POST
+              description: "Creates or updates a catalog object."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-catalog-object
+              method: GET
+              description: "Returns a single catalog object."
+              inputParameters:
+                - name: object_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The object ID."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: delete-catalog-object
+              method: DELETE
+              description: "Deletes a catalog object."
+              inputParameters:
+                - name: object_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The object ID to delete."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: search-catalog-objects
+              method: POST
+              description: "Searches for catalog objects."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: inventory
+          path: /v2/inventory
+          description: "Track and manage inventory."
+          operations:
+            - name: batch-retrieve-inventory-counts
+              method: POST
+              description: "Retrieves the current calculated stock count for a set of catalog objects."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: batch-change-inventory
+              method: POST
+              description: "Applies adjustments and counts to the provided item quantities."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: customers
+          path: /v2/customers
+          description: "Create and manage customers."
+          operations:
+            - name: list-customers
+              method: GET
+              description: "Lists customer profiles."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-customer
+              method: POST
+              description: "Creates a new customer."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: search-customers
+              method: POST
+              description: "Searches customer profiles."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-customer
+              method: GET
+              description: "Returns details for a single customer."
+              inputParameters:
+                - name: customer_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the customer."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: update-customer
+              method: PUT
+              description: "Updates a customer profile."
+              inputParameters:
+                - name: customer_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the customer."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: delete-customer
+              method: DELETE
+              description: "Deletes a customer profile."
+              inputParameters:
+                - name: customer_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the customer."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: locations
+          path: /v2/locations
+          description: "Manage business locations."
+          operations:
+            - name: list-locations
+              method: GET
+              description: "Lists all of a business's locations."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-location
+              method: POST
+              description: "Creates a location."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-location
+              method: GET
+              description: "Retrieves details of a specific location."
+              inputParameters:
+                - name: location_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the location."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: bookings
+          path: /v2/bookings
+          description: "Create and manage bookings."
+          operations:
+            - name: list-bookings
+              method: GET
+              description: "Retrieve a collection of bookings."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-booking
+              method: POST
+              description: "Creates a booking."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-booking
+              method: GET
+              description: "Retrieves a booking."
+              inputParameters:
+                - name: booking_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the booking."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: update-booking
+              method: PUT
+              description: "Updates a booking."
+              inputParameters:
+                - name: booking_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the booking."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: cancel-booking
+              method: POST
+              description: "Cancels an existing booking."
+              inputParameters:
+                - name: booking_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the booking."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: search-availability
+              method: POST
+              description: "Searches for availabilities for booking."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: loyalty
+          path: /v2/loyalty
+          description: "Manage loyalty programs and rewards."
+          operations:
+            - name: get-loyalty-program
+              method: GET
+              description: "Retrieves the loyalty program in a seller's account."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: search-loyalty-accounts
+              method: POST
+              description: "Searches for loyalty accounts."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-loyalty-account
+              method: POST
+              description: "Creates a loyalty account."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: accumulate-loyalty-points
+              method: POST
+              description: "Adds points to a loyalty account."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-loyalty-reward
+              method: POST
+              description: "Creates a loyalty reward."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: redeem-loyalty-reward
+              method: POST
+              description: "Redeems a loyalty reward."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: invoices
+          path: /v2/invoices
+          description: "Create and manage invoices."
+          operations:
+            - name: list-invoices
+              method: GET
+              description: "Returns a list of invoices for a given location."
+              inputParameters:
+                - name: location_id
+                  in: query
+                  type: string
+                  required: true
+                  description: "The ID of the location."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-invoice
+              method: POST
+              description: "Creates a draft invoice."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-invoice
+              method: GET
+              description: "Retrieves an invoice by invoice ID."
+              inputParameters:
+                - name: invoice_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the invoice."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: subscriptions
+          path: /v2/subscriptions
+          description: "Manage subscription plans."
+          operations:
+            - name: create-subscription
+              method: POST
+              description: "Creates a subscription."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: search-subscriptions
+              method: POST
+              description: "Searches for subscriptions."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-subscription
+              method: GET
+              description: "Retrieves a subscription."
+              inputParameters:
+                - name: subscription_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the subscription."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: gift-cards
+          path: /v2/gift-cards
+          description: "Manage gift cards."
+          operations:
+            - name: list-gift-cards
+              method: GET
+              description: "Lists all gift cards."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-gift-card
+              method: POST
+              description: "Creates a digital gift card."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-gift-card
+              method: GET
+              description: "Retrieves a gift card."
+              inputParameters:
+                - name: id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the gift card."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: team-members
+          path: /v2/team-members
+          description: "Manage team members."
+          operations:
+            - name: search-team-members
+              method: POST
+              description: "Returns a paginated list of team members."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-team-member
+              method: POST
+              description: "Creates a single team member."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-team-member
+              method: GET
+              description: "Retrieves a team member."
+              inputParameters:
+                - name: team_member_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the team member."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: update-team-member
+              method: PUT
+              description: "Updates a single team member."
+              inputParameters:
+                - name: team_member_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the team member."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: disputes
+          path: /v2/disputes
+          description: "Manage payment disputes."
+          operations:
+            - name: list-disputes
+              method: GET
+              description: "Returns a list of disputes."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-dispute
+              method: GET
+              description: "Returns details about a specific dispute."
+              inputParameters:
+                - name: dispute_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the dispute."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: accept-dispute
+              method: POST
+              description: "Accepts the loss on a dispute."
+              inputParameters:
+                - name: dispute_id
+                  in: path
+                  type: string
+                  required: true
+                  description: "The ID of the dispute."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: checkout
+          path: /v2/online-checkout/payment-links
+          description: "Create payment links and checkout pages."
+          operations:
+            - name: list-payment-links
+              method: GET
+              description: "Lists all payment links."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-payment-link
+              method: POST
+              description: "Creates a Square-hosted checkout page."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: merchants
+          path: /v2/merchants
+          description: "Retrieve merchant information."
+          operations:
+            - name: list-merchants
+              method: GET
+              description: "Provides details about the merchant."
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      port: 8100
+      namespace: square-rest
+      resources: []
+
+    - type: mcp
+      port: 9100
+      namespace: square-mcp
+      transport: http
+      tools: []

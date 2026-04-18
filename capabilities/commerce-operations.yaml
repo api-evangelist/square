@@ -1,0 +1,489 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "Square Commerce Operations"
+  description: "Unified workflow for commerce operations combining payments, orders, catalog, inventory, checkout, invoicing, subscriptions, and refunds. Used by commerce developers and business operators to manage the full sales lifecycle."
+  tags:
+    - Square
+    - Commerce
+    - Payments
+    - Orders
+    - Catalog
+    - Inventory
+  created: "2026-04-18"
+  modified: "2026-04-18"
+
+binds:
+  - namespace: env
+    keys:
+      SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+
+capability:
+  consumes:
+    - import: square
+      location: ./shared/square-api.yaml
+
+  exposes:
+    - type: rest
+      port: 8080
+      namespace: square-commerce-api
+      description: "Unified REST API for Square commerce operations."
+      resources:
+        - path: /v1/payments
+          name: payments
+          description: "Manage payments."
+          operations:
+            - method: GET
+              name: list-payments
+              description: "List payments."
+              call: "square.list-payments"
+              with:
+                begin_time: "rest.begin_time"
+                end_time: "rest.end_time"
+                location_id: "rest.location_id"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: POST
+              name: create-payment
+              description: "Create a payment."
+              call: "square.create-payment"
+              with:
+                source_id: "rest.source_id"
+                idempotency_key: "rest.idempotency_key"
+                amount_money: "rest.amount_money"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/payments/{payment_id}
+          name: payment
+          description: "Manage a specific payment."
+          operations:
+            - method: GET
+              name: get-payment
+              description: "Get payment details."
+              call: "square.get-payment"
+              with:
+                payment_id: "rest.payment_id"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/refunds
+          name: refunds
+          description: "Manage refunds."
+          operations:
+            - method: GET
+              name: list-refunds
+              description: "List refunds."
+              call: "square.list-payment-refunds"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: POST
+              name: create-refund
+              description: "Refund a payment."
+              call: "square.refund-payment"
+              with:
+                idempotency_key: "rest.idempotency_key"
+                payment_id: "rest.payment_id"
+                amount_money: "rest.amount_money"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/orders
+          name: orders
+          description: "Manage orders."
+          operations:
+            - method: POST
+              name: create-order
+              description: "Create an order."
+              call: "square.create-order"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/orders/{order_id}
+          name: order
+          description: "Manage a specific order."
+          operations:
+            - method: GET
+              name: get-order
+              description: "Get order details."
+              call: "square.get-order"
+              with:
+                order_id: "rest.order_id"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/catalog
+          name: catalog
+          description: "Manage catalog items."
+          operations:
+            - method: GET
+              name: list-catalog
+              description: "List catalog objects."
+              call: "square.list-catalog"
+              with:
+                types: "rest.types"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/invoices
+          name: invoices
+          description: "Manage invoices."
+          operations:
+            - method: GET
+              name: list-invoices
+              description: "List invoices."
+              call: "square.list-invoices"
+              with:
+                location_id: "rest.location_id"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/subscriptions
+          name: subscriptions
+          description: "Manage subscriptions."
+          operations:
+            - method: POST
+              name: create-subscription
+              description: "Create a subscription."
+              call: "square.create-subscription"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/checkout
+          name: checkout
+          description: "Manage payment links."
+          operations:
+            - method: GET
+              name: list-payment-links
+              description: "List payment links."
+              call: "square.list-payment-links"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: POST
+              name: create-payment-link
+              description: "Create a payment link."
+              call: "square.create-payment-link"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/disputes
+          name: disputes
+          description: "Manage disputes."
+          operations:
+            - method: GET
+              name: list-disputes
+              description: "List disputes."
+              call: "square.list-disputes"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9090
+      namespace: square-commerce-mcp
+      transport: http
+      description: "MCP server for AI-assisted Square commerce operations."
+      tools:
+        - name: list-payments
+          description: "List payments taken by the account."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.list-payments"
+          with:
+            begin_time: "tools.begin_time"
+            end_time: "tools.end_time"
+            location_id: "tools.location_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: create-payment
+          description: "Create a payment."
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "square.create-payment"
+          with:
+            source_id: "tools.source_id"
+            idempotency_key: "tools.idempotency_key"
+            amount_money: "tools.amount_money"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: get-payment
+          description: "Get details for a specific payment."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.get-payment"
+          with:
+            payment_id: "tools.payment_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: cancel-payment
+          description: "Cancel a payment."
+          hints:
+            readOnly: false
+            destructive: true
+          call: "square.cancel-payment"
+          with:
+            payment_id: "tools.payment_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: complete-payment
+          description: "Complete a payment."
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "square.complete-payment"
+          with:
+            payment_id: "tools.payment_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: list-refunds
+          description: "List payment refunds."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.list-payment-refunds"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: refund-payment
+          description: "Refund a payment."
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "square.refund-payment"
+          with:
+            idempotency_key: "tools.idempotency_key"
+            payment_id: "tools.payment_id"
+            amount_money: "tools.amount_money"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: create-order
+          description: "Create a new order."
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "square.create-order"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: search-orders
+          description: "Search all orders."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.search-orders"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: get-order
+          description: "Retrieve an order by ID."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.get-order"
+          with:
+            order_id: "tools.order_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: list-catalog
+          description: "List catalog objects."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.list-catalog"
+          with:
+            types: "tools.types"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: upsert-catalog-object
+          description: "Create or update a catalog object."
+          hints:
+            readOnly: false
+            idempotent: true
+          call: "square.upsert-catalog-object"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: get-catalog-object
+          description: "Get a single catalog object."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.get-catalog-object"
+          with:
+            object_id: "tools.object_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: search-catalog-objects
+          description: "Search catalog objects."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.search-catalog-objects"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: batch-retrieve-inventory-counts
+          description: "Retrieve inventory counts."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.batch-retrieve-inventory-counts"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: batch-change-inventory
+          description: "Apply inventory adjustments."
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "square.batch-change-inventory"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: list-invoices
+          description: "List invoices for a location."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.list-invoices"
+          with:
+            location_id: "tools.location_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: create-invoice
+          description: "Create a draft invoice."
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "square.create-invoice"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: get-invoice
+          description: "Get an invoice."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.get-invoice"
+          with:
+            invoice_id: "tools.invoice_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: create-subscription
+          description: "Create a subscription."
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "square.create-subscription"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: search-subscriptions
+          description: "Search subscriptions."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.search-subscriptions"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: list-payment-links
+          description: "List payment links."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.list-payment-links"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: create-payment-link
+          description: "Create a checkout payment link."
+          hints:
+            readOnly: false
+            idempotent: false
+          call: "square.create-payment-link"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: list-disputes
+          description: "List payment disputes."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.list-disputes"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: get-dispute
+          description: "Get dispute details."
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "square.get-dispute"
+          with:
+            dispute_id: "tools.dispute_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: accept-dispute
+          description: "Accept a dispute."
+          hints:
+            readOnly: false
+            idempotent: true
+          call: "square.accept-dispute"
+          with:
+            dispute_id: "tools.dispute_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
