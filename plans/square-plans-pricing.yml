@@ -1,0 +1,200 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Square
+providerId: square
+created: '2026-05-04'
+modified: '2026-05-04'
+reconciled: true
+tags:
+  - Payments
+  - POS
+  - Commerce
+description: Square processing fees by channel and plan (Free / Plus / Premium).
+sources:
+  - https://squareup.com/us/en/payments/our-fees
+plans:
+  - id: square-free
+    name: Free
+    type: freemium
+    description: $0 monthly. Standard processing rates.
+    entries:
+      - label: Tap/dip/swipe
+        name: in_person
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 2.6% + $0.15
+        userMultiplied: false
+      - label: Online (Square site)
+        name: online
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 3.3% + $0.30
+        userMultiplied: false
+      - label: Online API
+        name: online_api
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 2.9% + $0.30
+        userMultiplied: false
+      - label: Manual entry / card on file
+        name: manual
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 3.5% + $0.15
+        userMultiplied: false
+      - label: ACH (invoice)
+        name: ach_invoice
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 1% ($1 min)
+        userMultiplied: false
+      - label: ACH (API)
+        name: ach_api
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 1% ($1 min, $5 cap)
+        userMultiplied: false
+      - label: Afterpay
+        name: afterpay
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 6% + $0.30
+        userMultiplied: false
+      - label: Cash/check
+        name: cash
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: '0.00'
+        userMultiplied: false
+      - label: Bitcoin (until 2027)
+        name: btc
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: '0.00'
+        userMultiplied: false
+    elements:
+      - name: All Square POS
+      - name: Square Online
+      - name: Free hardware (mag-stripe reader)
+  - id: square-plus
+    name: Plus
+    type: paid
+    description: Subscription pricing varies by product.
+    entries:
+      - label: Tap/dip/swipe
+        name: in_person
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 2.5% + $0.15
+        userMultiplied: false
+      - label: Online
+        name: online
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 2.9% + $0.30
+        userMultiplied: false
+      - label: ACH (invoice, capped)
+        name: ach_invoice
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 1% ($1 min, $10 cap)
+        userMultiplied: false
+    elements:
+      - name: Lower in-person rate
+      - name: Advanced features
+      - name: Subscription per Square product
+  - id: square-premium
+    name: Premium
+    type: enterprise
+    description: $250K+ annual GPV; custom rates.
+    entries:
+      - label: Tap/dip/swipe
+        name: in_person
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: 2.4% + $0.15
+        userMultiplied: false
+      - label: Custom contract
+        name: contract
+        type: subscription
+        metric: year
+        limit: -1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: custom
+        userMultiplied: false
+    elements:
+      - name: Volume discounts
+      - name: Dedicated account team
+      - name: Custom underwriting
+  - id: square-international
+    name: International Cards
+    type: metered
+    description: Additional 1.50% on top of base rate.
+    entries:
+      - label: International surcharge
+        name: intl
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: global
+        unit: 1
+        price: +1.50%
+        userMultiplied: false
+    elements:
+      - name: Applied on top of base rate

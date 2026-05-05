@@ -1,0 +1,32 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Square
+providerId: square
+created: '2026-05-04'
+modified: '2026-05-04'
+reconciled: true
+tags:
+  - Rate Limiting
+  - Payments
+description: Square API rate limits per access token.
+sources:
+  - https://squareup.com/us/en/payments/our-fees
+  - https://developer.squareup.com/docs/build-basics/general-considerations/rate-limit
+headers:
+  retryAfter: Retry-After
+responseCodes:
+  throttled: 429
+limits:
+  - name: Default REST API
+    scope: access_token
+    metric: requests_per_second
+    limit: soft (raise via support)
+  - name: Webhook signature verification
+    scope: endpoint
+    metric: deliveries_per_second
+    limit: high
+  - name: Per-merchant idempotency keys
+    scope: merchant
+    metric: lifetime
+    limit: no expiration
