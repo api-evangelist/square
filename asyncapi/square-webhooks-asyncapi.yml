@@ -1,0 +1,2378 @@
+asyncapi: 2.6.0
+info:
+  title: Square Webhooks
+  version: '1.0.0'
+  description: |
+    AsyncAPI 2.6 description of the Square webhook event surface.
+
+    Square delivers HTTPS POST notifications to a subscriber-provided
+    `notification_url` whenever an event occurs on a seller's account.
+    Each notification body is a JSON object with `merchant_id`,
+    `location_id` (when applicable), `type`, `event_id`, `created_at`,
+    and a `data` envelope containing the affected object.
+
+    Each request is signed using HMAC-SHA-256. The signing payload is
+    the concatenation of the notification URL and the raw request body.
+    The base64-encoded digest is delivered via the
+    `x-square-hmacsha256-signature` HTTP header. Subscribers should
+    compare signatures using a constant-time comparison function.
+
+    Event types in this document are taken verbatim from the Square
+    "Webhook Events Reference" (developer.squareup.com).
+  termsOfService: https://squareup.com/us/en/legal/general/ua
+  contact:
+    name: Square Developer Platform
+    url: https://developer.squareup.com/docs/webhooks/overview
+    email: developers@squareup.com
+  license:
+    name: Square Developer Terms of Service
+    url: https://squareup.com/us/en/legal/general/ua
+  x-source-documentation:
+    - https://developer.squareup.com/docs/webhooks/overview
+    - https://developer.squareup.com/docs/webhooks/v2webhook-events-tech-ref
+    - https://developer.squareup.com/docs/webhooks/step3validate
+    - https://developer.squareup.com/docs/webhooks/webhook-subscriptions-api
+
+defaultContentType: application/json
+
+servers:
+  subscriber:
+    url: '{notification_url}'
+    protocol: https
+    description: |
+      Subscriber-hosted HTTPS endpoint that receives Square webhook
+      POST requests. The URL is registered with Square via the Webhook
+      Subscriptions API or the Developer Dashboard.
+    variables:
+      notification_url:
+        description: Fully qualified HTTPS URL configured on the subscription.
+        default: https://example.com/square/webhooks
+    security:
+      - hmacSha256Signature: []
+
+channels:
+  /:
+    description: |
+      Single inbound channel that receives every Square webhook event
+      type subscribed to by the application. The concrete event is
+      discriminated by the `type` field on the message payload.
+    publish:
+      operationId: receiveSquareEvent
+      summary: Receive a Square webhook event notification.
+      description: |
+        Square POSTs a JSON-encoded event envelope to the configured
+        notification URL. The request includes the
+        `x-square-hmacsha256-signature` header, which subscribers MUST
+        verify before acting on the payload.
+      bindings:
+        http:
+          type: request
+          method: POST
+          bindingVersion: 0.3.0
+      message:
+        oneOf:
+          - $ref: '#/components/messages/BankAccountDisabled'
+          - $ref: '#/components/messages/BankAccountVerified'
+          - $ref: '#/components/messages/BankAccountCreated'
+          - $ref: '#/components/messages/BookingCreated'
+          - $ref: '#/components/messages/BookingUpdated'
+          - $ref: '#/components/messages/BookingCustomAttributeDefinitionOwnedCreated'
+          - $ref: '#/components/messages/BookingCustomAttributeDefinitionOwnedUpdated'
+          - $ref: '#/components/messages/BookingCustomAttributeDefinitionOwnedDeleted'
+          - $ref: '#/components/messages/BookingCustomAttributeOwnedUpdated'
+          - $ref: '#/components/messages/BookingCustomAttributeOwnedDeleted'
+          - $ref: '#/components/messages/BookingCustomAttributeDefinitionVisibleCreated'
+          - $ref: '#/components/messages/BookingCustomAttributeDefinitionVisibleUpdated'
+          - $ref: '#/components/messages/BookingCustomAttributeDefinitionVisibleDeleted'
+          - $ref: '#/components/messages/BookingCustomAttributeVisibleUpdated'
+          - $ref: '#/components/messages/BookingCustomAttributeVisibleDeleted'
+          - $ref: '#/components/messages/CardAutomaticallyUpdated'
+          - $ref: '#/components/messages/CardCreated'
+          - $ref: '#/components/messages/CardDisabled'
+          - $ref: '#/components/messages/CardForgotten'
+          - $ref: '#/components/messages/CardUpdated'
+          - $ref: '#/components/messages/CatalogVersionUpdated'
+          - $ref: '#/components/messages/OnlineCheckoutLocationSettingsUpdated'
+          - $ref: '#/components/messages/OnlineCheckoutMerchantSettingsUpdated'
+          - $ref: '#/components/messages/CustomerCreated'
+          - $ref: '#/components/messages/CustomerDeleted'
+          - $ref: '#/components/messages/CustomerUpdated'
+          - $ref: '#/components/messages/CustomerCustomAttributeDefinitionOwnedCreated'
+          - $ref: '#/components/messages/CustomerCustomAttributeDefinitionOwnedUpdated'
+          - $ref: '#/components/messages/CustomerCustomAttributeDefinitionOwnedDeleted'
+          - $ref: '#/components/messages/CustomerCustomAttributeOwnedUpdated'
+          - $ref: '#/components/messages/CustomerCustomAttributeOwnedDeleted'
+          - $ref: '#/components/messages/CustomerCustomAttributeDefinitionVisibleCreated'
+          - $ref: '#/components/messages/CustomerCustomAttributeDefinitionVisibleUpdated'
+          - $ref: '#/components/messages/CustomerCustomAttributeDefinitionVisibleDeleted'
+          - $ref: '#/components/messages/CustomerCustomAttributeVisibleUpdated'
+          - $ref: '#/components/messages/CustomerCustomAttributeVisibleDeleted'
+          - $ref: '#/components/messages/DeviceCodePaired'
+          - $ref: '#/components/messages/DeviceCreated'
+          - $ref: '#/components/messages/DisputeCreated'
+          - $ref: '#/components/messages/DisputeStateChanged'
+          - $ref: '#/components/messages/DisputeStateUpdated'
+          - $ref: '#/components/messages/DisputeEvidenceAdded'
+          - $ref: '#/components/messages/DisputeEvidenceCreated'
+          - $ref: '#/components/messages/DisputeEvidenceDeleted'
+          - $ref: '#/components/messages/DisputeEvidenceRemoved'
+          - $ref: '#/components/messages/GiftCardCreated'
+          - $ref: '#/components/messages/GiftCardUpdated'
+          - $ref: '#/components/messages/GiftCardCustomerLinked'
+          - $ref: '#/components/messages/GiftCardCustomerUnlinked'
+          - $ref: '#/components/messages/GiftCardActivityCreated'
+          - $ref: '#/components/messages/GiftCardActivityUpdated'
+          - $ref: '#/components/messages/InventoryCountUpdated'
+          - $ref: '#/components/messages/InvoiceCreated'
+          - $ref: '#/components/messages/InvoicePublished'
+          - $ref: '#/components/messages/InvoiceUpdated'
+          - $ref: '#/components/messages/InvoicePaymentMade'
+          - $ref: '#/components/messages/InvoiceScheduledChargeFailed'
+          - $ref: '#/components/messages/InvoiceCanceled'
+          - $ref: '#/components/messages/InvoiceRefunded'
+          - $ref: '#/components/messages/InvoiceDeleted'
+          - $ref: '#/components/messages/LaborScheduledShiftCreated'
+          - $ref: '#/components/messages/LaborScheduledShiftUpdated'
+          - $ref: '#/components/messages/LaborScheduledShiftPublished'
+          - $ref: '#/components/messages/LaborScheduledShiftDeleted'
+          - $ref: '#/components/messages/LaborTimecardCreated'
+          - $ref: '#/components/messages/LaborTimecardUpdated'
+          - $ref: '#/components/messages/LaborTimecardDeleted'
+          - $ref: '#/components/messages/LaborShiftCreated'
+          - $ref: '#/components/messages/LaborShiftUpdated'
+          - $ref: '#/components/messages/LaborShiftDeleted'
+          - $ref: '#/components/messages/LocationCreated'
+          - $ref: '#/components/messages/LocationUpdated'
+          - $ref: '#/components/messages/LocationCustomAttributeDefinitionOwnedCreated'
+          - $ref: '#/components/messages/LocationCustomAttributeDefinitionOwnedUpdated'
+          - $ref: '#/components/messages/LocationCustomAttributeDefinitionOwnedDeleted'
+          - $ref: '#/components/messages/LocationCustomAttributeOwnedUpdated'
+          - $ref: '#/components/messages/LocationCustomAttributeOwnedDeleted'
+          - $ref: '#/components/messages/LocationCustomAttributeDefinitionVisibleCreated'
+          - $ref: '#/components/messages/LocationCustomAttributeDefinitionVisibleUpdated'
+          - $ref: '#/components/messages/LocationCustomAttributeDefinitionVisibleDeleted'
+          - $ref: '#/components/messages/LocationCustomAttributeVisibleUpdated'
+          - $ref: '#/components/messages/LocationCustomAttributeVisibleDeleted'
+          - $ref: '#/components/messages/LoyaltyAccountCreated'
+          - $ref: '#/components/messages/LoyaltyAccountUpdated'
+          - $ref: '#/components/messages/LoyaltyAccountDeleted'
+          - $ref: '#/components/messages/LoyaltyProgramCreated'
+          - $ref: '#/components/messages/LoyaltyProgramUpdated'
+          - $ref: '#/components/messages/LoyaltyPromotionCreated'
+          - $ref: '#/components/messages/LoyaltyPromotionUpdated'
+          - $ref: '#/components/messages/LoyaltyEventCreated'
+          - $ref: '#/components/messages/MerchantCustomAttributeDefinitionOwnedCreated'
+          - $ref: '#/components/messages/MerchantCustomAttributeDefinitionOwnedUpdated'
+          - $ref: '#/components/messages/MerchantCustomAttributeDefinitionOwnedDeleted'
+          - $ref: '#/components/messages/MerchantCustomAttributeOwnedUpdated'
+          - $ref: '#/components/messages/MerchantCustomAttributeOwnedDeleted'
+          - $ref: '#/components/messages/MerchantCustomAttributeDefinitionVisibleCreated'
+          - $ref: '#/components/messages/MerchantCustomAttributeDefinitionVisibleUpdated'
+          - $ref: '#/components/messages/MerchantCustomAttributeDefinitionVisibleDeleted'
+          - $ref: '#/components/messages/MerchantCustomAttributeVisibleUpdated'
+          - $ref: '#/components/messages/MerchantCustomAttributeVisibleDeleted'
+          - $ref: '#/components/messages/OAuthAuthorizationRevoked'
+          - $ref: '#/components/messages/OrderCreated'
+          - $ref: '#/components/messages/OrderFulfillmentUpdated'
+          - $ref: '#/components/messages/OrderUpdated'
+          - $ref: '#/components/messages/OrderCustomAttributeDefinitionOwnedCreated'
+          - $ref: '#/components/messages/OrderCustomAttributeDefinitionOwnedUpdated'
+          - $ref: '#/components/messages/OrderCustomAttributeDefinitionOwnedDeleted'
+          - $ref: '#/components/messages/OrderCustomAttributeOwnedUpdated'
+          - $ref: '#/components/messages/OrderCustomAttributeOwnedDeleted'
+          - $ref: '#/components/messages/OrderCustomAttributeDefinitionVisibleCreated'
+          - $ref: '#/components/messages/OrderCustomAttributeDefinitionVisibleUpdated'
+          - $ref: '#/components/messages/OrderCustomAttributeDefinitionVisibleDeleted'
+          - $ref: '#/components/messages/OrderCustomAttributeVisibleUpdated'
+          - $ref: '#/components/messages/OrderCustomAttributeVisibleDeleted'
+          - $ref: '#/components/messages/PaymentCreated'
+          - $ref: '#/components/messages/PaymentUpdated'
+          - $ref: '#/components/messages/PayoutFailed'
+          - $ref: '#/components/messages/PayoutPaid'
+          - $ref: '#/components/messages/PayoutSent'
+          - $ref: '#/components/messages/RefundCreated'
+          - $ref: '#/components/messages/RefundUpdated'
+          - $ref: '#/components/messages/SubscriptionCreated'
+          - $ref: '#/components/messages/SubscriptionUpdated'
+          - $ref: '#/components/messages/TeamMemberCreated'
+          - $ref: '#/components/messages/TeamMemberUpdated'
+          - $ref: '#/components/messages/TeamMemberWageSettingUpdated'
+          - $ref: '#/components/messages/JobCreated'
+          - $ref: '#/components/messages/JobUpdated'
+          - $ref: '#/components/messages/TerminalCheckoutCreated'
+          - $ref: '#/components/messages/TerminalCheckoutUpdated'
+          - $ref: '#/components/messages/TerminalRefundCreated'
+          - $ref: '#/components/messages/TerminalRefundUpdated'
+          - $ref: '#/components/messages/TerminalActionCreated'
+          - $ref: '#/components/messages/TerminalActionUpdated'
+          - $ref: '#/components/messages/TransferOrderCreated'
+          - $ref: '#/components/messages/TransferOrderUpdated'
+          - $ref: '#/components/messages/TransferOrderDeleted'
+          - $ref: '#/components/messages/VendorCreated'
+          - $ref: '#/components/messages/VendorUpdated'
+
+components:
+  securitySchemes:
+    hmacSha256Signature:
+      type: httpApiKey
+      in: header
+      name: x-square-hmacsha256-signature
+      description: |
+        Each webhook request includes the `x-square-hmacsha256-signature`
+        header. To verify authenticity, the subscriber computes
+        HMAC-SHA-256 over the concatenation of the notification URL and
+        the raw request body, using the signature key associated with
+        the webhook subscription as the HMAC key. The resulting digest
+        is base64-encoded and compared to the header value using a
+        constant-time comparison.
+
+  messageTraits:
+    SquareWebhookHeaders:
+      headers:
+        type: object
+        properties:
+          x-square-hmacsha256-signature:
+            type: string
+            description: Base64-encoded HMAC-SHA-256 signature of (notification_url + raw_body).
+          square-retry-number:
+            type: string
+            description: Present when the notification is a retry; ordinal of the retry attempt.
+          square-retry-reason:
+            type: string
+            description: Present when the notification is a retry; reason for the retry.
+          square-initial-delivery-timestamp:
+            type: string
+            description: Timestamp of the initial delivery attempt (present on retries).
+        required:
+          - x-square-hmacsha256-signature
+
+  schemas:
+    EventEnvelope:
+      type: object
+      description: Common envelope shape for all Square webhook event notifications.
+      required:
+        - merchant_id
+        - type
+        - event_id
+        - created_at
+        - data
+      properties:
+        merchant_id:
+          type: string
+          description: Identifier of the Square merchant the event belongs to.
+        location_id:
+          type: string
+          description: Identifier of the location associated with the event, when applicable.
+        type:
+          type: string
+          description: Event type name (e.g., `payment.created`).
+        event_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the event, used for idempotency.
+        created_at:
+          type: string
+          format: date-time
+          description: RFC 3339 timestamp at which the event was generated.
+        data:
+          type: object
+          description: Event-type-specific payload envelope.
+          properties:
+            type:
+              type: string
+              description: The Square object type carried in `object` (e.g., `payment`, `order`).
+            id:
+              type: string
+              description: Identifier of the affected object.
+            object:
+              type: object
+              description: |
+                The affected object. Shape varies by event type. Refer to the
+                corresponding Square REST API reference for the object schema.
+              additionalProperties: true
+
+  messages:
+    BankAccountDisabled:
+      name: bank_account.disabled
+      title: bank_account.disabled
+      summary: A bank account was disabled.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: bank_account.disabled
+
+    BankAccountVerified:
+      name: bank_account.verified
+      title: bank_account.verified
+      summary: A bank account was verified.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: bank_account.verified
+
+    BankAccountCreated:
+      name: bank_account.created
+      title: bank_account.created
+      summary: A bank account was linked to the seller.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: bank_account.created
+
+    BookingCreated:
+      name: booking.created
+      title: booking.created
+      summary: A booking was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.created
+
+    BookingUpdated:
+      name: booking.updated
+      title: booking.updated
+      summary: A booking was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.updated
+
+    BookingCustomAttributeDefinitionOwnedCreated:
+      name: booking.custom_attribute_definition.owned.created
+      title: booking.custom_attribute_definition.owned.created
+      summary: An owned booking custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute_definition.owned.created
+
+    BookingCustomAttributeDefinitionOwnedUpdated:
+      name: booking.custom_attribute_definition.owned.updated
+      title: booking.custom_attribute_definition.owned.updated
+      summary: An owned booking custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute_definition.owned.updated
+
+    BookingCustomAttributeDefinitionOwnedDeleted:
+      name: booking.custom_attribute_definition.owned.deleted
+      title: booking.custom_attribute_definition.owned.deleted
+      summary: An owned booking custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute_definition.owned.deleted
+
+    BookingCustomAttributeOwnedUpdated:
+      name: booking.custom_attribute.owned.updated
+      title: booking.custom_attribute.owned.updated
+      summary: An owned booking custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute.owned.updated
+
+    BookingCustomAttributeOwnedDeleted:
+      name: booking.custom_attribute.owned.deleted
+      title: booking.custom_attribute.owned.deleted
+      summary: An owned booking custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute.owned.deleted
+
+    BookingCustomAttributeDefinitionVisibleCreated:
+      name: booking.custom_attribute_definition.visible.created
+      title: booking.custom_attribute_definition.visible.created
+      summary: A visible booking custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute_definition.visible.created
+
+    BookingCustomAttributeDefinitionVisibleUpdated:
+      name: booking.custom_attribute_definition.visible.updated
+      title: booking.custom_attribute_definition.visible.updated
+      summary: A visible booking custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute_definition.visible.updated
+
+    BookingCustomAttributeDefinitionVisibleDeleted:
+      name: booking.custom_attribute_definition.visible.deleted
+      title: booking.custom_attribute_definition.visible.deleted
+      summary: A visible booking custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute_definition.visible.deleted
+
+    BookingCustomAttributeVisibleUpdated:
+      name: booking.custom_attribute.visible.updated
+      title: booking.custom_attribute.visible.updated
+      summary: A visible booking custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute.visible.updated
+
+    BookingCustomAttributeVisibleDeleted:
+      name: booking.custom_attribute.visible.deleted
+      title: booking.custom_attribute.visible.deleted
+      summary: A visible booking custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: booking.custom_attribute.visible.deleted
+
+    CardAutomaticallyUpdated:
+      name: card.automatically_updated
+      title: card.automatically_updated
+      summary: A card on file was automatically updated by the network.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: card.automatically_updated
+
+    CardCreated:
+      name: card.created
+      title: card.created
+      summary: A card on file was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: card.created
+
+    CardDisabled:
+      name: card.disabled
+      title: card.disabled
+      summary: A card on file was disabled.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: card.disabled
+
+    CardForgotten:
+      name: card.forgotten
+      title: card.forgotten
+      summary: A card on file was forgotten (data removed).
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: card.forgotten
+
+    CardUpdated:
+      name: card.updated
+      title: card.updated
+      summary: A card on file was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: card.updated
+
+    CatalogVersionUpdated:
+      name: catalog.version.updated
+      title: catalog.version.updated
+      summary: The seller's catalog version changed.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: catalog.version.updated
+
+    OnlineCheckoutLocationSettingsUpdated:
+      name: online_checkout.location_settings.updated
+      title: online_checkout.location_settings.updated
+      summary: Online checkout location settings were updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: online_checkout.location_settings.updated
+
+    OnlineCheckoutMerchantSettingsUpdated:
+      name: online_checkout.merchant_settings.updated
+      title: online_checkout.merchant_settings.updated
+      summary: Online checkout merchant settings were updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: online_checkout.merchant_settings.updated
+
+    CustomerCreated:
+      name: customer.created
+      title: customer.created
+      summary: A customer was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.created
+
+    CustomerDeleted:
+      name: customer.deleted
+      title: customer.deleted
+      summary: A customer was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.deleted
+
+    CustomerUpdated:
+      name: customer.updated
+      title: customer.updated
+      summary: A customer was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.updated
+
+    CustomerCustomAttributeDefinitionOwnedCreated:
+      name: customer.custom_attribute_definition.owned.created
+      title: customer.custom_attribute_definition.owned.created
+      summary: An owned customer custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute_definition.owned.created
+
+    CustomerCustomAttributeDefinitionOwnedUpdated:
+      name: customer.custom_attribute_definition.owned.updated
+      title: customer.custom_attribute_definition.owned.updated
+      summary: An owned customer custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute_definition.owned.updated
+
+    CustomerCustomAttributeDefinitionOwnedDeleted:
+      name: customer.custom_attribute_definition.owned.deleted
+      title: customer.custom_attribute_definition.owned.deleted
+      summary: An owned customer custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute_definition.owned.deleted
+
+    CustomerCustomAttributeOwnedUpdated:
+      name: customer.custom_attribute.owned.updated
+      title: customer.custom_attribute.owned.updated
+      summary: An owned customer custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute.owned.updated
+
+    CustomerCustomAttributeOwnedDeleted:
+      name: customer.custom_attribute.owned.deleted
+      title: customer.custom_attribute.owned.deleted
+      summary: An owned customer custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute.owned.deleted
+
+    CustomerCustomAttributeDefinitionVisibleCreated:
+      name: customer.custom_attribute_definition.visible.created
+      title: customer.custom_attribute_definition.visible.created
+      summary: A visible customer custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute_definition.visible.created
+
+    CustomerCustomAttributeDefinitionVisibleUpdated:
+      name: customer.custom_attribute_definition.visible.updated
+      title: customer.custom_attribute_definition.visible.updated
+      summary: A visible customer custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute_definition.visible.updated
+
+    CustomerCustomAttributeDefinitionVisibleDeleted:
+      name: customer.custom_attribute_definition.visible.deleted
+      title: customer.custom_attribute_definition.visible.deleted
+      summary: A visible customer custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute_definition.visible.deleted
+
+    CustomerCustomAttributeVisibleUpdated:
+      name: customer.custom_attribute.visible.updated
+      title: customer.custom_attribute.visible.updated
+      summary: A visible customer custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute.visible.updated
+
+    CustomerCustomAttributeVisibleDeleted:
+      name: customer.custom_attribute.visible.deleted
+      title: customer.custom_attribute.visible.deleted
+      summary: A visible customer custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: customer.custom_attribute.visible.deleted
+
+    DeviceCodePaired:
+      name: device.code.paired
+      title: device.code.paired
+      summary: A device code was paired to a device.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: device.code.paired
+
+    DeviceCreated:
+      name: device.created
+      title: device.created
+      summary: A new device was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: device.created
+
+    DisputeCreated:
+      name: dispute.created
+      title: dispute.created
+      summary: A dispute was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: dispute.created
+
+    DisputeStateChanged:
+      name: dispute.state.changed
+      title: dispute.state.changed
+      summary: A dispute changed state.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: dispute.state.changed
+
+    DisputeStateUpdated:
+      name: dispute.state.updated
+      title: dispute.state.updated
+      summary: A dispute state was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: dispute.state.updated
+
+    DisputeEvidenceAdded:
+      name: dispute.evidence.added
+      title: dispute.evidence.added
+      summary: Evidence was added to a dispute.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: dispute.evidence.added
+
+    DisputeEvidenceCreated:
+      name: dispute.evidence.created
+      title: dispute.evidence.created
+      summary: Evidence was created for a dispute.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: dispute.evidence.created
+
+    DisputeEvidenceDeleted:
+      name: dispute.evidence.deleted
+      title: dispute.evidence.deleted
+      summary: Evidence was deleted from a dispute.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: dispute.evidence.deleted
+
+    DisputeEvidenceRemoved:
+      name: dispute.evidence.removed
+      title: dispute.evidence.removed
+      summary: Evidence was removed from a dispute.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: dispute.evidence.removed
+
+    GiftCardCreated:
+      name: gift_card.created
+      title: gift_card.created
+      summary: A gift card was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: gift_card.created
+
+    GiftCardUpdated:
+      name: gift_card.updated
+      title: gift_card.updated
+      summary: A gift card was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: gift_card.updated
+
+    GiftCardCustomerLinked:
+      name: gift_card.customer_linked
+      title: gift_card.customer_linked
+      summary: A customer was linked to a gift card.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: gift_card.customer_linked
+
+    GiftCardCustomerUnlinked:
+      name: gift_card.customer_unlinked
+      title: gift_card.customer_unlinked
+      summary: A customer was unlinked from a gift card.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: gift_card.customer_unlinked
+
+    GiftCardActivityCreated:
+      name: gift_card.activity.created
+      title: gift_card.activity.created
+      summary: A gift card activity was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: gift_card.activity.created
+
+    GiftCardActivityUpdated:
+      name: gift_card.activity.updated
+      title: gift_card.activity.updated
+      summary: A gift card activity was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: gift_card.activity.updated
+
+    InventoryCountUpdated:
+      name: inventory.count.updated
+      title: inventory.count.updated
+      summary: One or more inventory counts changed.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: inventory.count.updated
+
+    InvoiceCreated:
+      name: invoice.created
+      title: invoice.created
+      summary: An invoice was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: invoice.created
+
+    InvoicePublished:
+      name: invoice.published
+      title: invoice.published
+      summary: An invoice was published.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: invoice.published
+
+    InvoiceUpdated:
+      name: invoice.updated
+      title: invoice.updated
+      summary: An invoice was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: invoice.updated
+
+    InvoicePaymentMade:
+      name: invoice.payment_made
+      title: invoice.payment_made
+      summary: A payment was made on an invoice.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: invoice.payment_made
+
+    InvoiceScheduledChargeFailed:
+      name: invoice.scheduled_charge_failed
+      title: invoice.scheduled_charge_failed
+      summary: A scheduled invoice charge failed.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: invoice.scheduled_charge_failed
+
+    InvoiceCanceled:
+      name: invoice.canceled
+      title: invoice.canceled
+      summary: An invoice was canceled.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: invoice.canceled
+
+    InvoiceRefunded:
+      name: invoice.refunded
+      title: invoice.refunded
+      summary: An invoice was refunded.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: invoice.refunded
+
+    InvoiceDeleted:
+      name: invoice.deleted
+      title: invoice.deleted
+      summary: An invoice was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: invoice.deleted
+
+    LaborScheduledShiftCreated:
+      name: labor.scheduled_shift.created
+      title: labor.scheduled_shift.created
+      summary: A scheduled shift was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.scheduled_shift.created
+
+    LaborScheduledShiftUpdated:
+      name: labor.scheduled_shift.updated
+      title: labor.scheduled_shift.updated
+      summary: A scheduled shift was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.scheduled_shift.updated
+
+    LaborScheduledShiftPublished:
+      name: labor.scheduled_shift.published
+      title: labor.scheduled_shift.published
+      summary: A scheduled shift was published.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.scheduled_shift.published
+
+    LaborScheduledShiftDeleted:
+      name: labor.scheduled_shift.deleted
+      title: labor.scheduled_shift.deleted
+      summary: A scheduled shift was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.scheduled_shift.deleted
+
+    LaborTimecardCreated:
+      name: labor.timecard.created
+      title: labor.timecard.created
+      summary: A timecard was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.timecard.created
+
+    LaborTimecardUpdated:
+      name: labor.timecard.updated
+      title: labor.timecard.updated
+      summary: A timecard was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.timecard.updated
+
+    LaborTimecardDeleted:
+      name: labor.timecard.deleted
+      title: labor.timecard.deleted
+      summary: A timecard was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.timecard.deleted
+
+    LaborShiftCreated:
+      name: labor.shift.created
+      title: labor.shift.created
+      summary: A labor shift was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.shift.created
+
+    LaborShiftUpdated:
+      name: labor.shift.updated
+      title: labor.shift.updated
+      summary: A labor shift was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.shift.updated
+
+    LaborShiftDeleted:
+      name: labor.shift.deleted
+      title: labor.shift.deleted
+      summary: A labor shift was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: labor.shift.deleted
+
+    LocationCreated:
+      name: location.created
+      title: location.created
+      summary: A location was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.created
+
+    LocationUpdated:
+      name: location.updated
+      title: location.updated
+      summary: A location was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.updated
+
+    LocationCustomAttributeDefinitionOwnedCreated:
+      name: location.custom_attribute_definition.owned.created
+      title: location.custom_attribute_definition.owned.created
+      summary: An owned location custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute_definition.owned.created
+
+    LocationCustomAttributeDefinitionOwnedUpdated:
+      name: location.custom_attribute_definition.owned.updated
+      title: location.custom_attribute_definition.owned.updated
+      summary: An owned location custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute_definition.owned.updated
+
+    LocationCustomAttributeDefinitionOwnedDeleted:
+      name: location.custom_attribute_definition.owned.deleted
+      title: location.custom_attribute_definition.owned.deleted
+      summary: An owned location custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute_definition.owned.deleted
+
+    LocationCustomAttributeOwnedUpdated:
+      name: location.custom_attribute.owned.updated
+      title: location.custom_attribute.owned.updated
+      summary: An owned location custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute.owned.updated
+
+    LocationCustomAttributeOwnedDeleted:
+      name: location.custom_attribute.owned.deleted
+      title: location.custom_attribute.owned.deleted
+      summary: An owned location custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute.owned.deleted
+
+    LocationCustomAttributeDefinitionVisibleCreated:
+      name: location.custom_attribute_definition.visible.created
+      title: location.custom_attribute_definition.visible.created
+      summary: A visible location custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute_definition.visible.created
+
+    LocationCustomAttributeDefinitionVisibleUpdated:
+      name: location.custom_attribute_definition.visible.updated
+      title: location.custom_attribute_definition.visible.updated
+      summary: A visible location custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute_definition.visible.updated
+
+    LocationCustomAttributeDefinitionVisibleDeleted:
+      name: location.custom_attribute_definition.visible.deleted
+      title: location.custom_attribute_definition.visible.deleted
+      summary: A visible location custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute_definition.visible.deleted
+
+    LocationCustomAttributeVisibleUpdated:
+      name: location.custom_attribute.visible.updated
+      title: location.custom_attribute.visible.updated
+      summary: A visible location custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute.visible.updated
+
+    LocationCustomAttributeVisibleDeleted:
+      name: location.custom_attribute.visible.deleted
+      title: location.custom_attribute.visible.deleted
+      summary: A visible location custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: location.custom_attribute.visible.deleted
+
+    LoyaltyAccountCreated:
+      name: loyalty.account.created
+      title: loyalty.account.created
+      summary: A loyalty account was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: loyalty.account.created
+
+    LoyaltyAccountUpdated:
+      name: loyalty.account.updated
+      title: loyalty.account.updated
+      summary: A loyalty account was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: loyalty.account.updated
+
+    LoyaltyAccountDeleted:
+      name: loyalty.account.deleted
+      title: loyalty.account.deleted
+      summary: A loyalty account was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: loyalty.account.deleted
+
+    LoyaltyProgramCreated:
+      name: loyalty.program.created
+      title: loyalty.program.created
+      summary: A loyalty program was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: loyalty.program.created
+
+    LoyaltyProgramUpdated:
+      name: loyalty.program.updated
+      title: loyalty.program.updated
+      summary: A loyalty program was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: loyalty.program.updated
+
+    LoyaltyPromotionCreated:
+      name: loyalty.promotion.created
+      title: loyalty.promotion.created
+      summary: A loyalty promotion was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: loyalty.promotion.created
+
+    LoyaltyPromotionUpdated:
+      name: loyalty.promotion.updated
+      title: loyalty.promotion.updated
+      summary: A loyalty promotion was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: loyalty.promotion.updated
+
+    LoyaltyEventCreated:
+      name: loyalty.event.created
+      title: loyalty.event.created
+      summary: A loyalty event was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: loyalty.event.created
+
+    MerchantCustomAttributeDefinitionOwnedCreated:
+      name: merchant.custom_attribute_definition.owned.created
+      title: merchant.custom_attribute_definition.owned.created
+      summary: An owned merchant custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute_definition.owned.created
+
+    MerchantCustomAttributeDefinitionOwnedUpdated:
+      name: merchant.custom_attribute_definition.owned.updated
+      title: merchant.custom_attribute_definition.owned.updated
+      summary: An owned merchant custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute_definition.owned.updated
+
+    MerchantCustomAttributeDefinitionOwnedDeleted:
+      name: merchant.custom_attribute_definition.owned.deleted
+      title: merchant.custom_attribute_definition.owned.deleted
+      summary: An owned merchant custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute_definition.owned.deleted
+
+    MerchantCustomAttributeOwnedUpdated:
+      name: merchant.custom_attribute.owned.updated
+      title: merchant.custom_attribute.owned.updated
+      summary: An owned merchant custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute.owned.updated
+
+    MerchantCustomAttributeOwnedDeleted:
+      name: merchant.custom_attribute.owned.deleted
+      title: merchant.custom_attribute.owned.deleted
+      summary: An owned merchant custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute.owned.deleted
+
+    MerchantCustomAttributeDefinitionVisibleCreated:
+      name: merchant.custom_attribute_definition.visible.created
+      title: merchant.custom_attribute_definition.visible.created
+      summary: A visible merchant custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute_definition.visible.created
+
+    MerchantCustomAttributeDefinitionVisibleUpdated:
+      name: merchant.custom_attribute_definition.visible.updated
+      title: merchant.custom_attribute_definition.visible.updated
+      summary: A visible merchant custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute_definition.visible.updated
+
+    MerchantCustomAttributeDefinitionVisibleDeleted:
+      name: merchant.custom_attribute_definition.visible.deleted
+      title: merchant.custom_attribute_definition.visible.deleted
+      summary: A visible merchant custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute_definition.visible.deleted
+
+    MerchantCustomAttributeVisibleUpdated:
+      name: merchant.custom_attribute.visible.updated
+      title: merchant.custom_attribute.visible.updated
+      summary: A visible merchant custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute.visible.updated
+
+    MerchantCustomAttributeVisibleDeleted:
+      name: merchant.custom_attribute.visible.deleted
+      title: merchant.custom_attribute.visible.deleted
+      summary: A visible merchant custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: merchant.custom_attribute.visible.deleted
+
+    OAuthAuthorizationRevoked:
+      name: oauth.authorization.revoked
+      title: oauth.authorization.revoked
+      summary: An OAuth authorization was revoked.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: oauth.authorization.revoked
+
+    OrderCreated:
+      name: order.created
+      title: order.created
+      summary: An order was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.created
+
+    OrderFulfillmentUpdated:
+      name: order.fulfillment.updated
+      title: order.fulfillment.updated
+      summary: An order fulfillment was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.fulfillment.updated
+
+    OrderUpdated:
+      name: order.updated
+      title: order.updated
+      summary: An order was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.updated
+
+    OrderCustomAttributeDefinitionOwnedCreated:
+      name: order.custom_attribute_definition.owned.created
+      title: order.custom_attribute_definition.owned.created
+      summary: An owned order custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute_definition.owned.created
+
+    OrderCustomAttributeDefinitionOwnedUpdated:
+      name: order.custom_attribute_definition.owned.updated
+      title: order.custom_attribute_definition.owned.updated
+      summary: An owned order custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute_definition.owned.updated
+
+    OrderCustomAttributeDefinitionOwnedDeleted:
+      name: order.custom_attribute_definition.owned.deleted
+      title: order.custom_attribute_definition.owned.deleted
+      summary: An owned order custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute_definition.owned.deleted
+
+    OrderCustomAttributeOwnedUpdated:
+      name: order.custom_attribute.owned.updated
+      title: order.custom_attribute.owned.updated
+      summary: An owned order custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute.owned.updated
+
+    OrderCustomAttributeOwnedDeleted:
+      name: order.custom_attribute.owned.deleted
+      title: order.custom_attribute.owned.deleted
+      summary: An owned order custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute.owned.deleted
+
+    OrderCustomAttributeDefinitionVisibleCreated:
+      name: order.custom_attribute_definition.visible.created
+      title: order.custom_attribute_definition.visible.created
+      summary: A visible order custom attribute definition was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute_definition.visible.created
+
+    OrderCustomAttributeDefinitionVisibleUpdated:
+      name: order.custom_attribute_definition.visible.updated
+      title: order.custom_attribute_definition.visible.updated
+      summary: A visible order custom attribute definition was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute_definition.visible.updated
+
+    OrderCustomAttributeDefinitionVisibleDeleted:
+      name: order.custom_attribute_definition.visible.deleted
+      title: order.custom_attribute_definition.visible.deleted
+      summary: A visible order custom attribute definition was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute_definition.visible.deleted
+
+    OrderCustomAttributeVisibleUpdated:
+      name: order.custom_attribute.visible.updated
+      title: order.custom_attribute.visible.updated
+      summary: A visible order custom attribute value was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute.visible.updated
+
+    OrderCustomAttributeVisibleDeleted:
+      name: order.custom_attribute.visible.deleted
+      title: order.custom_attribute.visible.deleted
+      summary: A visible order custom attribute value was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: order.custom_attribute.visible.deleted
+
+    PaymentCreated:
+      name: payment.created
+      title: payment.created
+      summary: A payment was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: payment.created
+
+    PaymentUpdated:
+      name: payment.updated
+      title: payment.updated
+      summary: A payment was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: payment.updated
+
+    PayoutFailed:
+      name: payout.failed
+      title: payout.failed
+      summary: A payout failed.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: payout.failed
+
+    PayoutPaid:
+      name: payout.paid
+      title: payout.paid
+      summary: A payout was paid.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: payout.paid
+
+    PayoutSent:
+      name: payout.sent
+      title: payout.sent
+      summary: A payout was sent.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: payout.sent
+
+    RefundCreated:
+      name: refund.created
+      title: refund.created
+      summary: A refund was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: refund.created
+
+    RefundUpdated:
+      name: refund.updated
+      title: refund.updated
+      summary: A refund was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: refund.updated
+
+    SubscriptionCreated:
+      name: subscription.created
+      title: subscription.created
+      summary: A subscription was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: subscription.created
+
+    SubscriptionUpdated:
+      name: subscription.updated
+      title: subscription.updated
+      summary: A subscription was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: subscription.updated
+
+    TeamMemberCreated:
+      name: team_member.created
+      title: team_member.created
+      summary: A team member was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: team_member.created
+
+    TeamMemberUpdated:
+      name: team_member.updated
+      title: team_member.updated
+      summary: A team member was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: team_member.updated
+
+    TeamMemberWageSettingUpdated:
+      name: team_member.wage_setting.updated
+      title: team_member.wage_setting.updated
+      summary: A team member wage setting was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: team_member.wage_setting.updated
+
+    JobCreated:
+      name: job.created
+      title: job.created
+      summary: A job was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: job.created
+
+    JobUpdated:
+      name: job.updated
+      title: job.updated
+      summary: A job was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: job.updated
+
+    TerminalCheckoutCreated:
+      name: terminal.checkout.created
+      title: terminal.checkout.created
+      summary: A Terminal checkout was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: terminal.checkout.created
+
+    TerminalCheckoutUpdated:
+      name: terminal.checkout.updated
+      title: terminal.checkout.updated
+      summary: A Terminal checkout was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: terminal.checkout.updated
+
+    TerminalRefundCreated:
+      name: terminal.refund.created
+      title: terminal.refund.created
+      summary: A Terminal refund was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: terminal.refund.created
+
+    TerminalRefundUpdated:
+      name: terminal.refund.updated
+      title: terminal.refund.updated
+      summary: A Terminal refund was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: terminal.refund.updated
+
+    TerminalActionCreated:
+      name: terminal.action.created
+      title: terminal.action.created
+      summary: A Terminal action was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: terminal.action.created
+
+    TerminalActionUpdated:
+      name: terminal.action.updated
+      title: terminal.action.updated
+      summary: A Terminal action was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: terminal.action.updated
+
+    TransferOrderCreated:
+      name: transfer_order.created
+      title: transfer_order.created
+      summary: A transfer order was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: transfer_order.created
+
+    TransferOrderUpdated:
+      name: transfer_order.updated
+      title: transfer_order.updated
+      summary: A transfer order was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: transfer_order.updated
+
+    TransferOrderDeleted:
+      name: transfer_order.deleted
+      title: transfer_order.deleted
+      summary: A transfer order was deleted.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: transfer_order.deleted
+
+    VendorCreated:
+      name: vendor.created
+      title: vendor.created
+      summary: A vendor was created.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: vendor.created
+
+    VendorUpdated:
+      name: vendor.updated
+      title: vendor.updated
+      summary: A vendor was updated.
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/SquareWebhookHeaders'
+      payload:
+        allOf:
+          - $ref: '#/components/schemas/EventEnvelope'
+          - type: object
+            properties:
+              type:
+                const: vendor.updated
