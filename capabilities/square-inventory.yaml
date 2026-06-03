@@ -1,0 +1,609 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Inventory
+  description: 'Inventory. 13 operations. Lead operation: Square Deprecated Retrieve Inventory Adjustment. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Inventory
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-inventory
+    baseUri: https://connect.squareup.com
+    description: Square — Inventory business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-inventory-adjustment-adjustment-id
+      path: /v2/inventory/adjustment/{adjustment_id}
+      operations:
+      - name: DeprecatedRetrieveInventoryAdjustment
+        method: GET
+        description: Square Deprecated Retrieve Inventory Adjustment
+        inputParameters:
+        - name: adjustment_id
+          in: path
+          type: string
+          required: true
+          description: ID of the [InventoryAdjustment](entity:InventoryAdjustment) to retrieve.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-adjustments-adjustment-id
+      path: /v2/inventory/adjustments/{adjustment_id}
+      operations:
+      - name: RetrieveInventoryAdjustment
+        method: GET
+        description: Square Retrieve Inventory Adjustment
+        inputParameters:
+        - name: adjustment_id
+          in: path
+          type: string
+          required: true
+          description: ID of the [InventoryAdjustment](entity:InventoryAdjustment) to retrieve.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-batch-change
+      path: /v2/inventory/batch-change
+      operations:
+      - name: DeprecatedBatchChangeInventory
+        method: POST
+        description: Square Deprecated Batch Change Inventory
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-batch-retrieve-changes
+      path: /v2/inventory/batch-retrieve-changes
+      operations:
+      - name: DeprecatedBatchRetrieveInventoryChanges
+        method: POST
+        description: Square Deprecated Batch Retrieve Inventory Changes
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-batch-retrieve-counts
+      path: /v2/inventory/batch-retrieve-counts
+      operations:
+      - name: DeprecatedBatchRetrieveInventoryCounts
+        method: POST
+        description: Square Deprecated Batch Retrieve Inventory Counts
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-changes-batch-create
+      path: /v2/inventory/changes/batch-create
+      operations:
+      - name: BatchChangeInventory
+        method: POST
+        description: Square Batch Change Inventory
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-changes-batch-retrieve
+      path: /v2/inventory/changes/batch-retrieve
+      operations:
+      - name: BatchRetrieveInventoryChanges
+        method: POST
+        description: Square Batch Retrieve Inventory Changes
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-counts-batch-retrieve
+      path: /v2/inventory/counts/batch-retrieve
+      operations:
+      - name: BatchRetrieveInventoryCounts
+        method: POST
+        description: Square Batch Retrieve Inventory Counts
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-physical-count-physical-count-id
+      path: /v2/inventory/physical-count/{physical_count_id}
+      operations:
+      - name: DeprecatedRetrieveInventoryPhysicalCount
+        method: GET
+        description: Square Deprecated Retrieve Inventory Physical Count
+        inputParameters:
+        - name: physical_count_id
+          in: path
+          type: string
+          required: true
+          description: ID of the
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-physical-counts-physical-count-id
+      path: /v2/inventory/physical-counts/{physical_count_id}
+      operations:
+      - name: RetrieveInventoryPhysicalCount
+        method: GET
+        description: Square Retrieve Inventory Physical Count
+        inputParameters:
+        - name: physical_count_id
+          in: path
+          type: string
+          required: true
+          description: ID of the
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-transfers-transfer-id
+      path: /v2/inventory/transfers/{transfer_id}
+      operations:
+      - name: RetrieveInventoryTransfer
+        method: GET
+        description: Square Retrieve Inventory Transfer
+        inputParameters:
+        - name: transfer_id
+          in: path
+          type: string
+          required: true
+          description: ID of the [InventoryTransfer](entity:InventoryTransfer) to retrieve.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-catalog-object-id
+      path: /v2/inventory/{catalog_object_id}
+      operations:
+      - name: RetrieveInventoryCount
+        method: GET
+        description: Square Retrieve Inventory Count
+        inputParameters:
+        - name: catalog_object_id
+          in: path
+          type: string
+          required: true
+          description: ID of the [CatalogObject](entity:CatalogObject) to retrieve.
+        - name: location_ids
+          in: query
+          type: string
+          required: false
+          description: The [Location](entity:Location) IDs to look up as a comma-separated
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pagination cursor returned by a previous call to this endpoint.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-inventory-catalog-object-id-changes
+      path: /v2/inventory/{catalog_object_id}/changes
+      operations:
+      - name: RetrieveInventoryChanges
+        method: GET
+        description: Square Retrieve Inventory Changes
+        inputParameters:
+        - name: catalog_object_id
+          in: path
+          type: string
+          required: true
+          description: ID of the [CatalogObject](entity:CatalogObject) to retrieve.
+        - name: location_ids
+          in: query
+          type: string
+          required: false
+          description: The [Location](entity:Location) IDs to look up as a comma-separated
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pagination cursor returned by a previous call to this endpoint.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-inventory-rest
+    port: 8080
+    description: REST adapter for Square — Inventory. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/inventory/adjustment/{adjustment-id}
+      name: v2-inventory-adjustment-adjustment-id
+      description: REST surface for /v2/inventory/adjustment/{adjustment_id}.
+      operations:
+      - method: GET
+        name: DeprecatedRetrieveInventoryAdjustment
+        description: Square Deprecated Retrieve Inventory Adjustment
+        call: square-inventory.DeprecatedRetrieveInventoryAdjustment
+        with:
+          adjustment_id: rest.adjustment_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/adjustments/{adjustment-id}
+      name: v2-inventory-adjustments-adjustment-id
+      description: REST surface for /v2/inventory/adjustments/{adjustment_id}.
+      operations:
+      - method: GET
+        name: RetrieveInventoryAdjustment
+        description: Square Retrieve Inventory Adjustment
+        call: square-inventory.RetrieveInventoryAdjustment
+        with:
+          adjustment_id: rest.adjustment_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/batch-change
+      name: v2-inventory-batch-change
+      description: REST surface for /v2/inventory/batch-change.
+      operations:
+      - method: POST
+        name: DeprecatedBatchChangeInventory
+        description: Square Deprecated Batch Change Inventory
+        call: square-inventory.DeprecatedBatchChangeInventory
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/batch-retrieve-changes
+      name: v2-inventory-batch-retrieve-changes
+      description: REST surface for /v2/inventory/batch-retrieve-changes.
+      operations:
+      - method: POST
+        name: DeprecatedBatchRetrieveInventoryChanges
+        description: Square Deprecated Batch Retrieve Inventory Changes
+        call: square-inventory.DeprecatedBatchRetrieveInventoryChanges
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/batch-retrieve-counts
+      name: v2-inventory-batch-retrieve-counts
+      description: REST surface for /v2/inventory/batch-retrieve-counts.
+      operations:
+      - method: POST
+        name: DeprecatedBatchRetrieveInventoryCounts
+        description: Square Deprecated Batch Retrieve Inventory Counts
+        call: square-inventory.DeprecatedBatchRetrieveInventoryCounts
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/changes/batch-create
+      name: v2-inventory-changes-batch-create
+      description: REST surface for /v2/inventory/changes/batch-create.
+      operations:
+      - method: POST
+        name: BatchChangeInventory
+        description: Square Batch Change Inventory
+        call: square-inventory.BatchChangeInventory
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/changes/batch-retrieve
+      name: v2-inventory-changes-batch-retrieve
+      description: REST surface for /v2/inventory/changes/batch-retrieve.
+      operations:
+      - method: POST
+        name: BatchRetrieveInventoryChanges
+        description: Square Batch Retrieve Inventory Changes
+        call: square-inventory.BatchRetrieveInventoryChanges
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/counts/batch-retrieve
+      name: v2-inventory-counts-batch-retrieve
+      description: REST surface for /v2/inventory/counts/batch-retrieve.
+      operations:
+      - method: POST
+        name: BatchRetrieveInventoryCounts
+        description: Square Batch Retrieve Inventory Counts
+        call: square-inventory.BatchRetrieveInventoryCounts
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/physical-count/{physical-count-id}
+      name: v2-inventory-physical-count-physical-count-id
+      description: REST surface for /v2/inventory/physical-count/{physical_count_id}.
+      operations:
+      - method: GET
+        name: DeprecatedRetrieveInventoryPhysicalCount
+        description: Square Deprecated Retrieve Inventory Physical Count
+        call: square-inventory.DeprecatedRetrieveInventoryPhysicalCount
+        with:
+          physical_count_id: rest.physical_count_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/physical-counts/{physical-count-id}
+      name: v2-inventory-physical-counts-physical-count-id
+      description: REST surface for /v2/inventory/physical-counts/{physical_count_id}.
+      operations:
+      - method: GET
+        name: RetrieveInventoryPhysicalCount
+        description: Square Retrieve Inventory Physical Count
+        call: square-inventory.RetrieveInventoryPhysicalCount
+        with:
+          physical_count_id: rest.physical_count_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/transfers/{transfer-id}
+      name: v2-inventory-transfers-transfer-id
+      description: REST surface for /v2/inventory/transfers/{transfer_id}.
+      operations:
+      - method: GET
+        name: RetrieveInventoryTransfer
+        description: Square Retrieve Inventory Transfer
+        call: square-inventory.RetrieveInventoryTransfer
+        with:
+          transfer_id: rest.transfer_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/{catalog-object-id}
+      name: v2-inventory-catalog-object-id
+      description: REST surface for /v2/inventory/{catalog_object_id}.
+      operations:
+      - method: GET
+        name: RetrieveInventoryCount
+        description: Square Retrieve Inventory Count
+        call: square-inventory.RetrieveInventoryCount
+        with:
+          catalog_object_id: rest.catalog_object_id
+          location_ids: rest.location_ids
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/inventory/{catalog-object-id}/changes
+      name: v2-inventory-catalog-object-id-changes
+      description: REST surface for /v2/inventory/{catalog_object_id}/changes.
+      operations:
+      - method: GET
+        name: RetrieveInventoryChanges
+        description: Square Retrieve Inventory Changes
+        call: square-inventory.RetrieveInventoryChanges
+        with:
+          catalog_object_id: rest.catalog_object_id
+          location_ids: rest.location_ids
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-inventory-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Inventory. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: deprecated-retrieve-inventory-adjustment
+      description: Square Deprecated Retrieve Inventory Adjustment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-inventory.DeprecatedRetrieveInventoryAdjustment
+      with:
+        adjustment_id: tools.adjustment_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-inventory-adjustment
+      description: Square Retrieve Inventory Adjustment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-inventory.RetrieveInventoryAdjustment
+      with:
+        adjustment_id: tools.adjustment_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deprecated-batch-change-inventory
+      description: Square Deprecated Batch Change Inventory
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-inventory.DeprecatedBatchChangeInventory
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deprecated-batch-retrieve-inventory-changes
+      description: Square Deprecated Batch Retrieve Inventory Changes
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-inventory.DeprecatedBatchRetrieveInventoryChanges
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deprecated-batch-retrieve-inventory-counts
+      description: Square Deprecated Batch Retrieve Inventory Counts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-inventory.DeprecatedBatchRetrieveInventoryCounts
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: batch-change-inventory
+      description: Square Batch Change Inventory
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-inventory.BatchChangeInventory
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: batch-retrieve-inventory-changes
+      description: Square Batch Retrieve Inventory Changes
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-inventory.BatchRetrieveInventoryChanges
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: batch-retrieve-inventory-counts
+      description: Square Batch Retrieve Inventory Counts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-inventory.BatchRetrieveInventoryCounts
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: deprecated-retrieve-inventory-physical-count
+      description: Square Deprecated Retrieve Inventory Physical Count
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-inventory.DeprecatedRetrieveInventoryPhysicalCount
+      with:
+        physical_count_id: tools.physical_count_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-inventory-physical-count
+      description: Square Retrieve Inventory Physical Count
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-inventory.RetrieveInventoryPhysicalCount
+      with:
+        physical_count_id: tools.physical_count_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-inventory-transfer
+      description: Square Retrieve Inventory Transfer
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-inventory.RetrieveInventoryTransfer
+      with:
+        transfer_id: tools.transfer_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-inventory-count
+      description: Square Retrieve Inventory Count
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-inventory.RetrieveInventoryCount
+      with:
+        catalog_object_id: tools.catalog_object_id
+        location_ids: tools.location_ids
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-inventory-changes
+      description: Square Retrieve Inventory Changes
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-inventory.RetrieveInventoryChanges
+      with:
+        catalog_object_id: tools.catalog_object_id
+        location_ids: tools.location_ids
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,284 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Devices
+  description: 'Devices. 5 operations. Lead operation: Square List Devices. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Devices
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-devices
+    baseUri: https://connect.squareup.com
+    description: Square — Devices business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-devices
+      path: /v2/devices
+      operations:
+      - name: ListDevices
+        method: GET
+        description: Square List Devices
+        inputParameters:
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pagination cursor returned by a previous call to this endpoint.
+        - name: sort_order
+          in: query
+          type: string
+          required: false
+          description: The order in which results are listed.
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The number of results to return in a single page.
+        - name: location_id
+          in: query
+          type: string
+          required: false
+          description: If present, only returns devices at the target location.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-devices-codes
+      path: /v2/devices/codes
+      operations:
+      - name: ListDeviceCodes
+        method: GET
+        description: Square List Device Codes
+        inputParameters:
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pagination cursor returned by a previous call to this endpoint.
+        - name: location_id
+          in: query
+          type: string
+          required: false
+          description: If specified, only returns DeviceCodes of the specified location.
+        - name: product_type
+          in: query
+          type: string
+          required: false
+          description: If specified, only returns DeviceCodes targeting the specified product type.
+        - name: status
+          in: query
+          type: string
+          required: false
+          description: If specified, returns DeviceCodes with the specified statuses.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: CreateDeviceCode
+        method: POST
+        description: Square Create Device Code
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-devices-codes-id
+      path: /v2/devices/codes/{id}
+      operations:
+      - name: GetDeviceCode
+        method: GET
+        description: Square Get Device Code
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The unique identifier for the device code.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-devices-device-id
+      path: /v2/devices/{device_id}
+      operations:
+      - name: GetDevice
+        method: GET
+        description: Square Get Device
+        inputParameters:
+        - name: device_id
+          in: path
+          type: string
+          required: true
+          description: The unique ID for the desired `Device`.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-devices-rest
+    port: 8080
+    description: REST adapter for Square — Devices. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/devices
+      name: v2-devices
+      description: REST surface for /v2/devices.
+      operations:
+      - method: GET
+        name: ListDevices
+        description: Square List Devices
+        call: square-devices.ListDevices
+        with:
+          cursor: rest.cursor
+          sort_order: rest.sort_order
+          limit: rest.limit
+          location_id: rest.location_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/devices/codes
+      name: v2-devices-codes
+      description: REST surface for /v2/devices/codes.
+      operations:
+      - method: GET
+        name: ListDeviceCodes
+        description: Square List Device Codes
+        call: square-devices.ListDeviceCodes
+        with:
+          cursor: rest.cursor
+          location_id: rest.location_id
+          product_type: rest.product_type
+          status: rest.status
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/devices/codes
+      name: v2-devices-codes
+      description: REST surface for /v2/devices/codes.
+      operations:
+      - method: POST
+        name: CreateDeviceCode
+        description: Square Create Device Code
+        call: square-devices.CreateDeviceCode
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/devices/codes/{id}
+      name: v2-devices-codes-id
+      description: REST surface for /v2/devices/codes/{id}.
+      operations:
+      - method: GET
+        name: GetDeviceCode
+        description: Square Get Device Code
+        call: square-devices.GetDeviceCode
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/devices/{device-id}
+      name: v2-devices-device-id
+      description: REST surface for /v2/devices/{device_id}.
+      operations:
+      - method: GET
+        name: GetDevice
+        description: Square Get Device
+        call: square-devices.GetDevice
+        with:
+          device_id: rest.device_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-devices-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Devices. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-devices
+      description: Square List Devices
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-devices.ListDevices
+      with:
+        cursor: tools.cursor
+        sort_order: tools.sort_order
+        limit: tools.limit
+        location_id: tools.location_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-device-codes
+      description: Square List Device Codes
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-devices.ListDeviceCodes
+      with:
+        cursor: tools.cursor
+        location_id: tools.location_id
+        product_type: tools.product_type
+        status: tools.status
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-device-code
+      description: Square Create Device Code
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-devices.CreateDeviceCode
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-device-code
+      description: Square Get Device Code
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-devices.GetDeviceCode
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-device
+      description: Square Get Device
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-devices.GetDevice
+      with:
+        device_id: tools.device_id
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,502 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Invoices
+  description: 'Invoices. 10 operations. Lead operation: Square List Invoices. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Invoices
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-invoices
+    baseUri: https://connect.squareup.com
+    description: Square — Invoices business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-invoices
+      path: /v2/invoices
+      operations:
+      - name: ListInvoices
+        method: GET
+        description: Square List Invoices
+        inputParameters:
+        - name: location_id
+          in: query
+          type: string
+          required: true
+          description: The ID of the location for which to list invoices.
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: 'A pagination cursor returned by a previous call to this endpoint. '
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: 'The maximum number of invoices to return (200 is the maximum `limit`). '
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: CreateInvoice
+        method: POST
+        description: Square Create Invoice
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-invoices-search
+      path: /v2/invoices/search
+      operations:
+      - name: SearchInvoices
+        method: POST
+        description: Square Search Invoices
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-invoices-invoice-id
+      path: /v2/invoices/{invoice_id}
+      operations:
+      - name: DeleteInvoice
+        method: DELETE
+        description: Square Delete Invoice
+        inputParameters:
+        - name: invoice_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the invoice to delete.
+        - name: version
+          in: query
+          type: integer
+          required: false
+          description: The version of the [invoice](entity:Invoice) to delete.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: GetInvoice
+        method: GET
+        description: Square Get Invoice
+        inputParameters:
+        - name: invoice_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the invoice to retrieve.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: UpdateInvoice
+        method: PUT
+        description: Square Update Invoice
+        inputParameters:
+        - name: invoice_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the invoice to update.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-invoices-invoice-id-attachments
+      path: /v2/invoices/{invoice_id}/attachments
+      operations:
+      - name: CreateInvoiceAttachment
+        method: POST
+        description: Square Create Invoice Attachment
+        inputParameters:
+        - name: invoice_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [invoice](entity:Invoice) to attach the file to.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-invoices-invoice-id-attachments-attachment-id
+      path: /v2/invoices/{invoice_id}/attachments/{attachment_id}
+      operations:
+      - name: DeleteInvoiceAttachment
+        method: DELETE
+        description: Square Delete Invoice Attachment
+        inputParameters:
+        - name: invoice_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [invoice](entity:Invoice) to delete the attachment from.
+        - name: attachment_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [attachment](entity:InvoiceAttachment) to delete.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-invoices-invoice-id-cancel
+      path: /v2/invoices/{invoice_id}/cancel
+      operations:
+      - name: CancelInvoice
+        method: POST
+        description: Square Cancel Invoice
+        inputParameters:
+        - name: invoice_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [invoice](entity:Invoice) to cancel.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-invoices-invoice-id-publish
+      path: /v2/invoices/{invoice_id}/publish
+      operations:
+      - name: PublishInvoice
+        method: POST
+        description: Square Publish Invoice
+        inputParameters:
+        - name: invoice_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the invoice to publish.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-invoices-rest
+    port: 8080
+    description: REST adapter for Square — Invoices. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/invoices
+      name: v2-invoices
+      description: REST surface for /v2/invoices.
+      operations:
+      - method: GET
+        name: ListInvoices
+        description: Square List Invoices
+        call: square-invoices.ListInvoices
+        with:
+          location_id: rest.location_id
+          cursor: rest.cursor
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices
+      name: v2-invoices
+      description: REST surface for /v2/invoices.
+      operations:
+      - method: POST
+        name: CreateInvoice
+        description: Square Create Invoice
+        call: square-invoices.CreateInvoice
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices/search
+      name: v2-invoices-search
+      description: REST surface for /v2/invoices/search.
+      operations:
+      - method: POST
+        name: SearchInvoices
+        description: Square Search Invoices
+        call: square-invoices.SearchInvoices
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices/{invoice-id}
+      name: v2-invoices-invoice-id
+      description: REST surface for /v2/invoices/{invoice_id}.
+      operations:
+      - method: DELETE
+        name: DeleteInvoice
+        description: Square Delete Invoice
+        call: square-invoices.DeleteInvoice
+        with:
+          invoice_id: rest.invoice_id
+          version: rest.version
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices/{invoice-id}
+      name: v2-invoices-invoice-id
+      description: REST surface for /v2/invoices/{invoice_id}.
+      operations:
+      - method: GET
+        name: GetInvoice
+        description: Square Get Invoice
+        call: square-invoices.GetInvoice
+        with:
+          invoice_id: rest.invoice_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices/{invoice-id}
+      name: v2-invoices-invoice-id
+      description: REST surface for /v2/invoices/{invoice_id}.
+      operations:
+      - method: PUT
+        name: UpdateInvoice
+        description: Square Update Invoice
+        call: square-invoices.UpdateInvoice
+        with:
+          invoice_id: rest.invoice_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices/{invoice-id}/attachments
+      name: v2-invoices-invoice-id-attachments
+      description: REST surface for /v2/invoices/{invoice_id}/attachments.
+      operations:
+      - method: POST
+        name: CreateInvoiceAttachment
+        description: Square Create Invoice Attachment
+        call: square-invoices.CreateInvoiceAttachment
+        with:
+          invoice_id: rest.invoice_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices/{invoice-id}/attachments/{attachment-id}
+      name: v2-invoices-invoice-id-attachments-attachment-id
+      description: REST surface for /v2/invoices/{invoice_id}/attachments/{attachment_id}.
+      operations:
+      - method: DELETE
+        name: DeleteInvoiceAttachment
+        description: Square Delete Invoice Attachment
+        call: square-invoices.DeleteInvoiceAttachment
+        with:
+          invoice_id: rest.invoice_id
+          attachment_id: rest.attachment_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices/{invoice-id}/cancel
+      name: v2-invoices-invoice-id-cancel
+      description: REST surface for /v2/invoices/{invoice_id}/cancel.
+      operations:
+      - method: POST
+        name: CancelInvoice
+        description: Square Cancel Invoice
+        call: square-invoices.CancelInvoice
+        with:
+          invoice_id: rest.invoice_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/invoices/{invoice-id}/publish
+      name: v2-invoices-invoice-id-publish
+      description: REST surface for /v2/invoices/{invoice_id}/publish.
+      operations:
+      - method: POST
+        name: PublishInvoice
+        description: Square Publish Invoice
+        call: square-invoices.PublishInvoice
+        with:
+          invoice_id: rest.invoice_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-invoices-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Invoices. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-invoices
+      description: Square List Invoices
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-invoices.ListInvoices
+      with:
+        location_id: tools.location_id
+        cursor: tools.cursor
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-invoice
+      description: Square Create Invoice
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-invoices.CreateInvoice
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: search-invoices
+      description: Square Search Invoices
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-invoices.SearchInvoices
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-invoice
+      description: Square Delete Invoice
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-invoices.DeleteInvoice
+      with:
+        invoice_id: tools.invoice_id
+        version: tools.version
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-invoice
+      description: Square Get Invoice
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-invoices.GetInvoice
+      with:
+        invoice_id: tools.invoice_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-invoice
+      description: Square Update Invoice
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-invoices.UpdateInvoice
+      with:
+        invoice_id: tools.invoice_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-invoice-attachment
+      description: Square Create Invoice Attachment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-invoices.CreateInvoiceAttachment
+      with:
+        invoice_id: tools.invoice_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-invoice-attachment
+      description: Square Delete Invoice Attachment
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-invoices.DeleteInvoiceAttachment
+      with:
+        invoice_id: tools.invoice_id
+        attachment_id: tools.attachment_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cancel-invoice
+      description: Square Cancel Invoice
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-invoices.CancelInvoice
+      with:
+        invoice_id: tools.invoice_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: publish-invoice
+      description: Square Publish Invoice
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-invoices.PublishInvoice
+      with:
+        invoice_id: tools.invoice_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

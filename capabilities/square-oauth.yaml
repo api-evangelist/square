@@ -1,0 +1,151 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — OAuth
+  description: 'OAuth. 3 operations. Lead operation: Square Revoke Token. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - OAuth
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-oauth
+    baseUri: https://connect.squareup.com
+    description: Square — OAuth business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: oauth2-revoke
+      path: /oauth2/revoke
+      operations:
+      - name: RevokeToken
+        method: POST
+        description: Square Revoke Token
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: oauth2-token
+      path: /oauth2/token
+      operations:
+      - name: ObtainToken
+        method: POST
+        description: Square Obtain Token
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: oauth2-token-status
+      path: /oauth2/token/status
+      operations:
+      - name: RetrieveTokenStatus
+        method: POST
+        description: Square Retrieve Token Status
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-oauth-rest
+    port: 8080
+    description: REST adapter for Square — OAuth. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/oauth2/revoke
+      name: oauth2-revoke
+      description: REST surface for /oauth2/revoke.
+      operations:
+      - method: POST
+        name: RevokeToken
+        description: Square Revoke Token
+        call: square-oauth.RevokeToken
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/oauth2/token
+      name: oauth2-token
+      description: REST surface for /oauth2/token.
+      operations:
+      - method: POST
+        name: ObtainToken
+        description: Square Obtain Token
+        call: square-oauth.ObtainToken
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/oauth2/token/status
+      name: oauth2-token-status
+      description: REST surface for /oauth2/token/status.
+      operations:
+      - method: POST
+        name: RetrieveTokenStatus
+        description: Square Retrieve Token Status
+        call: square-oauth.RetrieveTokenStatus
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-oauth-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — OAuth. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: revoke-token
+      description: Square Revoke Token
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-oauth.RevokeToken
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: obtain-token
+      description: Square Obtain Token
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-oauth.ObtainToken
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-token-status
+      description: Square Retrieve Token Status
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-oauth.RetrieveTokenStatus
+      outputParameters:
+      - type: object
+        mapping: $.

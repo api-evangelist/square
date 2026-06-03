@@ -1,0 +1,762 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Labor
+  description: 'Labor. 16 operations. Lead operation: Square List Break Types. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Labor
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-labor
+    baseUri: https://connect.squareup.com
+    description: Square — Labor business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-labor-break-types
+      path: /v2/labor/break-types
+      operations:
+      - name: ListBreakTypes
+        method: GET
+        description: Square List Break Types
+        inputParameters:
+        - name: location_id
+          in: query
+          type: string
+          required: false
+          description: Filter the returned `BreakType` results to only those that are associated with the
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The maximum number of `BreakType` results to return per page. The number can range between 1
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pointer to the next page of `BreakType` results to fetch.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: CreateBreakType
+        method: POST
+        description: Square Create Break Type
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-break-types-id
+      path: /v2/labor/break-types/{id}
+      operations:
+      - name: DeleteBreakType
+        method: DELETE
+        description: Square Delete Break Type
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The UUID for the `BreakType` being deleted.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: GetBreakType
+        method: GET
+        description: Square Get Break Type
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The UUID for the `BreakType` being retrieved.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: UpdateBreakType
+        method: PUT
+        description: Square Update Break Type
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: ' The UUID for the `BreakType` being updated.'
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-employee-wages
+      path: /v2/labor/employee-wages
+      operations:
+      - name: ListEmployeeWages
+        method: GET
+        description: Square List Employee Wages
+        inputParameters:
+        - name: employee_id
+          in: query
+          type: string
+          required: false
+          description: Filter the returned wages to only those that are associated with the specified employee.
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The maximum number of `EmployeeWage` results to return per page. The number can range between
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pointer to the next page of `EmployeeWage` results to fetch.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-employee-wages-id
+      path: /v2/labor/employee-wages/{id}
+      operations:
+      - name: GetEmployeeWage
+        method: GET
+        description: Square Get Employee Wage
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The UUID for the `EmployeeWage` being retrieved.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-shifts
+      path: /v2/labor/shifts
+      operations:
+      - name: CreateShift
+        method: POST
+        description: Square Create Shift
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-shifts-search
+      path: /v2/labor/shifts/search
+      operations:
+      - name: SearchShifts
+        method: POST
+        description: Square Search Shifts
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-shifts-id
+      path: /v2/labor/shifts/{id}
+      operations:
+      - name: DeleteShift
+        method: DELETE
+        description: Square Delete Shift
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The UUID for the `Shift` being deleted.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: GetShift
+        method: GET
+        description: Square Get Shift
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The UUID for the `Shift` being retrieved.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: UpdateShift
+        method: PUT
+        description: Square Update Shift
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The ID of the object being updated.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-team-member-wages
+      path: /v2/labor/team-member-wages
+      operations:
+      - name: ListTeamMemberWages
+        method: GET
+        description: Square List Team Member Wages
+        inputParameters:
+        - name: team_member_id
+          in: query
+          type: string
+          required: false
+          description: Filter the returned wages to only those that are associated with the
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The maximum number of `TeamMemberWage` results to return per page. The number can range between
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pointer to the next page of `EmployeeWage` results to fetch.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-team-member-wages-id
+      path: /v2/labor/team-member-wages/{id}
+      operations:
+      - name: GetTeamMemberWage
+        method: GET
+        description: Square Get Team Member Wage
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The UUID for the `TeamMemberWage` being retrieved.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-workweek-configs
+      path: /v2/labor/workweek-configs
+      operations:
+      - name: ListWorkweekConfigs
+        method: GET
+        description: Square List Workweek Configs
+        inputParameters:
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The maximum number of `WorkweekConfigs` results to return per page.
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pointer to the next page of `WorkweekConfig` results to fetch.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-labor-workweek-configs-id
+      path: /v2/labor/workweek-configs/{id}
+      operations:
+      - name: UpdateWorkweekConfig
+        method: PUT
+        description: Square Update Workweek Config
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: The UUID for the `WorkweekConfig` object being updated.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-labor-rest
+    port: 8080
+    description: REST adapter for Square — Labor. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/labor/break-types
+      name: v2-labor-break-types
+      description: REST surface for /v2/labor/break-types.
+      operations:
+      - method: GET
+        name: ListBreakTypes
+        description: Square List Break Types
+        call: square-labor.ListBreakTypes
+        with:
+          location_id: rest.location_id
+          limit: rest.limit
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/break-types
+      name: v2-labor-break-types
+      description: REST surface for /v2/labor/break-types.
+      operations:
+      - method: POST
+        name: CreateBreakType
+        description: Square Create Break Type
+        call: square-labor.CreateBreakType
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/break-types/{id}
+      name: v2-labor-break-types-id
+      description: REST surface for /v2/labor/break-types/{id}.
+      operations:
+      - method: DELETE
+        name: DeleteBreakType
+        description: Square Delete Break Type
+        call: square-labor.DeleteBreakType
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/break-types/{id}
+      name: v2-labor-break-types-id
+      description: REST surface for /v2/labor/break-types/{id}.
+      operations:
+      - method: GET
+        name: GetBreakType
+        description: Square Get Break Type
+        call: square-labor.GetBreakType
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/break-types/{id}
+      name: v2-labor-break-types-id
+      description: REST surface for /v2/labor/break-types/{id}.
+      operations:
+      - method: PUT
+        name: UpdateBreakType
+        description: Square Update Break Type
+        call: square-labor.UpdateBreakType
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/employee-wages
+      name: v2-labor-employee-wages
+      description: REST surface for /v2/labor/employee-wages.
+      operations:
+      - method: GET
+        name: ListEmployeeWages
+        description: Square List Employee Wages
+        call: square-labor.ListEmployeeWages
+        with:
+          employee_id: rest.employee_id
+          limit: rest.limit
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/employee-wages/{id}
+      name: v2-labor-employee-wages-id
+      description: REST surface for /v2/labor/employee-wages/{id}.
+      operations:
+      - method: GET
+        name: GetEmployeeWage
+        description: Square Get Employee Wage
+        call: square-labor.GetEmployeeWage
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/shifts
+      name: v2-labor-shifts
+      description: REST surface for /v2/labor/shifts.
+      operations:
+      - method: POST
+        name: CreateShift
+        description: Square Create Shift
+        call: square-labor.CreateShift
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/shifts/search
+      name: v2-labor-shifts-search
+      description: REST surface for /v2/labor/shifts/search.
+      operations:
+      - method: POST
+        name: SearchShifts
+        description: Square Search Shifts
+        call: square-labor.SearchShifts
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/shifts/{id}
+      name: v2-labor-shifts-id
+      description: REST surface for /v2/labor/shifts/{id}.
+      operations:
+      - method: DELETE
+        name: DeleteShift
+        description: Square Delete Shift
+        call: square-labor.DeleteShift
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/shifts/{id}
+      name: v2-labor-shifts-id
+      description: REST surface for /v2/labor/shifts/{id}.
+      operations:
+      - method: GET
+        name: GetShift
+        description: Square Get Shift
+        call: square-labor.GetShift
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/shifts/{id}
+      name: v2-labor-shifts-id
+      description: REST surface for /v2/labor/shifts/{id}.
+      operations:
+      - method: PUT
+        name: UpdateShift
+        description: Square Update Shift
+        call: square-labor.UpdateShift
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/team-member-wages
+      name: v2-labor-team-member-wages
+      description: REST surface for /v2/labor/team-member-wages.
+      operations:
+      - method: GET
+        name: ListTeamMemberWages
+        description: Square List Team Member Wages
+        call: square-labor.ListTeamMemberWages
+        with:
+          team_member_id: rest.team_member_id
+          limit: rest.limit
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/team-member-wages/{id}
+      name: v2-labor-team-member-wages-id
+      description: REST surface for /v2/labor/team-member-wages/{id}.
+      operations:
+      - method: GET
+        name: GetTeamMemberWage
+        description: Square Get Team Member Wage
+        call: square-labor.GetTeamMemberWage
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/workweek-configs
+      name: v2-labor-workweek-configs
+      description: REST surface for /v2/labor/workweek-configs.
+      operations:
+      - method: GET
+        name: ListWorkweekConfigs
+        description: Square List Workweek Configs
+        call: square-labor.ListWorkweekConfigs
+        with:
+          limit: rest.limit
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/labor/workweek-configs/{id}
+      name: v2-labor-workweek-configs-id
+      description: REST surface for /v2/labor/workweek-configs/{id}.
+      operations:
+      - method: PUT
+        name: UpdateWorkweekConfig
+        description: Square Update Workweek Config
+        call: square-labor.UpdateWorkweekConfig
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-labor-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Labor. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-break-types
+      description: Square List Break Types
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-labor.ListBreakTypes
+      with:
+        location_id: tools.location_id
+        limit: tools.limit
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-break-type
+      description: Square Create Break Type
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-labor.CreateBreakType
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-break-type
+      description: Square Delete Break Type
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-labor.DeleteBreakType
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-break-type
+      description: Square Get Break Type
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-labor.GetBreakType
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-break-type
+      description: Square Update Break Type
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-labor.UpdateBreakType
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-employee-wages
+      description: Square List Employee Wages
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-labor.ListEmployeeWages
+      with:
+        employee_id: tools.employee_id
+        limit: tools.limit
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-employee-wage
+      description: Square Get Employee Wage
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-labor.GetEmployeeWage
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-shift
+      description: Square Create Shift
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-labor.CreateShift
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: search-shifts
+      description: Square Search Shifts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-labor.SearchShifts
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-shift
+      description: Square Delete Shift
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-labor.DeleteShift
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-shift
+      description: Square Get Shift
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-labor.GetShift
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-shift
+      description: Square Update Shift
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-labor.UpdateShift
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-team-member-wages
+      description: Square List Team Member Wages
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-labor.ListTeamMemberWages
+      with:
+        team_member_id: tools.team_member_id
+        limit: tools.limit
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-team-member-wage
+      description: Square Get Team Member Wage
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-labor.GetTeamMemberWage
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-workweek-configs
+      description: Square List Workweek Configs
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-labor.ListWorkweekConfigs
+      with:
+        limit: tools.limit
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-workweek-config
+      description: Square Update Workweek Config
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-labor.UpdateWorkweekConfig
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

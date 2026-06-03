@@ -1,0 +1,845 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Loyalty
+  description: 'Loyalty. 18 operations. Lead operation: Square Create Loyalty Account. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Loyalty
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-loyalty
+    baseUri: https://connect.squareup.com
+    description: Square — Loyalty business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-loyalty-accounts
+      path: /v2/loyalty/accounts
+      operations:
+      - name: CreateLoyaltyAccount
+        method: POST
+        description: Square Create Loyalty Account
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-accounts-search
+      path: /v2/loyalty/accounts/search
+      operations:
+      - name: SearchLoyaltyAccounts
+        method: POST
+        description: Square Search Loyalty Accounts
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-accounts-account-id
+      path: /v2/loyalty/accounts/{account_id}
+      operations:
+      - name: RetrieveLoyaltyAccount
+        method: GET
+        description: Square Retrieve Loyalty Account
+        inputParameters:
+        - name: account_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [loyalty account](entity:LoyaltyAccount) to retrieve.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-accounts-account-id-accumulate
+      path: /v2/loyalty/accounts/{account_id}/accumulate
+      operations:
+      - name: AccumulateLoyaltyPoints
+        method: POST
+        description: Square Accumulate Loyalty Points
+        inputParameters:
+        - name: account_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the target [loyalty account](entity:LoyaltyAccount).
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-accounts-account-id-adjust
+      path: /v2/loyalty/accounts/{account_id}/adjust
+      operations:
+      - name: AdjustLoyaltyPoints
+        method: POST
+        description: Square Adjust Loyalty Points
+        inputParameters:
+        - name: account_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the target [loyalty account](entity:LoyaltyAccount).
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-events-search
+      path: /v2/loyalty/events/search
+      operations:
+      - name: SearchLoyaltyEvents
+        method: POST
+        description: Square Search Loyalty Events
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-programs
+      path: /v2/loyalty/programs
+      operations:
+      - name: ListLoyaltyPrograms
+        method: GET
+        description: Square List Loyalty Programs
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-programs-program-id
+      path: /v2/loyalty/programs/{program_id}
+      operations:
+      - name: RetrieveLoyaltyProgram
+        method: GET
+        description: Square Retrieve Loyalty Program
+        inputParameters:
+        - name: program_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the loyalty program or the keyword `main`. Either value can be used to retrieve the single loyalty program that belongs to the seller.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-programs-program-id-calculate
+      path: /v2/loyalty/programs/{program_id}/calculate
+      operations:
+      - name: CalculateLoyaltyPoints
+        method: POST
+        description: Square Calculate Loyalty Points
+        inputParameters:
+        - name: program_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [loyalty program](entity:LoyaltyProgram), which defines the rules for accruing points.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-programs-program-id-promotions
+      path: /v2/loyalty/programs/{program_id}/promotions
+      operations:
+      - name: ListLoyaltyPromotions
+        method: GET
+        description: Square List Loyalty Promotions
+        inputParameters:
+        - name: program_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the base [loyalty program](entity:LoyaltyProgram). To get the program ID,
+        - name: status
+          in: query
+          type: string
+          required: false
+          description: The status to filter the results by. If a status is provided, only loyalty promotions
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: The cursor returned in the paged response from the previous call to this endpoint.
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The maximum number of results to return in a single paged response.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: CreateLoyaltyPromotion
+        method: POST
+        description: Square Create Loyalty Promotion
+        inputParameters:
+        - name: program_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [loyalty program](entity:LoyaltyProgram) to associate with the promotion.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-programs-program-id-promotions-promotion-id
+      path: /v2/loyalty/programs/{program_id}/promotions/{promotion_id}
+      operations:
+      - name: RetrieveLoyaltyPromotion
+        method: GET
+        description: Square Retrieve Loyalty Promotion
+        inputParameters:
+        - name: promotion_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [loyalty promotion](entity:LoyaltyPromotion) to retrieve.
+        - name: program_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the base [loyalty program](entity:LoyaltyProgram). To get the program ID,
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-programs-program-id-promotions-promotion-id-cancel
+      path: /v2/loyalty/programs/{program_id}/promotions/{promotion_id}/cancel
+      operations:
+      - name: CancelLoyaltyPromotion
+        method: POST
+        description: Square Cancel Loyalty Promotion
+        inputParameters:
+        - name: promotion_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [loyalty promotion](entity:LoyaltyPromotion) to cancel. You can cancel a
+        - name: program_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the base [loyalty program](entity:LoyaltyProgram).
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-rewards
+      path: /v2/loyalty/rewards
+      operations:
+      - name: CreateLoyaltyReward
+        method: POST
+        description: Square Create Loyalty Reward
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-rewards-search
+      path: /v2/loyalty/rewards/search
+      operations:
+      - name: SearchLoyaltyRewards
+        method: POST
+        description: Square Search Loyalty Rewards
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-rewards-reward-id
+      path: /v2/loyalty/rewards/{reward_id}
+      operations:
+      - name: DeleteLoyaltyReward
+        method: DELETE
+        description: Square Delete Loyalty Reward
+        inputParameters:
+        - name: reward_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [loyalty reward](entity:LoyaltyReward) to delete.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: RetrieveLoyaltyReward
+        method: GET
+        description: Square Retrieve Loyalty Reward
+        inputParameters:
+        - name: reward_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [loyalty reward](entity:LoyaltyReward) to retrieve.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-loyalty-rewards-reward-id-redeem
+      path: /v2/loyalty/rewards/{reward_id}/redeem
+      operations:
+      - name: RedeemLoyaltyReward
+        method: POST
+        description: Square Redeem Loyalty Reward
+        inputParameters:
+        - name: reward_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the [loyalty reward](entity:LoyaltyReward) to redeem.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-loyalty-rest
+    port: 8080
+    description: REST adapter for Square — Loyalty. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/loyalty/accounts
+      name: v2-loyalty-accounts
+      description: REST surface for /v2/loyalty/accounts.
+      operations:
+      - method: POST
+        name: CreateLoyaltyAccount
+        description: Square Create Loyalty Account
+        call: square-loyalty.CreateLoyaltyAccount
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/accounts/search
+      name: v2-loyalty-accounts-search
+      description: REST surface for /v2/loyalty/accounts/search.
+      operations:
+      - method: POST
+        name: SearchLoyaltyAccounts
+        description: Square Search Loyalty Accounts
+        call: square-loyalty.SearchLoyaltyAccounts
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/accounts/{account-id}
+      name: v2-loyalty-accounts-account-id
+      description: REST surface for /v2/loyalty/accounts/{account_id}.
+      operations:
+      - method: GET
+        name: RetrieveLoyaltyAccount
+        description: Square Retrieve Loyalty Account
+        call: square-loyalty.RetrieveLoyaltyAccount
+        with:
+          account_id: rest.account_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/accounts/{account-id}/accumulate
+      name: v2-loyalty-accounts-account-id-accumulate
+      description: REST surface for /v2/loyalty/accounts/{account_id}/accumulate.
+      operations:
+      - method: POST
+        name: AccumulateLoyaltyPoints
+        description: Square Accumulate Loyalty Points
+        call: square-loyalty.AccumulateLoyaltyPoints
+        with:
+          account_id: rest.account_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/accounts/{account-id}/adjust
+      name: v2-loyalty-accounts-account-id-adjust
+      description: REST surface for /v2/loyalty/accounts/{account_id}/adjust.
+      operations:
+      - method: POST
+        name: AdjustLoyaltyPoints
+        description: Square Adjust Loyalty Points
+        call: square-loyalty.AdjustLoyaltyPoints
+        with:
+          account_id: rest.account_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/events/search
+      name: v2-loyalty-events-search
+      description: REST surface for /v2/loyalty/events/search.
+      operations:
+      - method: POST
+        name: SearchLoyaltyEvents
+        description: Square Search Loyalty Events
+        call: square-loyalty.SearchLoyaltyEvents
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/programs
+      name: v2-loyalty-programs
+      description: REST surface for /v2/loyalty/programs.
+      operations:
+      - method: GET
+        name: ListLoyaltyPrograms
+        description: Square List Loyalty Programs
+        call: square-loyalty.ListLoyaltyPrograms
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/programs/{program-id}
+      name: v2-loyalty-programs-program-id
+      description: REST surface for /v2/loyalty/programs/{program_id}.
+      operations:
+      - method: GET
+        name: RetrieveLoyaltyProgram
+        description: Square Retrieve Loyalty Program
+        call: square-loyalty.RetrieveLoyaltyProgram
+        with:
+          program_id: rest.program_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/programs/{program-id}/calculate
+      name: v2-loyalty-programs-program-id-calculate
+      description: REST surface for /v2/loyalty/programs/{program_id}/calculate.
+      operations:
+      - method: POST
+        name: CalculateLoyaltyPoints
+        description: Square Calculate Loyalty Points
+        call: square-loyalty.CalculateLoyaltyPoints
+        with:
+          program_id: rest.program_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/programs/{program-id}/promotions
+      name: v2-loyalty-programs-program-id-promotions
+      description: REST surface for /v2/loyalty/programs/{program_id}/promotions.
+      operations:
+      - method: GET
+        name: ListLoyaltyPromotions
+        description: Square List Loyalty Promotions
+        call: square-loyalty.ListLoyaltyPromotions
+        with:
+          program_id: rest.program_id
+          status: rest.status
+          cursor: rest.cursor
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/programs/{program-id}/promotions
+      name: v2-loyalty-programs-program-id-promotions
+      description: REST surface for /v2/loyalty/programs/{program_id}/promotions.
+      operations:
+      - method: POST
+        name: CreateLoyaltyPromotion
+        description: Square Create Loyalty Promotion
+        call: square-loyalty.CreateLoyaltyPromotion
+        with:
+          program_id: rest.program_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/programs/{program-id}/promotions/{promotion-id}
+      name: v2-loyalty-programs-program-id-promotions-promotion-id
+      description: REST surface for /v2/loyalty/programs/{program_id}/promotions/{promotion_id}.
+      operations:
+      - method: GET
+        name: RetrieveLoyaltyPromotion
+        description: Square Retrieve Loyalty Promotion
+        call: square-loyalty.RetrieveLoyaltyPromotion
+        with:
+          promotion_id: rest.promotion_id
+          program_id: rest.program_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/programs/{program-id}/promotions/{promotion-id}/cancel
+      name: v2-loyalty-programs-program-id-promotions-promotion-id-cancel
+      description: REST surface for /v2/loyalty/programs/{program_id}/promotions/{promotion_id}/cancel.
+      operations:
+      - method: POST
+        name: CancelLoyaltyPromotion
+        description: Square Cancel Loyalty Promotion
+        call: square-loyalty.CancelLoyaltyPromotion
+        with:
+          promotion_id: rest.promotion_id
+          program_id: rest.program_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/rewards
+      name: v2-loyalty-rewards
+      description: REST surface for /v2/loyalty/rewards.
+      operations:
+      - method: POST
+        name: CreateLoyaltyReward
+        description: Square Create Loyalty Reward
+        call: square-loyalty.CreateLoyaltyReward
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/rewards/search
+      name: v2-loyalty-rewards-search
+      description: REST surface for /v2/loyalty/rewards/search.
+      operations:
+      - method: POST
+        name: SearchLoyaltyRewards
+        description: Square Search Loyalty Rewards
+        call: square-loyalty.SearchLoyaltyRewards
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/rewards/{reward-id}
+      name: v2-loyalty-rewards-reward-id
+      description: REST surface for /v2/loyalty/rewards/{reward_id}.
+      operations:
+      - method: DELETE
+        name: DeleteLoyaltyReward
+        description: Square Delete Loyalty Reward
+        call: square-loyalty.DeleteLoyaltyReward
+        with:
+          reward_id: rest.reward_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/rewards/{reward-id}
+      name: v2-loyalty-rewards-reward-id
+      description: REST surface for /v2/loyalty/rewards/{reward_id}.
+      operations:
+      - method: GET
+        name: RetrieveLoyaltyReward
+        description: Square Retrieve Loyalty Reward
+        call: square-loyalty.RetrieveLoyaltyReward
+        with:
+          reward_id: rest.reward_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/loyalty/rewards/{reward-id}/redeem
+      name: v2-loyalty-rewards-reward-id-redeem
+      description: REST surface for /v2/loyalty/rewards/{reward_id}/redeem.
+      operations:
+      - method: POST
+        name: RedeemLoyaltyReward
+        description: Square Redeem Loyalty Reward
+        call: square-loyalty.RedeemLoyaltyReward
+        with:
+          reward_id: rest.reward_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-loyalty-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Loyalty. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: create-loyalty-account
+      description: Square Create Loyalty Account
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-loyalty.CreateLoyaltyAccount
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: search-loyalty-accounts
+      description: Square Search Loyalty Accounts
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-loyalty.SearchLoyaltyAccounts
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-loyalty-account
+      description: Square Retrieve Loyalty Account
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-loyalty.RetrieveLoyaltyAccount
+      with:
+        account_id: tools.account_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: accumulate-loyalty-points
+      description: Square Accumulate Loyalty Points
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-loyalty.AccumulateLoyaltyPoints
+      with:
+        account_id: tools.account_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: adjust-loyalty-points
+      description: Square Adjust Loyalty Points
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-loyalty.AdjustLoyaltyPoints
+      with:
+        account_id: tools.account_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: search-loyalty-events
+      description: Square Search Loyalty Events
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-loyalty.SearchLoyaltyEvents
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-loyalty-programs
+      description: Square List Loyalty Programs
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-loyalty.ListLoyaltyPrograms
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-loyalty-program
+      description: Square Retrieve Loyalty Program
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-loyalty.RetrieveLoyaltyProgram
+      with:
+        program_id: tools.program_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: calculate-loyalty-points
+      description: Square Calculate Loyalty Points
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-loyalty.CalculateLoyaltyPoints
+      with:
+        program_id: tools.program_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-loyalty-promotions
+      description: Square List Loyalty Promotions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-loyalty.ListLoyaltyPromotions
+      with:
+        program_id: tools.program_id
+        status: tools.status
+        cursor: tools.cursor
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-loyalty-promotion
+      description: Square Create Loyalty Promotion
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-loyalty.CreateLoyaltyPromotion
+      with:
+        program_id: tools.program_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-loyalty-promotion
+      description: Square Retrieve Loyalty Promotion
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-loyalty.RetrieveLoyaltyPromotion
+      with:
+        promotion_id: tools.promotion_id
+        program_id: tools.program_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cancel-loyalty-promotion
+      description: Square Cancel Loyalty Promotion
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-loyalty.CancelLoyaltyPromotion
+      with:
+        promotion_id: tools.promotion_id
+        program_id: tools.program_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-loyalty-reward
+      description: Square Create Loyalty Reward
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-loyalty.CreateLoyaltyReward
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: search-loyalty-rewards
+      description: Square Search Loyalty Rewards
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-loyalty.SearchLoyaltyRewards
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-loyalty-reward
+      description: Square Delete Loyalty Reward
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-loyalty.DeleteLoyaltyReward
+      with:
+        reward_id: tools.reward_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-loyalty-reward
+      description: Square Retrieve Loyalty Reward
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-loyalty.RetrieveLoyaltyReward
+      with:
+        reward_id: tools.reward_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: redeem-loyalty-reward
+      description: Square Redeem Loyalty Reward
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-loyalty.RedeemLoyaltyReward
+      with:
+        reward_id: tools.reward_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

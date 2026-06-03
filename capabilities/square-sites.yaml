@@ -1,0 +1,67 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Sites
+  description: 'Sites. 1 operations. Lead operation: Square List Sites. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Sites
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-sites
+    baseUri: https://connect.squareup.com
+    description: Square — Sites business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-sites
+      path: /v2/sites
+      operations:
+      - name: ListSites
+        method: GET
+        description: Square List Sites
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-sites-rest
+    port: 8080
+    description: REST adapter for Square — Sites. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/sites
+      name: v2-sites
+      description: REST surface for /v2/sites.
+      operations:
+      - method: GET
+        name: ListSites
+        description: Square List Sites
+        call: square-sites.ListSites
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-sites-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Sites. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-sites
+      description: Square List Sites
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-sites.ListSites
+      outputParameters:
+      - type: object
+        mapping: $.

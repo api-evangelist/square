@@ -1,0 +1,183 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Events
+  description: 'Events. 4 operations. Lead operation: Square Search Events. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Events
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-events
+    baseUri: https://connect.squareup.com
+    description: Square — Events business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-events
+      path: /v2/events
+      operations:
+      - name: SearchEvents
+        method: POST
+        description: Square Search Events
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-events-disable
+      path: /v2/events/disable
+      operations:
+      - name: DisableEvents
+        method: PUT
+        description: Square Disable Events
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-events-enable
+      path: /v2/events/enable
+      operations:
+      - name: EnableEvents
+        method: PUT
+        description: Square Enable Events
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-events-types
+      path: /v2/events/types
+      operations:
+      - name: ListEventTypes
+        method: GET
+        description: Square List Event Types
+        inputParameters:
+        - name: api_version
+          in: query
+          type: string
+          required: false
+          description: The API version for which to list event types. Setting this field overrides the default version used by the application.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-events-rest
+    port: 8080
+    description: REST adapter for Square — Events. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/events
+      name: v2-events
+      description: REST surface for /v2/events.
+      operations:
+      - method: POST
+        name: SearchEvents
+        description: Square Search Events
+        call: square-events.SearchEvents
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/events/disable
+      name: v2-events-disable
+      description: REST surface for /v2/events/disable.
+      operations:
+      - method: PUT
+        name: DisableEvents
+        description: Square Disable Events
+        call: square-events.DisableEvents
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/events/enable
+      name: v2-events-enable
+      description: REST surface for /v2/events/enable.
+      operations:
+      - method: PUT
+        name: EnableEvents
+        description: Square Enable Events
+        call: square-events.EnableEvents
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/events/types
+      name: v2-events-types
+      description: REST surface for /v2/events/types.
+      operations:
+      - method: GET
+        name: ListEventTypes
+        description: Square List Event Types
+        call: square-events.ListEventTypes
+        with:
+          api_version: rest.api_version
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-events-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Events. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: search-events
+      description: Square Search Events
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-events.SearchEvents
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: disable-events
+      description: Square Disable Events
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-events.DisableEvents
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: enable-events
+      description: Square Enable Events
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-events.EnableEvents
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-event-types
+      description: Square List Event Types
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-events.ListEventTypes
+      with:
+        api_version: tools.api_version
+      outputParameters:
+      - type: object
+        mapping: $.

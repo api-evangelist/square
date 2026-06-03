@@ -1,0 +1,77 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Apple Pay
+  description: 'Apple Pay. 1 operations. Lead operation: Square Register Domain. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Apple Pay
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-applepay
+    baseUri: https://connect.squareup.com
+    description: Square — Apple Pay business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-apple-pay-domains
+      path: /v2/apple-pay/domains
+      operations:
+      - name: RegisterDomain
+        method: POST
+        description: Square Register Domain
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-applepay-rest
+    port: 8080
+    description: REST adapter for Square — Apple Pay. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/apple-pay/domains
+      name: v2-apple-pay-domains
+      description: REST surface for /v2/apple-pay/domains.
+      operations:
+      - method: POST
+        name: RegisterDomain
+        description: Square Register Domain
+        call: square-applepay.RegisterDomain
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-applepay-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Apple Pay. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: register-domain
+      description: Square Register Domain
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-applepay.RegisterDomain
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

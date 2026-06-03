@@ -1,0 +1,382 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Orders
+  description: 'Orders. 8 operations. Lead operation: Square Create Order. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Orders
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-orders
+    baseUri: https://connect.squareup.com
+    description: Square — Orders business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-orders
+      path: /v2/orders
+      operations:
+      - name: CreateOrder
+        method: POST
+        description: Square Create Order
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-orders-batch-retrieve
+      path: /v2/orders/batch-retrieve
+      operations:
+      - name: BatchRetrieveOrders
+        method: POST
+        description: Square Batch Retrieve Orders
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-orders-calculate
+      path: /v2/orders/calculate
+      operations:
+      - name: CalculateOrder
+        method: POST
+        description: Square Calculate Order
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-orders-clone
+      path: /v2/orders/clone
+      operations:
+      - name: CloneOrder
+        method: POST
+        description: Square Clone Order
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-orders-search
+      path: /v2/orders/search
+      operations:
+      - name: SearchOrders
+        method: POST
+        description: Square Search Orders
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-orders-order-id
+      path: /v2/orders/{order_id}
+      operations:
+      - name: RetrieveOrder
+        method: GET
+        description: Square Retrieve Order
+        inputParameters:
+        - name: order_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the order to retrieve.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: UpdateOrder
+        method: PUT
+        description: Square Update Order
+        inputParameters:
+        - name: order_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the order to update.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-orders-order-id-pay
+      path: /v2/orders/{order_id}/pay
+      operations:
+      - name: PayOrder
+        method: POST
+        description: Square Pay Order
+        inputParameters:
+        - name: order_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the order being paid.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-orders-rest
+    port: 8080
+    description: REST adapter for Square — Orders. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/orders
+      name: v2-orders
+      description: REST surface for /v2/orders.
+      operations:
+      - method: POST
+        name: CreateOrder
+        description: Square Create Order
+        call: square-orders.CreateOrder
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/orders/batch-retrieve
+      name: v2-orders-batch-retrieve
+      description: REST surface for /v2/orders/batch-retrieve.
+      operations:
+      - method: POST
+        name: BatchRetrieveOrders
+        description: Square Batch Retrieve Orders
+        call: square-orders.BatchRetrieveOrders
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/orders/calculate
+      name: v2-orders-calculate
+      description: REST surface for /v2/orders/calculate.
+      operations:
+      - method: POST
+        name: CalculateOrder
+        description: Square Calculate Order
+        call: square-orders.CalculateOrder
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/orders/clone
+      name: v2-orders-clone
+      description: REST surface for /v2/orders/clone.
+      operations:
+      - method: POST
+        name: CloneOrder
+        description: Square Clone Order
+        call: square-orders.CloneOrder
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/orders/search
+      name: v2-orders-search
+      description: REST surface for /v2/orders/search.
+      operations:
+      - method: POST
+        name: SearchOrders
+        description: Square Search Orders
+        call: square-orders.SearchOrders
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/orders/{order-id}
+      name: v2-orders-order-id
+      description: REST surface for /v2/orders/{order_id}.
+      operations:
+      - method: GET
+        name: RetrieveOrder
+        description: Square Retrieve Order
+        call: square-orders.RetrieveOrder
+        with:
+          order_id: rest.order_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/orders/{order-id}
+      name: v2-orders-order-id
+      description: REST surface for /v2/orders/{order_id}.
+      operations:
+      - method: PUT
+        name: UpdateOrder
+        description: Square Update Order
+        call: square-orders.UpdateOrder
+        with:
+          order_id: rest.order_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/orders/{order-id}/pay
+      name: v2-orders-order-id-pay
+      description: REST surface for /v2/orders/{order_id}/pay.
+      operations:
+      - method: POST
+        name: PayOrder
+        description: Square Pay Order
+        call: square-orders.PayOrder
+        with:
+          order_id: rest.order_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-orders-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Orders. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: create-order
+      description: Square Create Order
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-orders.CreateOrder
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: batch-retrieve-orders
+      description: Square Batch Retrieve Orders
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-orders.BatchRetrieveOrders
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: calculate-order
+      description: Square Calculate Order
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-orders.CalculateOrder
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: clone-order
+      description: Square Clone Order
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-orders.CloneOrder
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: search-orders
+      description: Square Search Orders
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-orders.SearchOrders
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-order
+      description: Square Retrieve Order
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-orders.RetrieveOrder
+      with:
+        order_id: tools.order_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-order
+      description: Square Update Order
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-orders.UpdateOrder
+      with:
+        order_id: tools.order_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: pay-order
+      description: Square Pay Order
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-orders.PayOrder
+      with:
+        order_id: tools.order_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

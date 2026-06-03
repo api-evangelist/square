@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/json-structure/customer-structure.json",
+  "name": "Square Customer",
+  "description": "Represents a Square customer profile in the Customer Directory of a Square seller. Customers can be associated with payments, orders, loyalty programs, gift cards, and bookings.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "A unique Square-assigned ID for the customer profile.",
+      "readOnly": true,
+      "type": "string"
+    },
+    "created_at": {
+      "description": "The timestamp when the customer profile was created, in RFC 3339 format.",
+      "readOnly": true,
+      "type": "datetime"
+    },
+    "updated_at": {
+      "description": "The timestamp when the customer profile was last updated, in RFC 3339 format.",
+      "readOnly": true,
+      "type": "datetime"
+    },
+    "given_name": {
+      "description": "The given name (that is, the first name) associated with the customer profile.",
+      "type": "string"
+    },
+    "family_name": {
+      "description": "The family name (that is, the last name) associated with the customer profile.",
+      "type": "string"
+    },
+    "nickname": {
+      "description": "A nickname for the customer profile.",
+      "type": "string"
+    },
+    "company_name": {
+      "description": "A business name associated with the customer profile.",
+      "type": "string"
+    },
+    "email_address": {
+      "description": "The email address associated with the customer profile.",
+      "type": "string"
+    },
+    "address": {
+      "description": "The physical address associated with the customer profile.",
+      "properties": {
+        "address_line_1": {
+          "description": "The first line of the address.",
+          "type": "string"
+        },
+        "address_line_2": {
+          "description": "The second line of the address, if any.",
+          "type": "string"
+        },
+        "address_line_3": {
+          "description": "The third line of the address, if any.",
+          "type": "string"
+        },
+        "locality": {
+          "description": "The city or town of the address.",
+          "type": "string"
+        },
+        "sublocality": {
+          "description": "A civil region within the address's locality, if any.",
+          "type": "string"
+        },
+        "administrative_district_level_1": {
+          "description": "A civil entity within the address's country. In the US, this is the state.",
+          "type": "string"
+        },
+        "postal_code": {
+          "description": "The address's postal code.",
+          "type": "string"
+        },
+        "country": {
+          "description": "The address's country, in the two-letter format of ISO 3166.",
+          "minLength": 2,
+          "maxLength": 2,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "phone_number": {
+      "description": "The phone number associated with the customer profile.",
+      "type": "string"
+    },
+    "birthday": {
+      "description": "The birthday associated with the customer profile, in YYYY-MM-DD format. For example, 1998-09-21 represents September 21, 1998, and 0000-09-21 represents September 21 (without a birth year).",
+      "type": "string"
+    },
+    "reference_id": {
+      "description": "An optional second ID used to associate the customer profile with an entity in another system.",
+      "type": "string"
+    },
+    "note": {
+      "description": "A custom note associated with the customer profile.",
+      "type": "string"
+    },
+    "preferences": {
+      "description": "Represents general customer preferences.",
+      "properties": {
+        "email_unsubscribed": {
+          "description": "Whether the customer has unsubscribed from marketing campaign emails.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "creation_source": {
+      "description": "The method used to create the customer profile.",
+      "enum": [
+        "OTHER",
+        "APPOINTMENTS",
+        "COUPON",
+        "DELETION_RECOVERY",
+        "DIRECTORY",
+        "EGIFTING",
+        "EMAIL_COLLECTION",
+        "FEEDBACK",
+        "IMPORT",
+        "INVOICES",
+        "LOYALTY",
+        "MARKETING",
+        "MERGE",
+        "ONLINE_STORE",
+        "INSTANT_PROFILE",
+        "TERMINAL",
+        "THIRD_PARTY",
+        "THIRD_PARTY_IMPORT",
+        "UNMERGE_RECOVERY"
+      ],
+      "readOnly": true,
+      "type": "string"
+    },
+    "group_ids": {
+      "items": {
+        "type": "string"
+      },
+      "description": "The IDs of customer groups the customer belongs to.",
+      "type": "array"
+    },
+    "segment_ids": {
+      "items": {
+        "type": "string"
+      },
+      "description": "The IDs of customer segments the customer belongs to.",
+      "readOnly": true,
+      "type": "array"
+    },
+    "version": {
+      "description": "The Square-assigned version number of the customer profile. The version number is incremented each time an update is committed to the customer profile.",
+      "readOnly": true,
+      "type": "int64"
+    },
+    "tax_ids": {
+      "description": "The tax IDs associated with the customer profile. This field is available for customers of sellers in EU countries or the United Kingdom.",
+      "properties": {
+        "eu_vat": {
+          "description": "The EU VAT identification number for the customer.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

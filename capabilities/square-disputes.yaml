@@ -1,0 +1,459 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Disputes
+  description: 'Disputes. 9 operations. Lead operation: Square List Disputes. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Disputes
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-disputes
+    baseUri: https://connect.squareup.com
+    description: Square — Disputes business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-disputes
+      path: /v2/disputes
+      operations:
+      - name: ListDisputes
+        method: GET
+        description: Square List Disputes
+        inputParameters:
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pagination cursor returned by a previous call to this endpoint.
+        - name: states
+          in: query
+          type: string
+          required: false
+          description: The dispute states used to filter the result. If not specified, the endpoint returns all disputes.
+        - name: location_id
+          in: query
+          type: string
+          required: false
+          description: The ID of the location for which to return a list of disputes.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-disputes-dispute-id
+      path: /v2/disputes/{dispute_id}
+      operations:
+      - name: RetrieveDispute
+        method: GET
+        description: Square Retrieve Dispute
+        inputParameters:
+        - name: dispute_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the dispute you want more details about.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-disputes-dispute-id-accept
+      path: /v2/disputes/{dispute_id}/accept
+      operations:
+      - name: AcceptDispute
+        method: POST
+        description: Square Accept Dispute
+        inputParameters:
+        - name: dispute_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the dispute you want to accept.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-disputes-dispute-id-evidence
+      path: /v2/disputes/{dispute_id}/evidence
+      operations:
+      - name: ListDisputeEvidence
+        method: GET
+        description: Square List Dispute Evidence
+        inputParameters:
+        - name: dispute_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the dispute.
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pagination cursor returned by a previous call to this endpoint.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-disputes-dispute-id-evidence-files
+      path: /v2/disputes/{dispute_id}/evidence-files
+      operations:
+      - name: CreateDisputeEvidenceFile
+        method: POST
+        description: Square Create Dispute Evidence File
+        inputParameters:
+        - name: dispute_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the dispute for which you want to upload evidence.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-disputes-dispute-id-evidence-text
+      path: /v2/disputes/{dispute_id}/evidence-text
+      operations:
+      - name: CreateDisputeEvidenceText
+        method: POST
+        description: Square Create Dispute Evidence Text
+        inputParameters:
+        - name: dispute_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the dispute for which you want to upload evidence.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-disputes-dispute-id-evidence-evidence-id
+      path: /v2/disputes/{dispute_id}/evidence/{evidence_id}
+      operations:
+      - name: DeleteDisputeEvidence
+        method: DELETE
+        description: Square Delete Dispute Evidence
+        inputParameters:
+        - name: dispute_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the dispute from which you want to remove evidence.
+        - name: evidence_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the evidence you want to remove.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: RetrieveDisputeEvidence
+        method: GET
+        description: Square Retrieve Dispute Evidence
+        inputParameters:
+        - name: dispute_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the dispute from which you want to retrieve evidence metadata.
+        - name: evidence_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the evidence to retrieve.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-disputes-dispute-id-submit-evidence
+      path: /v2/disputes/{dispute_id}/submit-evidence
+      operations:
+      - name: SubmitEvidence
+        method: POST
+        description: Square Submit Evidence
+        inputParameters:
+        - name: dispute_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the dispute for which you want to submit evidence.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-disputes-rest
+    port: 8080
+    description: REST adapter for Square — Disputes. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/disputes
+      name: v2-disputes
+      description: REST surface for /v2/disputes.
+      operations:
+      - method: GET
+        name: ListDisputes
+        description: Square List Disputes
+        call: square-disputes.ListDisputes
+        with:
+          cursor: rest.cursor
+          states: rest.states
+          location_id: rest.location_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/disputes/{dispute-id}
+      name: v2-disputes-dispute-id
+      description: REST surface for /v2/disputes/{dispute_id}.
+      operations:
+      - method: GET
+        name: RetrieveDispute
+        description: Square Retrieve Dispute
+        call: square-disputes.RetrieveDispute
+        with:
+          dispute_id: rest.dispute_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/disputes/{dispute-id}/accept
+      name: v2-disputes-dispute-id-accept
+      description: REST surface for /v2/disputes/{dispute_id}/accept.
+      operations:
+      - method: POST
+        name: AcceptDispute
+        description: Square Accept Dispute
+        call: square-disputes.AcceptDispute
+        with:
+          dispute_id: rest.dispute_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/disputes/{dispute-id}/evidence
+      name: v2-disputes-dispute-id-evidence
+      description: REST surface for /v2/disputes/{dispute_id}/evidence.
+      operations:
+      - method: GET
+        name: ListDisputeEvidence
+        description: Square List Dispute Evidence
+        call: square-disputes.ListDisputeEvidence
+        with:
+          dispute_id: rest.dispute_id
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/disputes/{dispute-id}/evidence-files
+      name: v2-disputes-dispute-id-evidence-files
+      description: REST surface for /v2/disputes/{dispute_id}/evidence-files.
+      operations:
+      - method: POST
+        name: CreateDisputeEvidenceFile
+        description: Square Create Dispute Evidence File
+        call: square-disputes.CreateDisputeEvidenceFile
+        with:
+          dispute_id: rest.dispute_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/disputes/{dispute-id}/evidence-text
+      name: v2-disputes-dispute-id-evidence-text
+      description: REST surface for /v2/disputes/{dispute_id}/evidence-text.
+      operations:
+      - method: POST
+        name: CreateDisputeEvidenceText
+        description: Square Create Dispute Evidence Text
+        call: square-disputes.CreateDisputeEvidenceText
+        with:
+          dispute_id: rest.dispute_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/disputes/{dispute-id}/evidence/{evidence-id}
+      name: v2-disputes-dispute-id-evidence-evidence-id
+      description: REST surface for /v2/disputes/{dispute_id}/evidence/{evidence_id}.
+      operations:
+      - method: DELETE
+        name: DeleteDisputeEvidence
+        description: Square Delete Dispute Evidence
+        call: square-disputes.DeleteDisputeEvidence
+        with:
+          dispute_id: rest.dispute_id
+          evidence_id: rest.evidence_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/disputes/{dispute-id}/evidence/{evidence-id}
+      name: v2-disputes-dispute-id-evidence-evidence-id
+      description: REST surface for /v2/disputes/{dispute_id}/evidence/{evidence_id}.
+      operations:
+      - method: GET
+        name: RetrieveDisputeEvidence
+        description: Square Retrieve Dispute Evidence
+        call: square-disputes.RetrieveDisputeEvidence
+        with:
+          dispute_id: rest.dispute_id
+          evidence_id: rest.evidence_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/disputes/{dispute-id}/submit-evidence
+      name: v2-disputes-dispute-id-submit-evidence
+      description: REST surface for /v2/disputes/{dispute_id}/submit-evidence.
+      operations:
+      - method: POST
+        name: SubmitEvidence
+        description: Square Submit Evidence
+        call: square-disputes.SubmitEvidence
+        with:
+          dispute_id: rest.dispute_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-disputes-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Disputes. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-disputes
+      description: Square List Disputes
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-disputes.ListDisputes
+      with:
+        cursor: tools.cursor
+        states: tools.states
+        location_id: tools.location_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-dispute
+      description: Square Retrieve Dispute
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-disputes.RetrieveDispute
+      with:
+        dispute_id: tools.dispute_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: accept-dispute
+      description: Square Accept Dispute
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-disputes.AcceptDispute
+      with:
+        dispute_id: tools.dispute_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-dispute-evidence
+      description: Square List Dispute Evidence
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-disputes.ListDisputeEvidence
+      with:
+        dispute_id: tools.dispute_id
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-dispute-evidence-file
+      description: Square Create Dispute Evidence File
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-disputes.CreateDisputeEvidenceFile
+      with:
+        dispute_id: tools.dispute_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-dispute-evidence-text
+      description: Square Create Dispute Evidence Text
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-disputes.CreateDisputeEvidenceText
+      with:
+        dispute_id: tools.dispute_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-dispute-evidence
+      description: Square Delete Dispute Evidence
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-disputes.DeleteDisputeEvidence
+      with:
+        dispute_id: tools.dispute_id
+        evidence_id: tools.evidence_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-dispute-evidence
+      description: Square Retrieve Dispute Evidence
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-disputes.RetrieveDisputeEvidence
+      with:
+        dispute_id: tools.dispute_id
+        evidence_id: tools.evidence_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: submit-evidence
+      description: Square Submit Evidence
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-disputes.SubmitEvidence
+      with:
+        dispute_id: tools.dispute_id
+      outputParameters:
+      - type: object
+        mapping: $.

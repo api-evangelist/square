@@ -1,0 +1,599 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Subscriptions
+  description: 'Subscriptions. 12 operations. Lead operation: Square Create Subscription. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Subscriptions
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-subscriptions
+    baseUri: https://connect.squareup.com
+    description: Square — Subscriptions business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-subscriptions
+      path: /v2/subscriptions
+      operations:
+      - name: CreateSubscription
+        method: POST
+        description: Square Create Subscription
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-bulk-swap-plan
+      path: /v2/subscriptions/bulk-swap-plan
+      operations:
+      - name: BulkSwapPlan
+        method: POST
+        description: Square Bulk Swap Plan
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-search
+      path: /v2/subscriptions/search
+      operations:
+      - name: SearchSubscriptions
+        method: POST
+        description: Square Search Subscriptions
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-subscription-id
+      path: /v2/subscriptions/{subscription_id}
+      operations:
+      - name: RetrieveSubscription
+        method: GET
+        description: Square Retrieve Subscription
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription to retrieve.
+        - name: include
+          in: query
+          type: string
+          required: false
+          description: 'A query parameter to specify related information to be included in the response. '
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: UpdateSubscription
+        method: PUT
+        description: Square Update Subscription
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription to update.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-subscription-id-actions-action-id
+      path: /v2/subscriptions/{subscription_id}/actions/{action_id}
+      operations:
+      - name: DeleteSubscriptionAction
+        method: DELETE
+        description: Square Delete Subscription Action
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription the targeted action is to act upon.
+        - name: action_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the targeted action to be deleted.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-subscription-id-billing-anchor
+      path: /v2/subscriptions/{subscription_id}/billing-anchor
+      operations:
+      - name: ChangeBillingAnchorDate
+        method: POST
+        description: Square Change Billing Anchor Date
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription to update the billing anchor date.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-subscription-id-cancel
+      path: /v2/subscriptions/{subscription_id}/cancel
+      operations:
+      - name: CancelSubscription
+        method: POST
+        description: Square Cancel Subscription
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription to cancel.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-subscription-id-events
+      path: /v2/subscriptions/{subscription_id}/events
+      operations:
+      - name: ListSubscriptionEvents
+        method: GET
+        description: Square List Subscription Events
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription to retrieve the events for.
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: 'When the total number of resulting subscription events exceeds the limit of a paged response, '
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The upper limit on the number of subscription events to return
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-subscription-id-pause
+      path: /v2/subscriptions/{subscription_id}/pause
+      operations:
+      - name: PauseSubscription
+        method: POST
+        description: Square Pause Subscription
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription to pause.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-subscription-id-resume
+      path: /v2/subscriptions/{subscription_id}/resume
+      operations:
+      - name: ResumeSubscription
+        method: POST
+        description: Square Resume Subscription
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription to resume.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-subscriptions-subscription-id-swap-plan
+      path: /v2/subscriptions/{subscription_id}/swap-plan
+      operations:
+      - name: SwapPlan
+        method: POST
+        description: Square Swap Plan
+        inputParameters:
+        - name: subscription_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the subscription to swap the subscription plan for.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-subscriptions-rest
+    port: 8080
+    description: REST adapter for Square — Subscriptions. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/subscriptions
+      name: v2-subscriptions
+      description: REST surface for /v2/subscriptions.
+      operations:
+      - method: POST
+        name: CreateSubscription
+        description: Square Create Subscription
+        call: square-subscriptions.CreateSubscription
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/bulk-swap-plan
+      name: v2-subscriptions-bulk-swap-plan
+      description: REST surface for /v2/subscriptions/bulk-swap-plan.
+      operations:
+      - method: POST
+        name: BulkSwapPlan
+        description: Square Bulk Swap Plan
+        call: square-subscriptions.BulkSwapPlan
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/search
+      name: v2-subscriptions-search
+      description: REST surface for /v2/subscriptions/search.
+      operations:
+      - method: POST
+        name: SearchSubscriptions
+        description: Square Search Subscriptions
+        call: square-subscriptions.SearchSubscriptions
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}
+      name: v2-subscriptions-subscription-id
+      description: REST surface for /v2/subscriptions/{subscription_id}.
+      operations:
+      - method: GET
+        name: RetrieveSubscription
+        description: Square Retrieve Subscription
+        call: square-subscriptions.RetrieveSubscription
+        with:
+          subscription_id: rest.subscription_id
+          include: rest.include
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}
+      name: v2-subscriptions-subscription-id
+      description: REST surface for /v2/subscriptions/{subscription_id}.
+      operations:
+      - method: PUT
+        name: UpdateSubscription
+        description: Square Update Subscription
+        call: square-subscriptions.UpdateSubscription
+        with:
+          subscription_id: rest.subscription_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}/actions/{action-id}
+      name: v2-subscriptions-subscription-id-actions-action-id
+      description: REST surface for /v2/subscriptions/{subscription_id}/actions/{action_id}.
+      operations:
+      - method: DELETE
+        name: DeleteSubscriptionAction
+        description: Square Delete Subscription Action
+        call: square-subscriptions.DeleteSubscriptionAction
+        with:
+          subscription_id: rest.subscription_id
+          action_id: rest.action_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}/billing-anchor
+      name: v2-subscriptions-subscription-id-billing-anchor
+      description: REST surface for /v2/subscriptions/{subscription_id}/billing-anchor.
+      operations:
+      - method: POST
+        name: ChangeBillingAnchorDate
+        description: Square Change Billing Anchor Date
+        call: square-subscriptions.ChangeBillingAnchorDate
+        with:
+          subscription_id: rest.subscription_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}/cancel
+      name: v2-subscriptions-subscription-id-cancel
+      description: REST surface for /v2/subscriptions/{subscription_id}/cancel.
+      operations:
+      - method: POST
+        name: CancelSubscription
+        description: Square Cancel Subscription
+        call: square-subscriptions.CancelSubscription
+        with:
+          subscription_id: rest.subscription_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}/events
+      name: v2-subscriptions-subscription-id-events
+      description: REST surface for /v2/subscriptions/{subscription_id}/events.
+      operations:
+      - method: GET
+        name: ListSubscriptionEvents
+        description: Square List Subscription Events
+        call: square-subscriptions.ListSubscriptionEvents
+        with:
+          subscription_id: rest.subscription_id
+          cursor: rest.cursor
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}/pause
+      name: v2-subscriptions-subscription-id-pause
+      description: REST surface for /v2/subscriptions/{subscription_id}/pause.
+      operations:
+      - method: POST
+        name: PauseSubscription
+        description: Square Pause Subscription
+        call: square-subscriptions.PauseSubscription
+        with:
+          subscription_id: rest.subscription_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}/resume
+      name: v2-subscriptions-subscription-id-resume
+      description: REST surface for /v2/subscriptions/{subscription_id}/resume.
+      operations:
+      - method: POST
+        name: ResumeSubscription
+        description: Square Resume Subscription
+        call: square-subscriptions.ResumeSubscription
+        with:
+          subscription_id: rest.subscription_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/subscriptions/{subscription-id}/swap-plan
+      name: v2-subscriptions-subscription-id-swap-plan
+      description: REST surface for /v2/subscriptions/{subscription_id}/swap-plan.
+      operations:
+      - method: POST
+        name: SwapPlan
+        description: Square Swap Plan
+        call: square-subscriptions.SwapPlan
+        with:
+          subscription_id: rest.subscription_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-subscriptions-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Subscriptions. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: create-subscription
+      description: Square Create Subscription
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-subscriptions.CreateSubscription
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: bulk-swap-plan
+      description: Square Bulk Swap Plan
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-subscriptions.BulkSwapPlan
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: search-subscriptions
+      description: Square Search Subscriptions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: square-subscriptions.SearchSubscriptions
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-subscription
+      description: Square Retrieve Subscription
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-subscriptions.RetrieveSubscription
+      with:
+        subscription_id: tools.subscription_id
+        include: tools.include
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-subscription
+      description: Square Update Subscription
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-subscriptions.UpdateSubscription
+      with:
+        subscription_id: tools.subscription_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-subscription-action
+      description: Square Delete Subscription Action
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-subscriptions.DeleteSubscriptionAction
+      with:
+        subscription_id: tools.subscription_id
+        action_id: tools.action_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: change-billing-anchor-date
+      description: Square Change Billing Anchor Date
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-subscriptions.ChangeBillingAnchorDate
+      with:
+        subscription_id: tools.subscription_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cancel-subscription
+      description: Square Cancel Subscription
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-subscriptions.CancelSubscription
+      with:
+        subscription_id: tools.subscription_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-subscription-events
+      description: Square List Subscription Events
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-subscriptions.ListSubscriptionEvents
+      with:
+        subscription_id: tools.subscription_id
+        cursor: tools.cursor
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: pause-subscription
+      description: Square Pause Subscription
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-subscriptions.PauseSubscription
+      with:
+        subscription_id: tools.subscription_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: resume-subscription
+      description: Square Resume Subscription
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-subscriptions.ResumeSubscription
+      with:
+        subscription_id: tools.subscription_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: swap-plan
+      description: Square Swap Plan
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-subscriptions.SwapPlan
+      with:
+        subscription_id: tools.subscription_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

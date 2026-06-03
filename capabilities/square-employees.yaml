@@ -1,0 +1,140 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Employees
+  description: 'Employees. 2 operations. Lead operation: Square List Employees. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Employees
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-employees
+    baseUri: https://connect.squareup.com
+    description: Square — Employees business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-employees
+      path: /v2/employees
+      operations:
+      - name: ListEmployees
+        method: GET
+        description: Square List Employees
+        inputParameters:
+        - name: location_id
+          in: query
+          type: string
+          required: false
+          description: location_id
+        - name: status
+          in: query
+          type: string
+          required: false
+          description: Specifies the EmployeeStatus to filter the employee by.
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The number of employees to be returned on each page.
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: The token required to retrieve the specified page of results.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-employees-id
+      path: /v2/employees/{id}
+      operations:
+      - name: RetrieveEmployee
+        method: GET
+        description: Square Retrieve Employee
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: UUID for the employee that was requested.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-employees-rest
+    port: 8080
+    description: REST adapter for Square — Employees. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/employees
+      name: v2-employees
+      description: REST surface for /v2/employees.
+      operations:
+      - method: GET
+        name: ListEmployees
+        description: Square List Employees
+        call: square-employees.ListEmployees
+        with:
+          location_id: rest.location_id
+          status: rest.status
+          limit: rest.limit
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/employees/{id}
+      name: v2-employees-id
+      description: REST surface for /v2/employees/{id}.
+      operations:
+      - method: GET
+        name: RetrieveEmployee
+        description: Square Retrieve Employee
+        call: square-employees.RetrieveEmployee
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-employees-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Employees. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-employees
+      description: Square List Employees
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-employees.ListEmployees
+      with:
+        location_id: tools.location_id
+        status: tools.status
+        limit: tools.limit
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-employee
+      description: Square Retrieve Employee
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-employees.RetrieveEmployee
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,580 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Location Custom Attributes
+  description: 'Location Custom Attributes. 11 operations. Lead operation: Square List Location Custom Attribute Definitions. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Location Custom Attributes
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-locationcustomattributes
+    baseUri: https://connect.squareup.com
+    description: Square — Location Custom Attributes business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-locations-custom-attribute-definitions
+      path: /v2/locations/custom-attribute-definitions
+      operations:
+      - name: ListLocationCustomAttributeDefinitions
+        method: GET
+        description: Square List Location Custom Attribute Definitions
+        inputParameters:
+        - name: visibility_filter
+          in: query
+          type: string
+          required: false
+          description: Filters the `CustomAttributeDefinition` results by their `visibility` values.
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The maximum number of results to return in a single paged response. This limit is advisory.
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: The cursor returned in the paged response from the previous call to this endpoint.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: CreateLocationCustomAttributeDefinition
+        method: POST
+        description: Square Create Location Custom Attribute Definition
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-locations-custom-attribute-definitions-key
+      path: /v2/locations/custom-attribute-definitions/{key}
+      operations:
+      - name: DeleteLocationCustomAttributeDefinition
+        method: DELETE
+        description: Square Delete Location Custom Attribute Definition
+        inputParameters:
+        - name: key
+          in: path
+          type: string
+          required: true
+          description: The key of the custom attribute definition to delete.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: RetrieveLocationCustomAttributeDefinition
+        method: GET
+        description: Square Retrieve Location Custom Attribute Definition
+        inputParameters:
+        - name: key
+          in: path
+          type: string
+          required: true
+          description: The key of the custom attribute definition to retrieve. If the requesting application
+        - name: version
+          in: query
+          type: integer
+          required: false
+          description: The current version of the custom attribute definition, which is used for strongly consistent
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: UpdateLocationCustomAttributeDefinition
+        method: PUT
+        description: Square Update Location Custom Attribute Definition
+        inputParameters:
+        - name: key
+          in: path
+          type: string
+          required: true
+          description: The key of the custom attribute definition to update.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-locations-custom-attributes-bulk-delete
+      path: /v2/locations/custom-attributes/bulk-delete
+      operations:
+      - name: BulkDeleteLocationCustomAttributes
+        method: POST
+        description: Square Bulk Delete Location Custom Attributes
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-locations-custom-attributes-bulk-upsert
+      path: /v2/locations/custom-attributes/bulk-upsert
+      operations:
+      - name: BulkUpsertLocationCustomAttributes
+        method: POST
+        description: Square Bulk Upsert Location Custom Attributes
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-locations-location-id-custom-attributes
+      path: /v2/locations/{location_id}/custom-attributes
+      operations:
+      - name: ListLocationCustomAttributes
+        method: GET
+        description: Square List Location Custom Attributes
+        inputParameters:
+        - name: location_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the target [location](entity:Location).
+        - name: visibility_filter
+          in: query
+          type: string
+          required: false
+          description: Filters the `CustomAttributeDefinition` results by their `visibility` values.
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The maximum number of results to return in a single paged response. This limit is advisory.
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: The cursor returned in the paged response from the previous call to this endpoint.
+        - name: with_definitions
+          in: query
+          type: boolean
+          required: false
+          description: Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of each
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-locations-location-id-custom-attributes-key
+      path: /v2/locations/{location_id}/custom-attributes/{key}
+      operations:
+      - name: DeleteLocationCustomAttribute
+        method: DELETE
+        description: Square Delete Location Custom Attribute
+        inputParameters:
+        - name: location_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the target [location](entity:Location).
+        - name: key
+          in: path
+          type: string
+          required: true
+          description: The key of the custom attribute to delete. This key must match the `key` of a custom
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: RetrieveLocationCustomAttribute
+        method: GET
+        description: Square Retrieve Location Custom Attribute
+        inputParameters:
+        - name: location_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the target [location](entity:Location).
+        - name: key
+          in: path
+          type: string
+          required: true
+          description: The key of the custom attribute to retrieve. This key must match the `key` of a custom
+        - name: with_definition
+          in: query
+          type: boolean
+          required: false
+          description: Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of
+        - name: version
+          in: query
+          type: integer
+          required: false
+          description: The current version of the custom attribute, which is used for strongly consistent reads to
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: UpsertLocationCustomAttribute
+        method: POST
+        description: Square Upsert Location Custom Attribute
+        inputParameters:
+        - name: location_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the target [location](entity:Location).
+        - name: key
+          in: path
+          type: string
+          required: true
+          description: The key of the custom attribute to create or update. This key must match the `key` of a
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-locationcustomattributes-rest
+    port: 8080
+    description: REST adapter for Square — Location Custom Attributes. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/locations/custom-attribute-definitions
+      name: v2-locations-custom-attribute-definitions
+      description: REST surface for /v2/locations/custom-attribute-definitions.
+      operations:
+      - method: GET
+        name: ListLocationCustomAttributeDefinitions
+        description: Square List Location Custom Attribute Definitions
+        call: square-locationcustomattributes.ListLocationCustomAttributeDefinitions
+        with:
+          visibility_filter: rest.visibility_filter
+          limit: rest.limit
+          cursor: rest.cursor
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/custom-attribute-definitions
+      name: v2-locations-custom-attribute-definitions
+      description: REST surface for /v2/locations/custom-attribute-definitions.
+      operations:
+      - method: POST
+        name: CreateLocationCustomAttributeDefinition
+        description: Square Create Location Custom Attribute Definition
+        call: square-locationcustomattributes.CreateLocationCustomAttributeDefinition
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/custom-attribute-definitions/{key}
+      name: v2-locations-custom-attribute-definitions-key
+      description: REST surface for /v2/locations/custom-attribute-definitions/{key}.
+      operations:
+      - method: DELETE
+        name: DeleteLocationCustomAttributeDefinition
+        description: Square Delete Location Custom Attribute Definition
+        call: square-locationcustomattributes.DeleteLocationCustomAttributeDefinition
+        with:
+          key: rest.key
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/custom-attribute-definitions/{key}
+      name: v2-locations-custom-attribute-definitions-key
+      description: REST surface for /v2/locations/custom-attribute-definitions/{key}.
+      operations:
+      - method: GET
+        name: RetrieveLocationCustomAttributeDefinition
+        description: Square Retrieve Location Custom Attribute Definition
+        call: square-locationcustomattributes.RetrieveLocationCustomAttributeDefinition
+        with:
+          key: rest.key
+          version: rest.version
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/custom-attribute-definitions/{key}
+      name: v2-locations-custom-attribute-definitions-key
+      description: REST surface for /v2/locations/custom-attribute-definitions/{key}.
+      operations:
+      - method: PUT
+        name: UpdateLocationCustomAttributeDefinition
+        description: Square Update Location Custom Attribute Definition
+        call: square-locationcustomattributes.UpdateLocationCustomAttributeDefinition
+        with:
+          key: rest.key
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/custom-attributes/bulk-delete
+      name: v2-locations-custom-attributes-bulk-delete
+      description: REST surface for /v2/locations/custom-attributes/bulk-delete.
+      operations:
+      - method: POST
+        name: BulkDeleteLocationCustomAttributes
+        description: Square Bulk Delete Location Custom Attributes
+        call: square-locationcustomattributes.BulkDeleteLocationCustomAttributes
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/custom-attributes/bulk-upsert
+      name: v2-locations-custom-attributes-bulk-upsert
+      description: REST surface for /v2/locations/custom-attributes/bulk-upsert.
+      operations:
+      - method: POST
+        name: BulkUpsertLocationCustomAttributes
+        description: Square Bulk Upsert Location Custom Attributes
+        call: square-locationcustomattributes.BulkUpsertLocationCustomAttributes
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/{location-id}/custom-attributes
+      name: v2-locations-location-id-custom-attributes
+      description: REST surface for /v2/locations/{location_id}/custom-attributes.
+      operations:
+      - method: GET
+        name: ListLocationCustomAttributes
+        description: Square List Location Custom Attributes
+        call: square-locationcustomattributes.ListLocationCustomAttributes
+        with:
+          location_id: rest.location_id
+          visibility_filter: rest.visibility_filter
+          limit: rest.limit
+          cursor: rest.cursor
+          with_definitions: rest.with_definitions
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/{location-id}/custom-attributes/{key}
+      name: v2-locations-location-id-custom-attributes-key
+      description: REST surface for /v2/locations/{location_id}/custom-attributes/{key}.
+      operations:
+      - method: DELETE
+        name: DeleteLocationCustomAttribute
+        description: Square Delete Location Custom Attribute
+        call: square-locationcustomattributes.DeleteLocationCustomAttribute
+        with:
+          location_id: rest.location_id
+          key: rest.key
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/{location-id}/custom-attributes/{key}
+      name: v2-locations-location-id-custom-attributes-key
+      description: REST surface for /v2/locations/{location_id}/custom-attributes/{key}.
+      operations:
+      - method: GET
+        name: RetrieveLocationCustomAttribute
+        description: Square Retrieve Location Custom Attribute
+        call: square-locationcustomattributes.RetrieveLocationCustomAttribute
+        with:
+          location_id: rest.location_id
+          key: rest.key
+          with_definition: rest.with_definition
+          version: rest.version
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/locations/{location-id}/custom-attributes/{key}
+      name: v2-locations-location-id-custom-attributes-key
+      description: REST surface for /v2/locations/{location_id}/custom-attributes/{key}.
+      operations:
+      - method: POST
+        name: UpsertLocationCustomAttribute
+        description: Square Upsert Location Custom Attribute
+        call: square-locationcustomattributes.UpsertLocationCustomAttribute
+        with:
+          location_id: rest.location_id
+          key: rest.key
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-locationcustomattributes-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Location Custom Attributes. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-location-custom-attribute-definitions
+      description: Square List Location Custom Attribute Definitions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-locationcustomattributes.ListLocationCustomAttributeDefinitions
+      with:
+        visibility_filter: tools.visibility_filter
+        limit: tools.limit
+        cursor: tools.cursor
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-location-custom-attribute-definition
+      description: Square Create Location Custom Attribute Definition
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-locationcustomattributes.CreateLocationCustomAttributeDefinition
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-location-custom-attribute-definition
+      description: Square Delete Location Custom Attribute Definition
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-locationcustomattributes.DeleteLocationCustomAttributeDefinition
+      with:
+        key: tools.key
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-location-custom-attribute-definition
+      description: Square Retrieve Location Custom Attribute Definition
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-locationcustomattributes.RetrieveLocationCustomAttributeDefinition
+      with:
+        key: tools.key
+        version: tools.version
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-location-custom-attribute-definition
+      description: Square Update Location Custom Attribute Definition
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-locationcustomattributes.UpdateLocationCustomAttributeDefinition
+      with:
+        key: tools.key
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: bulk-delete-location-custom-attributes
+      description: Square Bulk Delete Location Custom Attributes
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-locationcustomattributes.BulkDeleteLocationCustomAttributes
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: bulk-upsert-location-custom-attributes
+      description: Square Bulk Upsert Location Custom Attributes
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-locationcustomattributes.BulkUpsertLocationCustomAttributes
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-location-custom-attributes
+      description: Square List Location Custom Attributes
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-locationcustomattributes.ListLocationCustomAttributes
+      with:
+        location_id: tools.location_id
+        visibility_filter: tools.visibility_filter
+        limit: tools.limit
+        cursor: tools.cursor
+        with_definitions: tools.with_definitions
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-location-custom-attribute
+      description: Square Delete Location Custom Attribute
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: square-locationcustomattributes.DeleteLocationCustomAttribute
+      with:
+        location_id: tools.location_id
+        key: tools.key
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-location-custom-attribute
+      description: Square Retrieve Location Custom Attribute
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-locationcustomattributes.RetrieveLocationCustomAttribute
+      with:
+        location_id: tools.location_id
+        key: tools.key
+        with_definition: tools.with_definition
+        version: tools.version
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: upsert-location-custom-attribute
+      description: Square Upsert Location Custom Attribute
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-locationcustomattributes.UpsertLocationCustomAttribute
+      with:
+        location_id: tools.location_id
+        key: tools.key
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

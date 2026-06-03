@@ -1,0 +1,165 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Gift Card Activities
+  description: 'Gift Card Activities. 2 operations. Lead operation: Square List Gift Card Activities. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Gift Card Activities
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-giftcardactivities
+    baseUri: https://connect.squareup.com
+    description: Square — Gift Card Activities business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-gift-cards-activities
+      path: /v2/gift-cards/activities
+      operations:
+      - name: ListGiftCardActivities
+        method: GET
+        description: Square List Gift Card Activities
+        inputParameters:
+        - name: gift_card_id
+          in: query
+          type: string
+          required: false
+          description: 'If a gift card ID is provided, the endpoint returns activities related '
+        - name: type
+          in: query
+          type: string
+          required: false
+          description: 'If a [type](entity:GiftCardActivityType) is provided, the endpoint returns gift card activities of the specified type. '
+        - name: location_id
+          in: query
+          type: string
+          required: false
+          description: 'If a location ID is provided, the endpoint returns gift card activities for the specified location. '
+        - name: begin_time
+          in: query
+          type: string
+          required: false
+          description: The timestamp for the beginning of the reporting period, in RFC 3339 format.
+        - name: end_time
+          in: query
+          type: string
+          required: false
+          description: The timestamp for the end of the reporting period, in RFC 3339 format.
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: 'If a limit is provided, the endpoint returns the specified number '
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pagination cursor returned by a previous call to this endpoint.
+        - name: sort_order
+          in: query
+          type: string
+          required: false
+          description: The order in which the endpoint returns the activities, based on `created_at`.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: CreateGiftCardActivity
+        method: POST
+        description: Square Create Gift Card Activity
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-giftcardactivities-rest
+    port: 8080
+    description: REST adapter for Square — Gift Card Activities. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/gift-cards/activities
+      name: v2-gift-cards-activities
+      description: REST surface for /v2/gift-cards/activities.
+      operations:
+      - method: GET
+        name: ListGiftCardActivities
+        description: Square List Gift Card Activities
+        call: square-giftcardactivities.ListGiftCardActivities
+        with:
+          gift_card_id: rest.gift_card_id
+          type: rest.type
+          location_id: rest.location_id
+          begin_time: rest.begin_time
+          end_time: rest.end_time
+          limit: rest.limit
+          cursor: rest.cursor
+          sort_order: rest.sort_order
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/gift-cards/activities
+      name: v2-gift-cards-activities
+      description: REST surface for /v2/gift-cards/activities.
+      operations:
+      - method: POST
+        name: CreateGiftCardActivity
+        description: Square Create Gift Card Activity
+        call: square-giftcardactivities.CreateGiftCardActivity
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-giftcardactivities-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Gift Card Activities. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-gift-card-activities
+      description: Square List Gift Card Activities
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-giftcardactivities.ListGiftCardActivities
+      with:
+        gift_card_id: tools.gift_card_id
+        type: tools.type
+        location_id: tools.location_id
+        begin_time: tools.begin_time
+        end_time: tools.end_time
+        limit: tools.limit
+        cursor: tools.cursor
+        sort_order: tools.sort_order
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-gift-card-activity
+      description: Square Create Gift Card Activity
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-giftcardactivities.CreateGiftCardActivity
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

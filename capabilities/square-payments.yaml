@@ -1,0 +1,435 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Square — Payments
+  description: 'Payments. 7 operations. Lead operation: Square List Payments. Self-contained Naftiko capability covering one Square business surface.'
+  tags:
+  - Square
+  - Payments
+  created: '2026-06-03'
+  modified: '2026-06-03'
+binds:
+- namespace: env
+  keys:
+    SQUARE_ACCESS_TOKEN: SQUARE_ACCESS_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: square-payments
+    baseUri: https://connect.squareup.com
+    description: Square — Payments business capability. Self-contained, no shared references.
+    authentication:
+      type: bearer
+      token: '{{env.SQUARE_ACCESS_TOKEN}}'
+    resources:
+    - name: v2-payments
+      path: /v2/payments
+      operations:
+      - name: ListPayments
+        method: GET
+        description: Square List Payments
+        inputParameters:
+        - name: begin_time
+          in: query
+          type: string
+          required: false
+          description: 'Indicates the start of the time range to retrieve payments for, in RFC 3339 format.  '
+        - name: end_time
+          in: query
+          type: string
+          required: false
+          description: 'Indicates the end of the time range to retrieve payments for, in RFC 3339 format.  The '
+        - name: sort_order
+          in: query
+          type: string
+          required: false
+          description: 'The order in which results are listed by `ListPaymentsRequest.sort_field`:'
+        - name: cursor
+          in: query
+          type: string
+          required: false
+          description: A pagination cursor returned by a previous call to this endpoint.
+        - name: location_id
+          in: query
+          type: string
+          required: false
+          description: Limit results to the location supplied. By default, results are returned
+        - name: total
+          in: query
+          type: integer
+          required: false
+          description: The exact amount in the `total_money` for a payment.
+        - name: last_4
+          in: query
+          type: string
+          required: false
+          description: The last four digits of a payment card.
+        - name: card_brand
+          in: query
+          type: string
+          required: false
+          description: The brand of the payment card (for example, VISA).
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: The maximum number of results to be returned in a single page.
+        - name: is_offline_payment
+          in: query
+          type: boolean
+          required: false
+          description: Whether the payment was taken offline or not.
+        - name: offline_begin_time
+          in: query
+          type: string
+          required: false
+          description: Indicates the start of the time range for which to retrieve offline payments, in RFC 3339
+        - name: offline_end_time
+          in: query
+          type: string
+          required: false
+          description: Indicates the end of the time range for which to retrieve offline payments, in RFC 3339
+        - name: updated_at_begin_time
+          in: query
+          type: string
+          required: false
+          description: Indicates the start of the time range to retrieve payments for, in RFC 3339 format.  The
+        - name: updated_at_end_time
+          in: query
+          type: string
+          required: false
+          description: Indicates the end of the time range to retrieve payments for, in RFC 3339 format.  The
+        - name: sort_field
+          in: query
+          type: string
+          required: false
+          description: The field used to sort results by. The default is `CREATED_AT`.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: CreatePayment
+        method: POST
+        description: Square Create Payment
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-payments-cancel
+      path: /v2/payments/cancel
+      operations:
+      - name: CancelPaymentByIdempotencyKey
+        method: POST
+        description: Square Cancel Payment by Idempotency Key
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-payments-payment-id
+      path: /v2/payments/{payment_id}
+      operations:
+      - name: GetPayment
+        method: GET
+        description: Square Get Payment
+        inputParameters:
+        - name: payment_id
+          in: path
+          type: string
+          required: true
+          description: A unique ID for the desired payment.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: UpdatePayment
+        method: PUT
+        description: Square Update Payment
+        inputParameters:
+        - name: payment_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the payment to update.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-payments-payment-id-cancel
+      path: /v2/payments/{payment_id}/cancel
+      operations:
+      - name: CancelPayment
+        method: POST
+        description: Square Cancel Payment
+        inputParameters:
+        - name: payment_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the payment to cancel.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v2-payments-payment-id-complete
+      path: /v2/payments/{payment_id}/complete
+      operations:
+      - name: CompletePayment
+        method: POST
+        description: Square Complete Payment
+        inputParameters:
+        - name: payment_id
+          in: path
+          type: string
+          required: true
+          description: The unique ID identifying the payment to be completed.
+        - name: body
+          in: body
+          type: object
+          required: true
+          description: Request body payload.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: square-payments-rest
+    port: 8080
+    description: REST adapter for Square — Payments. One Spectral-compliant resource per consumed operation, prefixed with /v1.
+    resources:
+    - path: /v1/v2/payments
+      name: v2-payments
+      description: REST surface for /v2/payments.
+      operations:
+      - method: GET
+        name: ListPayments
+        description: Square List Payments
+        call: square-payments.ListPayments
+        with:
+          begin_time: rest.begin_time
+          end_time: rest.end_time
+          sort_order: rest.sort_order
+          cursor: rest.cursor
+          location_id: rest.location_id
+          total: rest.total
+          last_4: rest.last_4
+          card_brand: rest.card_brand
+          limit: rest.limit
+          is_offline_payment: rest.is_offline_payment
+          offline_begin_time: rest.offline_begin_time
+          offline_end_time: rest.offline_end_time
+          updated_at_begin_time: rest.updated_at_begin_time
+          updated_at_end_time: rest.updated_at_end_time
+          sort_field: rest.sort_field
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/payments
+      name: v2-payments
+      description: REST surface for /v2/payments.
+      operations:
+      - method: POST
+        name: CreatePayment
+        description: Square Create Payment
+        call: square-payments.CreatePayment
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/payments/cancel
+      name: v2-payments-cancel
+      description: REST surface for /v2/payments/cancel.
+      operations:
+      - method: POST
+        name: CancelPaymentByIdempotencyKey
+        description: Square Cancel Payment by Idempotency Key
+        call: square-payments.CancelPaymentByIdempotencyKey
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/payments/{payment-id}
+      name: v2-payments-payment-id
+      description: REST surface for /v2/payments/{payment_id}.
+      operations:
+      - method: GET
+        name: GetPayment
+        description: Square Get Payment
+        call: square-payments.GetPayment
+        with:
+          payment_id: rest.payment_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/payments/{payment-id}
+      name: v2-payments-payment-id
+      description: REST surface for /v2/payments/{payment_id}.
+      operations:
+      - method: PUT
+        name: UpdatePayment
+        description: Square Update Payment
+        call: square-payments.UpdatePayment
+        with:
+          payment_id: rest.payment_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/payments/{payment-id}/cancel
+      name: v2-payments-payment-id-cancel
+      description: REST surface for /v2/payments/{payment_id}/cancel.
+      operations:
+      - method: POST
+        name: CancelPayment
+        description: Square Cancel Payment
+        call: square-payments.CancelPayment
+        with:
+          payment_id: rest.payment_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/payments/{payment-id}/complete
+      name: v2-payments-payment-id-complete
+      description: REST surface for /v2/payments/{payment_id}/complete.
+      operations:
+      - method: POST
+        name: CompletePayment
+        description: Square Complete Payment
+        call: square-payments.CompletePayment
+        with:
+          payment_id: rest.payment_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: square-payments-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Square — Payments. One tool per consumed operation, routed inline through this capability's consumes block.
+    tools:
+    - name: list-payments
+      description: Square List Payments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-payments.ListPayments
+      with:
+        begin_time: tools.begin_time
+        end_time: tools.end_time
+        sort_order: tools.sort_order
+        cursor: tools.cursor
+        location_id: tools.location_id
+        total: tools.total
+        last_4: tools.last_4
+        card_brand: tools.card_brand
+        limit: tools.limit
+        is_offline_payment: tools.is_offline_payment
+        offline_begin_time: tools.offline_begin_time
+        offline_end_time: tools.offline_end_time
+        updated_at_begin_time: tools.updated_at_begin_time
+        updated_at_end_time: tools.updated_at_end_time
+        sort_field: tools.sort_field
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-payment
+      description: Square Create Payment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-payments.CreatePayment
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cancel-payment-idempotency-key
+      description: Square Cancel Payment by Idempotency Key
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-payments.CancelPaymentByIdempotencyKey
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-payment
+      description: Square Get Payment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: square-payments.GetPayment
+      with:
+        payment_id: tools.payment_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-payment
+      description: Square Update Payment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: square-payments.UpdatePayment
+      with:
+        payment_id: tools.payment_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: cancel-payment
+      description: Square Cancel Payment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-payments.CancelPayment
+      with:
+        payment_id: tools.payment_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: complete-payment
+      description: Square Complete Payment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: square-payments.CompletePayment
+      with:
+        payment_id: tools.payment_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
