@@ -1,0 +1,3598 @@
+# Square GraphQL Schema
+# Conceptual schema derived from the Square REST API
+# https://developer.squareup.com/reference/square/
+
+# ─────────────────────────────────────────────
+# Scalars
+# ─────────────────────────────────────────────
+
+scalar DateTime
+scalar JSON
+
+# ─────────────────────────────────────────────
+# Enums
+# ─────────────────────────────────────────────
+
+enum Currency {
+  USD
+  CAD
+  GBP
+  AUD
+  EUR
+  JPY
+}
+
+enum PaymentStatus {
+  APPROVED
+  PENDING
+  COMPLETED
+  CANCELED
+  FAILED
+}
+
+enum CardBrand {
+  VISA
+  MASTERCARD
+  AMERICAN_EXPRESS
+  DISCOVER
+  DISCOVER_DINERS
+  JCB
+  CHINA_UNIONPAY
+  SQUARE_GIFT_CARD
+  SQUARE_CAPITAL_CARD
+  INTERAC
+  FELICA
+  ELO
+  OTHER_BRAND
+}
+
+enum CardType {
+  DEBIT
+  CREDIT
+  PREPAID
+  UNKNOWN
+}
+
+enum RefundStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FAILED
+}
+
+enum DisputeStatus {
+  INQUIRY_EVIDENCE_REQUIRED
+  INQUIRY_PROCESSING
+  INQUIRY_CLOSED
+  EVIDENCE_REQUIRED
+  PROCESSING
+  WON
+  LOST
+  ACCEPTED
+}
+
+enum OrderState {
+  OPEN
+  COMPLETED
+  CANCELED
+  DRAFT
+}
+
+enum FulfillmentType {
+  PICKUP
+  SHIPMENT
+  DELIVERY
+  DIGITAL
+}
+
+enum FulfillmentState {
+  PROPOSED
+  RESERVED
+  PREPARED
+  COMPLETED
+  CANCELED
+  FAILED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  UNPAID
+  SCHEDULED
+  PARTIALLY_PAID
+  PAID
+  PARTIALLY_REFUNDED
+  REFUNDED
+  CANCELED
+  FAILED
+  PAYMENT_PENDING
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  CANCELED
+  DEACTIVATED
+  PAUSED
+}
+
+enum LoyaltyEventType {
+  ACCUMULATE_POINTS
+  CREATE_REWARD
+  REDEEM_REWARD
+  DELETE_REWARD
+  ADJUST_POINTS
+  EXPIRE_POINTS
+  OTHER
+}
+
+enum BookingStatus {
+  PENDING
+  CANCELLED_BY_CUSTOMER
+  CANCELLED_BY_SELLER
+  DECLINED
+  ACCEPTED
+  NO_SHOW
+}
+
+enum ShiftStatus {
+  OPEN
+  CLOSED
+}
+
+enum TerminalCheckoutStatus {
+  PENDING
+  IN_PROGRESS
+  CANCEL_REQUESTED
+  CANCELED
+  COMPLETED
+}
+
+enum WebhookEventType {
+  PAYMENT_CREATED
+  PAYMENT_UPDATED
+  ORDER_CREATED
+  ORDER_UPDATED
+  ORDER_FULFILLED
+  REFUND_CREATED
+  REFUND_UPDATED
+  DISPUTE_CREATED
+  DISPUTE_STATE_CHANGED
+  CUSTOMER_CREATED
+  CUSTOMER_UPDATED
+  CUSTOMER_DELETED
+  INVENTORY_COUNT_UPDATED
+  SUBSCRIPTION_CREATED
+  SUBSCRIPTION_UPDATED
+}
+
+enum GiftCardStatus {
+  ACTIVE
+  DEACTIVATED
+  BLOCKED
+  PENDING
+}
+
+enum GiftCardActivityType {
+  ACTIVATE
+  LOAD
+  REDEEM
+  CLEAR_BALANCE
+  DEACTIVATE
+  ADJUST_INCREMENT
+  ADJUST_DECREMENT
+  REFUND
+  UNLINKED_ACTIVITY_REFUND
+  IMPORT
+  BLOCK
+  UNBLOCK
+  IMPORT_REVERSAL
+  TRANSFER_BALANCE_TO
+  TRANSFER_BALANCE_FROM
+}
+
+# ─────────────────────────────────────────────
+# Core value types
+# ─────────────────────────────────────────────
+
+type Money {
+  amount: Int
+  currency: Currency!
+}
+
+type Address {
+  addressLine1: String
+  addressLine2: String
+  addressLine3: String
+  locality: String
+  sublocality: String
+  administrativeDistrictLevel1: String
+  postalCode: String
+  country: String
+}
+
+type Coordinates {
+  latitude: Float
+  longitude: Float
+}
+
+type TimeRange {
+  startAt: DateTime
+  endAt: DateTime
+}
+
+# ─────────────────────────────────────────────
+# Payment domain
+# ─────────────────────────────────────────────
+
+type Payment {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  amountMoney: Money!
+  tipMoney: Money
+  totalMoney: Money
+  appFeeMoney: Money
+  processingFee: [ProcessingFee]
+  refundedMoney: Money
+  status: PaymentStatus!
+  delayDuration: String
+  delayAction: String
+  delayedUntil: DateTime
+  sourceType: String
+  cardDetails: CardDetails
+  walletDetails: WalletDetails
+  bankAccountDetails: BankAccountDetails
+  externalDetails: ExternalDetails
+  cashDetails: CashDetails
+  buyNowPayLaterDetails: BuyNowPayLater
+  locationId: ID
+  orderId: ID
+  referenceId: String
+  customerId: ID
+  employeeId: ID
+  teamMemberId: ID
+  refundIds: [ID]
+  riskEvaluation: RiskEvaluation
+  buyerEmailAddress: String
+  billingAddress: Address
+  shippingAddress: Address
+  note: String
+  statementDescriptionIdentifier: String
+  receiptNumber: String
+  receiptUrl: String
+  deviceDetails: DeviceSummary
+  applicationDetails: ApplicationDetails
+  versionToken: String
+  order: Order
+  customer: Customer
+  refunds: [Refund]
+}
+
+type ProcessingFee {
+  effectiveAt: DateTime
+  type: String
+  amountMoney: Money
+}
+
+type RiskEvaluation {
+  createdAt: DateTime
+  riskLevel: String
+}
+
+type ApplicationDetails {
+  squareProduct: String
+  applicationId: String
+}
+
+type DeviceSummary {
+  deviceId: String
+  deviceName: String
+  deviceInstallationId: String
+}
+
+type CardDetails {
+  status: String
+  card: Card
+  entryMethod: String
+  cvvStatus: String
+  avsStatus: String
+  authResultCode: String
+  applicationIdentifier: String
+  applicationName: String
+  applicationCryptogram: String
+  verificationMethod: String
+  verificationResults: String
+  statementDescription: String
+  deviceDetails: DeviceSummary
+  cardPaymentTimeline: CardPaymentTimeline
+  refundRequiresCardPresence: Boolean
+  errors: [PaymentError]
+}
+
+type CardPaymentTimeline {
+  authorizedAt: DateTime
+  capturedAt: DateTime
+  voidedAt: DateTime
+}
+
+type PaymentError {
+  category: String
+  code: String
+  detail: String
+  field: String
+}
+
+type Card {
+  id: ID!
+  cardBrand: CardBrand
+  last4: String
+  expMonth: Int
+  expYear: Int
+  cardholderName: String
+  billingAddress: Address
+  fingerprint: String
+  customerId: ID
+  merchantId: ID
+  referenceId: String
+  enabled: Boolean
+  cardType: CardType
+  prepaidType: String
+  bin: String
+  version: Int
+  cardCoBrand: String
+  customer: Customer
+}
+
+type WalletDetails {
+  status: String
+  brand: String
+  cashAppDetails: CashAppDetails
+}
+
+type CashAppDetails {
+  buyerFullName: String
+  buyerCountryCode: String
+  buyerCashtag: String
+}
+
+type BankAccountDetails {
+  bankName: String
+  transferType: String
+  accountOwnershipType: String
+  fingerprint: String
+  country: String
+  statementDescription: String
+  achDetails: AchDetails
+  errors: [PaymentError]
+}
+
+type AchDetails {
+  routingNumber: String
+  accountNumberSuffix: String
+  accountType: String
+}
+
+type CashDetails {
+  buyerSuppliedMoney: Money!
+  changeBackMoney: Money
+}
+
+type ExternalDetails {
+  type: String!
+  source: String!
+  sourceId: String
+  sourceFeeMoney: Money
+}
+
+type BuyNowPayLater {
+  brand: String
+  afterpayDetails: AfterpayDetails
+  clearpayDetails: ClearpayDetails
+}
+
+type AfterpayDetails {
+  emailAddress: String
+  checkoutId: String
+  internalId: String
+}
+
+type ClearpayDetails {
+  emailAddress: String
+  checkoutId: String
+  internalId: String
+}
+
+type PaymentMethod {
+  id: ID!
+  type: String!
+  card: Card
+  bankAccount: BankAccount
+  walletDetails: WalletDetails
+  customerId: ID
+  customer: Customer
+}
+
+# ─────────────────────────────────────────────
+# Bank Accounts
+# ─────────────────────────────────────────────
+
+type BankAccount {
+  id: ID!
+  accountNumberSuffix: String!
+  country: String!
+  currency: Currency!
+  accountType: String!
+  holderName: String!
+  primaryBankIdentificationNumber: String
+  secondaryBankIdentificationNumber: String
+  debitMandateReferenceId: String
+  referenceId: String
+  locationId: ID
+  status: String!
+  creditable: Boolean!
+  debitable: Boolean!
+  fingerprint: String
+  version: Int
+  bankName: String
+}
+
+# ─────────────────────────────────────────────
+# Refunds
+# ─────────────────────────────────────────────
+
+type Refund {
+  id: ID!
+  status: RefundStatus!
+  locationId: ID
+  unlinked: Boolean
+  destinationType: String
+  destinationDetails: DestinationDetails
+  amountMoney: Money!
+  appFeeMoney: Money
+  processingFee: [ProcessingFee]
+  paymentId: ID
+  orderId: ID
+  reason: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  teamMemberId: ID
+  terminalRefundDetails: TerminalRefundDetails
+  payment: Payment
+}
+
+type DestinationDetails {
+  cardDetails: RefundCardDetails
+  cashDetails: CashRefundDetails
+  externalDetails: ExternalRefundDetails
+}
+
+type RefundCardDetails {
+  card: Card
+  entryMethod: String
+}
+
+type CashRefundDetails {
+  sellerSuppliedMoney: Money!
+  changeBackMoney: Money
+}
+
+type ExternalRefundDetails {
+  type: String!
+  source: String!
+  sourceId: String
+}
+
+type TerminalRefundDetails {
+  deviceId: String
+  deadlineAt: DateTime
+  status: String
+}
+
+# ─────────────────────────────────────────────
+# Disputes
+# ─────────────────────────────────────────────
+
+type Dispute {
+  id: ID!
+  amountMoney: Money
+  reason: String
+  status: DisputeStatus!
+  dueAt: DateTime
+  disputedPayment: DisputedPayment
+  evidenceIds: [ID]
+  cardBrand: CardBrand
+  createdAt: DateTime!
+  updatedAt: DateTime
+  brandDisputeId: String
+  reportedDate: String
+  version: Int
+  locationId: ID
+  evidence: [DisputeEvidence]
+}
+
+type DisputedPayment {
+  paymentId: ID
+}
+
+type DisputeEvidence {
+  id: ID!
+  disputeId: ID!
+  evidenceFile: EvidenceFile
+  evidenceText: String
+  createdAt: DateTime
+  evidenceType: String
+  uploadedAt: DateTime
+}
+
+type EvidenceFile {
+  filename: String
+  filetype: String
+}
+
+# ─────────────────────────────────────────────
+# Orders
+# ─────────────────────────────────────────────
+
+type Order {
+  id: ID!
+  locationId: ID!
+  referenceId: String
+  source: OrderSource
+  customerId: ID
+  lineItems: [OrderLineItem]
+  taxes: [OrderTax]
+  discounts: [OrderDiscount]
+  serviceCharges: [OrderServiceCharge]
+  fulfillments: [OrderFulfillment]
+  returns: [OrderReturn]
+  returnAmounts: OrderAmounts
+  netAmounts: OrderAmounts
+  roundingAdjustment: OrderRoundingAdjustment
+  tenders: [OrderTender]
+  refunds: [Refund]
+  metadata: JSON
+  createdAt: DateTime!
+  updatedAt: DateTime
+  closedAt: DateTime
+  state: OrderState!
+  version: Int
+  totalMoney: Money
+  totalTaxMoney: Money
+  totalDiscountMoney: Money
+  totalTipMoney: Money
+  totalServiceChargeMoney: Money
+  ticketName: String
+  pricingOptions: OrderPricingOptions
+  rewards: [OrderReward]
+  netAmountDueMoney: Money
+  customer: Customer
+  location: Location
+}
+
+type OrderSource {
+  name: String
+}
+
+type OrderTax {
+  uid: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  name: String
+  type: String
+  percentage: String
+  metadata: JSON
+  appliedMoney: Money
+  scope: String
+  autoApplied: Boolean
+}
+
+type OrderDiscount {
+  uid: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  name: String
+  type: String
+  percentage: String
+  amountMoney: Money
+  appliedMoney: Money
+  metadata: JSON
+  scope: String
+  rewardIds: [String]
+  pricingRuleId: ID
+}
+
+type OrderServiceCharge {
+  uid: String
+  name: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  percentage: String
+  amountMoney: Money
+  appliedMoney: Money
+  totalMoney: Money
+  totalTaxMoney: Money
+  calculationPhase: String
+  taxable: Boolean
+  taxes: [OrderTax]
+  metadata: JSON
+  type: String
+  treatmentType: String
+  scope: String
+}
+
+type OrderLineItem {
+  uid: String
+  name: String
+  quantity: String!
+  quantityUnit: OrderQuantityUnit
+  note: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  variationName: String
+  itemType: String
+  metadata: JSON
+  modifiers: [OrderLineItemModifier]
+  appliedTaxes: [OrderLineItemAppliedTax]
+  appliedDiscounts: [OrderLineItemAppliedDiscount]
+  appliedServiceCharges: [OrderLineItemAppliedServiceCharge]
+  basePriceMoney: Money
+  variationTotalPriceMoney: Money
+  grossSalesMoney: Money
+  totalTaxMoney: Money
+  totalDiscountMoney: Money
+  totalServiceChargeMoney: Money
+  totalMoney: Money
+  pricingBlocklists: JSON
+}
+
+type OrderQuantityUnit {
+  measurementUnit: MeasurementUnit
+  precision: Int
+  catalogObjectId: ID
+  catalogVersion: Int
+}
+
+type MeasurementUnit {
+  customUnit: CustomMeasurementUnit
+  areaUnit: String
+  lengthUnit: String
+  volumeUnit: String
+  weightUnit: String
+  genericUnit: String
+  timeUnit: String
+  type: String
+}
+
+type CustomMeasurementUnit {
+  name: String!
+  abbreviation: String!
+}
+
+type OrderLineItemModifier {
+  uid: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  name: String
+  quantity: String
+  basePriceMoney: Money
+  totalPriceMoney: Money
+  metadata: JSON
+}
+
+type OrderLineItemAppliedTax {
+  uid: String!
+  taxUid: String!
+  appliedMoney: Money
+}
+
+type OrderLineItemAppliedDiscount {
+  uid: String!
+  discountUid: String!
+  appliedMoney: Money
+}
+
+type OrderLineItemAppliedServiceCharge {
+  uid: String!
+  serviceChargeUid: String!
+  appliedMoney: Money
+}
+
+type OrderRoundingAdjustment {
+  uid: String
+  name: String
+  amountMoney: Money
+}
+
+type OrderTender {
+  id: ID
+  locationId: ID
+  transactionId: ID
+  createdAt: DateTime
+  note: String
+  amountMoney: Money
+  tipMoney: Money
+  processingFeeMoney: Money
+  customerId: ID
+  type: String
+  cardDetails: CardDetails
+  cashDetails: CashDetails
+  additionalRecipients: [AdditionalRecipient]
+  paymentId: ID
+}
+
+type AdditionalRecipient {
+  locationId: ID!
+  description: String!
+  amountMoney: Money!
+  receivableId: ID
+}
+
+type OrderPricingOptions {
+  autoApplyDiscounts: Boolean
+  autoApplyTaxes: Boolean
+}
+
+type OrderReward {
+  id: ID!
+  rewardId: ID!
+}
+
+type OrderFulfillment {
+  uid: String
+  type: FulfillmentType
+  state: FulfillmentState
+  lineItemApplication: String
+  entries: [FulfillmentFulfillmentEntry]
+  metadata: JSON
+  pickupDetails: FulfillmentPickup
+  shipmentDetails: FulfillmentShipment
+  deliveryDetails: FulfillmentDelivery
+  digitalDetails: FulfillmentDigital
+}
+
+type FulfillmentFulfillmentEntry {
+  uid: String
+  lineItemUid: String!
+  quantity: String!
+  metadata: JSON
+}
+
+type FulfillmentPickup {
+  recipient: FulfillmentRecipient
+  expiresAt: DateTime
+  autoCompleteDuration: String
+  scheduleType: String
+  pickupAt: DateTime
+  pickupWindowDuration: String
+  prepTimeDuration: String
+  note: String
+  placedAt: DateTime
+  acceptedAt: DateTime
+  rejectedAt: DateTime
+  readyAt: DateTime
+  expiredAt: DateTime
+  pickedUpAt: DateTime
+  canceledAt: DateTime
+  cancelReason: String
+  isCurbsidePickup: Boolean
+  curbsidePickupDetails: CurbsidePickupDetails
+}
+
+type CurbsidePickupDetails {
+  curbsideName: String
+  buyerArrivedAt: DateTime
+}
+
+type FulfillmentShipment {
+  recipient: FulfillmentRecipient
+  carrier: String
+  shippingNote: String
+  shippingType: String
+  trackingNumber: String
+  trackingUrl: String
+  placedAt: DateTime
+  inProgressAt: DateTime
+  packagedAt: DateTime
+  expectedShippedAt: DateTime
+  shippedAt: DateTime
+  canceledAt: DateTime
+  cancelReason: String
+  failedAt: DateTime
+  failureReason: String
+}
+
+type FulfillmentDelivery {
+  recipient: FulfillmentRecipient
+  scheduleType: String
+  placedAt: DateTime
+  deliverAt: DateTime
+  prepTimeDuration: String
+  deliveryWindowDuration: String
+  note: String
+  completedAt: DateTime
+  inProgressAt: DateTime
+  rejectedAt: DateTime
+  readyAt: DateTime
+  deliveredAt: DateTime
+  canceledAt: DateTime
+  cancelReason: String
+  courierPickupAt: DateTime
+  courierPickupWindowDuration: String
+  isNoContactDelivery: Boolean
+  dropoffNotes: String
+  courierProviderName: String
+  courierSupportPhoneNumber: String
+  squareDeliveryId: String
+  externalDeliveryId: String
+  managedDelivery: Boolean
+}
+
+type FulfillmentDigital {
+  recipient: FulfillmentRecipient
+}
+
+type FulfillmentRecipient {
+  customerId: ID
+  displayName: String
+  emailAddress: String
+  phoneNumber: String
+  address: Address
+  customer: Customer
+}
+
+type OrderReturn {
+  uid: String
+  sourceOrderId: ID
+  returnLineItems: [ReturnLineItem]
+  returnServiceCharges: [OrderReturnServiceCharge]
+  returnTaxes: [OrderReturnTax]
+  returnDiscounts: [OrderReturnDiscount]
+  returnTips: [OrderReturnTip]
+  roundingAdjustment: OrderRoundingAdjustment
+  returnAmounts: OrderAmounts
+}
+
+type ReturnLineItem {
+  uid: String
+  sourceLineItemUid: String
+  name: String
+  quantity: String!
+  quantityUnit: OrderQuantityUnit
+  note: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  variationName: String
+  itemType: String
+  returnModifiers: [OrderReturnLineItemModifier]
+  appliedTaxes: [OrderLineItemAppliedTax]
+  appliedDiscounts: [OrderLineItemAppliedDiscount]
+  appliedServiceCharges: [OrderLineItemAppliedServiceCharge]
+  basePriceMoney: Money
+  variationTotalPriceMoney: Money
+  grossReturnMoney: Money
+  totalTaxMoney: Money
+  totalDiscountMoney: Money
+  totalServiceChargeMoney: Money
+  appliedMoney: Money
+  totalMoney: Money
+}
+
+type OrderReturnLineItemModifier {
+  uid: String
+  sourceModifierUid: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  name: String
+  basePriceMoney: Money
+  totalPriceMoney: Money
+  quantity: String
+}
+
+type OrderReturnServiceCharge {
+  uid: String
+  sourceServiceChargeUid: String
+  name: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  percentage: String
+  amountMoney: Money
+  appliedMoney: Money
+  totalMoney: Money
+  totalTaxMoney: Money
+  calculationPhase: String
+  taxable: Boolean
+  appliedTaxes: [OrderLineItemAppliedTax]
+  treatmentType: String
+  scope: String
+}
+
+type OrderReturnTax {
+  uid: String
+  sourceTaxUid: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  name: String
+  type: String
+  percentage: String
+  appliedMoney: Money
+  scope: String
+}
+
+type OrderReturnDiscount {
+  uid: String
+  sourceDiscountUid: String
+  catalogObjectId: ID
+  catalogVersion: Int
+  name: String
+  type: String
+  percentage: String
+  amountMoney: Money
+  appliedMoney: Money
+  scope: String
+}
+
+type OrderReturnTip {
+  uid: String
+  appliedMoney: Money
+  sourceTenderUid: String
+}
+
+type OrderAmounts {
+  totalMoney: Money
+  taxMoney: Money
+  discountMoney: Money
+  tipMoney: Money
+  serviceChargeMoney: Money
+}
+
+type OrderPriceModification {
+  uid: String
+  name: String
+  amountMoney: Money
+  appliedMoney: Money
+}
+
+# ─────────────────────────────────────────────
+# Checkout
+# ─────────────────────────────────────────────
+
+type Checkout {
+  id: ID!
+  checkoutPageUrl: String!
+  askForShippingAddress: Boolean
+  merchantSupportEmail: String
+  prePopulateBuyerEmail: String
+  prePopulateShippingAddress: Address
+  redirectUrl: String
+  order: CheckoutOrder
+  createdAt: DateTime!
+  additionalRecipients: [AdditionalRecipient]
+}
+
+type CheckoutOrder {
+  id: ID!
+  locationId: ID!
+  referenceId: String
+  lineItems: [OrderLineItem]
+  taxes: [OrderTax]
+  discounts: [OrderDiscount]
+}
+
+type PaymentLink {
+  id: ID!
+  version: Int!
+  description: String
+  orderId: ID
+  checkoutOptions: CheckoutOptions
+  prePopulatedData: PrePopulatedData
+  url: String
+  longUrl: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  paymentNote: String
+  order: Order
+}
+
+type CheckoutOptions {
+  allowTipping: Boolean
+  customFields: [CustomField]
+  subscriptionPlanId: ID
+  redirectUrl: String
+  merchantSupportEmail: String
+  askForShippingAddress: Boolean
+  acceptedPaymentMethods: AcceptedPaymentMethods
+  appFeeMoney: Money
+  shippingFee: ShippingFee
+  enableCoupon: Boolean
+  enableLoyalty: Boolean
+}
+
+type CustomField {
+  title: String!
+}
+
+type AcceptedPaymentMethods {
+  applePay: Boolean
+  googlePay: Boolean
+  cashAppPay: Boolean
+  afterpayClearpay: Boolean
+}
+
+type ShippingFee {
+  name: String
+  charge: Money
+}
+
+type PrePopulatedData {
+  buyerEmail: String
+  buyerPhoneNumber: String
+  buyerAddress: Address
+}
+
+# ─────────────────────────────────────────────
+# Invoices
+# ─────────────────────────────────────────────
+
+type Invoice {
+  id: ID!
+  version: Int!
+  locationId: ID
+  orderId: ID
+  primaryRecipient: InvoiceRecipient
+  paymentRequests: [InvoiceSchedule]
+  deliveryMethod: String
+  invoiceNumber: String
+  title: String
+  description: String
+  scheduledAt: DateTime
+  publicUrl: String
+  nextPaymentAmountMoney: Money
+  status: InvoiceStatus!
+  timezone: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  customFields: [InvoiceCustomField]
+  subscriptionId: ID
+  saleOrServiceDate: String
+  paymentConditions: String
+  storePaymentMethodEnabled: Boolean
+  attachments: [InvoiceAttachment]
+  order: Order
+  lineItems: [InvoiceLineItem]
+}
+
+type InvoiceRecipient {
+  customerId: ID
+  givenName: String
+  familyName: String
+  emailAddress: String
+  address: Address
+  phoneNumber: String
+  companyName: String
+  taxIds: InvoiceRecipientTaxIds
+  customer: Customer
+}
+
+type InvoiceRecipientTaxIds {
+  euVat: String
+}
+
+type InvoiceSchedule {
+  uid: String
+  requestMethod: String
+  requestType: String!
+  dueDate: String
+  fixedAmountRequestedMoney: Money
+  percentageRequested: String
+  tippingEnabled: Boolean
+  automaticPaymentSource: String
+  cardId: ID
+  bankAccountId: ID
+  squareAccountId: ID
+  reminders: [InvoicePaymentReminder]
+  computedAmountMoney: Money
+  totalCompletedAmountMoney: Money
+  roundingAdjustmentIncludedMoney: Money
+}
+
+type InvoicePaymentReminder {
+  uid: String
+  relativeScheduledDays: Int
+  message: String
+  status: String
+  sentAt: DateTime
+}
+
+type InvoiceLineItem {
+  uid: String
+  name: String
+  description: String
+  quantity: String
+  unitMoney: Money
+  totalMoney: Money
+  percentageMoney: Money
+  appliedTaxes: [InvoiceLineItemAppliedTax]
+  metadata: JSON
+}
+
+type InvoiceLineItemAppliedTax {
+  taxName: String
+  appliedMoney: Money
+}
+
+type InvoiceCustomField {
+  label: String!
+  value: String!
+  placement: String!
+}
+
+type InvoiceAttachment {
+  id: ID!
+  filename: String
+  description: String
+  filesize: Int
+  hash: String
+  mimeType: String
+  uploadedAt: DateTime
+}
+
+# ─────────────────────────────────────────────
+# Subscriptions
+# ─────────────────────────────────────────────
+
+type Subscription {
+  id: ID!
+  locationId: ID!
+  planVariationId: ID!
+  customerId: ID!
+  startDate: String!
+  canceledDate: String
+  chargedThroughDate: String
+  status: SubscriptionStatus!
+  taxPercentage: String
+  invoiceIds: [ID]
+  priceOverrideMoney: Money
+  version: Int
+  createdAt: DateTime!
+  cardId: ID
+  timezone: String
+  source: SubscriptionSource
+  actions: [SubscriptionAction]
+  monthlyBillingAnchorDate: Int
+  phases: [SubscriptionPhase]
+  customer: Customer
+  location: Location
+  events: [SubscriptionEvent]
+}
+
+type SubscriptionSource {
+  name: String
+}
+
+type SubscriptionAction {
+  id: ID
+  type: String
+  effectiveDate: String
+  monthlyBillingAnchorDate: Int
+  phases: [SubscriptionPhase]
+  newPlanVariationId: ID
+}
+
+type SubscriptionPhase {
+  uid: String
+  ordinal: Int!
+  orderTemplateId: ID
+  planPhaseUid: String
+}
+
+type SubscriptionEvent {
+  id: ID!
+  subscriptionEventType: String!
+  effectiveDate: String!
+  monthlyBillingAnchorDate: Int
+  info: SubscriptionEventInfo
+  phases: [SubscriptionPhase]
+  planVariationId: ID
+}
+
+type SubscriptionEventInfo {
+  detail: String
+  code: String
+}
+
+type Plan {
+  id: ID!
+  name: String!
+  eligibleCategoryIds: [ID]
+  allItems: Boolean
+  phases: [PlanPhase]
+}
+
+type PlanPhase {
+  uid: String
+  cadence: String!
+  periods: Int
+  recurring: Boolean
+  ordinal: Int
+  pricing: PlanPhasePricing
+}
+
+type PlanPhasePricing {
+  type: String
+  discountIds: [ID]
+  priceMoney: Money
+}
+
+# ─────────────────────────────────────────────
+# Customers
+# ─────────────────────────────────────────────
+
+type Customer {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  cards: [Card]
+  givenName: String
+  familyName: String
+  nickname: String
+  companyName: String
+  emailAddress: String
+  address: CustomerAddress
+  phoneNumber: String
+  birthday: String
+  referenceId: String
+  note: String
+  preferences: CustomerPreferences
+  creationSource: String
+  groupIds: [ID]
+  segmentIds: [ID]
+  version: Int
+  taxIds: CustomerTaxIds
+  groups: [CustomerGroup]
+  segments: [CustomerSegment]
+  loyaltyAccounts: [LoyaltyAccount]
+}
+
+type CustomerAddress {
+  addressLine1: String
+  addressLine2: String
+  addressLine3: String
+  locality: String
+  sublocality: String
+  sublocality2: String
+  sublocality3: String
+  administrativeDistrictLevel1: String
+  administrativeDistrictLevel2: String
+  administrativeDistrictLevel3: String
+  postalCode: String
+  country: String
+  firstName: String
+  lastName: String
+}
+
+type CustomerPreferences {
+  emailUnsubscribed: Boolean
+}
+
+type CustomerTaxIds {
+  euVat: String
+}
+
+type CustomerGroup {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  customers: [Customer]
+}
+
+type CustomerSegment {
+  id: ID!
+  name: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CustomerFilter {
+  creationSource: CustomerCreationSourceFilter
+  createdAt: TimeRangeFilter
+  updatedAt: TimeRangeFilter
+  emailAddress: CustomerTextFilter
+  phoneNumber: CustomerTextFilter
+  referenceId: CustomerTextFilter
+  groupIds: FilterValue
+  customAttribute: CustomerCustomAttributeFilter
+  segmentIds: FilterValue
+}
+
+input CustomerCreationSourceFilter {
+  values: [String]
+  rule: String
+}
+
+input TimeRangeFilter {
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input CustomerTextFilter {
+  exact: String
+  fuzzy: String
+}
+
+input FilterValue {
+  all: [String]
+  any: [String]
+  none: [String]
+}
+
+input CustomerCustomAttributeFilter {
+  filters: [CustomerCustomAttributeFilterItem]
+  updatedAt: TimeRangeFilter
+}
+
+input CustomerCustomAttributeFilterItem {
+  key: String!
+  filter: CustomerCustomAttributeValue
+  updatedAt: TimeRangeFilter
+}
+
+input CustomerCustomAttributeValue {
+  email: CustomerTextFilter
+  phone: CustomerTextFilter
+  text: CustomerTextFilter
+  selection: FilterValue
+  date: TimeRangeFilter
+  number: FloatRangeFilter
+  boolean: Boolean
+  address: CustomerAddressFilter
+}
+
+input FloatRangeFilter {
+  gte: Float
+  lte: Float
+}
+
+input CustomerAddressFilter {
+  postalCode: CustomerTextFilter
+  country: FilterValue
+}
+
+# ─────────────────────────────────────────────
+# Catalog
+# ─────────────────────────────────────────────
+
+type Catalog {
+  objects: [CatalogObject]
+  cursor: String
+}
+
+type CatalogObject {
+  type: String!
+  id: ID!
+  updatedAt: DateTime
+  version: Int
+  isDeleted: Boolean
+  customAttributeValues: JSON
+  catalogV1Ids: [CatalogV1Id]
+  presentAtAllLocations: Boolean
+  presentAtLocationIds: [ID]
+  absentAtLocationIds: [ID]
+  imageId: ID
+  itemData: CatalogItem
+  categoryData: CatalogCategory
+  itemVariationData: CatalogItemVariation
+  taxData: CatalogTax
+  discountData: CatalogDiscount
+  modifierListData: CatalogModifierList
+  modifierData: CatalogModifier
+  timePeriodData: CatalogAvailabilityPeriod
+  productSetData: CatalogProductSet
+  pricingRuleData: CatalogPricingRule
+  imageData: CatalogImage
+  measurementUnitData: CatalogMeasurementUnit
+  subscriptionPlanData: Plan
+  itemOptionData: CatalogItemOption
+  itemOptionValueData: CatalogItemOptionValue
+  customAttributeDefinitionData: CustomAttributeDefinition
+  quickAmountsSettingsData: CatalogQuickAmountsSettings
+  subscriptionPlanVariationData: PlanPhase
+  availabilityPeriodData: CatalogAvailabilityPeriod
+}
+
+type CatalogV1Id {
+  catalogV1Id: String
+  locationId: ID
+}
+
+type CatalogItem {
+  name: String!
+  description: String
+  abbreviation: String
+  labelColor: String
+  isTaxable: Boolean
+  availableOnline: Boolean
+  availableForPickup: Boolean
+  availableElectronically: Boolean
+  categoryId: ID
+  taxIds: [ID]
+  modifierListInfo: [CatalogItemModifierListInfo]
+  variations: [CatalogObject]
+  productType: String
+  skipModifierScreen: Boolean
+  itemOptions: [CatalogItemOptionForItem]
+  imageIds: [ID]
+  sortName: String
+  categories: [CatalogObject]
+  descriptionHtml: String
+  descriptionPlaintext: String
+  channels: [ID]
+  isArchived: Boolean
+  ecomSeoData: CatalogEcomSeoData
+  foodAndBeverageDetails: CatalogItemFoodAndBeverageDetails
+  reportingCategory: CatalogObjectCategory
+}
+
+type CatalogItemModifierListInfo {
+  modifierListId: ID!
+  modifierOverrides: [CatalogModifierOverride]
+  minSelectedModifiers: Int
+  maxSelectedModifiers: Int
+  enabled: Boolean
+  ordinal: Int
+}
+
+type CatalogModifierOverride {
+  modifierId: ID!
+  onByDefault: Boolean
+}
+
+type CatalogItemOptionForItem {
+  itemOptionId: ID
+}
+
+type CatalogEcomSeoData {
+  pageTitle: String
+  pageDescription: String
+  permalink: String
+}
+
+type CatalogItemFoodAndBeverageDetails {
+  calorieCount: Int
+  dietaryPreferences: [CatalogItemFoodAndBeverageDetailsDietaryPreference]
+  ingredients: [CatalogItemFoodAndBeverageDetailsIngredient]
+}
+
+type CatalogItemFoodAndBeverageDetailsDietaryPreference {
+  type: String
+  standardName: String
+  customName: String
+}
+
+type CatalogItemFoodAndBeverageDetailsIngredient {
+  type: String
+  standardName: String
+  customName: String
+}
+
+type CatalogObjectCategory {
+  id: ID
+  ordinal: Int
+}
+
+type CatalogItemVariation {
+  itemId: ID
+  name: String
+  sku: String
+  upc: String
+  ordinal: Int
+  pricingType: String
+  priceMoney: Money
+  locationOverrides: [ItemVariationLocationOverrides]
+  trackInventory: Boolean
+  inventoryAlertType: String
+  inventoryAlertThreshold: Int
+  userData: String
+  serviceDuration: Int
+  availableForBooking: Boolean
+  itemOptionValues: [CatalogItemOptionValueForItemVariation]
+  measurementUnitId: ID
+  sellable: Boolean
+  stockable: Boolean
+  imageIds: [ID]
+  teamMemberIds: [ID]
+  stockableConversion: CatalogStockConversion
+}
+
+type ItemVariationLocationOverrides {
+  locationId: ID
+  priceMoney: Money
+  pricingType: String
+  trackInventory: Boolean
+  inventoryAlertType: String
+  inventoryAlertThreshold: Int
+  soldOut: Boolean
+  soldOutValidUntil: DateTime
+}
+
+type CatalogItemOptionValueForItemVariation {
+  itemOptionId: ID
+  itemOptionValueId: ID
+}
+
+type CatalogStockConversion {
+  stockableItemVariationId: ID!
+  stockableQuantity: String!
+  nonstockableQuantity: String!
+}
+
+type CatalogModifier {
+  name: String
+  priceMoney: Money
+  ordinal: Int
+  modifierListId: ID
+  imageId: ID
+  locationOverrides: [ModifierLocationOverrides]
+}
+
+type ModifierLocationOverrides {
+  locationId: ID
+  priceMoney: Money
+  soldOut: Boolean
+}
+
+type CatalogModifierList {
+  name: String
+  ordinal: Int
+  selectionType: String
+  modifiers: [CatalogObject]
+  imageIds: [ID]
+  modifierType: String
+  maxLength: Int
+  textRequired: Boolean
+  internalName: String
+}
+
+type CatalogCategory {
+  name: String!
+  imageIds: [ID]
+  categoryType: String
+  parentCategory: CatalogObjectCategory
+  isTopLevel: Boolean
+  channels: [ID]
+  availabilityPeriodIds: [ID]
+  onlineVisibility: Boolean
+  rootCategory: String
+  ecomSeoData: CatalogEcomSeoData
+  pathToRoot: [CategoryPathToRootNode]
+}
+
+type CategoryPathToRootNode {
+  categoryId: ID
+  categoryName: String
+}
+
+type CatalogDiscount {
+  name: String!
+  discountType: String
+  percentage: String
+  amountMoney: Money
+  pinRequired: Boolean
+  labelColor: String
+  modifyTaxBasis: String
+  maximumAmountMoney: Money
+}
+
+type CatalogTax {
+  name: String!
+  calculationPhase: String
+  inclusionType: String
+  percentage: String
+  appliesToCustomAmounts: Boolean
+  enabled: Boolean
+  appliesToProductSetId: ID
+}
+
+type CatalogPricingRule {
+  name: String
+  timePeriodIds: [ID]
+  discountId: ID
+  matchProductsId: ID
+  applyProductsId: ID
+  excludeProductsId: ID
+  validFromDate: String
+  validFromLocalTime: String
+  validUntilDate: String
+  validUntilLocalTime: String
+  excludeStrategy: String
+  minimumOrderSubtotalMoney: Money
+  customerGroupIdsAny: [ID]
+}
+
+type CatalogAvailabilityPeriod {
+  startLocalTime: String
+  endLocalTime: String
+  dayOfWeek: String
+}
+
+type CatalogProductSet {
+  name: String
+  productIdsAny: [ID]
+  productIdsAll: [ID]
+  quantityExact: Int
+  quantityMin: Int
+  quantityMax: Int
+  allProducts: Boolean
+}
+
+type CatalogImage {
+  name: String
+  url: String
+  caption: String
+  photoStudioOrderId: ID
+}
+
+type CatalogMeasurementUnit {
+  measurementUnit: MeasurementUnit
+  precision: Int
+}
+
+type CatalogItemOption {
+  name: String
+  displayName: String
+  description: String
+  showColors: Boolean
+  values: [CatalogObject]
+}
+
+type CatalogItemOptionValue {
+  itemOptionId: ID
+  name: String
+  description: String
+  color: String
+  ordinal: Int
+}
+
+type CatalogQuickAmountsSettings {
+  option: String!
+  eligibleForAutoAmounts: Boolean
+  amounts: [CatalogQuickAmount]
+}
+
+type CatalogQuickAmount {
+  type: String!
+  amount: Money!
+  score: Int
+  ordinal: Int
+}
+
+# ─────────────────────────────────────────────
+# Inventory
+# ─────────────────────────────────────────────
+
+type Inventory {
+  catalogObjectId: ID!
+  catalogObjectType: String
+  state: String!
+  locationId: ID!
+  quantity: String
+  source: InventorySource
+  employeeId: ID
+  teamMemberId: ID
+  transactionId: ID
+  refundId: ID
+  purchaseOrderId: ID
+  goodsReceiptId: ID
+  adjustmentGroup: InventoryAdjustmentGroup
+  occurredAt: DateTime
+  createdAt: DateTime
+  location: Location
+}
+
+type InventorySource {
+  productionCenterId: ID
+  applicationId: String
+  name: String
+}
+
+type InventoryAdjustmentGroup {
+  id: ID
+  rootAdjustmentId: ID
+  fromState: String
+  toState: String
+}
+
+type InventoryTransfer {
+  id: ID!
+  referenceId: String
+  state: String!
+  fromLocationId: ID
+  toLocationId: ID
+  catalogObjectId: ID
+  catalogObjectType: String
+  quantity: String
+  occurredAt: DateTime
+  createdAt: DateTime
+  source: InventorySource
+  employeeId: ID
+  teamMemberId: ID
+  fromLocation: Location
+  toLocation: Location
+}
+
+# ─────────────────────────────────────────────
+# Location
+# ─────────────────────────────────────────────
+
+type Location {
+  id: ID!
+  name: String
+  address: Address
+  timezone: String
+  capabilities: [String]
+  status: String
+  createdAt: DateTime!
+  merchantId: ID
+  country: String
+  languageCode: String
+  currency: Currency
+  phoneNumber: String
+  businessName: String
+  type: String
+  websiteUrl: String
+  businessHours: BusinessHours
+  businessEmail: String
+  description: String
+  twitterUsername: String
+  instagramUsername: String
+  facebookUrl: String
+  coordinates: Coordinates
+  logoUrl: String
+  posBackgroundUrl: String
+  mcc: String
+  fullFormatLogoUrl: String
+  taxIds: TaxIds
+}
+
+type BusinessHours {
+  periods: [BusinessHoursPeriod]
+}
+
+type BusinessHoursPeriod {
+  dayOfWeek: String
+  startLocalTime: String
+  endLocalTime: String
+}
+
+type TaxIds {
+  euVat: String
+  frSiret: String
+  frNaf: String
+  esNif: String
+  jpQii: String
+}
+
+type Merchant {
+  id: ID!
+  businessName: String
+  country: String!
+  languageCode: String
+  currency: Currency
+  status: String
+  mainLocationId: ID
+  createdAt: DateTime
+  locations: [Location]
+}
+
+# ─────────────────────────────────────────────
+# Team and Labor
+# ─────────────────────────────────────────────
+
+type Employee {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  phoneNumber: String
+  locationIds: [ID]
+  status: String
+  isOwner: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type TeamMember {
+  id: ID!
+  referenceId: String
+  isOwner: Boolean
+  status: String
+  givenName: String
+  familyName: String
+  emailAddress: String
+  phoneNumber: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  assignedLocations: TeamMemberAssignedLocations
+  wageSetting: WageSetting
+}
+
+type TeamMemberAssignedLocations {
+  assignmentType: String
+  locationIds: [ID]
+  locations: [Location]
+}
+
+type WageSetting {
+  teamMemberId: ID
+  jobAssignments: [JobAssignment]
+  isOvertimeExempt: Boolean
+  version: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type JobAssignment {
+  jobTitle: String!
+  payType: String!
+  hourlyRate: Money
+  annualRate: Money
+  weeklyHours: Int
+  jobId: ID
+}
+
+type Team {
+  members: [TeamMember]
+  cursor: String
+}
+
+type Labor {
+  shifts: [Shift]
+  cursor: String
+}
+
+type Shift {
+  id: ID!
+  employeeId: String
+  locationId: ID!
+  timezone: String
+  startAt: DateTime!
+  endAt: DateTime
+  wage: ShiftWage
+  breaks: [Break]
+  status: ShiftStatus!
+  version: Int
+  createdAt: DateTime!
+  updatedAt: DateTime
+  teamMemberId: ID
+  declaredCashTipMoney: Money
+  teamMember: TeamMember
+  location: Location
+}
+
+type ShiftWage {
+  title: String
+  hourlyRate: Money
+  jobId: ID
+  tipEligible: Boolean
+}
+
+type Break {
+  id: ID!
+  startAt: DateTime!
+  endAt: DateTime
+  breakTypeId: ID!
+  name: String!
+  expectedDuration: String!
+  isPaid: Boolean!
+}
+
+# ─────────────────────────────────────────────
+# Loyalty
+# ─────────────────────────────────────────────
+
+type Loyalty {
+  id: ID!
+  name: String
+  status: String
+  programType: String
+  accrualRules: [LoyaltyProgramAccrualRule]
+  rewardTiers: [LoyaltyProgramRewardTier]
+  expirationPolicy: LoyaltyProgramExpirationPolicy
+  terminology: LoyaltyProgramTerminology
+  locationIds: [ID]
+  createdAt: DateTime
+  updatedAt: DateTime
+  accrualRulesDetails: [LoyaltyProgramAccrualRule]
+  locations: [Location]
+}
+
+type LoyaltyProgramAccrualRule {
+  accrualType: String!
+  points: Int
+  visitData: LoyaltyProgramAccrualRuleVisitData
+  spendData: LoyaltyProgramAccrualRuleSpendData
+  itemVariationData: LoyaltyProgramAccrualRuleItemVariationData
+  categoryData: LoyaltyProgramAccrualRuleCategoryData
+}
+
+type LoyaltyProgramAccrualRuleVisitData {
+  minimumAmountMoney: Money
+  taxMode: String!
+}
+
+type LoyaltyProgramAccrualRuleSpendData {
+  amountMoney: Money!
+  excludedCategoryIds: [ID]
+  excludedItemVariationIds: [ID]
+  taxMode: String!
+}
+
+type LoyaltyProgramAccrualRuleItemVariationData {
+  itemVariationId: ID!
+  points: Int!
+}
+
+type LoyaltyProgramAccrualRuleCategoryData {
+  categoryId: ID!
+  points: Int!
+}
+
+type LoyaltyProgramRewardTier {
+  id: ID!
+  points: Int!
+  name: String!
+  definition: LoyaltyProgramRewardDefinition
+  createdAt: DateTime!
+  pricingRuleReference: CatalogObjectReference
+}
+
+type LoyaltyProgramRewardDefinition {
+  scope: String!
+  discountType: String!
+  percentageDiscount: String
+  catalogObjectIds: [ID]
+  fixedDiscountMoney: Money
+  maxDiscountMoney: Money
+}
+
+type CatalogObjectReference {
+  objectId: ID
+  catalogVersion: Int
+}
+
+type LoyaltyProgramExpirationPolicy {
+  expirationDuration: String!
+  status: String!
+}
+
+type LoyaltyProgramTerminology {
+  one: String!
+  other: String!
+}
+
+type LoyaltyAccount {
+  id: ID!
+  programId: ID!
+  balance: Int!
+  lifetimePoints: Int
+  customerId: ID
+  enrolledAt: DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
+  mapping: LoyaltyAccountMapping
+  expiringPointDeadlines: [LoyaltyAccountExpiringPointDeadline]
+  customer: Customer
+  program: Loyalty
+}
+
+type LoyaltyAccountMapping {
+  id: ID
+  createdAt: DateTime
+  phoneNumber: String
+}
+
+type LoyaltyAccountExpiringPointDeadline {
+  points: Int!
+  expiresAt: DateTime!
+}
+
+type LoyaltyReward {
+  id: ID!
+  status: String!
+  loyaltyAccountId: ID!
+  rewardTierId: ID!
+  points: Int
+  orderId: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  redeemedAt: DateTime
+}
+
+type LoyaltyEvent {
+  id: ID!
+  type: LoyaltyEventType!
+  createdAt: DateTime!
+  loyaltyAccountId: ID!
+  source: String!
+  locationId: ID
+  accumulatePoints: LoyaltyEventAccumulatePoints
+  createReward: LoyaltyEventCreateReward
+  redeemReward: LoyaltyEventRedeemReward
+  deleteReward: LoyaltyEventDeleteReward
+  adjustPoints: LoyaltyEventAdjustPoints
+  expirePoints: LoyaltyEventExpirePoints
+  otherEvent: LoyaltyEventOther
+}
+
+type LoyaltyEventAccumulatePoints {
+  loyaltyProgramId: ID
+  points: Int
+  orderId: ID
+}
+
+type LoyaltyEventCreateReward {
+  loyaltyProgramId: ID!
+  rewardId: ID
+  points: Int!
+}
+
+type LoyaltyEventRedeemReward {
+  loyaltyProgramId: ID!
+  rewardId: ID
+  orderId: ID
+}
+
+type LoyaltyEventDeleteReward {
+  loyaltyProgramId: ID!
+  rewardId: ID
+  points: Int!
+}
+
+type LoyaltyEventAdjustPoints {
+  loyaltyProgramId: ID
+  points: Int!
+  reason: String
+}
+
+type LoyaltyEventExpirePoints {
+  loyaltyProgramId: ID!
+  points: Int!
+}
+
+type LoyaltyEventOther {
+  loyaltyProgramId: ID!
+  points: Int!
+}
+
+# ─────────────────────────────────────────────
+# Bookings
+# ─────────────────────────────────────────────
+
+type Booking {
+  id: ID!
+  version: Int
+  status: BookingStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  startAt: DateTime
+  locationId: ID
+  customerId: ID
+  customerNote: String
+  sellerNote: String
+  appointmentSegments: [AppointmentSegment]
+  transitionTimeMinutes: Int
+  allDay: Boolean
+  locationType: String
+  creatorDetails: BookingCreatorDetails
+  source: String
+  address: Address
+  location: Location
+  customer: Customer
+}
+
+type AppointmentSegment {
+  durationMinutes: Int!
+  serviceVariationId: ID!
+  teamMemberId: ID!
+  serviceVariationVersion: Int!
+  intermissionMinutes: Int
+  anyTeamMember: Boolean
+  resourceIds: [ID]
+  teamMember: TeamMember
+}
+
+type BookingCreatorDetails {
+  creatorType: String
+  teamMemberId: ID
+  customerId: ID
+}
+
+type BookingService {
+  id: ID!
+  name: String
+  teamMemberIds: [ID]
+  locationIds: [ID]
+  catalogItemId: ID
+  catalogItemVariationId: ID
+  duration: Int
+  teamMembers: [TeamMember]
+  locations: [Location]
+}
+
+type BookingTeam {
+  teamMemberId: ID!
+  description: String
+  displayName: String
+  isBookable: Boolean
+  profileImageUrl: String
+  teamMember: TeamMember
+  locations: [Location]
+  services: [BookingService]
+}
+
+# ─────────────────────────────────────────────
+# Terminal
+# ─────────────────────────────────────────────
+
+type Terminal {
+  id: ID!
+  name: String
+  status: String
+  locationId: ID
+  location: Location
+}
+
+type TerminalCheckout {
+  id: ID!
+  amountMoney: Money!
+  referenceId: String
+  note: String
+  orderId: ID
+  paymentOptions: PaymentOptions
+  deviceOptions: DeviceCheckoutOptions!
+  deadlineAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime
+  appId: String
+  locationId: ID
+  paymentType: String
+  teamMemberId: ID
+  customerId: ID
+  customerId2: ID
+  appFeeMoney: Money
+  statementDescriptionIdentifier: String
+  tipMoney: Money
+  status: TerminalCheckoutStatus!
+  cancelReason: String
+  paymentIds: [ID]
+  order: Order
+}
+
+type PaymentOptions {
+  autocomplete: Boolean
+  delayDuration: String
+  acceptPartialAuthorization: Boolean
+  delayAction: String
+}
+
+type DeviceCheckoutOptions {
+  deviceId: ID!
+  skipReceiptScreen: Boolean
+  collectSignature: Boolean
+  tipSettings: TipSettings
+  showItemizedCart: Boolean
+}
+
+type TipSettings {
+  allowTipping: Boolean
+  separateTipScreen: Boolean
+  customTipField: Boolean
+  tipPercentages: [Int]
+  smartTipping: Boolean
+}
+
+type DeviceCode {
+  id: ID!
+  name: String
+  code: String
+  deviceId: ID
+  productType: String!
+  locationId: ID
+  status: String!
+  pairBy: DateTime
+  createdAt: DateTime!
+  statusChangedAt: DateTime
+  pairedAt: DateTime
+  location: Location
+}
+
+# ─────────────────────────────────────────────
+# Webhooks and Events
+# ─────────────────────────────────────────────
+
+type Webhook {
+  id: ID!
+  name: String
+  enabled: Boolean!
+  eventTypes: [WebhookEventType]!
+  notificationUrl: String!
+  apiVersion: String!
+  signatureKey: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type WebhookEvent {
+  merchantId: ID!
+  locationId: ID
+  type: WebhookEventType!
+  eventId: ID!
+  createdAt: DateTime!
+  data: WebhookEventData
+}
+
+type WebhookEventData {
+  type: String
+  id: ID
+  object: JSON
+}
+
+# ─────────────────────────────────────────────
+# OAuth
+# ─────────────────────────────────────────────
+
+type OAuth {
+  clientId: ID!
+  scopes: [String]!
+  redirectUri: String!
+  state: String
+}
+
+type OAuthToken {
+  accessToken: String!
+  tokenType: String!
+  expiresAt: DateTime
+  merchantId: ID!
+  subscriptionId: ID
+  planId: ID
+  idToken: String
+  refreshToken: String
+  shortLived: Boolean
+  errors: [PaymentError]
+}
+
+# ─────────────────────────────────────────────
+# Gift Cards
+# ─────────────────────────────────────────────
+
+type GiftCard {
+  id: ID!
+  type: String!
+  ganSource: String
+  status: GiftCardStatus!
+  balanceMoney: Money
+  gan: String
+  createdAt: DateTime
+  customerIds: [ID]
+  customers: [Customer]
+}
+
+type GiftCardActivity {
+  id: ID!
+  type: GiftCardActivityType!
+  locationId: ID!
+  createdAt: DateTime!
+  giftCardId: ID
+  giftCardGan: String
+  giftCardBalanceMoney: Money
+  loadActivityDetails: GiftCardActivityLoad
+  activateActivityDetails: GiftCardActivityActivate
+  redeemActivityDetails: GiftCardActivityRedeem
+  clearBalanceActivityDetails: GiftCardActivityClearBalance
+  deactivateActivityDetails: GiftCardActivityDeactivate
+  adjustIncrementActivityDetails: GiftCardActivityAdjustIncrement
+  adjustDecrementActivityDetails: GiftCardActivityAdjustDecrement
+  refundActivityDetails: GiftCardActivityRefund
+  unlinkedActivityRefundActivityDetails: GiftCardActivityUnlinkedActivityRefund
+  importActivityDetails: GiftCardActivityImport
+  blockActivityDetails: GiftCardActivityBlock
+  unblockActivityDetails: GiftCardActivityUnblock
+  importReversalActivityDetails: GiftCardActivityImportReversal
+  transferBalanceToActivityDetails: GiftCardActivityTransferBalanceTo
+  transferBalanceFromActivityDetails: GiftCardActivityTransferBalanceFrom
+  giftCard: GiftCard
+}
+
+type GiftCardActivityLoad {
+  amountMoney: Money
+  orderId: ID
+  lineItemUid: String
+  referenceId: String
+  buyerPaymentInstrumentIds: [String]
+}
+
+type GiftCardActivityActivate {
+  amountMoney: Money
+  orderId: ID
+  lineItemUid: String
+  referenceId: String
+  buyerPaymentInstrumentIds: [String]
+}
+
+type GiftCardActivityRedeem {
+  amountMoney: Money!
+  paymentId: ID
+  referenceId: String
+  status: String
+}
+
+type GiftCardActivityClearBalance {
+  reason: String!
+}
+
+type GiftCardActivityDeactivate {
+  reason: String!
+}
+
+type GiftCardActivityAdjustIncrement {
+  amountMoney: Money!
+  reason: String!
+}
+
+type GiftCardActivityAdjustDecrement {
+  amountMoney: Money!
+  reason: String!
+}
+
+type GiftCardActivityRefund {
+  redeemActivityId: ID!
+  amountMoney: Money
+  referenceId: String
+  paymentId: ID
+}
+
+type GiftCardActivityUnlinkedActivityRefund {
+  amountMoney: Money!
+  referenceId: String
+  paymentId: ID
+}
+
+type GiftCardActivityImport {
+  amountMoney: Money!
+}
+
+type GiftCardActivityBlock {
+  reason: String!
+}
+
+type GiftCardActivityUnblock {
+  reason: String!
+}
+
+type GiftCardActivityImportReversal {
+  amountMoney: Money!
+}
+
+type GiftCardActivityTransferBalanceTo {
+  transferFromGiftCardId: ID!
+  amountMoney: Money!
+}
+
+type GiftCardActivityTransferBalanceFrom {
+  transferToGiftCardId: ID!
+  amountMoney: Money!
+}
+
+# ─────────────────────────────────────────────
+# Payouts
+# ─────────────────────────────────────────────
+
+type Payout {
+  id: ID!
+  status: String!
+  locationId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  amountMoney: Money
+  destination: Destination
+  version: Int
+  type: String
+  payoutFee: [PayoutFee]
+  arrivalDate: String
+  endToEndId: String
+  location: Location
+}
+
+type Destination {
+  type: String
+  id: ID
+}
+
+type PayoutFee {
+  effectiveAt: DateTime
+  type: String
+  amountMoney: Money
+}
+
+type PayoutEntry {
+  id: ID!
+  payoutId: ID!
+  effectiveAt: DateTime
+  type: String
+  grossAmountMoney: Money
+  feeAmountMoney: Money
+  netAmountMoney: Money
+  typeAppFeeRevenueDetails: PaymentBalanceActivityAppFeeRevenueDetail
+  typeAppFeeRefundDetails: PaymentBalanceActivityAppFeeRefundDetail
+  typeAutomaticSavingsDetails: PaymentBalanceActivityAutomaticSavingsDetail
+  typeAutomaticSavingsReversedDetails: PaymentBalanceActivityAutomaticSavingsReversedDetail
+  typeChargeDetails: PaymentBalanceActivityChargeDetail
+  typeDepositFeeDetails: PaymentBalanceActivityDepositFeeDetail
+  typeDisputeDetails: PaymentBalanceActivityDisputeDetail
+  typeFeeDetails: PaymentBalanceActivityFeeDetail
+  typeFreeProcessingDetails: PaymentBalanceActivityFreeProcessingDetail
+  typeHoldAdjustmentDetails: PaymentBalanceActivityHoldAdjustmentDetail
+  typeOpenDisputeDetails: PaymentBalanceActivityOpenDisputeDetail
+  typeOtherDetails: PaymentBalanceActivityOtherDetail
+  typeOtherAdjustmentDetails: PaymentBalanceActivityOtherAdjustmentDetail
+  typeRefundDetails: PaymentBalanceActivityRefundDetail
+  typeReleaseAdjustmentDetails: PaymentBalanceActivityReleaseAdjustmentDetail
+  typeReserveHoldDetails: PaymentBalanceActivityReserveHoldDetail
+  typeReserveReleaseDetails: PaymentBalanceActivityReserveReleaseDetail
+  typeSquareCapitalPaymentDetails: PaymentBalanceActivitySquareCapitalPaymentDetail
+  typeSquareCapitalReversedPaymentDetails: PaymentBalanceActivitySquareCapitalReversedPaymentDetail
+  typeTaxOnFeeDetails: PaymentBalanceActivityTaxOnFeeDetail
+  typeThirdPartyFeeDetails: PaymentBalanceActivityThirdPartyFeeDetail
+  typeThirdPartyFeeRefundDetails: PaymentBalanceActivityThirdPartyFeeRefundDetail
+}
+
+type PaymentBalanceActivityAppFeeRevenueDetail {
+  paymentId: ID
+  locationId: ID
+}
+
+type PaymentBalanceActivityAppFeeRefundDetail {
+  paymentId: ID
+  refundId: ID
+  locationId: ID
+}
+
+type PaymentBalanceActivityAutomaticSavingsDetail {
+  paymentId: ID
+  payoutId: ID
+}
+
+type PaymentBalanceActivityAutomaticSavingsReversedDetail {
+  paymentId: ID
+  payoutId: ID
+}
+
+type PaymentBalanceActivityChargeDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityDepositFeeDetail {
+  payoutId: ID
+}
+
+type PaymentBalanceActivityDisputeDetail {
+  paymentId: ID
+  disputeId: ID
+}
+
+type PaymentBalanceActivityFeeDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityFreeProcessingDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityHoldAdjustmentDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityOpenDisputeDetail {
+  paymentId: ID
+  disputeId: ID
+}
+
+type PaymentBalanceActivityOtherDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityOtherAdjustmentDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityRefundDetail {
+  paymentId: ID
+  refundId: ID
+}
+
+type PaymentBalanceActivityReleaseAdjustmentDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityReserveHoldDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityReserveReleaseDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivitySquareCapitalPaymentDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivitySquareCapitalReversedPaymentDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityTaxOnFeeDetail {
+  paymentId: ID
+  subscriptionId: ID
+}
+
+type PaymentBalanceActivityThirdPartyFeeDetail {
+  paymentId: ID
+}
+
+type PaymentBalanceActivityThirdPartyFeeRefundDetail {
+  paymentId: ID
+  refundId: ID
+}
+
+# ─────────────────────────────────────────────
+# Vendors
+# ─────────────────────────────────────────────
+
+type Vendor {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  name: String
+  address: Address
+  contacts: [VendorContact]
+  accountNumber: String
+  note: String
+  version: Int!
+  status: String
+}
+
+type VendorContact {
+  id: ID!
+  name: String
+  emailAddress: String
+  phoneNumber: String
+  removed: Boolean
+  ordinal: Int!
+}
+
+# ─────────────────────────────────────────────
+# Custom Attributes
+# ─────────────────────────────────────────────
+
+type CustomAttribute {
+  key: String!
+  value: JSON
+  version: Int
+  visibility: String
+  definition: CustomAttributeDefinition
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type CustomAttributeDefinition {
+  key: String!
+  schema: JSON
+  name: String
+  description: String
+  visibility: String
+  version: Int
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+# ─────────────────────────────────────────────
+# Input types
+# ─────────────────────────────────────────────
+
+input CreatePaymentInput {
+  sourceId: String!
+  idempotencyKey: String!
+  amountMoney: MoneyInput
+  tipMoney: MoneyInput
+  appFeeMoney: MoneyInput
+  delayDuration: String
+  delayAction: String
+  autocomplete: Boolean
+  orderId: ID
+  customerId: ID
+  locationId: ID
+  teamMemberId: ID
+  referenceId: String
+  verificationToken: String
+  acceptPartialAuthorization: Boolean
+  buyerEmailAddress: String
+  billingAddress: AddressInput
+  shippingAddress: AddressInput
+  note: String
+  statementDescriptionIdentifier: String
+  cashDetails: CashDetailsInput
+  externalDetails: ExternalDetailsInput
+}
+
+input MoneyInput {
+  amount: Int!
+  currency: Currency!
+}
+
+input AddressInput {
+  addressLine1: String
+  addressLine2: String
+  addressLine3: String
+  locality: String
+  sublocality: String
+  administrativeDistrictLevel1: String
+  postalCode: String
+  country: String
+}
+
+input CashDetailsInput {
+  buyerSuppliedMoney: MoneyInput!
+}
+
+input ExternalDetailsInput {
+  type: String!
+  source: String!
+  sourceId: String
+  sourceFeeMoney: MoneyInput
+}
+
+input CreateRefundInput {
+  idempotencyKey: String!
+  amountMoney: MoneyInput!
+  appFeeMoney: MoneyInput
+  paymentId: ID!
+  destinationId: ID
+  unlinked: Boolean
+  locationId: ID
+  customerId: ID
+  reason: String
+  paymentVersionToken: String
+  teamMemberId: ID
+  cashDetails: CashDetailsInput
+  externalDetails: ExternalDetailsInput
+}
+
+input CreateOrderInput {
+  idempotencyKey: String
+  order: OrderInput!
+}
+
+input OrderInput {
+  locationId: ID!
+  referenceId: String
+  customerId: ID
+  lineItems: [OrderLineItemInput]
+  taxes: [OrderTaxInput]
+  discounts: [OrderDiscountInput]
+  serviceCharges: [OrderServiceChargeInput]
+  fulfillments: [OrderFulfillmentInput]
+  metadata: JSON
+  ticketName: String
+  pricingOptions: OrderPricingOptionsInput
+}
+
+input OrderLineItemInput {
+  uid: String
+  name: String
+  quantity: String!
+  catalogObjectId: ID
+  catalogVersion: Int
+  variationName: String
+  note: String
+  basePriceMoney: MoneyInput
+  metadata: JSON
+}
+
+input OrderTaxInput {
+  uid: String
+  catalogObjectId: ID
+  name: String
+  type: String
+  percentage: String
+  scope: String
+}
+
+input OrderDiscountInput {
+  uid: String
+  catalogObjectId: ID
+  name: String
+  type: String
+  percentage: String
+  amountMoney: MoneyInput
+  scope: String
+}
+
+input OrderServiceChargeInput {
+  uid: String
+  name: String!
+  catalogObjectId: ID
+  percentage: String
+  amountMoney: MoneyInput
+  calculationPhase: String
+  taxable: Boolean
+  treatmentType: String
+  scope: String
+}
+
+input OrderFulfillmentInput {
+  uid: String
+  type: FulfillmentType
+  state: FulfillmentState
+  pickupDetails: FulfillmentPickupInput
+  shipmentDetails: FulfillmentShipmentInput
+}
+
+input FulfillmentPickupInput {
+  recipient: FulfillmentRecipientInput
+  expiresAt: DateTime
+  scheduleType: String
+  pickupAt: DateTime
+  note: String
+  isCurbsidePickup: Boolean
+}
+
+input FulfillmentShipmentInput {
+  recipient: FulfillmentRecipientInput
+  carrier: String
+  shippingNote: String
+  shippingType: String
+  trackingNumber: String
+  trackingUrl: String
+  expectedShippedAt: DateTime
+}
+
+input FulfillmentRecipientInput {
+  customerId: ID
+  displayName: String
+  emailAddress: String
+  phoneNumber: String
+  address: AddressInput
+}
+
+input OrderPricingOptionsInput {
+  autoApplyDiscounts: Boolean
+  autoApplyTaxes: Boolean
+}
+
+input UpdateOrderInput {
+  order: OrderInput
+  fieldsToClear: [String]
+  idempotencyKey: String
+}
+
+input CreateCustomerInput {
+  idempotencyKey: String
+  givenName: String
+  familyName: String
+  companyName: String
+  nickname: String
+  emailAddress: String
+  address: AddressInput
+  phoneNumber: String
+  referenceId: String
+  note: String
+  birthday: String
+  taxIds: CustomerTaxIdsInput
+}
+
+input CustomerTaxIdsInput {
+  euVat: String
+}
+
+input UpdateCustomerInput {
+  givenName: String
+  familyName: String
+  companyName: String
+  nickname: String
+  emailAddress: String
+  address: AddressInput
+  phoneNumber: String
+  referenceId: String
+  note: String
+  birthday: String
+  taxIds: CustomerTaxIdsInput
+  version: Int
+}
+
+input UpsertCatalogInput {
+  idempotencyKey: String!
+  object: CatalogObjectInput!
+}
+
+input CatalogObjectInput {
+  type: String!
+  id: String!
+  presentAtAllLocations: Boolean
+  presentAtLocationIds: [ID]
+  absentAtLocationIds: [ID]
+  itemData: CatalogItemInput
+  categoryData: CatalogCategoryInput
+  itemVariationData: CatalogItemVariationInput
+  taxData: CatalogTaxInput
+  discountData: CatalogDiscountInput
+  modifierData: CatalogModifierInput
+}
+
+input CatalogItemInput {
+  name: String!
+  description: String
+  abbreviation: String
+  labelColor: String
+  isTaxable: Boolean
+  availableOnline: Boolean
+  availableForPickup: Boolean
+  availableElectronically: Boolean
+  categoryId: ID
+  taxIds: [ID]
+}
+
+input CatalogCategoryInput {
+  name: String!
+  imageIds: [ID]
+}
+
+input CatalogItemVariationInput {
+  itemId: ID
+  name: String
+  sku: String
+  upc: String
+  pricingType: String
+  priceMoney: MoneyInput
+  trackInventory: Boolean
+  inventoryAlertType: String
+  inventoryAlertThreshold: Int
+  sellable: Boolean
+  stockable: Boolean
+  teamMemberIds: [ID]
+}
+
+input CatalogTaxInput {
+  name: String!
+  calculationPhase: String
+  inclusionType: String
+  percentage: String
+  appliesToCustomAmounts: Boolean
+  enabled: Boolean
+}
+
+input CatalogDiscountInput {
+  name: String!
+  discountType: String
+  percentage: String
+  amountMoney: MoneyInput
+  pinRequired: Boolean
+  labelColor: String
+}
+
+input CatalogModifierInput {
+  name: String!
+  priceMoney: MoneyInput
+  ordinal: Int
+  modifierListId: ID
+}
+
+input CreateInvoiceInput {
+  invoice: InvoiceInput!
+  idempotencyKey: String
+}
+
+input InvoiceInput {
+  locationId: ID!
+  orderId: ID
+  primaryRecipient: InvoiceRecipientInput
+  paymentRequests: [InvoicePaymentRequestInput]
+  deliveryMethod: String
+  invoiceNumber: String
+  title: String
+  description: String
+  scheduledAt: DateTime
+  customFields: [InvoiceCustomFieldInput]
+  saleOrServiceDate: String
+  storePaymentMethodEnabled: Boolean
+}
+
+input InvoiceRecipientInput {
+  customerId: ID
+  givenName: String
+  familyName: String
+  emailAddress: String
+  address: AddressInput
+  phoneNumber: String
+  companyName: String
+}
+
+input InvoicePaymentRequestInput {
+  requestType: String!
+  dueDate: String
+  fixedAmountRequestedMoney: MoneyInput
+  percentageRequested: String
+  tippingEnabled: Boolean
+  automaticPaymentSource: String
+  cardId: ID
+  reminders: [InvoicePaymentReminderInput]
+}
+
+input InvoicePaymentReminderInput {
+  uid: String
+  relativeScheduledDays: Int
+  message: String
+}
+
+input InvoiceCustomFieldInput {
+  label: String!
+  value: String!
+  placement: String!
+}
+
+input CreateSubscriptionInput {
+  idempotencyKey: String
+  locationId: ID!
+  planVariationId: ID!
+  customerId: ID!
+  startDate: String
+  canceledDate: String
+  taxPercentage: String
+  priceOverrideMoney: MoneyInput
+  cardId: ID
+  timezone: String
+  source: SubscriptionSourceInput
+  monthlyBillingAnchorDate: Int
+  phases: [PhaseInput]
+}
+
+input SubscriptionSourceInput {
+  name: String
+}
+
+input PhaseInput {
+  ordinal: Int!
+  orderTemplateId: ID
+}
+
+input CreateBookingInput {
+  idempotencyKey: String
+  booking: BookingInput!
+}
+
+input BookingInput {
+  startAt: DateTime
+  locationId: ID
+  customerId: ID
+  customerNote: String
+  sellerNote: String
+  appointmentSegments: [AppointmentSegmentInput]
+  locationType: String
+  address: AddressInput
+}
+
+input AppointmentSegmentInput {
+  durationMinutes: Int!
+  serviceVariationId: ID!
+  teamMemberId: ID!
+  serviceVariationVersion: Int!
+  intermissionMinutes: Int
+  anyTeamMember: Boolean
+  resourceIds: [ID]
+}
+
+input CreateShiftInput {
+  idempotencyKey: String
+  shift: ShiftInput!
+}
+
+input ShiftInput {
+  locationId: ID!
+  startAt: DateTime!
+  endAt: DateTime
+  wage: ShiftWageInput
+  breaks: [BreakInput]
+  teamMemberId: ID
+  declaredCashTipMoney: MoneyInput
+}
+
+input ShiftWageInput {
+  title: String
+  hourlyRate: MoneyInput
+  jobId: ID
+  tipEligible: Boolean
+}
+
+input BreakInput {
+  startAt: DateTime!
+  endAt: DateTime
+  breakTypeId: ID!
+  name: String!
+  expectedDuration: String!
+  isPaid: Boolean!
+}
+
+input CreateLoyaltyAccountInput {
+  loyaltyAccount: LoyaltyAccountInput!
+  idempotencyKey: String!
+}
+
+input LoyaltyAccountInput {
+  programId: ID!
+  mapping: LoyaltyAccountMappingInput
+}
+
+input LoyaltyAccountMappingInput {
+  phoneNumber: String!
+}
+
+input AccumulatePointsInput {
+  accumulatePoints: AccumulateLoyaltyPointsInput!
+  idempotencyKey: String!
+  locationId: ID!
+}
+
+input AccumulateLoyaltyPointsInput {
+  orderId: ID!
+}
+
+input CreateLoyaltyRewardInput {
+  reward: LoyaltyRewardInput!
+  idempotencyKey: String!
+}
+
+input LoyaltyRewardInput {
+  loyaltyAccountId: ID!
+  rewardTierId: ID!
+  orderId: ID
+}
+
+input CreateTerminalCheckoutInput {
+  idempotencyKey: String!
+  checkout: TerminalCheckoutInput!
+}
+
+input TerminalCheckoutInput {
+  amountMoney: MoneyInput!
+  referenceId: String
+  note: String
+  orderId: ID
+  paymentOptions: PaymentOptionsInput
+  deviceOptions: DeviceCheckoutOptionsInput!
+  deadlineAt: DateTime
+  customerId: ID
+  appFeeMoney: MoneyInput
+  statementDescriptionIdentifier: String
+  tipMoney: MoneyInput
+}
+
+input PaymentOptionsInput {
+  autocomplete: Boolean
+  delayDuration: String
+  acceptPartialAuthorization: Boolean
+  delayAction: String
+}
+
+input DeviceCheckoutOptionsInput {
+  deviceId: ID!
+  skipReceiptScreen: Boolean
+  collectSignature: Boolean
+  tipSettings: TipSettingsInput
+  showItemizedCart: Boolean
+}
+
+input TipSettingsInput {
+  allowTipping: Boolean
+  separateTipScreen: Boolean
+  customTipField: Boolean
+  tipPercentages: [Int]
+  smartTipping: Boolean
+}
+
+input CreateWebhookInput {
+  idempotencyKey: String
+  subscription: WebhookSubscriptionInput!
+}
+
+input WebhookSubscriptionInput {
+  name: String
+  eventTypes: [WebhookEventType]!
+  notificationUrl: String!
+  apiVersion: String!
+}
+
+input CreateGiftCardInput {
+  idempotencyKey: String!
+  locationId: ID!
+  giftCard: GiftCardInput!
+}
+
+input GiftCardInput {
+  type: String!
+  gan: String
+}
+
+input CreateVendorInput {
+  idempotencyKey: String!
+  vendor: VendorInput!
+}
+
+input VendorInput {
+  name: String
+  address: AddressInput
+  contacts: [VendorContactInput]
+  accountNumber: String
+  note: String
+  status: String
+}
+
+input VendorContactInput {
+  name: String
+  emailAddress: String
+  phoneNumber: String
+  ordinal: Int!
+}
+
+# ─────────────────────────────────────────────
+# Root types
+# ─────────────────────────────────────────────
+
+type Query {
+  payment(id: ID!): Payment
+  payments(locationId: ID, beginTime: DateTime, endTime: DateTime, sortOrder: String, cursor: String, limit: Int, teamMemberId: ID, customerId: ID): PaymentConnection
+  order(id: ID!): Order
+  orders(locationIds: [ID!], fulfillmentTypes: [FulfillmentType], fulfillmentStates: [FulfillmentState], cursor: String, limit: Int): OrderConnection
+  customer(id: ID!): Customer
+  customers(cursor: String, limit: Int, sortField: String, sortOrder: String, filter: CustomerFilter): CustomerConnection
+  catalogItem(id: ID!): CatalogObject
+  catalog(cursor: String, types: [String], catalogVersion: Int, includedRelatedObjectIds: [ID], includeRelatedObjects: Boolean, includeDeletedObjects: Boolean): CatalogConnection
+  location(id: ID!): Location
+  locations: [Location]
+  invoice(id: ID!): Invoice
+  invoices(locationId: ID!, cursor: String, limit: Int): InvoiceConnection
+  subscription(id: ID!): Subscription
+  subscriptions(cursor: String, limit: Int, locationId: ID, customerId: ID, planVariationId: ID): SubscriptionConnection
+  booking(id: ID!): Booking
+  bookings(cursor: String, limit: Int, locationId: ID, startAtMin: DateTime, startAtMax: DateTime, teamMemberId: ID, customerId: ID): BookingConnection
+  shift(id: ID!): Shift
+  shifts(locationId: ID, employeeId: ID, teamMemberId: ID, status: ShiftStatus, start: TimeRange, end: TimeRange, workday: ShiftWorkday, cursor: String, limit: Int): ShiftConnection
+  loyaltyAccount(id: ID!): LoyaltyAccount
+  loyaltyAccounts(cursor: String, limit: Int, query: LoyaltyAccountQuery): LoyaltyAccountConnection
+  loyaltyProgram(id: ID!): Loyalty
+  loyaltyPrograms: [Loyalty]
+  loyaltyEvents(cursor: String, limit: Int, query: LoyaltyEventQuery): LoyaltyEventConnection
+  dispute(id: ID!): Dispute
+  disputes(cursor: String, locationId: ID, status: DisputeStatus): DisputeConnection
+  refund(id: ID!): Refund
+  refunds(beginTime: DateTime, endTime: DateTime, sortOrder: String, cursor: String, locationId: ID, status: RefundStatus, sourceType: String, limit: Int): RefundConnection
+  terminalCheckout(id: ID!): TerminalCheckout
+  terminalCheckouts(cursor: String, limit: Int, query: TerminalCheckoutQuery): TerminalCheckoutConnection
+  giftCard(id: ID!): GiftCard
+  giftCards(type: String, state: GiftCardStatus, limit: Int, cursor: String, customerId: ID): GiftCardConnection
+  giftCardActivities(giftCardId: ID, type: GiftCardActivityType, locationId: ID, beginTime: DateTime, endTime: DateTime, sortOrder: String, limit: Int, cursor: String): GiftCardActivityConnection
+  webhook(id: ID!): Webhook
+  webhooks(cursor: String, limit: Int): WebhookConnection
+  payout(id: ID!): Payout
+  payouts(locationId: ID, status: String, beginTime: DateTime, endTime: DateTime, sortOrder: String, cursor: String, limit: Int): PayoutConnection
+  payoutEntries(payoutId: ID!, cursor: String, limit: Int): PayoutEntryConnection
+  vendor(id: ID!): Vendor
+  vendors(cursor: String, limit: Int, filter: VendorFilter): VendorConnection
+  teamMember(id: ID!): TeamMember
+  teamMembers(cursor: String, limit: Int, query: TeamMemberQuery): TeamMemberConnection
+  bankAccount(id: ID!): BankAccount
+  bankAccounts(cursor: String, limit: Int, locationId: ID): BankAccountConnection
+  merchant(id: ID!): Merchant
+  merchants(cursor: String): [Merchant]
+  inventory(catalogObjectId: ID!, locationIds: [ID], cursor: String): InventoryConnection
+  inventoryTransfers(locationId: ID, catalogObjectId: ID, updatedAfter: DateTime, cursor: String): InventoryTransferConnection
+  deviceCode(id: ID!): DeviceCode
+  deviceCodes(cursor: String, locationId: ID, productType: String, status: String): DeviceCodeConnection
+  card(id: ID!): Card
+  cards(cursor: String, customerId: ID, referenceId: String, enabled: Boolean): CardConnection
+}
+
+type Mutation {
+  createPayment(input: CreatePaymentInput!): Payment
+  cancelPayment(id: ID!): Payment
+  cancelPaymentByIdempotencyKey(idempotencyKey: String!): Boolean
+  completePayment(id: ID!, versionToken: String): Payment
+  updatePayment(id: ID!, input: CreatePaymentInput!): Payment
+  createRefund(input: CreateRefundInput!): Refund
+  createOrder(input: CreateOrderInput!): Order
+  updateOrder(id: ID!, input: UpdateOrderInput!): Order
+  payOrder(id: ID!, idempotencyKey: String!, paymentIds: [ID]!): Order
+  createCustomer(input: CreateCustomerInput!): Customer
+  updateCustomer(id: ID!, input: UpdateCustomerInput!): Customer
+  deleteCustomer(id: ID!, version: Int): Boolean
+  createCard(idempotencyKey: String!, sourceId: String!, card: CardInput!): Card
+  disableCard(id: ID!): Card
+  upsertCatalogObject(input: UpsertCatalogInput!): CatalogObject
+  deleteCatalogObject(id: ID!): [ID]
+  batchUpsertCatalogObjects(idempotencyKey: String!, batches: [CatalogObjectBatchInput]!): [CatalogObject]
+  batchDeleteCatalogObjects(objectIds: [ID]!): [ID]
+  createInvoice(input: CreateInvoiceInput!): Invoice
+  updateInvoice(id: ID!, invoice: InvoiceInput!, idempotencyKey: String, fieldsToClear: [String]!): Invoice
+  deleteInvoice(id: ID!, version: Int!): Boolean
+  publishInvoice(id: ID!, version: Int!, idempotencyKey: String): Invoice
+  cancelInvoice(id: ID!, version: Int!): Invoice
+  createSubscription(input: CreateSubscriptionInput!): Subscription
+  cancelSubscription(id: ID!): Subscription
+  pauseSubscription(id: ID!, pauseCycleDuration: Int, pausedUntilDate: String, resumeChangedScheduledDate: String): Subscription
+  resumeSubscription(id: ID!, resumeEffectiveDate: String, changePlanScheduleEntry: SubscriptionActionInput): Subscription
+  swapPlan(subscriptionId: ID!, newPlanVariationId: ID!, phases: [PhaseInput]): Subscription
+  createBooking(input: CreateBookingInput!): Booking
+  updateBooking(id: ID!, input: CreateBookingInput!): Booking
+  cancelBooking(id: ID!, bookingVersion: Int, idempotencyKey: String): Booking
+  createShift(input: CreateShiftInput!): Shift
+  updateShift(id: ID!, shift: ShiftInput!): Shift
+  deleteShift(id: ID!): Boolean
+  createLoyaltyAccount(input: CreateLoyaltyAccountInput!): LoyaltyAccount
+  accumulateLoyaltyPoints(accountId: ID!, input: AccumulatePointsInput!): LoyaltyEvent
+  createLoyaltyReward(input: CreateLoyaltyRewardInput!): LoyaltyReward
+  deleteLoyaltyReward(id: ID!): Boolean
+  redeemLoyaltyReward(rewardId: ID!, idempotencyKey: String!, checkoutId: ID!): LoyaltyEvent
+  challengeDispute(disputeId: ID!): Dispute
+  acceptDispute(disputeId: ID!): Dispute
+  createTerminalCheckout(input: CreateTerminalCheckoutInput!): TerminalCheckout
+  cancelTerminalCheckout(checkoutId: ID!): TerminalCheckout
+  createWebhookSubscription(input: CreateWebhookInput!): Webhook
+  updateWebhookSubscription(id: ID!, subscription: WebhookSubscriptionInput!): Webhook
+  deleteWebhookSubscription(id: ID!): Boolean
+  createGiftCard(input: CreateGiftCardInput!): GiftCard
+  createGiftCardActivity(idempotencyKey: String!, giftCardActivity: GiftCardActivityInput!): GiftCardActivity
+  createVendor(input: CreateVendorInput!): Vendor
+  updateVendor(id: ID!, vendor: VendorInput!, idempotencyKey: String!): Vendor
+  createDeviceCode(idempotencyKey: String!, deviceCode: DeviceCodeInput!): DeviceCode
+  deleteCard(id: ID!): Boolean
+  addGroupToCustomer(customerId: ID!, groupId: ID!): Boolean
+  removeGroupFromCustomer(customerId: ID!, groupId: ID!): Boolean
+  linkCustomerToGiftCard(giftCardId: ID!, customerId: ID!): GiftCard
+  unlinkCustomerFromGiftCard(giftCardId: ID!, customerId: ID!): GiftCard
+}
+
+# ─────────────────────────────────────────────
+# Pagination connection types
+# ─────────────────────────────────────────────
+
+type PaymentConnection {
+  payments: [Payment]
+  cursor: String
+}
+
+type OrderConnection {
+  orders: [Order]
+  cursor: String
+}
+
+type CustomerConnection {
+  customers: [Customer]
+  cursor: String
+}
+
+type CatalogConnection {
+  objects: [CatalogObject]
+  relatedObjects: [CatalogObject]
+  latestTime: DateTime
+  cursor: String
+}
+
+type InvoiceConnection {
+  invoices: [Invoice]
+  cursor: String
+}
+
+type SubscriptionConnection {
+  subscriptions: [Subscription]
+  cursor: String
+}
+
+type BookingConnection {
+  bookings: [Booking]
+  cursor: String
+}
+
+type ShiftConnection {
+  shifts: [Shift]
+  cursor: String
+}
+
+type LoyaltyAccountConnection {
+  loyaltyAccounts: [LoyaltyAccount]
+  cursor: String
+}
+
+type LoyaltyEventConnection {
+  loyaltyEvents: [LoyaltyEvent]
+  cursor: String
+}
+
+type DisputeConnection {
+  disputes: [Dispute]
+  cursor: String
+}
+
+type RefundConnection {
+  refunds: [Refund]
+  cursor: String
+}
+
+type TerminalCheckoutConnection {
+  data: [TerminalCheckout]
+  cursor: String
+}
+
+type GiftCardConnection {
+  giftCards: [GiftCard]
+  cursor: String
+}
+
+type GiftCardActivityConnection {
+  giftCardActivities: [GiftCardActivity]
+  cursor: String
+}
+
+type WebhookConnection {
+  subscriptions: [Webhook]
+  cursor: String
+}
+
+type PayoutConnection {
+  payouts: [Payout]
+  cursor: String
+}
+
+type PayoutEntryConnection {
+  entries: [PayoutEntry]
+  cursor: String
+}
+
+type VendorConnection {
+  vendors: [Vendor]
+  cursor: String
+}
+
+type TeamMemberConnection {
+  teamMembers: [TeamMember]
+  cursor: String
+}
+
+type BankAccountConnection {
+  bankAccounts: [BankAccount]
+  cursor: String
+}
+
+type InventoryConnection {
+  counts: [Inventory]
+  cursor: String
+}
+
+type InventoryTransferConnection {
+  transfers: [InventoryTransfer]
+  cursor: String
+}
+
+type DeviceCodeConnection {
+  deviceCodes: [DeviceCode]
+  cursor: String
+}
+
+type CardConnection {
+  cards: [Card]
+  cursor: String
+}
+
+# ─────────────────────────────────────────────
+# Additional input types
+# ─────────────────────────────────────────────
+
+input CardInput {
+  billingAddress: AddressInput
+  cardholderName: String
+  referenceId: String
+  customerId: ID
+  verificationToken: String
+}
+
+input CatalogObjectBatchInput {
+  objects: [CatalogObjectInput]!
+}
+
+input ShiftWorkday {
+  dateRange: DateRangeInput
+  matchShiftsBy: String
+  defaultTimezone: String
+}
+
+input DateRangeInput {
+  startDate: String
+  endDate: String
+}
+
+input LoyaltyAccountQuery {
+  mappings: [LoyaltyAccountMappingInput]
+}
+
+input LoyaltyEventQuery {
+  loyaltyAccountFilter: LoyaltyEventLoyaltyAccountFilter
+  typeFilter: LoyaltyEventTypeFilter
+  dateTimeFilter: LoyaltyEventDateTimeFilter
+  locationFilter: LoyaltyEventLocationFilter
+  orderFilter: LoyaltyEventOrderFilter
+}
+
+input LoyaltyEventLoyaltyAccountFilter {
+  loyaltyAccountId: ID!
+}
+
+input LoyaltyEventTypeFilter {
+  types: [LoyaltyEventType]!
+}
+
+input LoyaltyEventDateTimeFilter {
+  createdAt: TimeRangeInput!
+}
+
+input TimeRangeInput {
+  startAt: DateTime
+  endAt: DateTime
+}
+
+input LoyaltyEventLocationFilter {
+  locationIds: [ID]!
+}
+
+input LoyaltyEventOrderFilter {
+  orderId: ID!
+}
+
+input TerminalCheckoutQuery {
+  filter: TerminalCheckoutQueryFilter
+  sort: TerminalCheckoutQuerySort
+}
+
+input TerminalCheckoutQueryFilter {
+  deviceId: ID
+  createdAt: TimeRangeInput
+  status: TerminalCheckoutStatus
+}
+
+input TerminalCheckoutQuerySort {
+  sortOrder: String
+}
+
+input GiftCardActivityInput {
+  type: GiftCardActivityType!
+  locationId: ID!
+  giftCardId: ID
+  giftCardGan: String
+  loadActivityDetails: GiftCardActivityLoadInput
+  activateActivityDetails: GiftCardActivityActivateInput
+  redeemActivityDetails: GiftCardActivityRedeemInput
+  clearBalanceActivityDetails: GiftCardActivityClearBalanceInput
+  deactivateActivityDetails: GiftCardActivityDeactivateInput
+  adjustIncrementActivityDetails: GiftCardActivityAdjustIncrementInput
+  adjustDecrementActivityDetails: GiftCardActivityAdjustDecrementInput
+  refundActivityDetails: GiftCardActivityRefundInput
+  importActivityDetails: GiftCardActivityImportInput
+  blockActivityDetails: GiftCardActivityBlockInput
+  unblockActivityDetails: GiftCardActivityUnblockInput
+  importReversalActivityDetails: GiftCardActivityImportReversalInput
+  transferBalanceToActivityDetails: GiftCardActivityTransferBalanceToInput
+  transferBalanceFromActivityDetails: GiftCardActivityTransferBalanceFromInput
+}
+
+input GiftCardActivityLoadInput {
+  amountMoney: MoneyInput
+  orderId: ID
+  lineItemUid: String
+  referenceId: String
+  buyerPaymentInstrumentIds: [String]
+}
+
+input GiftCardActivityActivateInput {
+  amountMoney: MoneyInput
+  orderId: ID
+  lineItemUid: String
+  referenceId: String
+  buyerPaymentInstrumentIds: [String]
+}
+
+input GiftCardActivityRedeemInput {
+  amountMoney: MoneyInput!
+  paymentId: ID
+  referenceId: String
+}
+
+input GiftCardActivityClearBalanceInput {
+  reason: String!
+}
+
+input GiftCardActivityDeactivateInput {
+  reason: String!
+}
+
+input GiftCardActivityAdjustIncrementInput {
+  amountMoney: MoneyInput!
+  reason: String!
+}
+
+input GiftCardActivityAdjustDecrementInput {
+  amountMoney: MoneyInput!
+  reason: String!
+}
+
+input GiftCardActivityRefundInput {
+  redeemActivityId: ID!
+  amountMoney: MoneyInput
+  referenceId: String
+  paymentId: ID
+}
+
+input GiftCardActivityImportInput {
+  amountMoney: MoneyInput!
+}
+
+input GiftCardActivityBlockInput {
+  reason: String!
+}
+
+input GiftCardActivityUnblockInput {
+  reason: String!
+}
+
+input GiftCardActivityImportReversalInput {
+  amountMoney: MoneyInput!
+}
+
+input GiftCardActivityTransferBalanceToInput {
+  transferFromGiftCardId: ID!
+  amountMoney: MoneyInput!
+}
+
+input GiftCardActivityTransferBalanceFromInput {
+  transferToGiftCardId: ID!
+  amountMoney: MoneyInput!
+}
+
+input DeviceCodeInput {
+  name: String
+  locationId: ID
+  productType: String!
+}
+
+input SubscriptionActionInput {
+  type: String
+  effectiveDate: String
+  newPlanVariationId: ID
+  phases: [PhaseInput]
+}
+
+input VendorFilter {
+  name: [String]
+  status: [String]
+}
+
+input TeamMemberQuery {
+  filter: TeamMemberFilter
+}
+
+input TeamMemberFilter {
+  locationIds: TeamMemberFilterLocationIds
+  status: String
+  isOwner: Boolean
+}
+
+input TeamMemberFilterLocationIds {
+  all: [ID]
+  any: [ID]
+  none: [ID]
+}
