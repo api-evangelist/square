@@ -1,0 +1,59 @@
+generated: '2026-07-14'
+method: searched
+source: https://developer.squareup.com/reference/sdks/web/payments
+description: >-
+  Square's embeddable, client-side UI components — the drop-in payment surfaces
+  that render tokenizable payment inputs in the browser and in native mobile
+  apps, distinct from the server-side SDK client libraries catalogued in
+  apis.yml. The Web Payments SDK renders PCI-compliant inputs (card data never
+  touches the seller's server → PCI SAQ A scope), tokenizes to Square, and the
+  resulting token is spent by the server-side Payments API. Grouped by family:
+  Web Payments SDK (browser), In-App Payments SDK and Mobile Payments SDK (native).
+docs:
+  - https://developer.squareup.com/docs/web-payments/overview
+  - https://developer.squareup.com/reference/sdks/web/payments
+  - https://developer.squareup.com/docs/in-app-payments-sdk/what-it-does
+  - https://developer.squareup.com/docs/mobile-payments-sdk
+
+libraries:
+  - name: Web Payments SDK
+    loader_sandbox: https://sandbox.web.squarecdn.com/v1/square.js
+    loader_production: https://web.squarecdn.com/v1/square.js
+    global: window.Square
+    init: Square.payments(applicationId, locationId)
+    purpose: Loads the browser SDK and mounts payment method components; tokenizes inputs to Square.
+
+families:
+  web_payments_sdk:
+    description: >-
+      Browser components created from the payments instance; each factory returns
+      a payment method object that renders/attaches an input and exposes
+      tokenize() to produce a single-use source token spent by CreatePayment.
+    components:
+      - {name: Card, factory: payments.card(), description: Hosted, PCI-compliant credit/debit card input fields.}
+      - {name: Gift Card, factory: payments.giftCard(), description: Square gift card entry for gift-card-funded payments.}
+      - {name: ACH, factory: payments.ach(), description: ACH bank transfer via Plaid-linked bank account.}
+      - {name: Apple Pay, factory: payments.applePay(), description: Apple Pay digital wallet button.}
+      - {name: Google Pay, factory: payments.googlePay(), description: Google Pay digital wallet button.}
+      - {name: Cash App Pay, factory: payments.cashAppPay(), description: Cash App Pay button / QR flow.}
+      - {name: Afterpay / Clearpay, factory: payments.afterpayClearpay(), description: Buy-now-pay-later checkout.}
+      - {name: Payment Request, factory: payments.paymentRequest(), description: Shared payment request object backing the wallet buttons (Apple Pay / Google Pay).}
+      - {name: ACH / Card verification, factory: payments.verifyBuyer(), description: Strong Customer Authentication (3DS/SCA) buyer verification on tokenized cards.}
+
+  in_app_payments_sdk:
+    description: Native mobile drop-in payment entry (card, digital wallets) for iOS and Android apps; tokenizes to Square like the Web SDK.
+    platforms: [iOS, Android, React Native, Flutter]
+    components:
+      - {name: Card Entry, description: Native card entry form.}
+      - {name: Apple Pay / Google Pay, description: Native digital wallet buttons.}
+
+  mobile_payments_sdk:
+    description: In-person card-present payments (chip/tap/Tap to Pay) from a custom mobile POS app using Square hardware or the phone NFC reader.
+    platforms: [iOS, Android, React Native, Flutter]
+    components:
+      - {name: Mobile Payments UI, description: Square-provided in-person payment prompt and card reader integration.}
+      - {name: Tap to Pay, description: Contactless card acceptance on supported devices without external hardware.}
+
+cross_reference:
+  sandbox: sandbox/square-sandbox.yml
+  packages_note: Server-side SDKs (Node, Python, Java, .NET, Ruby, PHP, Go) are catalogued under type SDKs in apis.yml.

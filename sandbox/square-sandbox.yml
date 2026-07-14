@@ -1,0 +1,115 @@
+generated: '2026-07-14'
+method: searched
+source: https://developer.squareup.com/docs/devtools/sandbox/payments
+description: >-
+  Square's sandbox / test-data surface — the credentials, magic values, and
+  hosted test tokens a developer needs to exercise the Payments, Cards, Gift
+  Cards, and Bank Accounts APIs end-to-end without moving real money. Captured
+  verbatim from developer.squareup.com. Square separates Sandbox and Production
+  by environment (separate Developer Console credentials, separate base host
+  connect.squareupsandbox.com vs connect.squareup.com); Sandbox access tokens
+  are pinned to a test seller account and never charge real cards.
+docs:
+  - https://developer.squareup.com/docs/devtools/sandbox/overview
+  - https://developer.squareup.com/docs/devtools/sandbox/payments
+  - https://developer.squareup.com/docs/devtools/sandbox/testing
+
+environments:
+  - name: sandbox
+    base_url: https://connect.squareupsandbox.com
+    web_payments_sdk: https://sandbox.web.squarecdn.com/v1/square.js
+    notes: >-
+      Isolated test seller provisioned in the Developer Console. Payments settle
+      instantly to a test balance; no real card is ever charged. Some
+      production-only features return SANDBOX_NOT_SUPPORTED.
+  - name: production
+    base_url: https://connect.squareup.com
+    web_payments_sdk: https://web.squarecdn.com/v1/square.js
+
+# Card conventions for card-not-present sandbox tests.
+card_conventions:
+  expiration: Any future month/year.
+  postal_code: USD, CAD, GBP require a valid postal code; Japan (JPY) does not.
+  note: The CVV and postal code shown below are the values that produce a successful test payment.
+
+# Raw test PANs (card-not-present success) — use with the Web Payments SDK card form.
+test_cards:
+  success:
+    - {brand: visa, number: '4111 1111 1111 1111', cvv: '111'}
+    - {brand: mastercard, number: '5105 1051 0510 5100', cvv: '111'}
+    - {brand: discover, number: '6011 0000 0000 0004', cvv: '111'}
+    - {brand: diners_club, number: '3000 000000 0004', cvv: '111'}
+    - {brand: jcb, number: '3569 9900 1009 5841', cvv: '111'}
+    - {brand: amex, number: '3400 000000 00009', cvv: '1111'}
+    - {brand: china_unionpay, number: '6222 9888 1234 0000', cvv: '123'}
+    - {brand: square_gift_card, number: '7783 3200 0000 0000', cvv: N/A}
+  # Substitute one field into an otherwise-good card to trigger a specific decline.
+  error_triggers:
+    - {field: cvv, value: '911', result: Card CVV incorrect (CVV_FAILURE)}
+    - {field: postal_code, value: '99999', result: Card postal code incorrect (ADDRESS_VERIFICATION_FAILURE)}
+    - {field: expiration, value: '01/40', result: Card expiration date incorrect}
+    - {field: number, value: '4000000000000002', result: Card declined (GENERIC_DECLINE)}
+    - {field: pan, value: '4000000000000010', result: Card on file authorization declined}
+
+# Preferred over raw PANs in CreatePayment — Square-hosted payment source tokens (source_id).
+payment_source_tokens:
+  card_success:
+    - {token: 'cnon:card-nonce-ok', behavior: succeeds}
+    - {token: 'cnon:gift-card-nonce-ok', behavior: gift card succeeds}
+  card_failure:
+    - {token: 'cnon:card-nonce-rejected-cvv', error: CVV_FAILURE}
+    - {token: 'cnon:card-nonce-rejected-postalcode', error: ADDRESS_VERIFICATION_FAILURE}
+    - {token: 'cnon:card-nonce-rejected-expiration', error: INVALID_EXPIRATION}
+    - {token: 'cnon:card-nonce-declined', error: GENERIC_DECLINE}
+    - {token: 'cnon:card-nonce-already-used', error: CARD_TOKEN_USED}
+    - {token: 'cnon:gift-card-nonce-insufficient-funds', error: INSUFFICIENT_FUNDS}
+    - {token: 'cnon:gift-card-nonce-insufficient-permission', error: INSUFFICIENT_PERMISSIONS}
+  update_payment:
+    - {token: 'cnon:card-edit-not-allowed'}
+    - {token: 'cnon:card-edit-down-only'}
+    - {token: 'cnon:card-edit-tip-failure'}
+    - {token: 'cnon:card-edit-failure'}
+
+# Card-on-file source ids (CreateCard / stored card payments).
+card_on_file_tokens:
+  success:
+    - {token: 'ccof:customer-card-id-ok'}
+    - {token: 'ccof:customer-card-id-requires-verification'}
+    - {token: 'ccof:customer-card-id-visa-ok'}
+    - {token: 'ccof:customer-card-id-mastercard-ok'}
+    - {token: 'ccof:customer-card-id-american-express-ok'}
+  failure:
+    - {token: 'ccof:customer-card-id-rejected-postalcode'}
+    - {token: 'ccof:customer-card-id-rejected-expiration'}
+    - {token: 'ccof:customer-card-id-declined'}
+
+# ACH bank transfer source tokens (bnon:) and Plaid link test credentials.
+ach_bank_transfer:
+  plaid_test_credentials: {username: user_good, password: pass_good}
+  tokens:
+    - {token: 'bnon:bank-nonce-ok', behavior: succeeds}
+    - {token: 'bnon:bank-nonce-failure', behavior: fails}
+    - {token: 'bnon:bank-nonce-account-unusable', error: ACCOUNT_UNUSABLE}
+    - {token: 'bnon:bank-nonce-insufficient-funds', error: INSUFFICIENT_FUNDS}
+    - {token: 'bnon:bank-nonce-invalid-account', error: INVALID_ACCOUNT}
+    - {token: 'bnon:bank-nonce-buyer-refused-payment', error: BUYER_REFUSED_PAYMENT}
+
+# Buy-now-pay-later and wallet source tokens (wnon:).
+alternative_payment_tokens:
+  afterpay_clearpay:
+    - {token: 'wnon:afterpay-or-clearpay-ok', behavior: succeeds}
+    - {token: 'wnon:afterpay-or-clearpay-declined', behavior: declined}
+  cash_app_pay:
+    - {token: 'wnon:cash-app-ok', behavior: succeeds}
+    - {token: 'wnon:cash-app-declined', behavior: declined}
+
+# Risk-evaluation simulation — charge these exact amounts to force a risk level.
+risk_evaluation_amounts:
+  - {amount: 2222, risk_level: MODERATE}
+  - {amount: 3333, risk_level: HIGH}
+  - {amount: other, risk_level: NORMAL}
+
+cross_reference:
+  decline_codes: errors/square-decline-codes.yml
+  conventions: conventions/square-conventions.yml
+  components: components/square-components.yml

@@ -1,0 +1,118 @@
+generated: '2026-07-14'
+method: searched
+source: >-
+  https://developer.squareup.com/docs/build-basics — the cross-cutting
+  request/response conventions that apply to every Square API endpoint (Payments,
+  Orders, Catalog, Customers, ...) rather than any single operation. Derived in
+  part from openapi/square-openapi.yml.
+description: >-
+  How Square's REST API behaves across every operation: authentication style,
+  idempotency, cursor pagination, metadata / custom attributes, request tracing,
+  date-based versioning, the error envelope shape, and rate-limit signaling.
+  These are the developer-experience / runtime-semantics conventions that OpenAPI
+  does not fully express.
+docs:
+  - https://developer.squareup.com/docs/build-basics
+  - https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency
+  - https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination
+  - https://developer.squareup.com/docs/build-basics/versioning-overview
+
+base_url: https://connect.squareup.com
+sandbox_base_url: https://connect.squareupsandbox.com
+api_style: REST over HTTPS, JSON request and response bodies, path is /v2/<resource>
+
+authentication:
+  scheme: Bearer token in the Authorization header (Authorization = Bearer <access_token>)
+  token_types: [OAuth 2.0 access token (per-seller, scoped), Personal Access Token (own account)]
+  oauth: OAuth 2.0 authorization code grant; scopes gate resource access.
+  docs: https://developer.squareup.com/docs/build-basics/access-tokens
+  detail: authentication/square-authentication.yml
+  scopes: scopes/square-scopes.yml
+
+idempotency:
+  supported: true
+  mechanism: idempotency_key field in the JSON request body (not a header)
+  applies_to: >-
+    Write endpoints that create or mutate money-moving/stateful resources —
+    CreatePayment, RefundPayment, CreateOrder, CreateCustomer, CreateInvoice,
+    CreateSubscription, and similar.
+  key_format: Client-generated unique string, max 45 characters for most endpoints.
+  conflict_behavior: >-
+    Reusing an idempotency_key returns the original result rather than creating a
+    duplicate; reuse with a conflicting request returns error code
+    IDEMPOTENCY_KEY_REUSED.
+  docs: https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency
+
+pagination:
+  style: cursor
+  request_params:
+    cursor: Opaque cursor returned by the prior page; on GET endpoints passed as a query parameter, on POST/search endpoints included in the request body.
+    limit: Optional page size; a default applies when omitted.
+  response_fields:
+    cursor: Returned when more results exist; absent on the last page.
+  cursor_lifetime: A cursor is valid for 5 minutes; expired cursors return INVALID_CURSOR.
+  docs: https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination
+
+metadata:
+  supported: true
+  mechanisms:
+    - name: metadata
+      detail: Free-form key-value map available on many objects (e.g. Payment, Order, Customer) and echoed back in responses.
+    - name: Custom Attributes
+      detail: Typed, schema-defined attributes attached to Customers, Orders, Bookings, Merchants, Locations, Catalog objects via the Custom Attributes APIs.
+      api: square:custom-attributes-api
+
+request_tracing:
+  note: >-
+    Square does not document a dedicated public request-id response header; errors
+    carry a category/code/detail envelope (see error_envelope). Developer Console
+    API Logs surface per-request detail for the application.
+
+versioning:
+  scheme: date-based (YYYY-MM-DD), applies to all Square APIs at once
+  mechanism: Square-Version request header; each application has a pinned default version set on its Developer Console Credentials page.
+  default_behavior: When Square-Version is omitted, the application's pinned default version is used.
+  response: Responses always return the Square-Version header indicating the version that processed the request.
+  breaking_change_policy: Breaking changes (including retirements) ship only in new dated versions; non-breaking additions (new endpoints, optional fields, new enum values) are added to existing versions. Deprecations are not breaking.
+  current: '2026-05-20'
+  errors: [INVALID_SQUARE_VERSION_FORMAT, API_VERSION_INCOMPATIBLE]
+  detail: changelog/square-changelog.yml
+  docs: https://developer.squareup.com/docs/build-basics/versioning-overview
+
+error_envelope:
+  media_type: application/json
+  rfc9457: false
+  shape: '{ "errors": [ { "category", "code", "detail", "field" } ] }'
+  categories:
+    - API_ERROR
+    - AUTHENTICATION_ERROR
+    - INVALID_REQUEST_ERROR
+    - RATE_LIMIT_ERROR
+    - PAYMENT_METHOD_ERROR
+    - REFUND_ERROR
+    - MERCHANT_SUBSCRIPTION_ERROR
+    - EXTERNAL_VENDOR_ERROR
+  detail: errors/square-decline-codes.yml
+  reference: https://developer.squareup.com/reference/square/objects/ErrorCode
+  docs: https://developer.squareup.com/docs/build-basics/handling-errors
+
+rate_limits:
+  signal_status: 429
+  signal_code: RATE_LIMITED (category RATE_LIMIT_ERROR)
+  guidance: Retry with exponential backoff; TEMPORARY_ERROR responses are safe to retry with the same idempotency_key.
+  detail: rate-limits/square-rate-limits.yml
+  docs: https://developer.squareup.com/docs/build-basics/api-rate-limits
+
+webhooks:
+  signing_header: x-square-hmacsha256-signature
+  verification: HMAC-SHA256 over the notification URL + raw request body using the subscription signature key.
+  detail: asyncapi/square-webhooks-asyncapi.yml
+  docs: https://developer.squareup.com/docs/webhooks/overview
+
+other_conventions:
+  - name: Money amounts
+    detail: Money is an object { amount (integer minor units, e.g. cents), currency (ISO 4217) }.
+  - name: Timestamps
+    detail: RFC 3339 / ISO 8601 UTC strings (e.g. 2026-07-14T12:00:00Z).
+  - name: Sandbox vs production
+    detail: Separate hosts and credentials; see sandbox/square-sandbox.yml.

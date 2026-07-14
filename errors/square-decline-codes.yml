@@ -1,0 +1,83 @@
+generated: '2026-07-14'
+method: searched
+source: https://developer.squareup.com/reference/square/objects/ErrorCode
+description: >-
+  Square's payment-method decline taxonomy — the issuer/processor-level reasons a
+  card, gift card, or bank payment is declined. These are the ErrorCode values in
+  the PAYMENT_METHOD_ERROR (and related REFUND_ERROR) category that appear in the
+  errors[] envelope on a failed CreatePayment / RefundPayment. Distinct from the
+  API-level errors (AUTHENTICATION_ERROR / INVALID_REQUEST_ERROR); those belong in
+  a problem-types catalog. Descriptions captured verbatim from Square's ErrorCode
+  reference (mirrored in openapi/square-openapi.yml x-enum-elements).
+docs:
+  - https://developer.squareup.com/reference/square/objects/ErrorCode
+  - https://developer.squareup.com/docs/payments-api/error-codes
+  - https://developer.squareup.com/docs/build-basics/handling-errors
+envelope_field: errors[].code   # category = PAYMENT_METHOD_ERROR (or REFUND_ERROR), with detail and optional field
+note: >-
+  Square does not expose a separate issuer decline_code field; the decline reason
+  is the ErrorCode value itself. GENERIC_DECLINE is returned when the issuer gives
+  no additional detail, masking fraud/risk reasons from the buyer.
+mask_as_generic: [GENERIC_DECLINE]
+
+decline_codes:
+  - {code: GENERIC_DECLINE, meaning: Square received a decline without any additional information. If the payment information seems correct, the buyer can contact their issuer for more information., action: Ask the buyer to contact their card issuer or use another payment method.}
+  - {code: CARD_DECLINED, meaning: The card was declined., action: Buyer contacts issuer or uses another card.}
+  - {code: CARD_DECLINED_CALL_ISSUER, meaning: The payment card was declined with a request for the card holder to call the issuer., action: Buyer must call their card issuer.}
+  - {code: CARD_DECLINED_VERIFICATION_REQUIRED, meaning: The payment card was declined with a request for additional verification., action: Perform buyer verification (SCA/3DS) and retry.}
+  - {code: CVV_FAILURE, meaning: The card issuer declined the request because the CVV value is invalid., action: Re-enter the correct CVV.}
+  - {code: VERIFY_CVV_FAILURE, meaning: The CVV could not be verified., action: Re-enter the correct CVV.}
+  - {code: ADDRESS_VERIFICATION_FAILURE, meaning: The card issuer declined the request because the postal code is invalid., action: Re-enter the correct billing postal code.}
+  - {code: VERIFY_AVS_FAILURE, meaning: The AVS could not be verified., action: Re-enter the correct billing address / postal code.}
+  - {code: INVALID_POSTAL_CODE, meaning: The postal code is incorrectly formatted., action: Correct the postal code format.}
+  - {code: CARD_EXPIRED, meaning: The card issuer declined the request because the card is expired., action: Buyer uses an unexpired card.}
+  - {code: INVALID_EXPIRATION, meaning: The expiration date for the payment card is invalid. For example, it indicates a date in the past., action: Re-enter a valid expiration date.}
+  - {code: INVALID_EXPIRATION_YEAR, meaning: The expiration year for the payment card is invalid., action: Re-enter a valid expiration year.}
+  - {code: INVALID_EXPIRATION_DATE, meaning: The expiration date for the payment card is invalid. For example, it contains invalid characters., action: Re-enter a valid expiration date.}
+  - {code: EXPIRATION_FAILURE, meaning: The card expiration date is either invalid or indicates that the card is expired., action: Re-enter a valid expiration date or use another card.}
+  - {code: BAD_EXPIRATION, meaning: The card expiration date is either missing or incorrectly formatted., action: Provide a correctly formatted expiration date.}
+  - {code: PAN_FAILURE, meaning: The specified card number is invalid. For example, it is of incorrect length or is incorrectly formatted., action: Re-enter the correct card number.}
+  - {code: INVALID_CARD, meaning: The credit card cannot be validated based on the provided details., action: Verify the card details and retry.}
+  - {code: INVALID_CARD_DATA, meaning: Generic error - the provided card data is invalid., action: Verify the card details and retry.}
+  - {code: INVALID_ENCRYPTED_CARD, meaning: The encrypted card information is invalid., action: Re-tokenize the card and retry.}
+  - {code: UNSUPPORTED_CARD_BRAND, meaning: The credit card provided is not from a supported issuer., action: Use a card from a supported brand.}
+  - {code: UNSUPPORTED_ENTRY_METHOD, meaning: The entry method for the credit card (swipe, dip, tap) is not supported., action: Use a supported entry method.}
+  - {code: INSUFFICIENT_FUNDS, meaning: The funding source has insufficient funds to cover the payment., action: Use another payment method.}
+  - {code: TRANSACTION_LIMIT, meaning: The card issuer has determined the payment amount is either too high or too low (for example, the card reached its credit limit)., action: Buyer contacts issuer or uses another method.}
+  - {code: PAYMENT_LIMIT_EXCEEDED, meaning: Square declined the request because the payment amount exceeded the processing limit for this merchant., action: Split the payment or contact Square about limits.}
+  - {code: AMOUNT_TOO_HIGH, meaning: The requested payment amount is too high for the provided payment source., action: Lower the amount or use another source.}
+  - {code: CURRENCY_MISMATCH, meaning: The currency associated with the payment is not valid for the provided funding source., action: Use a source that supports the payment currency.}
+  - {code: INVALID_ACCOUNT, meaning: The issuer was not able to locate the account on record., action: Buyer verifies details with their issuer.}
+  - {code: CARD_NOT_SUPPORTED, meaning: The card is not supported either in the geographic region or by the merchant category code (MCC)., action: Use a supported card.}
+  - {code: VOICE_FAILURE, meaning: The card issuer requires voice authorization from the cardholder., action: Buyer contacts the issuing bank to authorize.}
+  - {code: PAYMENT_AMOUNT_MISMATCH, meaning: The payment was declined because the money amount Square expected does not match the amount provided., action: Reconcile the amounts and retry.}
+  - {code: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED, meaning: The card must be swiped, tapped, or dipped; manually entered card numbers are declined., action: Capture the card via a reader.}
+  - {code: CHIP_INSERTION_REQUIRED, meaning: The card issuer requires that the card be read using a chip reader., action: Dip the chip instead of swiping.}
+  - {code: CARD_PRESENCE_REQUIRED, meaning: The transaction requires that a card be present., action: Perform a card-present transaction.}
+  - {code: INVALID_PIN, meaning: The card issuer declined the request because the PIN is invalid., action: Re-enter the correct PIN.}
+  - {code: MISSING_PIN, meaning: The payment is missing a required PIN., action: Prompt for the PIN.}
+  - {code: ALLOWABLE_PIN_TRIES_EXCEEDED, meaning: The card has exhausted its available PIN entry retries set by the card issuer., action: Buyer contacts the card issuer.}
+  - {code: MISSING_ACCOUNT_TYPE, meaning: The payment is missing a required ACCOUNT_TYPE parameter., action: Provide the account type.}
+  - {code: INSUFFICIENT_PERMISSIONS, meaning: The Square account does not have permission to accept this payment (for example, gift card payments)., action: Verify the seller is enabled for this payment type.}
+  - {code: CARDHOLDER_INSUFFICIENT_PERMISSIONS, meaning: The card issuer declined the transaction due to restrictions on where the card can be used., action: Use the card at an eligible merchant.}
+  - {code: INVALID_LOCATION, meaning: The Square account cannot take payments in the specified region., action: Use a location in a supported region.}
+  - {code: INVALID_FEES, meaning: The app_fee_money on a payment is too high., action: Lower the application fee.}
+  - {code: GIFT_CARD_AVAILABLE_AMOUNT, meaning: A partial gift-card authorization cannot be combined with tip_money or app_fee_money., action: Remove tip/app fee or use a full-balance payment.}
+  - {code: ACCOUNT_UNUSABLE, meaning: The account provided cannot carry out transactions., action: Use a different funding account.}
+  - {code: BUYER_REFUSED_PAYMENT, meaning: Bank account rejected or was not authorized for the payment., action: Buyer authorizes the payment or uses another method.}
+  - {code: APPLE_TTP_PIN_TOKEN, meaning: The payment was declined during an Apple Tap to Pay transaction with a request for the card PIN (supplemental to CARD_DECLINED_VERIFICATION_REQUIRED; carries an issuer token in details to start PIN collection)., action: Initiate the on-device PIN collection flow.}
+  - {code: TEMPORARY_ERROR, meaning: A temporary internal error occurred., action: Safely retry using the same idempotency_key.}
+
+refund_decline_codes:
+  - {code: REFUND_DECLINED, meaning: The card issuer declined the refund., action: Retry later or contact the issuer.}
+  - {code: RESERVATION_DECLINED, meaning: The card issuer declined the refund., action: Retry later or contact the issuer.}
+  - {code: REFUND_AMOUNT_INVALID, meaning: The requested refund amount exceeds the amount available to refund., action: Lower the refund amount.}
+  - {code: REFUND_ALREADY_PENDING, meaning: The payment already has a pending refund., action: Wait for the existing refund to settle.}
+  - {code: PAYMENT_NOT_REFUNDABLE, meaning: The payment is not refundable (for example, it is too old)., action: No refund is possible via the API.}
+  - {code: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE, meaning: The payment is not refundable because it has been disputed., action: Resolve through the Disputes API.}
+  - {code: INSUFFICIENT_PERMISSIONS_FOR_REFUND, meaning: The Square account does not have permission to process this refund., action: Grant refund permissions / scope.}
+  - {code: CARD_MISMATCH, meaning: The provided card does not match what is expected., action: Use the original card.}
+
+cross_reference:
+  sandbox_tokens: sandbox/square-sandbox.yml
+  conventions: conventions/square-conventions.yml

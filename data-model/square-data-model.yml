@@ -1,0 +1,76 @@
+generated: '2026-07-14'
+method: derived
+source: >-
+  Derived from the object relationships in openapi/square-openapi.yml (schema
+  $ref links and id-reference fields such as customer_id, order_id, location_id,
+  catalog_object_id) and the Square API object reference
+  (developer.squareup.com/reference/square/objects). Captures the core
+  entity-relationship graph behind Square's commerce/payments domain. This is the
+  machine-readable graph; Square object ids are opaque (no type prefixes), so
+  entities are keyed by object name and domain rather than id-prefix.
+docs: https://developer.squareup.com/reference/square/objects
+notation: >-
+  relationships use has_one / has_many / belongs_to with the foreign-key field
+  name; direction is from the entity that owns the reference. All money-bearing
+  and cross-entity references are scoped to a Location within a Merchant.
+
+entities:
+  - {name: Merchant, domain: business, description: An organization/business that sells with Square; the top-level account.}
+  - {name: Location, domain: business, description: A physical or logical place of business where a merchant transacts.}
+  - {name: TeamMember, domain: business, description: A staff member of the merchant, assigned to locations.}
+  - {name: Payment, domain: payments, description: A single attempt to move money from a payment source.}
+  - {name: Refund (PaymentRefund), domain: payments, description: A full or partial reversal of a payment.}
+  - {name: Dispute, domain: payments, description: A cardholder dispute/chargeback against a payment.}
+  - {name: Card, domain: payments, description: A card-on-file saved for a customer for future payments.}
+  - {name: BankAccount, domain: payments, description: A seller bank account linked to the Square account.}
+  - {name: Payout, domain: payments, description: A deposit/withdrawal of funds to/from a seller bank account.}
+  - {name: Order, domain: orders, description: An itemized record of a sale, with line items, taxes, discounts, and fulfillments.}
+  - {name: Customer, domain: customers, description: A buyer profile in the seller's Customer Directory.}
+  - {name: CustomerGroup, domain: customers, description: A group of customers for segmentation.}
+  - {name: CatalogObject, domain: catalog, description: A polymorphic catalog entry (item, item variation, category, tax, discount, modifier).}
+  - {name: InventoryCount, domain: inventory, description: The stock state of a catalog item variation at a location.}
+  - {name: Invoice, domain: invoicing, description: A request for payment against an order, with payment schedules.}
+  - {name: Subscription, domain: subscriptions, description: A recurring billing agreement tied to a subscription plan.}
+  - {name: GiftCard, domain: gift-cards, description: A digital or physical gift card with a stored balance.}
+  - {name: GiftCardActivity, domain: gift-cards, description: A ledger entry (activate/load/redeem/adjust/refund) against a gift card.}
+  - {name: LoyaltyAccount, domain: loyalty, description: A buyer's enrollment in a loyalty program, accruing points.}
+  - {name: Booking, domain: bookings, description: A reservation of a service with a team member at a location and time.}
+  - {name: Event, domain: platform, description: A record of a change delivered via webhooks and queryable via the Events API.}
+
+relationships:
+  - {from: Merchant, to: Location, kind: has_many, via: merchant_id}
+  - {from: Location, to: Payment, kind: has_many, via: location_id}
+  - {from: Payment, to: Location, kind: belongs_to, via: location_id}
+  - {from: Payment, to: Order, kind: belongs_to, via: order_id}
+  - {from: Payment, to: Customer, kind: belongs_to, via: customer_id}
+  - {from: Payment, to: Refund, kind: has_many, via: payment_id}
+  - {from: Refund, to: Payment, kind: belongs_to, via: payment_id}
+  - {from: Dispute, to: Payment, kind: belongs_to, via: payment_id}
+  - {from: Card, to: Customer, kind: belongs_to, via: customer_id}
+  - {from: Customer, to: Card, kind: has_many, via: customer_id}
+  - {from: Payout, to: BankAccount, kind: belongs_to, via: destination_id}
+  - {from: Payout, to: Location, kind: belongs_to, via: location_id}
+  - {from: Order, to: Location, kind: belongs_to, via: location_id}
+  - {from: Order, to: Customer, kind: belongs_to, via: customer_id}
+  - {from: Order, to: CatalogObject, kind: has_many, via: 'line_items[].catalog_object_id'}
+  - {from: Customer, to: CustomerGroup, kind: has_many, via: group_ids}
+  - {from: InventoryCount, to: CatalogObject, kind: belongs_to, via: catalog_object_id}
+  - {from: InventoryCount, to: Location, kind: belongs_to, via: location_id}
+  - {from: Invoice, to: Order, kind: belongs_to, via: order_id}
+  - {from: Invoice, to: Location, kind: belongs_to, via: location_id}
+  - {from: Invoice, to: Customer, kind: belongs_to, via: primary_recipient.customer_id}
+  - {from: Subscription, to: Customer, kind: belongs_to, via: customer_id}
+  - {from: Subscription, to: Location, kind: belongs_to, via: location_id}
+  - {from: Subscription, to: CatalogObject, kind: belongs_to, via: plan_variation_id}
+  - {from: GiftCard, to: GiftCardActivity, kind: has_many, via: gift_card_id}
+  - {from: GiftCardActivity, to: GiftCard, kind: belongs_to, via: gift_card_id}
+  - {from: LoyaltyAccount, to: Customer, kind: belongs_to, via: customer_id}
+  - {from: Booking, to: Location, kind: belongs_to, via: location_id}
+  - {from: Booking, to: Customer, kind: belongs_to, via: customer_id}
+  - {from: Booking, to: TeamMember, kind: belongs_to, via: 'appointment_segments[].team_member_id'}
+  - {from: TeamMember, to: Location, kind: has_many, via: assigned_locations}
+
+interchange_hubs: [Location, Customer, Order, Payment, CatalogObject]
+notes:
+  - All resources are scoped to a Location within a Merchant; location_id is the most common foreign key.
+  - Order is the itemization hub that ties Payments, Invoices, and Catalog line items together.
