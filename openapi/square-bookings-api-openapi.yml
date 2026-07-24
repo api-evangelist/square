@@ -1,0 +1,4441 @@
+openapi: 3.0.0
+info:
+  version: '2.0'
+  title: Square ApplePay Bookings API
+  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  termsOfService: https://connect.squareup.com/tos
+  contact:
+    name: Square Developer Platform
+    email: developers@squareup.com
+    url: https://squareup.com/developers
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  externalDocs:
+    description: 'Read the official documentation here:'
+    url: https://docs.connect.squareup.com/
+  x-server-configuration:
+    default-environment: production
+    default-server: default
+    environments:
+    - name: production
+      servers:
+      - name: default
+        url: https://connect.squareup.com
+    - name: sandbox
+      servers:
+      - name: default
+        url: https://connect.squareupsandbox.com
+    - name: custom
+      servers:
+      - name: default
+        url: '{custom_url}'
+    parameters:
+    - name: custom_url
+      description: Sets the base URL requests are made to. Defaults to `https://connect.squareup.com`
+      type: string
+      example: https://connect.squareup.com
+  x-square-generic-error-codes:
+  - ACCESS_TOKEN_EXPIRED
+  - ACCESS_TOKEN_REVOKED
+  - API_VERSION_INCOMPATIBLE
+  - APPLICATION_DISABLED
+  - ARRAY_EMPTY
+  - ARRAY_LENGTH_TOO_LONG
+  - ARRAY_LENGTH_TOO_SHORT
+  - BAD_CERTIFICATE
+  - BAD_GATEWAY
+  - BAD_REQUEST
+  - CONFLICT
+  - CONFLICTING_PARAMETERS
+  - CURRENCY_MISMATCH
+  - EXPECTED_ARRAY
+  - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+  - EXPECTED_BOOLEAN
+  - EXPECTED_FLOAT
+  - EXPECTED_INTEGER
+  - EXPECTED_JSON_BODY
+  - EXPECTED_MAP
+  - EXPECTED_OBJECT
+  - EXPECTED_STRING
+  - FORBIDDEN
+  - GATEWAY_TIMEOUT
+  - GONE
+  - IDEMPOTENCY_KEY_REUSED
+  - INCORRECT_TYPE
+  - INSUFFICIENT_SCOPES
+  - INTERNAL_SERVER_ERROR
+  - INVALID_ARRAY_VALUE
+  - INVALID_CONTENT_TYPE
+  - INVALID_CURSOR
+  - INVALID_ENUM_VALUE
+  - INVALID_FORM_VALUE
+  - INVALID_SORT_ORDER
+  - INVALID_SQUARE_VERSION_FORMAT
+  - INVALID_TIME
+  - INVALID_TIME_RANGE
+  - INVALID_VALUE
+  - LOCATION_MISMATCH
+  - MAP_KEY_LENGTH_TOO_LONG
+  - MAP_KEY_LENGTH_TOO_SHORT
+  - MERCHANT_SUBSCRIPTION_NOT_FOUND
+  - METHOD_NOT_ALLOWED
+  - MISSING_REQUIRED_PARAMETER
+  - NOT_ACCEPTABLE
+  - NOT_FOUND
+  - NOT_IMPLEMENTED
+  - NO_FIELDS_SET
+  - RATE_LIMITED
+  - REQUEST_ENTITY_TOO_LARGE
+  - REQUEST_TIMEOUT
+  - SANDBOX_NOT_SUPPORTED
+  - SERVICE_UNAVAILABLE
+  - TOO_MANY_MAP_ENTRIES
+  - UNAUTHORIZED
+  - UNEXPECTED_VALUE
+  - UNKNOWN_BODY_PARAMETER
+  - UNKNOWN_QUERY_PARAMETER
+  - UNPROCESSABLE_ENTITY
+  - UNSUPPORTED_MEDIA_TYPE
+  - V1_ACCESS_TOKEN
+  - V1_APPLICATION
+  - VALUE_EMPTY
+  - VALUE_REGEX_MISMATCH
+  - VALUE_TOO_HIGH
+  - VALUE_TOO_LONG
+  - VALUE_TOO_LOW
+  - VALUE_TOO_SHORT
+servers:
+- url: https://connect.squareup.com
+  variables: {}
+tags:
+- name: Bookings
+paths:
+  /v2/bookings:
+    get:
+      tags:
+      - Bookings
+      summary: Square List Bookings
+      operationId: ListBookings
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Retrieve a collection of bookings.
+
+
+        To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
+
+        To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_READ
+      parameters:
+      - name: limit
+        description: The maximum number of results per page to return in a paged response.
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: cursor
+        description: The pagination cursor from the preceding response to return the next page of the results. Do not set this when retrieving the first page of the results.
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: customer_id
+        description: The [customer](entity:Customer) for whom to retrieve bookings. If this is not set, bookings for all customers are retrieved.
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: team_member_id
+        description: The team member for whom to retrieve bookings. If this is not set, bookings of all members are retrieved.
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: location_id
+        description: The location for which to retrieve bookings. If this is not set, all locations' bookings are retrieved.
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: start_at_min
+        description: The RFC 3339 timestamp specifying the earliest of the start time. If this is not set, the current time is used.
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: start_at_max
+        description: The RFC 3339 timestamp specifying the latest of the start time. If this is not set, the time of 31 days after `start_at_min` is used.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBookingsResponse'
+    post:
+      tags:
+      - Bookings
+      summary: Square Create Booking
+      operationId: CreateBooking
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Creates a booking.
+
+
+        The required input must include the following:
+
+        - `Booking.location_id`
+
+        - `Booking.start_at`
+
+        - `Booking.AppointmentSegment.team_member_id`
+
+        - `Booking.AppointmentSegment.service_variation_id`
+
+        - `Booking.AppointmentSegment.service_variation_version`
+
+
+        To call this endpoint with buyer-level permissions, set `APPOINTMENTS_WRITE` for the OAuth scope.
+
+        To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE` and `APPOINTMENTS_WRITE` for the OAuth scope.
+
+
+        For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to *Appointments Plus*
+
+        or *Appointments Premium*.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateBookingResponse'
+  /v2/bookings/availability/search:
+    post:
+      tags:
+      - Bookings
+      summary: Square Search Availability
+      operationId: SearchAvailability
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Searches for availabilities for booking.
+
+
+        To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
+
+        To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchAvailabilityRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchAvailabilityResponse'
+  /v2/bookings/bulk-retrieve:
+    post:
+      tags:
+      - Bookings
+      summary: Square Bulk Retrieve Bookings
+      operationId: BulkRetrieveBookings
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Bulk-Retrieves a list of bookings by booking IDs.
+
+
+        To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
+
+        To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRetrieveBookingsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkRetrieveBookingsResponse'
+  /v2/bookings/business-booking-profile:
+    get:
+      tags:
+      - Bookings
+      summary: Square Retrieve Business Booking Profile
+      operationId: RetrieveBusinessBookingProfile
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a seller's booking profile.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_BUSINESS_SETTINGS_READ
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveBusinessBookingProfileResponse'
+  /v2/bookings/location-booking-profiles:
+    get:
+      tags:
+      - Bookings
+      summary: Square List Location Booking Profiles
+      operationId: ListLocationBookingProfiles
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Lists location booking profiles of a seller.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_BUSINESS_SETTINGS_READ
+      parameters:
+      - name: limit
+        description: The maximum number of results to return in a paged response.
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: cursor
+        description: The pagination cursor from the preceding response to return the next page of the results. Do not set this when retrieving the first page of the results.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLocationBookingProfilesResponse'
+  /v2/bookings/location-booking-profiles/{location_id}:
+    get:
+      tags:
+      - Bookings
+      summary: Square Retrieve Location Booking Profile
+      operationId: RetrieveLocationBookingProfile
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a seller's location booking profile.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_BUSINESS_SETTINGS_READ
+      parameters:
+      - name: location_id
+        description: The ID of the location to retrieve the booking profile.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveLocationBookingProfileResponse'
+  /v2/bookings/team-member-booking-profiles:
+    get:
+      tags:
+      - Bookings
+      summary: Square List Team Member Booking Profiles
+      operationId: ListTeamMemberBookingProfiles
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Lists booking profiles for team members.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_BUSINESS_SETTINGS_READ
+      parameters:
+      - name: bookable_only
+        description: Indicates whether to include only bookable team members in the returned result (`true`) or not (`false`).
+        schema:
+          type: boolean
+          default: false
+        in: query
+        required: false
+      - name: limit
+        description: The maximum number of results to return in a paged response.
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: cursor
+        description: The pagination cursor from the preceding response to return the next page of the results. Do not set this when retrieving the first page of the results.
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: location_id
+        description: Indicates whether to include only team members enabled at the given location in the returned result.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTeamMemberBookingProfilesResponse'
+  /v2/bookings/team-member-booking-profiles/bulk-retrieve:
+    post:
+      tags:
+      - Bookings
+      summary: Square Bulk Retrieve Team Member Booking Profiles
+      operationId: BulkRetrieveTeamMemberBookingProfiles
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves one or more team members' booking profiles.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_BUSINESS_SETTINGS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRetrieveTeamMemberBookingProfilesRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkRetrieveTeamMemberBookingProfilesResponse'
+  /v2/bookings/team-member-booking-profiles/{team_member_id}:
+    get:
+      tags:
+      - Bookings
+      summary: Square Retrieve Team Member Booking Profile
+      operationId: RetrieveTeamMemberBookingProfile
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a team member's booking profile.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_BUSINESS_SETTINGS_READ
+      parameters:
+      - name: team_member_id
+        description: The ID of the team member to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveTeamMemberBookingProfileResponse'
+  /v2/bookings/{booking_id}:
+    get:
+      tags:
+      - Bookings
+      summary: Square Retrieve Booking
+      operationId: RetrieveBooking
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Retrieves a booking.
+
+
+        To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
+
+        To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_READ
+      parameters:
+      - name: booking_id
+        description: The ID of the [Booking](entity:Booking) object representing the to-be-retrieved booking.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveBookingResponse'
+    put:
+      tags:
+      - Bookings
+      summary: Square Update Booking
+      operationId: UpdateBooking
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Updates a booking.
+
+
+        To call this endpoint with buyer-level permissions, set `APPOINTMENTS_WRITE` for the OAuth scope.
+
+        To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE` and `APPOINTMENTS_WRITE` for the OAuth scope.
+
+
+        For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to *Appointments Plus*
+
+        or *Appointments Premium*.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_WRITE
+      parameters:
+      - name: booking_id
+        description: The ID of the [Booking](entity:Booking) object representing the to-be-updated booking.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookingRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateBookingResponse'
+  /v2/bookings/{booking_id}/cancel:
+    post:
+      tags:
+      - Bookings
+      summary: Square Cancel Booking
+      operationId: CancelBooking
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Cancels an existing booking.
+
+
+        To call this endpoint with buyer-level permissions, set `APPOINTMENTS_WRITE` for the OAuth scope.
+
+        To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE` and `APPOINTMENTS_WRITE` for the OAuth scope.
+
+
+        For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to *Appointments Plus*
+
+        or *Appointments Premium*.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - APPOINTMENTS_WRITE
+      parameters:
+      - name: booking_id
+        description: The ID of the [Booking](entity:Booking) object representing the to-be-cancelled booking.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelBookingRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelBookingResponse'
+components:
+  schemas:
+    Address:
+      type: object
+      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
+      x-release-status: PUBLIC
+      properties:
+        address_line_1:
+          type: string
+          description: 'The first line of the address.
+
+
+            Fields that start with `address_line` provide the address''s most specific
+
+            details, like street number, street name, and building name. They do *not*
+
+            provide less specific details like city, state/province, or country (these
+
+            details are provided in other fields).'
+          nullable: true
+        address_line_2:
+          type: string
+          description: The second line of the address, if any.
+          nullable: true
+        address_line_3:
+          type: string
+          description: The third line of the address, if any.
+          nullable: true
+        locality:
+          type: string
+          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+          nullable: true
+        sublocality:
+          type: string
+          description: A civil region within the address's `locality`, if any.
+          nullable: true
+        sublocality_2:
+          type: string
+          description: A civil region within the address's `sublocality`, if any.
+          nullable: true
+        sublocality_3:
+          type: string
+          description: A civil region within the address's `sublocality_2`, if any.
+          nullable: true
+        administrative_district_level_1:
+          type: string
+          description: 'A civil entity within the address''s country. In the US, this
+
+            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
+          nullable: true
+        administrative_district_level_2:
+          type: string
+          description: 'A civil entity within the address''s `administrative_district_level_1`.
+
+            In the US, this is the county.'
+          nullable: true
+        administrative_district_level_3:
+          type: string
+          description: 'A civil entity within the address''s `administrative_district_level_2`,
+
+            if any.'
+          nullable: true
+        postal_code:
+          type: string
+          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+          nullable: true
+        country:
+          $ref: '#/components/schemas/Country'
+          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
+
+            See [Country](#type-country) for possible values'
+          nullable: true
+        first_name:
+          type: string
+          description: Optional first name when it's representing recipient.
+          nullable: true
+        last_name:
+          type: string
+          description: Optional last name when it's representing recipient.
+          nullable: true
+    Country:
+      type: string
+      enum:
+      - ZZ
+      - AD
+      - AE
+      - AF
+      - AG
+      - AI
+      - AL
+      - AM
+      - AO
+      - AQ
+      - AR
+      - AS
+      - AT
+      - AU
+      - AW
+      - AX
+      - AZ
+      - BA
+      - BB
+      - BD
+      - BE
+      - BF
+      - BG
+      - BH
+      - BI
+      - BJ
+      - BL
+      - BM
+      - BN
+      - BO
+      - BQ
+      - BR
+      - BS
+      - BT
+      - BV
+      - BW
+      - BY
+      - BZ
+      - CA
+      - CC
+      - CD
+      - CF
+      - CG
+      - CH
+      - CI
+      - CK
+      - CL
+      - CM
+      - CN
+      - CO
+      - CR
+      - CU
+      - CV
+      - CW
+      - CX
+      - CY
+      - CZ
+      - DE
+      - DJ
+      - DK
+      - DM
+      - DO
+      - DZ
+      - EC
+      - EE
+      - EG
+      - EH
+      - ER
+      - ES
+      - ET
+      - FI
+      - FJ
+      - FK
+      - FM
+      - FO
+      - FR
+      - GA
+      - GB
+      - GD
+      - GE
+      - GF
+      - GG
+      - GH
+      - GI
+      - GL
+      - GM
+      - GN
+      - GP
+      - GQ
+      - GR
+      - GS
+      - GT
+      - GU
+      - GW
+      - GY
+      - HK
+      - HM
+      - HN
+      - HR
+      - HT
+      - HU
+      - ID
+      - IE
+      - IL
+      - IM
+      - IN
+      - IO
+      - IQ
+      - IR
+      - IS
+      - IT
+      - JE
+      - JM
+      - JO
+      - JP
+      - KE
+      - KG
+      - KH
+      - KI
+      - KM
+      - KN
+      - KP
+      - KR
+      - KW
+      - KY
+      - KZ
+      - LA
+      - LB
+      - LC
+      - LI
+      - LK
+      - LR
+      - LS
+      - LT
+      - LU
+      - LV
+      - LY
+      - MA
+      - MC
+      - MD
+      - ME
+      - MF
+      - MG
+      - MH
+      - MK
+      - ML
+      - MM
+      - MN
+      - MO
+      - MP
+      - MQ
+      - MR
+      - MS
+      - MT
+      - MU
+      - MV
+      - MW
+      - MX
+      - MY
+      - MZ
+      - NA
+      - NC
+      - NE
+      - NF
+      - NG
+      - NI
+      - NL
+      - 'NO'
+      - NP
+      - NR
+      - NU
+      - NZ
+      - OM
+      - PA
+      - PE
+      - PF
+      - PG
+      - PH
+      - PK
+      - PL
+      - PM
+      - PN
+      - PR
+      - PS
+      - PT
+      - PW
+      - PY
+      - QA
+      - RE
+      - RO
+      - RS
+      - RU
+      - RW
+      - SA
+      - SB
+      - SC
+      - SD
+      - SE
+      - SG
+      - SH
+      - SI
+      - SJ
+      - SK
+      - SL
+      - SM
+      - SN
+      - SO
+      - SR
+      - SS
+      - ST
+      - SV
+      - SX
+      - SY
+      - SZ
+      - TC
+      - TD
+      - TF
+      - TG
+      - TH
+      - TJ
+      - TK
+      - TL
+      - TM
+      - TN
+      - TO
+      - TR
+      - TT
+      - TV
+      - TW
+      - TZ
+      - UA
+      - UG
+      - UM
+      - US
+      - UY
+      - UZ
+      - VA
+      - VC
+      - VE
+      - VG
+      - VI
+      - VN
+      - VU
+      - WF
+      - WS
+      - YE
+      - YT
+      - ZA
+      - ZM
+      - ZW
+      x-enum-elements:
+      - name: ZZ
+        description: Unknown
+      - name: AD
+        description: Andorra
+      - name: AE
+        description: United Arab Emirates
+      - name: AF
+        description: Afghanistan
+      - name: AG
+        description: Antigua and Barbuda
+      - name: AI
+        description: Anguilla
+      - name: AL
+        description: Albania
+      - name: AM
+        description: Armenia
+      - name: AO
+        description: Angola
+      - name: AQ
+        description: Antartica
+      - name: AR
+        description: Argentina
+      - name: AS
+        description: American Samoa
+      - name: AT
+        description: Austria
+      - name: AU
+        description: Australia
+      - name: AW
+        description: Aruba
+      - name: AX
+        description: Åland Islands
+      - name: AZ
+        description: Azerbaijan
+      - name: BA
+        description: Bosnia and Herzegovina
+      - name: BB
+        description: Barbados
+      - name: BD
+        description: Bangladesh
+      - name: BE
+        description: Belgium
+      - name: BF
+        description: Burkina Faso
+      - name: BG
+        description: Bulgaria
+      - name: BH
+        description: Bahrain
+      - name: BI
+        description: Burundi
+      - name: BJ
+        description: Benin
+      - name: BL
+        description: Saint Barthélemy
+      - name: BM
+        description: Bermuda
+      - name: BN
+        description: Brunei
+      - name: BO
+        description: Bolivia
+      - name: BQ
+        description: Bonaire
+      - name: BR
+        description: Brazil
+      - name: BS
+        description: Bahamas
+      - name: BT
+        description: Bhutan
+      - name: BV
+        description: Bouvet Island
+      - name: BW
+        description: Botswana
+      - name: BY
+        description: Belarus
+      - name: BZ
+        description: Belize
+      - name: CA
+        description: Canada
+      - name: CC
+        description: Cocos Islands
+      - name: CD
+        description: Democratic Republic of the Congo
+      - name: CF
+        description: Central African Republic
+      - name: CG
+        description: Congo
+      - name: CH
+        description: Switzerland
+      - name: CI
+        description: Ivory Coast
+      - name: CK
+        description: Cook Islands
+      - name: CL
+        description: Chile
+      - name: CM
+        description: Cameroon
+      - name: CN
+        description: China
+      - name: CO
+        description: Colombia
+      - name: CR
+        description: Costa Rica
+      - name: CU
+        description: Cuba
+      - name: CV
+        description: Cabo Verde
+      - name: CW
+        description: Curaçao
+      - name: CX
+        description: Christmas Island
+      - name: CY
+        description: Cyprus
+      - name: CZ
+        description: Czechia
+      - name: DE
+        description: Germany
+      - name: DJ
+        description: Djibouti
+      - name: DK
+        description: Denmark
+      - name: DM
+        description: Dominica
+      - name: DO
+        description: Dominican Republic
+      - name: DZ
+        description: Algeria
+      - name: EC
+        description: Ecuador
+      - name: EE
+        description: Estonia
+      - name: EG
+        description: Egypt
+      - name: EH
+        description: Western Sahara
+      - name: ER
+        description: Eritrea
+      - name: ES
+        description: Spain
+      - name: ET
+        description: Ethiopia
+      - name: FI
+        description: Finland
+      - name: FJ
+        description: Fiji
+      - name: FK
+        description: Falkland Islands
+      - name: FM
+        description: Federated States of Micronesia
+      - name: FO
+        description: Faroe Islands
+      - name: FR
+        description: France
+      - name: GA
+        description: Gabon
+      - name: GB
+        description: United Kingdom
+      - name: GD
+        description: Grenada
+      - name: GE
+        description: Georgia
+      - name: GF
+        description: French Guiana
+      - name: GG
+        description: Guernsey
+      - name: GH
+        description: Ghana
+      - name: GI
+        description: Gibraltar
+      - name: GL
+        description: Greenland
+      - name: GM
+        description: Gambia
+      - name: GN
+        description: Guinea
+      - name: GP
+        description: Guadeloupe
+      - name: GQ
+        description: Equatorial Guinea
+      - name: GR
+        description: Greece
+      - name: GS
+        description: South Georgia and the South Sandwich Islands
+      - name: GT
+        description: Guatemala
+      - name: GU
+        description: Guam
+      - name: GW
+        description: Guinea-Bissau
+      - name: GY
+        description: Guyana
+      - name: HK
+        description: Hong Kong
+      - name: HM
+        description: Heard Island and McDonald Islands
+      - name: HN
+        description: Honduras
+      - name: HR
+        description: Croatia
+      - name: HT
+        description: Haiti
+      - name: HU
+        description: Hungary
+      - name: ID
+        description: Indonesia
+      - name: IE
+        description: Ireland
+      - name: IL
+        description: Israel
+      - name: IM
+        description: Isle of Man
+      - name: IN
+        description: India
+      - name: IO
+        description: British Indian Ocean Territory
+      - name: IQ
+        description: Iraq
+      - name: IR
+        description: Iran
+      - name: IS
+        description: Iceland
+      - name: IT
+        description: Italy
+      - name: JE
+        description: Jersey
+      - name: JM
+        description: Jamaica
+      - name: JO
+        description: Jordan
+      - name: JP
+        description: Japan
+      - name: KE
+        description: Kenya
+      - name: KG
+        description: Kyrgyzstan
+      - name: KH
+        description: Cambodia
+      - name: KI
+        description: Kiribati
+      - name: KM
+        description: Comoros
+      - name: KN
+        description: Saint Kitts and Nevis
+      - name: KP
+        description: Democratic People's Republic of Korea
+      - name: KR
+        description: Republic of Korea
+      - name: KW
+        description: Kuwait
+      - name: KY
+        description: Cayman Islands
+      - name: KZ
+        description: Kazakhstan
+      - name: LA
+        description: Lao People's Democratic Republic
+      - name: LB
+        description: Lebanon
+      - name: LC
+        description: Saint Lucia
+      - name: LI
+        description: Liechtenstein
+      - name: LK
+        description: Sri Lanka
+      - name: LR
+        description: Liberia
+      - name: LS
+        description: Lesotho
+      - name: LT
+        description: Lithuania
+      - name: LU
+        description: Luxembourg
+      - name: LV
+        description: Latvia
+      - name: LY
+        description: Libya
+      - name: MA
+        description: Morocco
+      - name: MC
+        description: Monaco
+      - name: MD
+        description: Moldova
+      - name: ME
+        description: Montenegro
+      - name: MF
+        description: Saint Martin
+      - name: MG
+        description: Madagascar
+      - name: MH
+        description: Marshall Islands
+      - name: MK
+        description: North Macedonia
+      - name: ML
+        description: Mali
+      - name: MM
+        description: Myanmar
+      - name: MN
+        description: Mongolia
+      - name: MO
+        description: Macao
+      - name: MP
+        description: Northern Mariana Islands
+      - name: MQ
+        description: Martinique
+      - name: MR
+        description: Mauritania
+      - name: MS
+        description: Montserrat
+      - name: MT
+        description: Malta
+      - name: MU
+        description: Mauritius
+      - name: MV
+        description: Maldives
+      - name: MW
+        description: Malawi
+      - name: MX
+        description: Mexico
+      - name: MY
+        description: Malaysia
+      - name: MZ
+        description: Mozambique
+      - name: NA
+        description: Namibia
+      - name: NC
+        description: New Caledonia
+      - name: NE
+        description: Niger
+      - name: NF
+        description: Norfolk Island
+      - name: NG
+        description: Nigeria
+      - name: NI
+        description: Nicaragua
+      - name: NL
+        description: Netherlands
+      - name: 'NO'
+        description: Norway
+      - name: NP
+        description: Nepal
+      - name: NR
+        description: Nauru
+      - name: NU
+        description: Niue
+      - name: NZ
+        description: New Zealand
+      - name: OM
+        description: Oman
+      - name: PA
+        description: Panama
+      - name: PE
+        description: Peru
+      - name: PF
+        description: French Polynesia
+      - name: PG
+        description: Papua New Guinea
+      - name: PH
+        description: Philippines
+      - name: PK
+        description: Pakistan
+      - name: PL
+        description: Poland
+      - name: PM
+        description: Saint Pierre and Miquelon
+      - name: PN
+        description: Pitcairn
+      - name: PR
+        description: Puerto Rico
+      - name: PS
+        description: Palestine
+      - name: PT
+        description: Portugal
+      - name: PW
+        description: Palau
+      - name: PY
+        description: Paraguay
+      - name: QA
+        description: Qatar
+      - name: RE
+        description: Réunion
+      - name: RO
+        description: Romania
+      - name: RS
+        description: Serbia
+      - name: RU
+        description: Russia
+      - name: RW
+        description: Rwanda
+      - name: SA
+        description: Saudi Arabia
+      - name: SB
+        description: Solomon Islands
+      - name: SC
+        description: Seychelles
+      - name: SD
+        description: Sudan
+      - name: SE
+        description: Sweden
+      - name: SG
+        description: Singapore
+      - name: SH
+        description: Saint Helena, Ascension and Tristan da Cunha
+      - name: SI
+        description: Slovenia
+      - name: SJ
+        description: Svalbard and Jan Mayen
+      - name: SK
+        description: Slovakia
+      - name: SL
+        description: Sierra Leone
+      - name: SM
+        description: San Marino
+      - name: SN
+        description: Senegal
+      - name: SO
+        description: Somalia
+      - name: SR
+        description: Suriname
+      - name: SS
+        description: South Sudan
+      - name: ST
+        description: Sao Tome and Principe
+      - name: SV
+        description: El Salvador
+      - name: SX
+        description: Sint Maarten
+      - name: SY
+        description: Syrian Arab Republic
+      - name: SZ
+        description: Eswatini
+      - name: TC
+        description: Turks and Caicos Islands
+      - name: TD
+        description: Chad
+      - name: TF
+        description: French Southern Territories
+      - name: TG
+        description: Togo
+      - name: TH
+        description: Thailand
+      - name: TJ
+        description: Tajikistan
+      - name: TK
+        description: Tokelau
+      - name: TL
+        description: Timor-Leste
+      - name: TM
+        description: Turkmenistan
+      - name: TN
+        description: Tunisia
+      - name: TO
+        description: Tonga
+      - name: TR
+        description: Turkey
+      - name: TT
+        description: Trinidad and Tobago
+      - name: TV
+        description: Tuvalu
+      - name: TW
+        description: Taiwan
+      - name: TZ
+        description: Tanzania
+      - name: UA
+        description: Ukraine
+      - name: UG
+        description: Uganda
+      - name: UM
+        description: United States Minor Outlying Islands
+      - name: US
+        description: United States of America
+      - name: UY
+        description: Uruguay
+      - name: UZ
+        description: Uzbekistan
+      - name: VA
+        description: Vatican City
+      - name: VC
+        description: Saint Vincent and the Grenadines
+      - name: VE
+        description: Venezuela
+      - name: VG
+        description: British Virgin Islands
+      - name: VI
+        description: U.S. Virgin Islands
+      - name: VN
+        description: Vietnam
+      - name: VU
+        description: Vanuatu
+      - name: WF
+        description: Wallis and Futuna
+      - name: WS
+        description: Samoa
+      - name: YE
+        description: Yemen
+      - name: YT
+        description: Mayotte
+      - name: ZA
+        description: South Africa
+      - name: ZM
+        description: Zambia
+      - name: ZW
+        description: Zimbabwe
+      description: 'Indicates the country associated with another entity, such as a business.
+
+        Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
+      x-release-status: PUBLIC
+    Availability:
+      type: object
+      description: Defines an appointment slot that encapsulates the appointment segments, location and starting time available for booking.
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type: string
+          description: The RFC 3339 timestamp specifying the beginning time of the slot available for booking.
+          nullable: true
+        location_id:
+          type: string
+          description: The ID of the location available for booking.
+          maxLength: 32
+          readOnly: true
+        appointment_segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppointmentSegment'
+          description: The list of appointment segments available for booking
+          nullable: true
+    LocationBookingProfile:
+      type: object
+      description: The booking profile of a seller's location, including the location's ID and whether the location is enabled for online booking.
+      x-release-status: PUBLIC
+      properties:
+        location_id:
+          type: string
+          description: The ID of the [location](entity:Location).
+          nullable: true
+        booking_site_url:
+          type: string
+          description: Url for the online booking site for this location.
+          nullable: true
+        online_booking_enabled:
+          type: boolean
+          description: Indicates whether the location is enabled for online booking.
+          nullable: true
+    AppointmentSegment:
+      type: object
+      description: Defines an appointment segment of a booking.
+      x-release-status: PUBLIC
+      required:
+      - team_member_id
+      properties:
+        duration_minutes:
+          type: integer
+          description: The time span in minutes of an appointment segment.
+          maximum: 1500
+          nullable: true
+        service_variation_id:
+          type: string
+          description: The ID of the [CatalogItemVariation](entity:CatalogItemVariation) object representing the service booked in this segment.
+          maxLength: 36
+          nullable: true
+        team_member_id:
+          type: string
+          description: The ID of the [TeamMember](entity:TeamMember) object representing the team member booked in this segment.
+          minLength: 1
+          maxLength: 32
+        service_variation_version:
+          type: integer
+          description: The current version of the item variation representing the service booked in this segment.
+          format: int64
+          nullable: true
+        intermission_minutes:
+          type: integer
+          description: Time between the end of this segment and the beginning of the subsequent segment.
+          readOnly: true
+        any_team_member:
+          type: boolean
+          description: Whether the customer accepts any team member, instead of a specific one, to serve this segment.
+          readOnly: true
+        resource_ids:
+          type: array
+          items:
+            type: string
+          description: The IDs of the seller-accessible resources used for this appointment segment.
+          readOnly: true
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    SearchAvailabilityRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - query
+      properties:
+        query:
+          $ref: '#/components/schemas/SearchAvailabilityQuery'
+          description: Query conditions used to filter buyer-accessible booking availabilities.
+    RetrieveBusinessBookingProfileResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        business_booking_profile:
+          $ref: '#/components/schemas/BusinessBookingProfile'
+          description: The seller's booking profile.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        business_booking_profile:
+          allow_user_cancel: true
+          booking_enabled: true
+          booking_policy: ACCEPT_ALL
+          business_appointment_settings:
+            alignment_time: HALF_HOURLY
+            any_team_member_booking_enabled: true
+            cancellation_fee_money:
+              currency: USD
+            cancellation_policy: CUSTOM_POLICY
+            location_types:
+            - BUSINESS_LOCATION
+            max_booking_lead_time_seconds: 31536000
+            min_booking_lead_time_seconds: 0
+            multiple_service_booking_enabled: true
+            skip_booking_flow_staff_selection: false
+          created_at: '2020-09-10T21:40:38Z'
+          customer_timezone_choice: CUSTOMER_CHOICE
+          seller_id: MLJQYZZRM0D3Y
+        errors: []
+    BookingCreatorDetailsCreatorType:
+      type: string
+      enum:
+      - TEAM_MEMBER
+      - CUSTOMER
+      x-enum-elements:
+      - name: TEAM_MEMBER
+        description: The creator is of the seller type.
+      - name: CUSTOMER
+        description: The creator is of the buyer type.
+      description: Supported types of a booking creator.
+      x-release-status: PUBLIC
+    UpdateBookingRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - booking
+      properties:
+        idempotency_key:
+          type: string
+          description: A unique key to make this request an idempotent operation.
+          maxLength: 255
+          nullable: true
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking to be updated. Individual attributes explicitly specified here override the corresponding values of the existing booking.
+    ListBookingsResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        bookings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Booking'
+          description: The list of targeted bookings.
+        cursor:
+          type: string
+          description: The pagination cursor to be used in the subsequent request to get the next page of the results. Stop retrieving the next page of the results when the cursor is not set.
+          maxLength: 65536
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        bookings:
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          created_at: '2020-10-28T15:47:41Z'
+          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
+          customer_note: ''
+          id: zkras0xv0xwswx
+          location_id: LEQHH0YY8B42M
+          seller_note: ''
+          start_at: '2020-11-26T13:00:00Z'
+          status: ACCEPTED
+          updated_at: '2020-10-28T15:49:25Z'
+          version: 1
+        cursor: null
+        errors: []
+    BusinessAppointmentSettingsBookingLocationType:
+      type: string
+      enum:
+      - BUSINESS_LOCATION
+      - CUSTOMER_LOCATION
+      - PHONE
+      x-enum-elements:
+      - name: BUSINESS_LOCATION
+        description: The service is provided at a seller location.
+      - name: CUSTOMER_LOCATION
+        description: The service is provided at a customer location.
+      - name: PHONE
+        description: The service is provided over the phone.
+      description: Supported types of location where service is provided.
+      x-release-status: PUBLIC
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type: integer
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+          nullable: true
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+          nullable: true
+    BusinessAppointmentSettingsAlignmentTime:
+      type: string
+      enum:
+      - SERVICE_DURATION
+      - QUARTER_HOURLY
+      - HALF_HOURLY
+      - HOURLY
+      x-enum-elements:
+      - name: SERVICE_DURATION
+        description: The service duration unit is one visit of a fixed time interval specified by the seller.
+      - name: QUARTER_HOURLY
+        description: The service duration unit is a 15-minute interval. Bookings can be scheduled every quarter hour.
+      - name: HALF_HOURLY
+        description: The service duration unit is a 30-minute interval. Bookings can be scheduled every half hour.
+      - name: HOURLY
+        description: The service duration unit is a 60-minute interval. Bookings can be scheduled every hour.
+      description: Time units of a service duration for bookings.
+      x-release-status: PUBLIC
+    SearchAvailabilityQuery:
+      type: object
+      description: The query used to search for buyer-accessible availabilities of bookings.
+      x-release-status: PUBLIC
+      required:
+      - filter
+      properties:
+        filter:
+          $ref: '#/components/schemas/SearchAvailabilityFilter'
+          description: The query filter to search for buyer-accessible availabilities of existing bookings.
+    BulkRetrieveTeamMemberBookingProfilesResponse:
+      type: object
+      description: Response payload for the [BulkRetrieveTeamMemberBookingProfiles](api-endpoint:Bookings-BulkRetrieveTeamMemberBookingProfiles) endpoint.
+      x-release-status: PUBLIC
+      properties:
+        team_member_booking_profiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RetrieveTeamMemberBookingProfileResponse'
+          description: The returned team members' booking profiles, as a map with `team_member_id` as the key and [TeamMemberBookingProfile](entity:TeamMemberBookingProfile) the value.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        team_member_booking_profiles:
+          TMXUrsBWWcHTt79t:
+            errors:
+            - category: INVALID_REQUEST_ERROR
+              code: NOT_FOUND
+              detail: Resource not found.
+          TMaJcbiRqPIGZuS9:
+            errors: []
+            team_member_booking_profile:
+              display_name: Sandbox Staff 1
+              is_bookable: true
+              team_member_id: TMaJcbiRqPIGZuS9
+          TMtdegug1fqni3wh:
+            errors: []
+            team_member_booking_profile:
+              display_name: Sandbox Staff 2
+              is_bookable: true
+              team_member_id: TMtdegug1fqni3wh
+    CancelBookingResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking that was cancelled.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        booking:
+          appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          created_at: '2020-10-28T15:47:41Z'
+          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
+          customer_note: ''
+          id: zkras0xv0xwswx
+          location_id: LEQHH0YY8B42M
+          seller_note: ''
+          start_at: '2020-11-26T13:00:00Z'
+          status: CANCELLED_BY_CUSTOMER
+          updated_at: '2020-10-28T15:49:25Z'
+          version: 1
+        errors: []
+    BulkRetrieveBookingsRequest:
+      type: object
+      description: Request payload for bulk retrieval of bookings.
+      x-release-status: PUBLIC
+      required:
+      - booking_ids
+      properties:
+        booking_ids:
+          type: array
+          items:
+            type: string
+          description: A non-empty list of [Booking](entity:Booking) IDs specifying bookings to retrieve.
+    FilterValue:
+      type: object
+      description: 'A filter to select resources based on an exact field value. For any given
+
+        value, the value can only be in one property. Depending on the field, either
+
+        all properties can be set or only a subset will be available.
+
+
+        Refer to the documentation of the field.'
+      x-release-status: BETA
+      properties:
+        all:
+          type: array
+          items:
+            type: string
+          description: A list of terms that must be present on the field of the resource.
+          nullable: true
+        any:
+          type: array
+          items:
+            type: string
+          description: 'A list of terms where at least one of them must be present on the
+
+            field of the resource.'
+          nullable: true
+        none:
+          type: array
+          items:
+            type: string
+          description: A list of terms that must not be present on the field the resource
+          nullable: true
+    Booking:
+      type: object
+      description: 'Represents a booking as a time-bound service contract for a seller''s staff member to provide a specified service
+
+        at a given location to a requesting customer in one or more appointment segments.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: A unique ID of this object representing a booking.
+          maxLength: 36
+          readOnly: true
+        version:
+          type: integer
+          description: The revision number for the booking used for optimistic concurrency.
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+          description: 'The status of the booking, describing where the booking stands with respect to the booking state machine.
+
+            See [BookingStatus](#type-bookingstatus) for possible values'
+          readOnly: true
+        created_at:
+          type: string
+          description: The RFC 3339 timestamp specifying the creation time of this booking.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The RFC 3339 timestamp specifying the most recent update time of this booking.
+          readOnly: true
+        start_at:
+          type: string
+          description: The RFC 3339 timestamp specifying the starting time of this booking.
+          nullable: true
+        location_id:
+          type: string
+          description: The ID of the [Location](entity:Location) object representing the location where the booked service is provided. Once set when the booking is created, its value cannot be changed.
+          maxLength: 32
+          nullable: true
+        customer_id:
+          type: string
+          description: The ID of the [Customer](entity:Customer) object representing the customer receiving the booked service.
+          maxLength: 192
+          nullable: true
+        customer_note:
+          type: string
+          description: The free-text field for the customer to supply notes about the booking. For example, the note can be preferences that cannot be expressed by supported attributes of a relevant [CatalogObject](entity:CatalogObject) instance.
+          maxLength: 4096
+          nullable: true
+        seller_note:
+          type: string
+          description: 'The free-text field for the seller to supply notes about the booking. For example, the note can be preferences that cannot be expressed by supported attributes of a specific [CatalogObject](entity:CatalogObject) instance.
+
+            This field should not be visible to customers.'
+          maxLength: 4096
+          nullable: true
+        appointment_segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppointmentSegment'
+          description: A list of appointment segments for this booking.
+          nullable: true
+        transition_time_minutes:
+          type: integer
+          description: 'Additional time at the end of a booking.
+
+            Applications should not make this field visible to customers of a seller.'
+          readOnly: true
+        all_day:
+          type: boolean
+          description: Whether the booking is of a full business day.
+          readOnly: true
+        location_type:
+          $ref: '#/components/schemas/BusinessAppointmentSettingsBookingLocationType'
+          description: 'The type of location where the booking is held.
+
+            See [BusinessAppointmentSettingsBookingLocationType](#type-businessappointmentsettingsbookinglocationtype) for possible values'
+          nullable: true
+        creator_details:
+          $ref: '#/components/schemas/BookingCreatorDetails'
+          description: Information about the booking creator.
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/BookingBookingSource'
+          description: 'The source of the booking.
+
+            Access to this field requires seller-level permissions.
+
+            See [BookingBookingSource](#type-bookingbookingsource) for possible values'
+          readOnly: true
+        address:
+          $ref: '#/components/schemas/Address'
+          description: Stores a customer address if the location type is `CUSTOMER_LOCATION`.
+          nullable: true
+    CancelBookingRequest:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        idempotency_key:
+          type: string
+          description: A unique key to make this request an idempotent operation.
+          maxLength: 255
+          nullable: true
+        booking_version:
+          type: integer
+          description: The revision number for the booking used for optimistic concurrency.
+          nullable: true
+    CreateBookingRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - booking
+      properties:
+        idempotency_key:
+          type: string
+          description: A unique key to make this request an idempotent operation.
+          maxLength: 255
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The details of the booking to be created.
+    SearchAvailabilityFilter:
+      type: object
+      description: A query filter to search for buyer-accessible availabilities by.
+      x-release-status: PUBLIC
+      required:
+      - start_at_range
+      properties:
+        start_at_range:
+          $ref: '#/components/schemas/TimeRange'
+          description: 'The query expression to search for buy-accessible availabilities with their starting times falling within the specified time range.
+
+            The time range must be at least 24 hours and at most 32 days long.
+
+            For waitlist availabilities, the time range can be 0 or more up to 367 days long.'
+        location_id:
+          type: string
+          description: 'The query expression to search for buyer-accessible availabilities with their location IDs matching the specified location ID.
+
+            This query expression cannot be set if `booking_id` is set.'
+          maxLength: 32
+          nullable: true
+        segment_filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentFilter'
+          description: 'The query expression to search for buyer-accessible availabilities matching the specified list of segment filters.
+
+            If the size of the `segment_filters` list is `n`, the search returns availabilities with `n` segments per availability.
+
+
+            This query expression cannot be set if `booking_id` is set.'
+          nullable: true
+        booking_id:
+          type: string
+          description: 'The query expression to search for buyer-accessible availabilities for an existing booking by matching the specified `booking_id` value.
+
+            This is commonly used to reschedule an appointment.
+
+            If this expression is set, the `location_id` and `segment_filters` expressions cannot be set.'
+          maxLength: 36
+          nullable: true
+    SegmentFilter:
+      type: object
+      description: A query filter to search for buyer-accessible appointment segments by.
+      x-release-status: PUBLIC
+      required:
+      - service_variation_id
+      properties:
+        service_variation_id:
+          type: string
+          description: The ID of the [CatalogItemVariation](entity:CatalogItemVariation) object representing the service booked in this segment.
+          minLength: 1
+          maxLength: 36
+        team_member_id_filter:
+          $ref: '#/components/schemas/FilterValue'
+          description: 'A query filter to search for buyer-accessible appointment segments with service-providing team members matching the specified list of team member IDs.  Supported query expressions are
+
+            - `ANY`: return the appointment segments with team members whose IDs match any member in this list.
+
+            - `NONE`: return the appointment segments with team members whose IDs are not in this list.
+
+            - `ALL`: not supported.
+
+
+            When no expression is specified, any service-providing team member is eligible to fulfill the Booking.'
+          nullable: true
+    TeamMemberBookingProfile:
+      type: object
+      description: The booking profile of a seller's team member, including the team member's ID, display name, description and whether the team member can be booked as a service provider.
+      x-release-status: PUBLIC
+      properties:
+        team_member_id:
+          type: string
+          description: The ID of the [TeamMember](entity:TeamMember) object for the team member associated with the booking profile.
+          maxLength: 32
+          readOnly: true
+        description:
+          type: string
+          description: The description of the team member.
+          maxLength: 65536
+          readOnly: true
+        display_name:
+          type: string
+          description: The display name of the team member.
+          maxLength: 512
+          readOnly: true
+        is_bookable:
+          type: boolean
+          description: Indicates whether the team member can be booked through the Bookings API or the seller's online booking channel or site (`true`) or not (`false`).
+          nullable: true
+        profile_image_url:
+          type: string
+          description: The URL of the team member's image for the bookings profile.
+          maxLength: 2048
+          readOnly: true
+    RetrieveTeamMemberBookingProfileResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        team_member_booking_profile:
+          $ref: '#/components/schemas/TeamMemberBookingProfile'
+          description: The returned team member booking profile.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        team_member_booking_profile:
+          display_name: Sandbox Staff
+          is_bookable: true
+          team_member_id: TMaJcbiRqPIGZuS9
+    BookingBookingSource:
+      type: string
+      enum:
+      - FIRST_PARTY_MERCHANT
+      - FIRST_PARTY_BUYER
+      - THIRD_PARTY_BUYER
+      - API
+      x-enum-elements:
+      - name: FIRST_PARTY_MERCHANT
+        description: The booking was created by a seller from a Square Appointments application, such as the Square Appointments Dashboard or a Square Appointments mobile app.
+      - name: FIRST_PARTY_BUYER
+        description: The booking was created by a buyer from a Square Appointments application, such as Square Online Booking Site.
+      - name: THIRD_PARTY_BUYER
+        description: The booking was created by a buyer created from a third-party application.
+      - name: API
+        description: The booking was created by a seller or a buyer from the Square Bookings API.
+      description: Supported sources a booking was created from.
+      x-release-status: PUBLIC
+    RetrieveLocationBookingProfileResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        location_booking_profile:
+          $ref: '#/components/schemas/LocationBookingProfile'
+          description: The requested location booking profile.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        location_booking_profile:
+          booking_enabled: true
+          booking_site_url: https://square.site/book/L3HETDGYQ4A2C/prod-business
+          location_id: L3HETDGYQ4A2C
+    BookingCreatorDetails:
+      type: object
+      description: Information about a booking creator.
+      x-release-status: PUBLIC
+      properties:
+        creator_type:
+          $ref: '#/components/schemas/BookingCreatorDetailsCreatorType'
+          description: 'The seller-accessible type of the creator of the booking.
+
+            See [BookingCreatorDetailsCreatorType](#type-bookingcreatordetailscreatortype) for possible values'
+          readOnly: true
+        team_member_id:
+          type: string
+          description: 'The ID of the team member who created the booking, when the booking creator is of the `TEAM_MEMBER` type.
+
+            Access to this field requires seller-level permissions.'
+          maxLength: 32
+          readOnly: true
+        customer_id:
+          type: string
+          description: 'The ID of the customer who created the booking, when the booking creator is of the `CUSTOMER` type.
+
+            Access to this field requires seller-level permissions.'
+          maxLength: 192
+          readOnly: true
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    BookingStatus:
+      type: string
+      enum:
+      - PENDING
+      - CANCELLED_BY_CUSTOMER
+      - CANCELLED_BY_SELLER
+      - DECLINED
+      - ACCEPTED
+      - NO_SHOW
+      x-enum-elements:
+      - name: PENDING
+        description: An unaccepted booking. It is visible to both sellers and customers.
+      - name: CANCELLED_BY_CUSTOMER
+        description: A customer-cancelled booking. It is visible to both the seller and the customer.
+      - name: CANCELLED_BY_SELLER
+        description: A seller-cancelled booking. It is visible to both the seller and the customer.
+      - name: DECLINED
+        description: A declined booking. It had once been pending, but was then declined by the seller.
+      - name: ACCEPTED
+        description: An accepted booking agreed to or accepted by the seller.
+      - name: NO_SHOW
+        description: 'A no-show booking. The booking was accepted at one time, but have now been marked as a no-show by
+
+          the seller because the client either missed the booking or cancelled it without enough notice.'
+      description: Supported booking statuses.
+      x-release-status: PUBLIC
+    BusinessAppointmentSettingsMaxAppointmentsPerDayLimitType:
+      type: string
+      enum:
+      - PER_TEAM_MEMBER
+      - PER_LOCATION
+      x-enum-elements:
+      - name: PER_TEAM_MEMBER
+        description: The maximum number of daily appointments is set on a per team member basis.
+      - name: PER_LOCATION
+        description: The maximum number of daily appointments is set on a per location basis.
+      description: Types of daily appointment limits.
+      x-release-status: PUBLIC
+    BusinessAppointmentSettings:
+      type: object
+      description: The service appointment settings, including where and how the service is provided.
+      x-release-status: PUBLIC
+      properties:
+        location_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessAppointmentSettingsBookingLocationType'
+          description: 'Types of the location allowed for bookings.
+
+            See [BusinessAppointmentSettingsBookingLocationType](#type-businessappointmentsettingsbookinglocationtype) for possible values'
+          nullable: true
+        alignment_time:
+          $ref: '#/components/schemas/BusinessAppointmentSettingsAlignmentTime'
+          description: 'The time unit of the service duration for bookings.
+
+            See [BusinessAppointmentSettingsAlignmentTime](#type-businessappointmentsettingsalignmenttime) for possible values'
+          nullable: true
+        min_booking_lead_time_seconds:
+          type: integer
+          description: The minimum lead time in seconds before a service can be booked. A booking must be created at least this amount of time before its starting time.
+          nullable: true
+        max_booking_lead_time_seconds:
+          type: integer
+          description: The maximum lead time in seconds before a service can be booked. A booking must be created at most this amount of time before its starting time.
+          nullable: true
+        any_team_member_booking_enabled:
+          type: boolean
+          description: 'Indicates whether a customer can choose from all available time slots and have a staff member assigned
+
+            automatically (`true`) or not (`false`).'
+          nullable: true
+        multiple_service_booking_enabled:
+          type: boolean
+          description: Indicates whether a customer can book multiple services in a single online booking.
+          nullable: true
+        max_appointments_per_day_limit_type:
+          $ref: '#/components/schemas/BusinessAppointmentSettingsMaxAppointmentsPerDayLimitType'
+          description: 'Indicates whether the daily appointment limit applies to team members or to
+
+            business locations.
+
+            See [BusinessAppointmentSettingsMaxAppointmentsPerDayLimitType](#type-businessappointmentsettingsmaxappointmentsperdaylimittype) for possible values'
+          nullable: true
+        max_appointments_per_day_limit:
+          type: integer
+          description: The maximum number of daily appointments per team member or per location.
+          nullable: true
+        cancellation_window_seconds:
+          type: integer
+          description: The cut-off time in seconds for allowing clients to cancel or reschedule an appointment.
+          nullable: true
+        cancellation_fee_money:
+          $ref: '#/components/schemas/Money'
+          description: The flat-fee amount charged for a no-show booking.
+          nullable: true
+        cancellation_policy:
+          $ref: '#/components/schemas/BusinessAppointmentSettingsCancellationPolicy'
+          description: 'The cancellation policy adopted by the seller.
+
+            See [BusinessAppointmentSettingsCancellationPolicy](#type-businessappointmentsettingscancellationpolicy) for possible values'
+          nullable: true
+        cancellation_policy_text:
+          type: string
+          description: The free-form text of the seller's cancellation policy.
+          maxLength: 65536
+          nullable: true
+        skip_booking_flow_staff_selection:
+          type: boolean
+          description: Indicates whether customers has an assigned staff member (`true`) or can select s staff member of their choice (`false`).
+          nullable: true
+    TimeRange:
+      type: object
+      description: 'Represents a generic time range. The start and end values are
+
+        represented in RFC 3339 format. Time ranges are customized to be
+
+        inclusive or exclusive based on the needs of a particular endpoint.
+
+        Refer to the relevant endpoint-specific documentation to determine
+
+        how time ranges are handled.'
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type: string
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            starts.'
+          nullable: true
+        end_at:
+          type: string
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            ends.'
+          nullable: true
+    RetrieveBookingResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking that was requested.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        booking:
+          appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          created_at: '2020-10-28T15:47:41Z'
+          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
+          customer_note: ''
+          id: zkras0xv0xwswx
+          location_id: LEQHH0YY8B42M
+          seller_note: ''
+          start_at: '2020-11-26T13:00:00Z'
+          status: ACCEPTED
+          updated_at: '2020-10-28T15:49:25Z'
+          version: 1
+        errors: []
+    BulkRetrieveTeamMemberBookingProfilesRequest:
+      type: object
+      description: Request payload for the [BulkRetrieveTeamMemberBookingProfiles](api-endpoint:Bookings-BulkRetrieveTeamMemberBookingProfiles) endpoint.
+      x-release-status: PUBLIC
+      required:
+      - team_member_ids
+      properties:
+        team_member_ids:
+          type: array
+          items:
+            type: string
+          description: A non-empty list of IDs of team members whose booking profiles you want to retrieve.
+    UpdateBookingResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking that was updated.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        booking:
+          address:
+            address_line_1: 1955 Broadway
+            address_line_2: Suite 600
+            administrative_district_level_1: CA
+            locality: Oakland
+            postal_code: '94612'
+          appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          created_at: '2020-10-28T15:47:41Z'
+          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
+          customer_note: I would like to sit near the window please
+          id: zkras0xv0xwswx
+          location_id: LEQHH0YY8B42M
+          location_type: CUSTOMER_LOCATION
+          seller_note: ''
+          start_at: '2020-11-26T13:00:00Z'
+          status: ACCEPTED
+          updated_at: '2020-10-28T15:49:25Z'
+          version: 2
+        errors: []
+    BusinessBookingProfile:
+      type: object
+      description: A seller's business booking profile, including booking policy, appointment settings, etc.
+      x-release-status: PUBLIC
+      properties:
+        seller_id:
+          type: string
+          description: The ID of the seller, obtainable using the Merchants API.
+          maxLength: 32
+          nullable: true
+        created_at:
+          type: string
+          description: The RFC 3339 timestamp specifying the booking's creation time.
+          readOnly: true
+        booking_enabled:
+          type: boolean
+          description: Indicates whether the seller is open for booking.
+          nullable: true
+        customer_timezone_choice:
+          $ref: '#/components/schemas/BusinessBookingProfileCustomerTimezoneChoice'
+          description: 'The choice of customer''s time zone information of a booking.
+
+            The Square online booking site and all notifications to customers uses either the seller location’s time zone
+
+            or the time zone the customer chooses at booking.
+
+            See [BusinessBookingProfileCustomerTimezoneChoice](#type-businessbookingprofilecustomertimezonechoice) for possible values'
+          nullable: true
+        booking_policy:
+          $ref: '#/components/schemas/BusinessBookingProfileBookingPolicy'
+          description: 'The policy for the seller to automatically accept booking requests (`ACCEPT_ALL`) or not (`REQUIRES_ACCEPTANCE`).
+
+            See [BusinessBookingProfileBookingPolicy](#type-businessbookingprofilebookingpolicy) for possible values'
+          nullable: true
+        allow_user_cancel:
+          type: boolean
+          description: Indicates whether customers can cancel or reschedule their own bookings (`true`) or not (`false`).
+          nullable: true
+        business_appointment_settings:
+          $ref: '#/components/schemas/BusinessAppointmentSettings'
+          description: Settings for appointment-type bookings.
+          nullable: true
+        support_seller_level_writes:
+          type: boolean
+          description: Indicates whether the seller's subscription to Square Appointments supports creating, updating or canceling an appointment through the API (`true`) or not (`false`) using seller permission.
+          nullable: true
+    BusinessBookingProfileCustomerTimezoneChoice:
+      type: string
+      enum:
+      - BUSINESS_LOCATION_TIMEZONE
+      - CUSTOMER_CHOICE
+      x-enum-elements:
+      - name: BUSINESS_LOCATION_TIMEZONE
+        description: Use the time zone of the business location for bookings.
+      - name: CUSTOMER_CHOICE
+        description: Use the customer-chosen time zone for bookings.
+      description: Choices of customer-facing time zone used for bookings.
+      x-release-status: PUBLIC
+    ListLocationBookingProfilesResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        location_booking_profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationBookingProfile'
+          description: The list of a seller's location booking profiles.
+        cursor:
+          type: string
+          description: The pagination cursor to be used in the subsequent request to get the next page of the results. Stop retrieving the next page of the results when the cursor is not set.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        location_booking_profiles:
+        - booking_site_url: https://squareup.com/book/LY6WNBPVM6VGV/testbusiness
+          location_id: LY6WNBPVM6VGV
+          online_booking_enabled: true
+        - location_id: PYTRNBPVMJUPV
+          online_booking_enabled: false
+    CreateBookingResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking that was created.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        booking:
+          appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          created_at: '2020-10-28T15:47:41Z'
+          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
+          customer_note: ''
+          id: zkras0xv0xwswx
+          location_id: LEQHH0YY8B42M
+          seller_note: ''
+          start_at: '2020-11-26T13:00:00Z'
+          status: ACCEPTED
+          updated_at: '2020-10-28T15:47:41Z'
+          version: 0
+        errors: []
+    BulkRetrieveBookingsResponse:
+      type: object
+      description: Response payload for bulk retrieval of bookings.
+      x-release-status: PUBLIC
+      properties:
+        bookings:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RetrieveBookingResponse'
+          description: Requested bookings returned as a map containing `booking_id` as the key and `RetrieveBookingResponse` as the value.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        bookings:
+          sc3p3m7dvctfr1:
+            booking:
+              all_day: false
+              appointment_segments:
+              - any_team_member: false
+                duration_minutes: 60
+                service_variation_id: VG4FYBKK3UL6UITOEYQ6MFLS
+                service_variation_version: 1641341724039
+                team_member_id: TMjiqI3PxyLMKr4k
+              created_at: '2023-04-26T18:19:21Z'
+              customer_id: 4TDWKN9E8165X8Z77MRS0VFMJM
+              id: sc3p3m7dvctfr1
+              location_id: LY6WNBPVM6VGV
+              start_at: '2023-05-01T14:00:00Z'
+              status: ACCEPTED
+              updated_at: '2023-04-26T18:19:21Z'
+              version: 0
+            errors: []
+          tdegug1dvctdef:
+            errors:
+            - category: INVALID_REQUEST_ERROR
+              code: NOT_FOUND
+              detail: Specified booking was not found.
+              field: booking_id
+          tdegug1fqni3wh:
+            booking:
+              all_day: false
+              appointment_segments:
+              - any_team_member: false
+                duration_minutes: 60
+                service_variation_id: VG4FYBKK3UL6UITOEYQ6MFLS
+                service_variation_version: 1641341724039
+                team_member_id: TMjiqI3PxyLMKr4k
+              created_at: '2023-04-26T18:19:30Z'
+              customer_id: 4TDWKN9E8165X8Z77MRS0VFMJM
+              id: tdegug1fqni3wh
+              location_id: LY6WNBPVM6VGV
+              start_at: '2023-05-02T14:00:00Z'
+              status: ACCEPTED
+              updated_at: '2023-04-26T18:19:30Z'
+              version: 0
+            errors: []
+        errors: []
+    BusinessAppointmentSettingsCancellationPolicy:
+      type: string
+      enum:
+      - CANCELLATION_TREATED_AS_NO_SHOW
+      - CUSTOM_POLICY
+      x-enum-elements:
+      - name: CANCELLATION_TREATED_AS_NO_SHOW
+        description: Cancellations are treated as no shows and may incur a fee as specified by `cancellation_fee_money`.
+      - name: CUSTOM_POLICY
+        description: Cancellations follow the seller-specified policy that is described in free-form text and not enforced automatically by Square.
+      description: The category of the seller’s cancellation policy.
+      x-release-status: PUBLIC
+    ListTeamMemberBookingProfilesResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        team_member_booking_profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMemberBookingProfile'
+          description: 'The list of team member booking profiles. The results are returned in the ascending order of the time
+
+            when the team member booking profiles were last updated. Multiple booking profiles updated at the same time
+
+            are further sorted in the ascending order of their IDs.'
+        cursor:
+          type: string
+          description: The pagination cursor to be used in the subsequent request to get the next page of the results. Stop retrieving the next page of the results when the cursor is not set.
+          maxLength: 65536
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        team_member_booking_profiles:
+        - display_name: Sandbox Seller
+          is_bookable: true
+          team_member_id: TMXUrsBWWcHTt79t
+        - display_name: Sandbox Staff
+          is_bookable: true
+          team_member_id: TMaJcbiRqPIGZuS9
+    BusinessBookingProfileBookingPolicy:
+      type: string
+      enum:
+      - ACCEPT_ALL
+      - REQUIRES_ACCEPTANCE
+      x-enum-elements:
+      - name: ACCEPT_ALL
+        description: The seller accepts all booking requests automatically.
+      - name: REQUIRES_ACCEPTANCE
+        description: The seller must accept requests to complete bookings.
+      description: Policies for accepting bookings.
+      x-release-status: PUBLIC
+    SearchAvailabilityResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        availabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Availability'
+          description: List of appointment slots available for booking.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        availabilities:
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-26T13:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-26T13:30:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-26T14:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-26T14:30:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-26T15:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-26T15:30:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-26T16:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T09:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T09:30:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T10:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T10:30:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T11:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T11:30:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T12:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T12:30:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T13:00:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T13:30:00Z'
+        - appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMaJcbiRqPIGZuS9
+          location_id: LEQHH0YY8B42M
+          start_at: '2020-11-27T14:00:00Z'
+        errors: []
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-additional-headers:
+      - name: Square-Version
+        description: Square Connect API versions
+        schema:
+          default: '2025-01-23'
+      flows:
+        authorizationCode:
+          authorizationUrl: https://connect.squareup.com/oauth2/authorize
+          tokenUrl: https://connect.squareup.com/oauth2/token
+          scopes:
+            ADDON_CONFIGURATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants write access for third-party Add-ons to read configurations of their Add-ons, for example, when calling `RetrieveConfiguration` endpoint.'
+            ADDON_CONFIGURATIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access for third-party Add-ons to store configurations of their Add-ons, for example, when calling `CreateConfiguration` endpoint.'
+            APPOINTMENTS_ALL_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to all of a seller''s booking information, calendar, and business details.
+
+              This permission must be accompanied by the `APPOINTMENTS_READ` permission.'
+            APPOINTMENTS_ALL_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to all booking details, including double-booking a seller.
+
+              This permission must be accompanied by the `APPOINTMENTS_WRITE` permission.'
+            APPOINTMENTS_BUSINESS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to booking business settings. For example, to call the
+
+              ListTeamMemberBookingProfiles endpoint.'
+            APPOINTMENTS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to booking information. For example, to call the
+
+              RetrieveBooking endpoint.'
+            APPOINTMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to booking information. For example, to call the CreateBooking endpoint.'
+            BANK_ACCOUNTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to bank account information associated with the targeted
+
+              Square account. For example, to call the Connect v1 ListBankAccounts endpoint.'
+            CASH_DRAWER_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to cash drawer shift information. For example, to call the
+
+              ListCashDrawerShifts endpoint.'
+            CHANNELS_CREATE: '__HTTP Method__: `POST`
+
+
+              Grants write access to create channels, for example, when calling the
+
+              `CreateChannel` endpoint.'
+            CHANNELS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to view channels, for example, when calling the
+
+              `RetrieveChannel` endpoint.'
+            CHANNELS_UPDATE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to update channels, for example, when calling the
+
+              `UpdateChannel` endpoint.'
+            CUSTOMERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to customer information. For example, to call the
+
+              ListCustomers endpoint.'
+            CUSTOMERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to customer information. For example, to create and update
+
+              customer profiles.'
+            DEVICES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to device information. For example, to
+
+              call the `GetDevice` and `ListDevices` endpoints.'
+            DEVICE_CREDENTIAL_MANAGEMENT: '__HTTP Method__: `POST`, `GET`
+
+
+              Grants read/write access to device credentials information. For example, to
+
+              call the CreateDeviceCode endpoint.'
+            DISPUTES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to dispute information. For example, to call the RetrieveDispute
+
+              endpoint.'
+            DISPUTES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to dispute information. For example, to call the SubmitEvidence
+
+              endpoint.'
+            EMPLOYEES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee profile information. For example, to call the
+
+              Connect v1 Employees API.'
+            EMPLOYEES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee profile information. For example, to create
+
+              and modify employee profiles.'
+            GIFTCARDS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to gift card information. For example, to call the RetrieveGiftCard
+
+              endpoint.'
+            GIFTCARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to gift card information. For example, to call the CreateGiftCard
+
+              endpoint.'
+            INVENTORY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to inventory information. For example, to call the
+
+              RetrieveInventoryCount endpoint.'
+            INVENTORY_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to inventory information. For example, to call the
+
+              BatchChangeInventory endpoint.'
+            INVOICES_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to invoice information. For example, to call the ListInvoices endpoint.'
+            INVOICES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to invoice information. For example, to call the CreateInvoice endpoint.'
+            ITEMS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to product catalog information. For example, to obtain objects in a product catalog.'
+            ITEMS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to product catalog information. For example, to modify or
+
+              add to a product catalog.'
+            LOYALTY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to loyalty information. For example, to call the
+
+              ListLoyaltyPrograms endpoint.'
+            LOYALTY_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to loyalty information. For example, to call the
+
+              CreateLoyaltyAccount endpoint.'
+            MERCHANT_PROFILE_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to business and location information. For example, to
+
+              obtain a location ID for subsequent activity.'
+            MERCHANT_PROFILE_WRITE: '__HTTP Method__: `POST`, `PUT`
+
+
+              Grants write access to business and location information. For example, to create a new location or
+
+              update the business hours at an existing location.'
+            ONLINE_STORE_SITE_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store site details.'
+            ONLINE_STORE_SNIPPETS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store snippets on published websites.'
+            ONLINE_STORE_SNIPPETS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Write access to ECOM online store snippets on published websites.'
+            ORDERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to order information. For example, to call the
+
+              BatchRetrieveOrders endpoint.'
+            ORDERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to order information. For example, to call the
+
+              CreateCheckout endpoint.'
+            PAYMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to transaction and refund information. For example, to call
+
+              the RetrieveTransaction endpoint.'
+            PAYMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to transaction and refunds information. For example, to
+
+              process payments with the Payments or Checkout API.'
+            PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allow third party applications to deduct a portion of each transaction amount.
+
+              __Required__ to use multiparty transaction functionality with the Payments
+
+              API.'
+            PAYMENTS_WRITE_IN_PERSON: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to payments and refunds information. For example, to
+
+              process in-person payments.'
+            PAYMENTS_WRITE_SHARED_ONFILE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allows the developer to process payments on behalf of a seller using a shared on file payment method.'
+            PAYOUTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to payouts and payout entries information. For example,
+
+              to call the Connect v2 `ListPayouts` endpoint.'
+            PERMISSION_SETS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to Permission Sets. For example, to
+
+              call the `ListPermissionSets` and `RetrievePermissionSet` endpoints.'
+            PERMISSION_SETS_WRITE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to Permission Sets.'
+            RESERVATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to reservation information, for example, when calling the
+
+              `RetrieveReservation` endpoint.'
+            RESERVATIONS_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to reservation information, for example, when calling the
+
+              `CreateReservation` endpoint.'
+            RESTAURANT_CHECKS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to check information, for example, when calling the
+
+              `RetrieveCheck` endpoint.'
+            SETTLEMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to settlement (deposit) information. For example, to call
+
+              the Connect v1 ListSettlements endpoint.'
+            SUBSCRIPTIONS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to subscription information. For example, to call the RetrieveSubscription
+
+              endpoint.'
+            SUBSCRIPTIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to subscription information. For example, to call the CreateSubscription
+
+              endpoint.'
+            TIMECARDS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard information. For example, to call the
+
+              Connect v2 SearchShifts endpoint.'
+            TIMECARDS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard settings information. For example, to
+
+              call the GetBreakType endpoint.'
+            TIMECARDS_SETTINGS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee timecard settings information. For example, to
+
+              call the UpdateBreakType endpoint.'
+            TIMECARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee shift information. For example, to create
+
+              and modify employee shifts.'
+            VENDOR_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to vendor information, for example, when calling the
+
+              `RetrieveVendor` endpoint.'
+            VENDOR_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to vendor information, for example, when calling the
+
+              `BulkUpdateVendors` endpoint.'
+    oauth2ClientSecret:
+      type: apiKey
+      in: header
+      name: Authorization
+x-fern-global-headers:
+- header: Square-Version
+  name: version
+  optional: true
+  env: VERSION
+  type: literal<"2025-01-23">

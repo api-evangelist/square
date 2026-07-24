@@ -1,0 +1,3835 @@
+openapi: 3.0.0
+info:
+  version: '2.0'
+  title: Square ApplePay Inventory API
+  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  termsOfService: https://connect.squareup.com/tos
+  contact:
+    name: Square Developer Platform
+    email: developers@squareup.com
+    url: https://squareup.com/developers
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  externalDocs:
+    description: 'Read the official documentation here:'
+    url: https://docs.connect.squareup.com/
+  x-server-configuration:
+    default-environment: production
+    default-server: default
+    environments:
+    - name: production
+      servers:
+      - name: default
+        url: https://connect.squareup.com
+    - name: sandbox
+      servers:
+      - name: default
+        url: https://connect.squareupsandbox.com
+    - name: custom
+      servers:
+      - name: default
+        url: '{custom_url}'
+    parameters:
+    - name: custom_url
+      description: Sets the base URL requests are made to. Defaults to `https://connect.squareup.com`
+      type: string
+      example: https://connect.squareup.com
+  x-square-generic-error-codes:
+  - ACCESS_TOKEN_EXPIRED
+  - ACCESS_TOKEN_REVOKED
+  - API_VERSION_INCOMPATIBLE
+  - APPLICATION_DISABLED
+  - ARRAY_EMPTY
+  - ARRAY_LENGTH_TOO_LONG
+  - ARRAY_LENGTH_TOO_SHORT
+  - BAD_CERTIFICATE
+  - BAD_GATEWAY
+  - BAD_REQUEST
+  - CONFLICT
+  - CONFLICTING_PARAMETERS
+  - CURRENCY_MISMATCH
+  - EXPECTED_ARRAY
+  - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+  - EXPECTED_BOOLEAN
+  - EXPECTED_FLOAT
+  - EXPECTED_INTEGER
+  - EXPECTED_JSON_BODY
+  - EXPECTED_MAP
+  - EXPECTED_OBJECT
+  - EXPECTED_STRING
+  - FORBIDDEN
+  - GATEWAY_TIMEOUT
+  - GONE
+  - IDEMPOTENCY_KEY_REUSED
+  - INCORRECT_TYPE
+  - INSUFFICIENT_SCOPES
+  - INTERNAL_SERVER_ERROR
+  - INVALID_ARRAY_VALUE
+  - INVALID_CONTENT_TYPE
+  - INVALID_CURSOR
+  - INVALID_ENUM_VALUE
+  - INVALID_FORM_VALUE
+  - INVALID_SORT_ORDER
+  - INVALID_SQUARE_VERSION_FORMAT
+  - INVALID_TIME
+  - INVALID_TIME_RANGE
+  - INVALID_VALUE
+  - LOCATION_MISMATCH
+  - MAP_KEY_LENGTH_TOO_LONG
+  - MAP_KEY_LENGTH_TOO_SHORT
+  - MERCHANT_SUBSCRIPTION_NOT_FOUND
+  - METHOD_NOT_ALLOWED
+  - MISSING_REQUIRED_PARAMETER
+  - NOT_ACCEPTABLE
+  - NOT_FOUND
+  - NOT_IMPLEMENTED
+  - NO_FIELDS_SET
+  - RATE_LIMITED
+  - REQUEST_ENTITY_TOO_LARGE
+  - REQUEST_TIMEOUT
+  - SANDBOX_NOT_SUPPORTED
+  - SERVICE_UNAVAILABLE
+  - TOO_MANY_MAP_ENTRIES
+  - UNAUTHORIZED
+  - UNEXPECTED_VALUE
+  - UNKNOWN_BODY_PARAMETER
+  - UNKNOWN_QUERY_PARAMETER
+  - UNPROCESSABLE_ENTITY
+  - UNSUPPORTED_MEDIA_TYPE
+  - V1_ACCESS_TOKEN
+  - V1_APPLICATION
+  - VALUE_EMPTY
+  - VALUE_REGEX_MISMATCH
+  - VALUE_TOO_HIGH
+  - VALUE_TOO_LONG
+  - VALUE_TOO_LOW
+  - VALUE_TOO_SHORT
+servers:
+- url: https://connect.squareup.com
+  variables: {}
+tags:
+- name: Inventory
+paths:
+  /v2/inventory/adjustment/{adjustment_id}:
+    get:
+      tags:
+      - Inventory
+      summary: Square Deprecated Retrieve Inventory Adjustment
+      operationId: DeprecatedRetrieveInventoryAdjustment
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deprecated version of [RetrieveInventoryAdjustment](api-endpoint:Inventory-RetrieveInventoryAdjustment) after the endpoint URL
+
+        is updated to conform to the standard convention.'
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-06-16'
+        retirementDate: '2023-11-15'
+        replacedBy: RetrieveInventoryAdjustment
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters:
+      - name: adjustment_id
+        description: ID of the [InventoryAdjustment](entity:InventoryAdjustment) to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveInventoryAdjustmentResponse'
+  /v2/inventory/adjustments/{adjustment_id}:
+    get:
+      tags:
+      - Inventory
+      summary: Square Retrieve Inventory Adjustment
+      operationId: RetrieveInventoryAdjustment
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Returns the [InventoryAdjustment](entity:InventoryAdjustment) object
+
+        with the provided `adjustment_id`.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters:
+      - name: adjustment_id
+        description: ID of the [InventoryAdjustment](entity:InventoryAdjustment) to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveInventoryAdjustmentResponse'
+  /v2/inventory/batch-change:
+    post:
+      tags:
+      - Inventory
+      summary: Square Deprecated Batch Change Inventory
+      operationId: DeprecatedBatchChangeInventory
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deprecated version of [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory) after the endpoint URL
+
+        is updated to conform to the standard convention.'
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-06-16'
+        retirementDate: '2023-11-15'
+        replacedBy: BatchChangeInventory
+      security:
+      - oauth2:
+        - INVENTORY_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchChangeInventoryRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchChangeInventoryResponse'
+  /v2/inventory/batch-retrieve-changes:
+    post:
+      tags:
+      - Inventory
+      summary: Square Deprecated Batch Retrieve Inventory Changes
+      operationId: DeprecatedBatchRetrieveInventoryChanges
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deprecated version of [BatchRetrieveInventoryChanges](api-endpoint:Inventory-BatchRetrieveInventoryChanges) after the endpoint URL
+
+        is updated to conform to the standard convention.'
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-06-16'
+        retirementDate: '2023-11-15'
+        replacedBy: BatchRetrieveInventoryChanges
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchRetrieveInventoryChangesRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchRetrieveInventoryChangesResponse'
+  /v2/inventory/batch-retrieve-counts:
+    post:
+      tags:
+      - Inventory
+      summary: Square Deprecated Batch Retrieve Inventory Counts
+      operationId: DeprecatedBatchRetrieveInventoryCounts
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deprecated version of [BatchRetrieveInventoryCounts](api-endpoint:Inventory-BatchRetrieveInventoryCounts) after the endpoint URL
+
+        is updated to conform to the standard convention.'
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-06-16'
+        retirementDate: '2023-11-15'
+        replacedBy: BatchRetrieveInventoryCounts
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchRetrieveInventoryCountsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchRetrieveInventoryCountsResponse'
+  /v2/inventory/changes/batch-create:
+    post:
+      tags:
+      - Inventory
+      summary: Square Batch Change Inventory
+      operationId: BatchChangeInventory
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Applies adjustments and counts to the provided item quantities.
+
+
+        On success: returns the current calculated counts for all objects
+
+        referenced in the request.
+
+        On failure: returns a list of related errors.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - INVENTORY_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchChangeInventoryRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchChangeInventoryResponse'
+  /v2/inventory/changes/batch-retrieve:
+    post:
+      tags:
+      - Inventory
+      summary: Square Batch Retrieve Inventory Changes
+      operationId: BatchRetrieveInventoryChanges
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Returns historical physical counts and adjustments based on the
+
+        provided filter criteria.
+
+
+        Results are paginated and sorted in ascending order according their
+
+        `occurred_at` timestamp (oldest first).
+
+
+        BatchRetrieveInventoryChanges is a catch-all query endpoint for queries
+
+        that cannot be handled by other, simpler endpoints.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchRetrieveInventoryChangesRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchRetrieveInventoryChangesResponse'
+  /v2/inventory/counts/batch-retrieve:
+    post:
+      tags:
+      - Inventory
+      summary: Square Batch Retrieve Inventory Counts
+      operationId: BatchRetrieveInventoryCounts
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Returns current counts for the provided
+
+        [CatalogObject](entity:CatalogObject)s at the requested
+
+        [Location](entity:Location)s.
+
+
+        Results are paginated and sorted in descending order according to their
+
+        `calculated_at` timestamp (newest first).
+
+
+        When `updated_after` is specified, only counts that have changed since that
+
+        time (based on the server timestamp for the most recent change) are
+
+        returned. This allows clients to perform a "sync" operation, for example
+
+        in response to receiving a Webhook notification.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchRetrieveInventoryCountsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchRetrieveInventoryCountsResponse'
+  /v2/inventory/physical-count/{physical_count_id}:
+    get:
+      tags:
+      - Inventory
+      summary: Square Deprecated Retrieve Inventory Physical Count
+      operationId: DeprecatedRetrieveInventoryPhysicalCount
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deprecated version of [RetrieveInventoryPhysicalCount](api-endpoint:Inventory-RetrieveInventoryPhysicalCount) after the endpoint URL
+
+        is updated to conform to the standard convention.'
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-06-16'
+        retirementDate: '2023-11-15'
+        replacedBy: RetrieveInventoryPhysicalCount
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters:
+      - name: physical_count_id
+        description: 'ID of the
+
+          [InventoryPhysicalCount](entity:InventoryPhysicalCount) to retrieve.'
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveInventoryPhysicalCountResponse'
+  /v2/inventory/physical-counts/{physical_count_id}:
+    get:
+      tags:
+      - Inventory
+      summary: Square Retrieve Inventory Physical Count
+      operationId: RetrieveInventoryPhysicalCount
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Returns the [InventoryPhysicalCount](entity:InventoryPhysicalCount)
+
+        object with the provided `physical_count_id`.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters:
+      - name: physical_count_id
+        description: 'ID of the
+
+          [InventoryPhysicalCount](entity:InventoryPhysicalCount) to retrieve.'
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveInventoryPhysicalCountResponse'
+  /v2/inventory/transfers/{transfer_id}:
+    get:
+      tags:
+      - Inventory
+      summary: Square Retrieve Inventory Transfer
+      operationId: RetrieveInventoryTransfer
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Returns the [InventoryTransfer](entity:InventoryTransfer) object
+
+        with the provided `transfer_id`.'
+      x-release-status: BETA
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters:
+      - name: transfer_id
+        description: ID of the [InventoryTransfer](entity:InventoryTransfer) to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveInventoryTransferResponse'
+  /v2/inventory/{catalog_object_id}:
+    get:
+      tags:
+      - Inventory
+      summary: Square Retrieve Inventory Count
+      operationId: RetrieveInventoryCount
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Retrieves the current calculated stock count for a given
+
+        [CatalogObject](entity:CatalogObject) at a given set of
+
+        [Location](entity:Location)s. Responses are paginated and unsorted.
+
+        For more sophisticated queries, use a batch endpoint.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters:
+      - name: catalog_object_id
+        description: ID of the [CatalogObject](entity:CatalogObject) to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: location_ids
+        description: 'The [Location](entity:Location) IDs to look up as a comma-separated
+
+          list. An empty list queries all locations.'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: cursor
+        description: 'A pagination cursor returned by a previous call to this endpoint.
+
+          Provide this to retrieve the next set of results for the original query.
+
+
+          See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveInventoryCountResponse'
+  /v2/inventory/{catalog_object_id}/changes:
+    get:
+      tags:
+      - Inventory
+      summary: Square Retrieve Inventory Changes
+      operationId: RetrieveInventoryChanges
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Returns a set of physical counts and inventory adjustments for the
+
+        provided [CatalogObject](entity:CatalogObject) at the requested
+
+        [Location](entity:Location)s.
+
+
+        You can achieve the same result by calling [BatchRetrieveInventoryChanges](api-endpoint:Inventory-BatchRetrieveInventoryChanges)
+
+        and having the `catalog_object_ids` list contain a single element of the `CatalogObject` ID.
+
+
+        Results are paginated and sorted in descending order according to their
+
+        `occurred_at` timestamp (newest first).
+
+
+        There are no limits on how far back the caller can page. This endpoint can be
+
+        used to display recent changes for a specific item. For more
+
+        sophisticated queries, use a batch endpoint.'
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-06-16'
+        retirementDate: '2023-11-15'
+        replacedBy: BatchRetrieveInventoryChanges
+      security:
+      - oauth2:
+        - INVENTORY_READ
+      parameters:
+      - name: catalog_object_id
+        description: ID of the [CatalogObject](entity:CatalogObject) to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: location_ids
+        description: 'The [Location](entity:Location) IDs to look up as a comma-separated
+
+          list. An empty list queries all locations.'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: cursor
+        description: 'A pagination cursor returned by a previous call to this endpoint.
+
+          Provide this to retrieve the next set of results for the original query.
+
+
+          See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveInventoryChangesResponse'
+components:
+  schemas:
+    MeasurementUnitVolume:
+      type: string
+      enum:
+      - GENERIC_FLUID_OUNCE
+      - GENERIC_SHOT
+      - GENERIC_CUP
+      - GENERIC_PINT
+      - GENERIC_QUART
+      - GENERIC_GALLON
+      - IMPERIAL_CUBIC_INCH
+      - IMPERIAL_CUBIC_FOOT
+      - IMPERIAL_CUBIC_YARD
+      - METRIC_MILLILITER
+      - METRIC_LITER
+      x-enum-elements:
+      - name: GENERIC_FLUID_OUNCE
+        description: The volume is measured in ounces.
+      - name: GENERIC_SHOT
+        description: The volume is measured in shots.
+      - name: GENERIC_CUP
+        description: The volume is measured in cups.
+      - name: GENERIC_PINT
+        description: The volume is measured in pints.
+      - name: GENERIC_QUART
+        description: The volume is measured in quarts.
+      - name: GENERIC_GALLON
+        description: The volume is measured in gallons.
+      - name: IMPERIAL_CUBIC_INCH
+        description: The volume is measured in cubic inches.
+      - name: IMPERIAL_CUBIC_FOOT
+        description: The volume is measured in cubic feet.
+      - name: IMPERIAL_CUBIC_YARD
+        description: The volume is measured in cubic yards.
+      - name: METRIC_MILLILITER
+        description: The volume is measured in metric milliliters.
+      - name: METRIC_LITER
+        description: The volume is measured in metric liters.
+      description: The unit of volume used to measure a quantity.
+      x-release-status: PUBLIC
+    InventoryAdjustment:
+      type: object
+      description: 'Represents a change in state or quantity of product inventory at a
+
+        particular time and location.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: 'A unique ID generated by Square for the
+
+            `InventoryAdjustment`.'
+          maxLength: 100
+        reference_id:
+          type: string
+          description: 'An optional ID provided by the application to tie the
+
+            `InventoryAdjustment` to an external
+
+            system.'
+          maxLength: 255
+          nullable: true
+        from_state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'The [inventory state](entity:InventoryState) of the related quantity
+
+            of items before the adjustment.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+          nullable: true
+        to_state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'The [inventory state](entity:InventoryState) of the related quantity
+
+            of items after the adjustment.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+          nullable: true
+        location_id:
+          type: string
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items is being tracked.'
+          maxLength: 100
+          nullable: true
+        catalog_object_id:
+          type: string
+          description: 'The Square-generated ID of the
+
+            [CatalogObject](entity:CatalogObject) being tracked.'
+          maxLength: 100
+          nullable: true
+        catalog_object_type:
+          type: string
+          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
+          maxLength: 14
+          nullable: true
+        quantity:
+          type: string
+          description: 'The number of items affected by the adjustment as a decimal string.
+
+            Can support up to 5 digits after the decimal point.'
+          maxLength: 26
+          nullable: true
+        total_price_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The total price paid for goods associated with the
+
+            adjustment. Present if and only if `to_state` is `SOLD`. Always
+
+            non-negative.'
+          readOnly: true
+        occurred_at:
+          type: string
+          description: 'A client-generated RFC 3339-formatted timestamp that indicates when
+
+            the inventory adjustment took place. For inventory adjustment updates, the `occurred_at`
+
+            timestamp cannot be older than 24 hours or in the future relative to the
+
+            time of the request.'
+          maxLength: 34
+          nullable: true
+        created_at:
+          type: string
+          description: An RFC 3339-formatted timestamp that indicates when the inventory adjustment is received.
+          maxLength: 34
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/SourceApplication'
+          description: 'Information about the application that caused the
+
+            inventory adjustment.'
+          readOnly: true
+        employee_id:
+          type: string
+          description: 'The Square-generated ID of the [Employee](entity:Employee) responsible for the
+
+            inventory adjustment.'
+          maxLength: 100
+          nullable: true
+        team_member_id:
+          type: string
+          description: 'The Square-generated ID of the [Team Member](entity:TeamMember) responsible for the
+
+            inventory adjustment.'
+          maxLength: 100
+          nullable: true
+        transaction_id:
+          type: string
+          description: 'The Square-generated ID of the [Transaction](entity:Transaction) that
+
+            caused the adjustment. Only relevant for payment-related state
+
+            transitions.'
+          maxLength: 255
+          readOnly: true
+        refund_id:
+          type: string
+          description: 'The Square-generated ID of the [Refund](entity:Refund) that
+
+            caused the adjustment. Only relevant for refund-related state
+
+            transitions.'
+          maxLength: 255
+          readOnly: true
+        purchase_order_id:
+          type: string
+          description: 'The Square-generated ID of the purchase order that caused the
+
+            adjustment. Only relevant for state transitions from the Square for Retail
+
+            app.'
+          maxLength: 100
+          readOnly: true
+        goods_receipt_id:
+          type: string
+          description: 'The Square-generated ID of the goods receipt that caused the
+
+            adjustment. Only relevant for state transitions from the Square for Retail
+
+            app.'
+          maxLength: 100
+          readOnly: true
+        adjustment_group:
+          $ref: '#/components/schemas/InventoryAdjustmentGroup'
+          description: An adjustment group bundling the related adjustments of item variations through stock conversions in a single inventory event.
+          readOnly: true
+          x-release-status: BETA
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    BatchRetrieveInventoryChangesResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryChange'
+          description: 'The current calculated inventory changes for the requested objects
+
+            and locations.'
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If unset,
+
+            this is the final response.
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+      example:
+        changes:
+        - physical_count:
+            catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+            catalog_object_type: ITEM_VARIATION
+            created_at: '2016-11-16T22:25:24.878Z'
+            id: 46YDTW253DWGGK9HMAE6XCAO
+            location_id: C6W5YS5QM06F5
+            occurred_at: '2016-11-16T22:24:49.028Z'
+            quantity: '86'
+            reference_id: 22c07cf4-5626-4224-89f9-691112019399
+            source:
+              application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
+              name: Square Point of Sale 4.37
+              product: SQUARE_POS
+            state: IN_STOCK
+            team_member_id: LRK57NSQ5X7PUD05
+          type: PHYSICAL_COUNT
+        errors: []
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type: integer
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+          nullable: true
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+          nullable: true
+    RetrieveInventoryAdjustmentResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        adjustment:
+          $ref: '#/components/schemas/InventoryAdjustment'
+          description: The requested [InventoryAdjustment](entity:InventoryAdjustment).
+      example:
+        adjustment:
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          created_at: '2016-11-17T13:02:15.142Z'
+          from_state: IN_STOCK
+          id: UDMOEO78BG6GYWA2XDRYX3KB
+          location_id: C6W5YS5QM06F5
+          occurred_at: '2016-11-16T25:44:22.837Z'
+          quantity: '7'
+          reference_id: 4a366069-4096-47a2-99a5-0084ac879509
+          source:
+            application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
+            name: Square Point of Sale 4.37
+            product: SQUARE_POS
+          team_member_id: LRK57NSQ5X7PUD05
+          to_state: SOLD
+          total_price_money:
+            amount: 4550
+            currency: USD
+        errors: []
+    InventoryState:
+      type: string
+      enum:
+      - CUSTOM
+      - IN_STOCK
+      - SOLD
+      - RETURNED_BY_CUSTOMER
+      - RESERVED_FOR_SALE
+      - SOLD_ONLINE
+      - ORDERED_FROM_VENDOR
+      - RECEIVED_FROM_VENDOR
+      - IN_TRANSIT_TO
+      - NONE
+      - WASTE
+      - UNLINKED_RETURN
+      - COMPOSED
+      - DECOMPOSED
+      - SUPPORTED_BY_NEWER_VERSION
+      - IN_TRANSIT
+      x-enum-elements:
+      - name: CUSTOM
+        description: 'The related quantity of items are in a custom state. **READ-ONLY**:
+
+          the Inventory API cannot move quantities to or from this state.'
+      - name: IN_STOCK
+        description: The related quantity of items are on hand and available for sale.
+      - name: SOLD
+        description: 'The related quantity of items were sold as part of an itemized
+
+          transaction. Quantities in the `SOLD` state are no longer tracked.'
+      - name: RETURNED_BY_CUSTOMER
+        description: 'The related quantity of items were returned through the Square Point
+
+          of Sale application, but are not yet available for sale. **READ-ONLY**:
+
+          the Inventory API cannot move quantities to or from this state.'
+      - name: RESERVED_FOR_SALE
+        description: 'The related quantity of items are on hand, but not currently
+
+          available for sale. **READ-ONLY**: the Inventory API cannot move
+
+          quantities to or from this state.'
+      - name: SOLD_ONLINE
+        description: 'The related quantity of items were sold online. **READ-ONLY**: the
+
+          Inventory API cannot move quantities to or from this state.'
+      - name: ORDERED_FROM_VENDOR
+        description: 'The related quantity of items were ordered from a vendor but not yet
+
+          received. **READ-ONLY**: the Inventory API cannot move quantities to or
+
+          from this state.'
+      - name: RECEIVED_FROM_VENDOR
+        description: 'The related quantity of items were received from a vendor but are
+
+          not yet available for sale. **READ-ONLY**: the Inventory API cannot move
+
+          quantities to or from this state.'
+      - name: IN_TRANSIT_TO
+        description: 'Replaced by `IN_TRANSIT` to represent quantities
+
+          of items that are in transit between locations.'
+      - name: NONE
+        description: 'A placeholder indicating that the related quantity of items are not
+
+          currently tracked in Square. Transferring quantities from the `NONE` state
+
+          to a tracked state (e.g., `IN_STOCK`) introduces stock into the system.'
+      - name: WASTE
+        description: 'The related quantity of items are lost or damaged and cannot be
+
+          sold.'
+      - name: UNLINKED_RETURN
+        description: 'The related quantity of items were returned but not linked to a
+
+          previous transaction. Unlinked returns are not tracked in Square.
+
+          Transferring a quantity from `UNLINKED_RETURN` to a tracked state (e.g.,
+
+          `IN_STOCK`) introduces new stock into the system.'
+      - name: COMPOSED
+        description: The related quantity of items that are part of a composition consisting one or more components.
+      - name: DECOMPOSED
+        description: The related quantity of items that are part of a component.
+      - name: SUPPORTED_BY_NEWER_VERSION
+        description: This state is not supported by this version of the Square API. We recommend that you upgrade the client to use the appropriate version of the Square API supporting this state.
+      - name: IN_TRANSIT
+        description: The related quantity of items are in transit between locations. **READ-ONLY:** the Inventory API cannot currently be used to move quantities to or from this inventory state.
+      description: Indicates the state of a tracked item quantity in the lifecycle of goods.
+      x-release-status: PUBLIC
+    InventoryPhysicalCount:
+      type: object
+      description: 'Represents the quantity of an item variation that is physically present
+
+        at a specific location, verified by a seller or a seller''s employee. For example,
+
+        a physical count might come from an employee counting the item variations on
+
+        hand or from syncing with an external system.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: 'A unique Square-generated ID for the
+
+            [InventoryPhysicalCount](entity:InventoryPhysicalCount).'
+          maxLength: 100
+        reference_id:
+          type: string
+          description: 'An optional ID provided by the application to tie the
+
+            [InventoryPhysicalCount](entity:InventoryPhysicalCount) to an external
+
+            system.'
+          maxLength: 255
+          nullable: true
+        catalog_object_id:
+          type: string
+          description: 'The Square-generated ID of the
+
+            [CatalogObject](entity:CatalogObject) being tracked.'
+          maxLength: 100
+          nullable: true
+        catalog_object_type:
+          type: string
+          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
+          maxLength: 14
+          nullable: true
+        state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'The current [inventory state](entity:InventoryState) for the related
+
+            quantity of items.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+          nullable: true
+        location_id:
+          type: string
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items is being tracked.'
+          maxLength: 100
+          nullable: true
+        quantity:
+          type: string
+          description: 'The number of items affected by the physical count as a decimal string.
+
+            The number can support up to 5 digits after the decimal point.'
+          maxLength: 26
+          nullable: true
+        source:
+          $ref: '#/components/schemas/SourceApplication'
+          description: 'Information about the application with which the
+
+            physical count is submitted.'
+          readOnly: true
+        employee_id:
+          type: string
+          description: 'The Square-generated ID of the [Employee](entity:Employee) responsible for the
+
+            physical count.'
+          maxLength: 100
+          nullable: true
+        team_member_id:
+          type: string
+          description: 'The Square-generated ID of the [Team Member](entity:TeamMember) responsible for the
+
+            physical count.'
+          maxLength: 100
+          nullable: true
+        occurred_at:
+          type: string
+          description: 'A client-generated RFC 3339-formatted timestamp that indicates when
+
+            the physical count was examined. For physical count updates, the `occurred_at`
+
+            timestamp cannot be older than 24 hours or in the future relative to the
+
+            time of the request.'
+          maxLength: 34
+          nullable: true
+        created_at:
+          type: string
+          description: An RFC 3339-formatted timestamp that indicates when the physical count is received.
+          maxLength: 34
+          readOnly: true
+    MeasurementUnitLength:
+      type: string
+      enum:
+      - IMPERIAL_INCH
+      - IMPERIAL_FOOT
+      - IMPERIAL_YARD
+      - IMPERIAL_MILE
+      - METRIC_MILLIMETER
+      - METRIC_CENTIMETER
+      - METRIC_METER
+      - METRIC_KILOMETER
+      x-enum-elements:
+      - name: IMPERIAL_INCH
+        description: The length is measured in inches.
+      - name: IMPERIAL_FOOT
+        description: The length is measured in feet.
+      - name: IMPERIAL_YARD
+        description: The length is measured in yards.
+      - name: IMPERIAL_MILE
+        description: The length is measured in miles.
+      - name: METRIC_MILLIMETER
+        description: The length is measured in millimeters.
+      - name: METRIC_CENTIMETER
+        description: The length is measured in centimeters.
+      - name: METRIC_METER
+        description: The length is measured in meters.
+      - name: METRIC_KILOMETER
+        description: The length is measured in kilometers.
+      description: The unit of length used to measure a quantity.
+      x-release-status: PUBLIC
+    BatchRetrieveInventoryChangesRequest:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        catalog_object_ids:
+          type: array
+          items:
+            type: string
+          description: 'The filter to return results by `CatalogObject` ID.
+
+            The filter is only applicable when set. The default value is null.'
+          nullable: true
+        location_ids:
+          type: array
+          items:
+            type: string
+          description: 'The filter to return results by `Location` ID.
+
+            The filter is only applicable when set. The default value is null.'
+          nullable: true
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryChangeType'
+          description: 'The filter to return results by `InventoryChangeType` values other than `TRANSFER`.
+
+            The default value is `[PHYSICAL_COUNT, ADJUSTMENT]`.'
+          nullable: true
+        states:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryState'
+          description: 'The filter to return `ADJUSTMENT` query results by
+
+            `InventoryState`. This filter is only applied when set.
+
+            The default value is null.'
+          nullable: true
+        updated_after:
+          type: string
+          description: 'The filter to return results with their `calculated_at` value
+
+            after the given time as specified in an RFC 3339 timestamp.
+
+            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
+          nullable: true
+        updated_before:
+          type: string
+          description: 'The filter to return results with their `created_at` or `calculated_at` value
+
+            strictly before the given time as specified in an RFC 3339 timestamp.
+
+            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
+          nullable: true
+        cursor:
+          type: string
+          description: 'A pagination cursor returned by a previous call to this endpoint.
+
+            Provide this to retrieve the next set of results for the original query.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+          nullable: true
+        limit:
+          type: integer
+          description: The number of [records](entity:InventoryChange) to return.
+          minimum: 1
+          maximum: 1000
+          nullable: true
+      example:
+        catalog_object_ids:
+        - W62UWFY35CWMYGVWK6TWJDNI
+        location_ids:
+        - C6W5YS5QM06F5
+        states:
+        - IN_STOCK
+        types:
+        - PHYSICAL_COUNT
+        updated_after: '2016-11-01T00:00:00.000Z'
+        updated_before: '2016-12-01T00:00:00.000Z'
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.csharp
+        java: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.java
+        javascript: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.javascript
+        php: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.php
+        python: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.python
+        ruby: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.ruby
+    SourceApplication:
+      type: object
+      description: Represents information about the application used to generate a change.
+      x-release-status: PUBLIC
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+          description: '__Read only__ The [product](entity:Product) type of the application.
+
+            See [Product](#type-product) for possible values'
+          nullable: true
+        application_id:
+          type: string
+          description: '__Read only__ The Square-assigned ID of the application. This field is used only if the
+
+            [product](entity:Product) type is `EXTERNAL_API`.'
+          nullable: true
+        name:
+          type: string
+          description: '__Read only__ The display name of the application
+
+            (for example, `"Custom Application"` or `"Square POS 4.74 for Android"`).'
+          nullable: true
+    RetrieveInventoryChangesResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryChange'
+          description: The set of inventory changes for the requested object and locations.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If unset,
+
+            this is the final response.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+      example:
+        changes:
+        - adjustment:
+            catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+            catalog_object_type: ITEM_VARIATION
+            created_at: '2016-11-16T22:25:24.878Z'
+            from_state: IN_STOCK
+            id: OJKJIUANKLMLQANZADNPLKAD
+            location_id: C6W5YS5QM06F5
+            occurred_at: '2016-11-16T22:25:24.878Z'
+            quantity: '3'
+            reference_id: d8207693-168f-4b44-a2fd-a7ff533ddd26
+            source:
+              application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
+              name: Square Point of Sale 4.37
+              product: SQUARE_POS
+            team_member_id: AV7YRCGI2H1J5NQ8E1XIZCNA
+            to_state: SOLD
+            total_price_money:
+              amount: 5000
+              currency: USD
+            transaction_id: 5APV6JYK1SNCZD11AND2RX1Z
+          type: ADJUSTMENT
+        errors: []
+    MeasurementUnitGeneric:
+      type: string
+      enum:
+      - UNIT
+      x-enum-elements:
+      - name: UNIT
+        description: The generic unit.
+      x-release-status: PUBLIC
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    CatalogMeasurementUnit:
+      type: object
+      description: 'Represents the unit used to measure a `CatalogItemVariation` and
+
+        specifies the precision for decimal quantities.'
+      x-release-status: PUBLIC
+      properties:
+        measurement_unit:
+          $ref: '#/components/schemas/MeasurementUnit'
+          description: Indicates the unit used to measure the quantity of a catalog item variation.
+          nullable: true
+        precision:
+          type: integer
+          description: 'An integer between 0 and 5 that represents the maximum number of
+
+            positions allowed after the decimal in quantities measured with this unit.
+
+            For example:
+
+
+            - if the precision is 0, the quantity can be 1, 2, 3, etc.
+
+            - if the precision is 1, the quantity can be 0.1, 0.2, etc.
+
+            - if the precision is 2, the quantity can be 0.01, 0.12, etc.
+
+
+            Default: 3'
+          nullable: true
+    Product:
+      type: string
+      enum:
+      - SQUARE_POS
+      - EXTERNAL_API
+      - BILLING
+      - APPOINTMENTS
+      - INVOICES
+      - ONLINE_STORE
+      - PAYROLL
+      - DASHBOARD
+      - ITEM_LIBRARY_IMPORT
+      - OTHER
+      x-enum-elements:
+      - name: SQUARE_POS
+        description: Square Point of Sale application.
+      - name: EXTERNAL_API
+        description: Square Connect APIs (for example, Orders API or Checkout API).
+      - name: BILLING
+        description: A Square subscription (various products).
+      - name: APPOINTMENTS
+        description: Square Appointments.
+      - name: INVOICES
+        description: Square Invoices.
+      - name: ONLINE_STORE
+        description: Square Online Store.
+      - name: PAYROLL
+        description: Square Payroll.
+      - name: DASHBOARD
+        description: Square Dashboard.
+      - name: ITEM_LIBRARY_IMPORT
+        description: Item Library Import.
+      - name: OTHER
+        description: A Square product that does not match any other value.
+      description: Indicates the Square product used to generate a change.
+      x-release-status: PUBLIC
+    MeasurementUnitCustom:
+      type: object
+      description: The information needed to define a custom unit, provided by the seller.
+      x-release-status: PUBLIC
+      required:
+      - name
+      - abbreviation
+      properties:
+        name:
+          type: string
+          description: The name of the custom unit, for example "bushel".
+        abbreviation:
+          type: string
+          description: 'The abbreviation of the custom unit, such as "bsh" (bushel). This appears
+
+            in the cart for the Point of Sale app, and in reports.'
+    InventoryCount:
+      type: object
+      description: 'Represents Square-estimated quantity of items in a particular state at a
+
+        particular seller location based on the known history of physical counts and
+
+        inventory adjustments.'
+      x-release-status: PUBLIC
+      properties:
+        catalog_object_id:
+          type: string
+          description: 'The Square-generated ID of the
+
+            [CatalogObject](entity:CatalogObject) being tracked.'
+          maxLength: 100
+          nullable: true
+        catalog_object_type:
+          type: string
+          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
+          maxLength: 14
+          nullable: true
+        state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'The current [inventory state](entity:InventoryState) for the related
+
+            quantity of items.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+          nullable: true
+        location_id:
+          type: string
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items is being tracked.'
+          maxLength: 100
+          nullable: true
+        quantity:
+          type: string
+          description: 'The number of items affected by the estimated count as a decimal string.
+
+            Can support up to 5 digits after the decimal point.'
+          maxLength: 26
+          nullable: true
+        calculated_at:
+          type: string
+          description: 'An RFC 3339-formatted timestamp that indicates when the most recent physical count or adjustment affecting
+
+            the estimated count is received.'
+          maxLength: 34
+          readOnly: true
+        is_estimated:
+          type: boolean
+          description: 'Whether the inventory count is for composed variation (TRUE) or not (FALSE). If true, the inventory count will not be present in the response of
+
+            any of these endpoints: [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory),
+
+            [BatchRetrieveInventoryChanges](api-endpoint:Inventory-BatchRetrieveInventoryChanges),
+
+            [BatchRetrieveInventoryCounts](api-endpoint:Inventory-BatchRetrieveInventoryCounts), and
+
+            [RetrieveInventoryChanges](api-endpoint:Inventory-RetrieveInventoryChanges).'
+          readOnly: true
+          x-release-status: BETA
+    BatchRetrieveInventoryCountsResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryCount'
+          description: 'The current calculated inventory counts for the requested objects
+
+            and locations.'
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If unset,
+
+            this is the final response.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+      example:
+        counts:
+        - calculated_at: '2016-11-16T22:28:01.223Z'
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          location_id: 59TNP9SA8VGDA
+          quantity: '79'
+          state: IN_STOCK
+        errors: []
+    BatchRetrieveInventoryCountsRequest:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        catalog_object_ids:
+          type: array
+          items:
+            type: string
+          description: 'The filter to return results by `CatalogObject` ID.
+
+            The filter is applicable only when set.  The default is null.'
+          nullable: true
+        location_ids:
+          type: array
+          items:
+            type: string
+          description: 'The filter to return results by `Location` ID.
+
+            This filter is applicable only when set. The default is null.'
+          nullable: true
+        updated_after:
+          type: string
+          description: 'The filter to return results with their `calculated_at` value
+
+            after the given time as specified in an RFC 3339 timestamp.
+
+            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
+          nullable: true
+        cursor:
+          type: string
+          description: 'A pagination cursor returned by a previous call to this endpoint.
+
+            Provide this to retrieve the next set of results for the original query.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+          nullable: true
+        states:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryState'
+          description: 'The filter to return results by `InventoryState`. The filter is only applicable when set.
+
+            Ignored are untracked states of `NONE`, `SOLD`, and `UNLINKED_RETURN`.
+
+            The default is null.'
+          nullable: true
+        limit:
+          type: integer
+          description: The number of [records](entity:InventoryCount) to return.
+          minimum: 1
+          maximum: 1000
+          nullable: true
+      example:
+        catalog_object_ids:
+        - W62UWFY35CWMYGVWK6TWJDNI
+        location_ids:
+        - 59TNP9SA8VGDA
+        updated_after: '2016-11-16T00:00:00.000Z'
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.csharp
+        java: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.java
+        javascript: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.javascript
+        php: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.php
+        python: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.python
+        ruby: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.ruby
+    RetrieveInventoryCountResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryCount'
+          description: 'The current calculated inventory counts for the requested object and
+
+            locations.'
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If unset,
+
+            this is the final response.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+      example:
+        counts:
+        - calculated_at: '2016-11-16T22:28:01.223Z'
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          location_id: C6W5YS5QM06F5
+          quantity: '22'
+          state: IN_STOCK
+        errors: []
+    MeasurementUnitArea:
+      type: string
+      enum:
+      - IMPERIAL_ACRE
+      - IMPERIAL_SQUARE_INCH
+      - IMPERIAL_SQUARE_FOOT
+      - IMPERIAL_SQUARE_YARD
+      - IMPERIAL_SQUARE_MILE
+      - METRIC_SQUARE_CENTIMETER
+      - METRIC_SQUARE_METER
+      - METRIC_SQUARE_KILOMETER
+      x-enum-elements:
+      - name: IMPERIAL_ACRE
+        description: The area is measured in acres.
+      - name: IMPERIAL_SQUARE_INCH
+        description: The area is measured in square inches.
+      - name: IMPERIAL_SQUARE_FOOT
+        description: The area is measured in square feet.
+      - name: IMPERIAL_SQUARE_YARD
+        description: The area is measured in square yards.
+      - name: IMPERIAL_SQUARE_MILE
+        description: The area is measured in square miles.
+      - name: METRIC_SQUARE_CENTIMETER
+        description: The area is measured in square centimeters.
+      - name: METRIC_SQUARE_METER
+        description: The area is measured in square meters.
+      - name: METRIC_SQUARE_KILOMETER
+        description: The area is measured in square kilometers.
+      description: Unit of area used to measure a quantity.
+      x-release-status: PUBLIC
+    RetrieveInventoryPhysicalCountResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        count:
+          $ref: '#/components/schemas/InventoryPhysicalCount'
+          description: The requested [InventoryPhysicalCount](entity:InventoryPhysicalCount).
+      example:
+        count:
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          created_at: '2016-11-16T22:25:24.878Z'
+          id: ANZADNPLKADOJKJIUANKLMLQ
+          location_id: C6W5YS5QM06F5
+          occurred_at: '2016-11-16T22:25:24.878Z'
+          quantity: '15'
+          reference_id: f857ec37-f9a0-4458-8e23-5b5e0bea4e53
+          source:
+            application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
+            name: Square Point of Sale 4.37
+            product: SQUARE_POS
+          state: IN_STOCK
+          team_member_id: LRK57NSQ5X7PUD05
+        errors: []
+    InventoryChange:
+      type: object
+      description: 'Represents a single physical count, inventory, adjustment, or transfer
+
+        that is part of the history of inventory changes for a particular
+
+        [CatalogObject](entity:CatalogObject) instance.'
+      x-release-status: PUBLIC
+      properties:
+        type:
+          $ref: '#/components/schemas/InventoryChangeType'
+          description: 'Indicates how the inventory change is applied. See
+
+            [InventoryChangeType](entity:InventoryChangeType) for all possible values.
+
+            See [InventoryChangeType](#type-inventorychangetype) for possible values'
+          nullable: true
+        physical_count:
+          $ref: '#/components/schemas/InventoryPhysicalCount'
+          description: 'Contains details about the physical count when `type` is
+
+            `PHYSICAL_COUNT`, and is unset for all other change types.'
+          nullable: true
+        adjustment:
+          $ref: '#/components/schemas/InventoryAdjustment'
+          description: 'Contains details about the inventory adjustment when `type` is
+
+            `ADJUSTMENT`, and is unset for all other change types.'
+          nullable: true
+        transfer:
+          $ref: '#/components/schemas/InventoryTransfer'
+          description: 'Contains details about the inventory transfer when `type` is
+
+            `TRANSFER`, and is unset for all other change types.
+
+
+            _Note:_ An [InventoryTransfer](entity:InventoryTransfer) object can only be set in the input to the
+
+            [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory) endpoint when the seller has an active Retail Plus subscription.'
+          nullable: true
+        measurement_unit:
+          $ref: '#/components/schemas/CatalogMeasurementUnit'
+          description: The [CatalogMeasurementUnit](entity:CatalogMeasurementUnit) object representing the catalog measurement unit associated with the inventory change.
+          readOnly: true
+        measurement_unit_id:
+          type: string
+          description: The ID of the [CatalogMeasurementUnit](entity:CatalogMeasurementUnit) object representing the catalog measurement unit associated with the inventory change.
+          readOnly: true
+    MeasurementUnit:
+      type: object
+      description: 'Represents a unit of measurement to use with a quantity, such as ounces
+
+        or inches. Exactly one of the following fields are required: `custom_unit`,
+
+        `area_unit`, `length_unit`, `volume_unit`, and `weight_unit`.'
+      x-release-status: PUBLIC
+      properties:
+        custom_unit:
+          $ref: '#/components/schemas/MeasurementUnitCustom'
+          description: 'A custom unit of measurement defined by the seller using the Point of Sale
+
+            app or ad-hoc as an order line item.'
+          nullable: true
+        area_unit:
+          $ref: '#/components/schemas/MeasurementUnitArea'
+          description: 'Represents a standard area unit.
+
+            See [MeasurementUnitArea](#type-measurementunitarea) for possible values'
+          nullable: true
+        length_unit:
+          $ref: '#/components/schemas/MeasurementUnitLength'
+          description: 'Represents a standard length unit.
+
+            See [MeasurementUnitLength](#type-measurementunitlength) for possible values'
+          nullable: true
+        volume_unit:
+          $ref: '#/components/schemas/MeasurementUnitVolume'
+          description: 'Represents a standard volume unit.
+
+            See [MeasurementUnitVolume](#type-measurementunitvolume) for possible values'
+          nullable: true
+        weight_unit:
+          $ref: '#/components/schemas/MeasurementUnitWeight'
+          description: 'Represents a standard unit of weight or mass.
+
+            See [MeasurementUnitWeight](#type-measurementunitweight) for possible values'
+          nullable: true
+        generic_unit:
+          $ref: '#/components/schemas/MeasurementUnitGeneric'
+          description: 'Reserved for API integrations that lack the ability to specify a real measurement unit
+
+            See [MeasurementUnitGeneric](#type-measurementunitgeneric) for possible values'
+          nullable: true
+        time_unit:
+          $ref: '#/components/schemas/MeasurementUnitTime'
+          description: 'Represents a standard unit of time.
+
+            See [MeasurementUnitTime](#type-measurementunittime) for possible values'
+          nullable: true
+        type:
+          $ref: '#/components/schemas/MeasurementUnitUnitType'
+          description: 'Represents the type of the measurement unit.
+
+            See [MeasurementUnitUnitType](#type-measurementunitunittype) for possible values'
+          nullable: true
+    BatchChangeInventoryResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryCount'
+          description: The current counts for all objects referenced in the request.
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryChange'
+          description: Changes created for the request.
+          x-release-status: BETA
+      example:
+        counts:
+        - calculated_at: '2016-11-16T22:28:01.223Z'
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          location_id: C6W5YS5QM06F5
+          quantity: '53'
+          state: IN_STOCK
+        errors: []
+    MeasurementUnitUnitType:
+      type: string
+      enum:
+      - TYPE_CUSTOM
+      - TYPE_AREA
+      - TYPE_LENGTH
+      - TYPE_VOLUME
+      - TYPE_WEIGHT
+      - TYPE_GENERIC
+      x-enum-elements:
+      - name: TYPE_CUSTOM
+        description: The unit details are contained in the custom_unit field.
+      - name: TYPE_AREA
+        description: The unit details are contained in the area_unit field.
+      - name: TYPE_LENGTH
+        description: The unit details are contained in the length_unit field.
+      - name: TYPE_VOLUME
+        description: The unit details are contained in the volume_unit field.
+      - name: TYPE_WEIGHT
+        description: The unit details are contained in the weight_unit field.
+      - name: TYPE_GENERIC
+        description: The unit details are contained in the generic_unit field.
+      description: Describes the type of this unit and indicates which field contains the unit information. This is an ‘open’ enum.
+      x-release-status: PUBLIC
+    InventoryTransfer:
+      type: object
+      description: 'Represents the transfer of a quantity of product inventory at a
+
+        particular time from one location to another.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: 'A unique ID generated by Square for the
+
+            `InventoryTransfer`.'
+          maxLength: 100
+        reference_id:
+          type: string
+          description: 'An optional ID provided by the application to tie the
+
+            `InventoryTransfer` to an external system.'
+          maxLength: 255
+          nullable: true
+        state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'The [inventory state](entity:InventoryState) for the quantity of
+
+            items being transferred.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+          nullable: true
+        from_location_id:
+          type: string
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items was tracked before the transfer.'
+          maxLength: 100
+          nullable: true
+        to_location_id:
+          type: string
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items was tracked after the transfer.'
+          maxLength: 100
+          nullable: true
+        catalog_object_id:
+          type: string
+          description: 'The Square-generated ID of the
+
+            [CatalogObject](entity:CatalogObject) being tracked.'
+          maxLength: 100
+          nullable: true
+        catalog_object_type:
+          type: string
+          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
+          maxLength: 14
+          nullable: true
+        quantity:
+          type: string
+          description: 'The number of items affected by the transfer as a decimal string.
+
+            Can support up to 5 digits after the decimal point.'
+          maxLength: 26
+          nullable: true
+        occurred_at:
+          type: string
+          description: 'A client-generated RFC 3339-formatted timestamp that indicates when
+
+            the transfer took place. For write actions, the `occurred_at` timestamp
+
+            cannot be older than 24 hours or in the future relative to the time of the
+
+            request.'
+          maxLength: 34
+          nullable: true
+        created_at:
+          type: string
+          description: 'An RFC 3339-formatted timestamp that indicates when Square
+
+            received the transfer request.'
+          maxLength: 34
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/SourceApplication'
+          description: 'Information about the application that initiated the
+
+            inventory transfer.'
+          readOnly: true
+        employee_id:
+          type: string
+          description: 'The Square-generated ID of the [Employee](entity:Employee) responsible for the
+
+            inventory transfer.'
+          maxLength: 100
+          nullable: true
+        team_member_id:
+          type: string
+          description: 'The Square-generated ID of the [Team Member](entity:TeamMember) responsible for the
+
+            inventory transfer.'
+          maxLength: 100
+          nullable: true
+    RetrieveInventoryTransferResponse:
+      type: object
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        transfer:
+          $ref: '#/components/schemas/InventoryTransfer'
+          description: The requested [InventoryTransfer](entity:InventoryTransfer).
+      example:
+        errors: []
+        transfer:
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          created_at: '2016-11-17T13:02:15.142Z'
+          from_location_id: C6W5YS5QM06F5
+          id: UDMOEO78BG6GYWA2XDRYX3KB
+          occurred_at: '2016-11-16T25:44:22.837Z'
+          quantity: '7'
+          reference_id: 4a366069-4096-47a2-99a5-0084ac879509
+          source:
+            application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
+            name: Square Point of Sale 4.37
+            product: SQUARE_POS
+          state: IN_STOCK
+          team_member_id: LRK57NSQ5X7PUD05
+          to_location_id: 59TNP9SA8VGDA
+    InventoryAdjustmentGroup:
+      type: object
+      x-release-status: BETA
+      properties:
+        id:
+          type: string
+          description: 'A unique ID generated by Square for the
+
+            `InventoryAdjustmentGroup`.'
+          maxLength: 100
+          readOnly: true
+        root_adjustment_id:
+          type: string
+          description: The inventory adjustment of the composed variation.
+          maxLength: 100
+          readOnly: true
+        from_state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'Representative `from_state` for adjustments within the group. For example, for a group adjustment from `IN_STOCK` to `SOLD`,
+
+            there can be two component adjustments in the group: one from `IN_STOCK`to `COMPOSED` and the other one from `COMPOSED` to `SOLD`.
+
+            Here, the representative `from_state` for the `InventoryAdjustmentGroup` is `IN_STOCK`.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+          readOnly: true
+        to_state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'Representative `to_state` for adjustments within group. For example, for a group adjustment from `IN_STOCK` to `SOLD`,
+
+            the two component adjustments in the group can be from `IN_STOCK` to `COMPOSED` and from `COMPOSED` to `SOLD`.
+
+            Here, the representative `to_state` of the `InventoryAdjustmentGroup` is `SOLD`.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+          readOnly: true
+    BatchChangeInventoryRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      properties:
+        idempotency_key:
+          type: string
+          description: 'A client-supplied, universally unique identifier (UUID) for the
+
+            request.
+
+
+            See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the
+
+            [API Development 101](https://developer.squareup.com/docs/buildbasics) section for more
+
+            information.'
+          minLength: 1
+          maxLength: 128
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryChange'
+          description: 'The set of physical counts and inventory adjustments to be made.
+
+            Changes are applied based on the client-supplied timestamp and may be sent
+
+            out of order.'
+          nullable: true
+        ignore_unchanged_counts:
+          type: boolean
+          description: 'Indicates whether the current physical count should be ignored if
+
+            the quantity is unchanged since the last physical count. Default: `true`.'
+          nullable: true
+      example:
+        changes:
+        - physical_count:
+            catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+            location_id: C6W5YS5QM06F5
+            occurred_at: '2016-11-16T22:25:24.878Z'
+            quantity: '53'
+            reference_id: 1536bfbf-efed-48bf-b17d-a197141b2a92
+            state: IN_STOCK
+            team_member_id: LRK57NSQ5X7PUD05
+          type: PHYSICAL_COUNT
+        idempotency_key: 8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe
+        ignore_unchanged_counts: true
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.csharp
+        java: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.java
+        javascript: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.javascript
+        php: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.php
+        python: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.python
+        ruby: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.ruby
+    MeasurementUnitWeight:
+      type: string
+      enum:
+      - IMPERIAL_WEIGHT_OUNCE
+      - IMPERIAL_POUND
+      - IMPERIAL_STONE
+      - METRIC_MILLIGRAM
+      - METRIC_GRAM
+      - METRIC_KILOGRAM
+      x-enum-elements:
+      - name: IMPERIAL_WEIGHT_OUNCE
+        description: The weight is measured in ounces.
+      - name: IMPERIAL_POUND
+        description: The weight is measured in pounds.
+      - name: IMPERIAL_STONE
+        description: The weight is measured in stones.
+      - name: METRIC_MILLIGRAM
+        description: The weight is measured in milligrams.
+      - name: METRIC_GRAM
+        description: The weight is measured in grams.
+      - name: METRIC_KILOGRAM
+        description: The weight is measured in kilograms.
+      description: Unit of weight used to measure a quantity.
+      x-release-status: PUBLIC
+    InventoryChangeType:
+      type: string
+      enum:
+      - PHYSICAL_COUNT
+      - ADJUSTMENT
+      - TRANSFER
+      x-enum-elements:
+      - name: PHYSICAL_COUNT
+        description: The change occurred as part of a physical count update.
+      - name: ADJUSTMENT
+        description: 'The change occurred as part of the normal lifecycle of goods
+
+          (e.g., as an inventory adjustment).'
+      - name: TRANSFER
+        description: The change occurred as part of an inventory transfer.
+      description: Indicates how the inventory change was applied to a tracked product quantity.
+      x-release-status: PUBLIC
+    MeasurementUnitTime:
+      type: string
+      enum:
+      - GENERIC_MILLISECOND
+      - GENERIC_SECOND
+      - GENERIC_MINUTE
+      - GENERIC_HOUR
+      - GENERIC_DAY
+      x-enum-elements:
+      - name: GENERIC_MILLISECOND
+        description: The time is measured in milliseconds.
+      - name: GENERIC_SECOND
+        description: The time is measured in seconds.
+      - name: GENERIC_MINUTE
+        description: The time is measured in minutes.
+      - name: GENERIC_HOUR
+        description: The time is measured in hours.
+      - name: GENERIC_DAY
+        description: The time is measured in days.
+      description: Unit of time used to measure a quantity (a duration).
+      x-release-status: PUBLIC
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-additional-headers:
+      - name: Square-Version
+        description: Square Connect API versions
+        schema:
+          default: '2025-01-23'
+      flows:
+        authorizationCode:
+          authorizationUrl: https://connect.squareup.com/oauth2/authorize
+          tokenUrl: https://connect.squareup.com/oauth2/token
+          scopes:
+            ADDON_CONFIGURATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants write access for third-party Add-ons to read configurations of their Add-ons, for example, when calling `RetrieveConfiguration` endpoint.'
+            ADDON_CONFIGURATIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access for third-party Add-ons to store configurations of their Add-ons, for example, when calling `CreateConfiguration` endpoint.'
+            APPOINTMENTS_ALL_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to all of a seller''s booking information, calendar, and business details.
+
+              This permission must be accompanied by the `APPOINTMENTS_READ` permission.'
+            APPOINTMENTS_ALL_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to all booking details, including double-booking a seller.
+
+              This permission must be accompanied by the `APPOINTMENTS_WRITE` permission.'
+            APPOINTMENTS_BUSINESS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to booking business settings. For example, to call the
+
+              ListTeamMemberBookingProfiles endpoint.'
+            APPOINTMENTS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to booking information. For example, to call the
+
+              RetrieveBooking endpoint.'
+            APPOINTMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to booking information. For example, to call the CreateBooking endpoint.'
+            BANK_ACCOUNTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to bank account information associated with the targeted
+
+              Square account. For example, to call the Connect v1 ListBankAccounts endpoint.'
+            CASH_DRAWER_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to cash drawer shift information. For example, to call the
+
+              ListCashDrawerShifts endpoint.'
+            CHANNELS_CREATE: '__HTTP Method__: `POST`
+
+
+              Grants write access to create channels, for example, when calling the
+
+              `CreateChannel` endpoint.'
+            CHANNELS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to view channels, for example, when calling the
+
+              `RetrieveChannel` endpoint.'
+            CHANNELS_UPDATE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to update channels, for example, when calling the
+
+              `UpdateChannel` endpoint.'
+            CUSTOMERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to customer information. For example, to call the
+
+              ListCustomers endpoint.'
+            CUSTOMERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to customer information. For example, to create and update
+
+              customer profiles.'
+            DEVICES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to device information. For example, to
+
+              call the `GetDevice` and `ListDevices` endpoints.'
+            DEVICE_CREDENTIAL_MANAGEMENT: '__HTTP Method__: `POST`, `GET`
+
+
+              Grants read/write access to device credentials information. For example, to
+
+              call the CreateDeviceCode endpoint.'
+            DISPUTES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to dispute information. For example, to call the RetrieveDispute
+
+              endpoint.'
+            DISPUTES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to dispute information. For example, to call the SubmitEvidence
+
+              endpoint.'
+            EMPLOYEES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee profile information. For example, to call the
+
+              Connect v1 Employees API.'
+            EMPLOYEES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee profile information. For example, to create
+
+              and modify employee profiles.'
+            GIFTCARDS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to gift card information. For example, to call the RetrieveGiftCard
+
+              endpoint.'
+            GIFTCARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to gift card information. For example, to call the CreateGiftCard
+
+              endpoint.'
+            INVENTORY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to inventory information. For example, to call the
+
+              RetrieveInventoryCount endpoint.'
+            INVENTORY_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to inventory information. For example, to call the
+
+              BatchChangeInventory endpoint.'
+            INVOICES_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to invoice information. For example, to call the ListInvoices endpoint.'
+            INVOICES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to invoice information. For example, to call the CreateInvoice endpoint.'
+            ITEMS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to product catalog information. For example, to obtain objects in a product catalog.'
+            ITEMS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to product catalog information. For example, to modify or
+
+              add to a product catalog.'
+            LOYALTY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to loyalty information. For example, to call the
+
+              ListLoyaltyPrograms endpoint.'
+            LOYALTY_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to loyalty information. For example, to call the
+
+              CreateLoyaltyAccount endpoint.'
+            MERCHANT_PROFILE_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to business and location information. For example, to
+
+              obtain a location ID for subsequent activity.'
+            MERCHANT_PROFILE_WRITE: '__HTTP Method__: `POST`, `PUT`
+
+
+              Grants write access to business and location information. For example, to create a new location or
+
+              update the business hours at an existing location.'
+            ONLINE_STORE_SITE_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store site details.'
+            ONLINE_STORE_SNIPPETS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store snippets on published websites.'
+            ONLINE_STORE_SNIPPETS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Write access to ECOM online store snippets on published websites.'
+            ORDERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to order information. For example, to call the
+
+              BatchRetrieveOrders endpoint.'
+            ORDERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to order information. For example, to call the
+
+              CreateCheckout endpoint.'
+            PAYMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to transaction and refund information. For example, to call
+
+              the RetrieveTransaction endpoint.'
+            PAYMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to transaction and refunds information. For example, to
+
+              process payments with the Payments or Checkout API.'
+            PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allow third party applications to deduct a portion of each transaction amount.
+
+              __Required__ to use multiparty transaction functionality with the Payments
+
+              API.'
+            PAYMENTS_WRITE_IN_PERSON: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to payments and refunds information. For example, to
+
+              process in-person payments.'
+            PAYMENTS_WRITE_SHARED_ONFILE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allows the developer to process payments on behalf of a seller using a shared on file payment method.'
+            PAYOUTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to payouts and payout entries information. For example,
+
+              to call the Connect v2 `ListPayouts` endpoint.'
+            PERMISSION_SETS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to Permission Sets. For example, to
+
+              call the `ListPermissionSets` and `RetrievePermissionSet` endpoints.'
+            PERMISSION_SETS_WRITE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to Permission Sets.'
+            RESERVATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to reservation information, for example, when calling the
+
+              `RetrieveReservation` endpoint.'
+            RESERVATIONS_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to reservation information, for example, when calling the
+
+              `CreateReservation` endpoint.'
+            RESTAURANT_CHECKS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to check information, for example, when calling the
+
+              `RetrieveCheck` endpoint.'
+            SETTLEMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to settlement (deposit) information. For example, to call
+
+              the Connect v1 ListSettlements endpoint.'
+            SUBSCRIPTIONS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to subscription information. For example, to call the RetrieveSubscription
+
+              endpoint.'
+            SUBSCRIPTIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to subscription information. For example, to call the CreateSubscription
+
+              endpoint.'
+            TIMECARDS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard information. For example, to call the
+
+              Connect v2 SearchShifts endpoint.'
+            TIMECARDS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard settings information. For example, to
+
+              call the GetBreakType endpoint.'
+            TIMECARDS_SETTINGS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee timecard settings information. For example, to
+
+              call the UpdateBreakType endpoint.'
+            TIMECARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee shift information. For example, to create
+
+              and modify employee shifts.'
+            VENDOR_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to vendor information, for example, when calling the
+
+              `RetrieveVendor` endpoint.'
+            VENDOR_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to vendor information, for example, when calling the
+
+              `BulkUpdateVendors` endpoint.'
+    oauth2ClientSecret:
+      type: apiKey
+      in: header
+      name: Authorization
+x-fern-global-headers:
+- header: Square-Version
+  name: version
+  optional: true
+  env: VERSION
+  type: literal<"2025-01-23">

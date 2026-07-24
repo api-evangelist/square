@@ -1,0 +1,4970 @@
+openapi: 3.0.0
+info:
+  version: '2.0'
+  title: Square ApplePay Loyalty API
+  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  termsOfService: https://connect.squareup.com/tos
+  contact:
+    name: Square Developer Platform
+    email: developers@squareup.com
+    url: https://squareup.com/developers
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  externalDocs:
+    description: 'Read the official documentation here:'
+    url: https://docs.connect.squareup.com/
+  x-server-configuration:
+    default-environment: production
+    default-server: default
+    environments:
+    - name: production
+      servers:
+      - name: default
+        url: https://connect.squareup.com
+    - name: sandbox
+      servers:
+      - name: default
+        url: https://connect.squareupsandbox.com
+    - name: custom
+      servers:
+      - name: default
+        url: '{custom_url}'
+    parameters:
+    - name: custom_url
+      description: Sets the base URL requests are made to. Defaults to `https://connect.squareup.com`
+      type: string
+      example: https://connect.squareup.com
+  x-square-generic-error-codes:
+  - ACCESS_TOKEN_EXPIRED
+  - ACCESS_TOKEN_REVOKED
+  - API_VERSION_INCOMPATIBLE
+  - APPLICATION_DISABLED
+  - ARRAY_EMPTY
+  - ARRAY_LENGTH_TOO_LONG
+  - ARRAY_LENGTH_TOO_SHORT
+  - BAD_CERTIFICATE
+  - BAD_GATEWAY
+  - BAD_REQUEST
+  - CONFLICT
+  - CONFLICTING_PARAMETERS
+  - CURRENCY_MISMATCH
+  - EXPECTED_ARRAY
+  - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+  - EXPECTED_BOOLEAN
+  - EXPECTED_FLOAT
+  - EXPECTED_INTEGER
+  - EXPECTED_JSON_BODY
+  - EXPECTED_MAP
+  - EXPECTED_OBJECT
+  - EXPECTED_STRING
+  - FORBIDDEN
+  - GATEWAY_TIMEOUT
+  - GONE
+  - IDEMPOTENCY_KEY_REUSED
+  - INCORRECT_TYPE
+  - INSUFFICIENT_SCOPES
+  - INTERNAL_SERVER_ERROR
+  - INVALID_ARRAY_VALUE
+  - INVALID_CONTENT_TYPE
+  - INVALID_CURSOR
+  - INVALID_ENUM_VALUE
+  - INVALID_FORM_VALUE
+  - INVALID_SORT_ORDER
+  - INVALID_SQUARE_VERSION_FORMAT
+  - INVALID_TIME
+  - INVALID_TIME_RANGE
+  - INVALID_VALUE
+  - LOCATION_MISMATCH
+  - MAP_KEY_LENGTH_TOO_LONG
+  - MAP_KEY_LENGTH_TOO_SHORT
+  - MERCHANT_SUBSCRIPTION_NOT_FOUND
+  - METHOD_NOT_ALLOWED
+  - MISSING_REQUIRED_PARAMETER
+  - NOT_ACCEPTABLE
+  - NOT_FOUND
+  - NOT_IMPLEMENTED
+  - NO_FIELDS_SET
+  - RATE_LIMITED
+  - REQUEST_ENTITY_TOO_LARGE
+  - REQUEST_TIMEOUT
+  - SANDBOX_NOT_SUPPORTED
+  - SERVICE_UNAVAILABLE
+  - TOO_MANY_MAP_ENTRIES
+  - UNAUTHORIZED
+  - UNEXPECTED_VALUE
+  - UNKNOWN_BODY_PARAMETER
+  - UNKNOWN_QUERY_PARAMETER
+  - UNPROCESSABLE_ENTITY
+  - UNSUPPORTED_MEDIA_TYPE
+  - V1_ACCESS_TOKEN
+  - V1_APPLICATION
+  - VALUE_EMPTY
+  - VALUE_REGEX_MISMATCH
+  - VALUE_TOO_HIGH
+  - VALUE_TOO_LONG
+  - VALUE_TOO_LOW
+  - VALUE_TOO_SHORT
+servers:
+- url: https://connect.squareup.com
+  variables: {}
+tags:
+- name: Loyalty
+paths:
+  /v2/loyalty/accounts:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Create Loyalty Account
+      operationId: CreateLoyaltyAccount
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Creates a loyalty account. To create a loyalty account, you must provide the `program_id` and a `mapping` with the `phone_number` of the buyer.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoyaltyAccountRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLoyaltyAccountResponse'
+      x-endpoint-errors:
+      - error-code: INVALID_PHONE_NUMBER
+  /v2/loyalty/accounts/search:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Search Loyalty Accounts
+      operationId: SearchLoyaltyAccounts
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Searches for loyalty accounts in a loyalty program.
+
+
+        You can search for a loyalty account using the phone number or customer ID associated with the account. To return all loyalty accounts, specify an empty `query` object or omit it entirely.
+
+
+        Search results are sorted by `created_at` in ascending order.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchLoyaltyAccountsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchLoyaltyAccountsResponse'
+  /v2/loyalty/accounts/{account_id}:
+    get:
+      tags:
+      - Loyalty
+      summary: Square Retrieve Loyalty Account
+      operationId: RetrieveLoyaltyAccount
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a loyalty account.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters:
+      - name: account_id
+        description: The ID of the [loyalty account](entity:LoyaltyAccount) to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveLoyaltyAccountResponse'
+  /v2/loyalty/accounts/{account_id}/accumulate:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Accumulate Loyalty Points
+      operationId: AccumulateLoyaltyPoints
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Adds points earned from a purchase to a [loyalty account](entity:LoyaltyAccount).
+
+
+        - If you are using the Orders API to manage orders, provide the `order_id`. Square reads the order
+
+        to compute the points earned from both the base loyalty program and an associated
+
+        [loyalty promotion](entity:LoyaltyPromotion). For purchases that qualify for multiple accrual
+
+        rules, Square computes points based on the accrual rule that grants the most points.
+
+        For purchases that qualify for multiple promotions, Square computes points based on the most
+
+        recently created promotion. A purchase must first qualify for program points to be eligible for promotion points.
+
+
+        - If you are not using the Orders API to manage orders, provide `points` with the number of points to add.
+
+        You must first perform a client-side computation of the points earned from the loyalty program and
+
+        loyalty promotion. For spend-based and visit-based programs, you can call [CalculateLoyaltyPoints](api-endpoint:Loyalty-CalculateLoyaltyPoints)
+
+        to compute the points earned from the base loyalty program. For information about computing points earned from a loyalty promotion, see
+
+        [Calculating promotion points](https://developer.squareup.com/docs/loyalty-api/loyalty-promotions#calculate-promotion-points).'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_WRITE
+      parameters:
+      - name: account_id
+        description: The ID of the target [loyalty account](entity:LoyaltyAccount).
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccumulateLoyaltyPointsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccumulateLoyaltyPointsResponse'
+  /v2/loyalty/accounts/{account_id}/adjust:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Adjust Loyalty Points
+      operationId: AdjustLoyaltyPoints
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Adds points to or subtracts points from a buyer''s account.
+
+
+        Use this endpoint only when you need to manually adjust points. Otherwise, in your application flow, you call
+
+        [AccumulateLoyaltyPoints](api-endpoint:Loyalty-AccumulateLoyaltyPoints)
+
+        to add points when a buyer pays for the purchase.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_WRITE
+      parameters:
+      - name: account_id
+        description: The ID of the target [loyalty account](entity:LoyaltyAccount).
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustLoyaltyPointsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdjustLoyaltyPointsResponse'
+  /v2/loyalty/events/search:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Search Loyalty Events
+      operationId: SearchLoyaltyEvents
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Searches for loyalty events.
+
+
+        A Square loyalty program maintains a ledger of events that occur during the lifetime of a
+
+        buyer''s loyalty account. Each change in the point balance
+
+        (for example, points earned, points redeemed, and points expired) is
+
+        recorded in the ledger. Using this endpoint, you can search the ledger for events.
+
+
+        Search results are sorted by `created_at` in descending order.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchLoyaltyEventsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchLoyaltyEventsResponse'
+  /v2/loyalty/programs:
+    get:
+      tags:
+      - Loyalty
+      summary: Square List Loyalty Programs
+      operationId: ListLoyaltyPrograms
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Returns a list of loyalty programs in the seller''s account.
+
+        Loyalty programs define how buyers can earn points and redeem points for rewards. Square sellers can have only one loyalty program, which is created and managed from the Seller Dashboard. For more information, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview).
+
+
+
+        Replaced with [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) when used with the keyword `main`.'
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-05-13'
+        replacedBy: RetrieveLoyaltyProgram
+        guideUrl: https://developer.squareup.com/docs/loyalty-api/overview#migration-notes
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLoyaltyProgramsResponse'
+      x-endpoint-errors:
+      - error-code: UNSUPPORTED_LOYALTY_REWARD_TIER
+  /v2/loyalty/programs/{program_id}:
+    get:
+      tags:
+      - Loyalty
+      summary: Square Retrieve Loyalty Program
+      operationId: RetrieveLoyaltyProgram
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Retrieves the loyalty program in a seller''s account, specified by the program ID or the keyword `main`.
+
+
+        Loyalty programs define how buyers can earn points and redeem points for rewards. Square sellers can have only one loyalty program, which is created and managed from the Seller Dashboard. For more information, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview).'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters:
+      - name: program_id
+        description: The ID of the loyalty program or the keyword `main`. Either value can be used to retrieve the single loyalty program that belongs to the seller.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveLoyaltyProgramResponse'
+      x-endpoint-errors:
+      - error-code: UNSUPPORTED_LOYALTY_REWARD_TIER
+  /v2/loyalty/programs/{program_id}/calculate:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Calculate Loyalty Points
+      operationId: CalculateLoyaltyPoints
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Calculates the number of points a buyer can earn from a purchase. Applications might call this endpoint
+
+        to display the points to the buyer.
+
+
+        - If you are using the Orders API to manage orders, provide the `order_id` and (optional) `loyalty_account_id`.
+
+        Square reads the order to compute the points earned from the base loyalty program and an associated
+
+        [loyalty promotion](entity:LoyaltyPromotion).
+
+
+        - If you are not using the Orders API to manage orders, provide `transaction_amount_money` with the
+
+        purchase amount. Square uses this amount to calculate the points earned from the base loyalty program,
+
+        but not points earned from a loyalty promotion. For spend-based and visit-based programs, the `tax_mode`
+
+        setting of the accrual rule indicates how taxes should be treated for loyalty points accrual.
+
+        If the purchase qualifies for program points, call
+
+        [ListLoyaltyPromotions](api-endpoint:Loyalty-ListLoyaltyPromotions) and perform a client-side computation
+
+        to calculate whether the purchase also qualifies for promotion points. For more information, see
+
+        [Calculating promotion points](https://developer.squareup.com/docs/loyalty-api/loyalty-promotions#calculate-promotion-points).'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters:
+      - name: program_id
+        description: The ID of the [loyalty program](entity:LoyaltyProgram), which defines the rules for accruing points.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateLoyaltyPointsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculateLoyaltyPointsResponse'
+  /v2/loyalty/programs/{program_id}/promotions:
+    get:
+      tags:
+      - Loyalty
+      summary: Square List Loyalty Promotions
+      operationId: ListLoyaltyPromotions
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Lists the loyalty promotions associated with a [loyalty program](entity:LoyaltyProgram).
+
+        Results are sorted by the `created_at` date in descending order (newest to oldest).'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters:
+      - name: program_id
+        description: 'The ID of the base [loyalty program](entity:LoyaltyProgram). To get the program ID,
+
+          call [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) using the `main` keyword.'
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: status
+        description: 'The status to filter the results by. If a status is provided, only loyalty promotions
+
+          with the specified status are returned. Otherwise, all loyalty promotions associated with
+
+          the loyalty program are returned.'
+        schema:
+          $ref: '#/components/schemas/LoyaltyPromotionStatus'
+        in: query
+        required: false
+      - name: cursor
+        description: 'The cursor returned in the paged response from the previous call to this endpoint.
+
+          Provide this cursor to retrieve the next page of results for your original request.
+
+          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: limit
+        description: 'The maximum number of results to return in a single paged response.
+
+          The minimum value is 1 and the maximum value is 30. The default value is 30.
+
+          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        schema:
+          type: integer
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLoyaltyPromotionsResponse'
+    post:
+      tags:
+      - Loyalty
+      summary: Square Create Loyalty Promotion
+      operationId: CreateLoyaltyPromotion
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Creates a loyalty promotion for a [loyalty program](entity:LoyaltyProgram). A loyalty promotion
+
+        enables buyers to earn points in addition to those earned from the base loyalty program.
+
+
+        This endpoint sets the loyalty promotion to the `ACTIVE` or `SCHEDULED` status, depending on the
+
+        `available_time` setting. A loyalty program can have a maximum of 10 loyalty promotions with an
+
+        `ACTIVE` or `SCHEDULED` status.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_WRITE
+      parameters:
+      - name: program_id
+        description: 'The ID of the [loyalty program](entity:LoyaltyProgram) to associate with the promotion.
+
+          To get the program ID, call [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram)
+
+          using the `main` keyword.'
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoyaltyPromotionRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLoyaltyPromotionResponse'
+  /v2/loyalty/programs/{program_id}/promotions/{promotion_id}:
+    get:
+      tags:
+      - Loyalty
+      summary: Square Retrieve Loyalty Promotion
+      operationId: RetrieveLoyaltyPromotion
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a loyalty promotion.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters:
+      - name: promotion_id
+        description: The ID of the [loyalty promotion](entity:LoyaltyPromotion) to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: program_id
+        description: 'The ID of the base [loyalty program](entity:LoyaltyProgram). To get the program ID,
+
+          call [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) using the `main` keyword.'
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveLoyaltyPromotionResponse'
+  /v2/loyalty/programs/{program_id}/promotions/{promotion_id}/cancel:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Cancel Loyalty Promotion
+      operationId: CancelLoyaltyPromotion
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Cancels a loyalty promotion. Use this endpoint to cancel an `ACTIVE` promotion earlier than the
+
+        end date, cancel an `ACTIVE` promotion when an end date is not specified, or cancel a `SCHEDULED` promotion.
+
+        Because updating a promotion is not supported, you can also use this endpoint to cancel a promotion before
+
+        you create a new one.
+
+
+        This endpoint sets the loyalty promotion to the `CANCELED` state'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_WRITE
+      parameters:
+      - name: promotion_id
+        description: 'The ID of the [loyalty promotion](entity:LoyaltyPromotion) to cancel. You can cancel a
+
+          promotion that has an `ACTIVE` or `SCHEDULED` status.'
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: program_id
+        description: The ID of the base [loyalty program](entity:LoyaltyProgram).
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelLoyaltyPromotionResponse'
+  /v2/loyalty/rewards:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Create Loyalty Reward
+      operationId: CreateLoyaltyReward
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Creates a loyalty reward. In the process, the endpoint does following:
+
+
+        - Uses the `reward_tier_id` in the request to determine the number of points
+
+        to lock for this reward.
+
+        - If the request includes `order_id`, it adds the reward and related discount to the order.
+
+
+        After a reward is created, the points are locked and
+
+        not available for the buyer to redeem another reward.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoyaltyRewardRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLoyaltyRewardResponse'
+  /v2/loyalty/rewards/search:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Search Loyalty Rewards
+      operationId: SearchLoyaltyRewards
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Searches for loyalty rewards. This endpoint accepts a request with no query filters and returns results for all loyalty accounts.
+
+        If you include a `query` object, `loyalty_account_id` is required and `status` is  optional.
+
+
+        If you know a reward ID, use the
+
+        [RetrieveLoyaltyReward](api-endpoint:Loyalty-RetrieveLoyaltyReward) endpoint.
+
+
+        Search results are sorted by `updated_at` in descending order.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchLoyaltyRewardsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchLoyaltyRewardsResponse'
+  /v2/loyalty/rewards/{reward_id}:
+    delete:
+      tags:
+      - Loyalty
+      summary: Square Delete Loyalty Reward
+      operationId: DeleteLoyaltyReward
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deletes a loyalty reward by doing the following:
+
+
+        - Returns the loyalty points back to the loyalty account.
+
+        - If an order ID was specified when the reward was created
+
+        (see [CreateLoyaltyReward](api-endpoint:Loyalty-CreateLoyaltyReward)),
+
+        it updates the order by removing the reward and related
+
+        discounts.
+
+
+        You cannot delete a reward that has reached the terminal state (REDEEMED).'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_WRITE
+      parameters:
+      - name: reward_id
+        description: The ID of the [loyalty reward](entity:LoyaltyReward) to delete.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteLoyaltyRewardResponse'
+    get:
+      tags:
+      - Loyalty
+      summary: Square Retrieve Loyalty Reward
+      operationId: RetrieveLoyaltyReward
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a loyalty reward.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_READ
+      parameters:
+      - name: reward_id
+        description: The ID of the [loyalty reward](entity:LoyaltyReward) to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveLoyaltyRewardResponse'
+  /v2/loyalty/rewards/{reward_id}/redeem:
+    post:
+      tags:
+      - Loyalty
+      summary: Square Redeem Loyalty Reward
+      operationId: RedeemLoyaltyReward
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Redeems a loyalty reward.
+
+
+        The endpoint sets the reward to the `REDEEMED` terminal state.
+
+
+        If you are using your own order processing system (not using the
+
+        Orders API), you call this endpoint after the buyer paid for the
+
+        purchase.
+
+
+        After the reward reaches the terminal state, it cannot be deleted.
+
+        In other words, points used for the reward cannot be returned
+
+        to the account.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - LOYALTY_WRITE
+      parameters:
+      - name: reward_id
+        description: The ID of the [loyalty reward](entity:LoyaltyReward) to redeem.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RedeemLoyaltyRewardRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedeemLoyaltyRewardResponse'
+components:
+  schemas:
+    LoyaltyEventAdjustPoints:
+      type: object
+      description: Provides metadata when the event `type` is `ADJUST_POINTS`.
+      x-release-status: PUBLIC
+      required:
+      - points
+      properties:
+        loyalty_program_id:
+          type: string
+          description: The Square-assigned ID of the [loyalty program](entity:LoyaltyProgram).
+          maxLength: 36
+          readOnly: true
+        points:
+          type: integer
+          description: The number of points added or removed.
+        reason:
+          type: string
+          description: The reason for the adjustment of points.
+          nullable: true
+    RetrieveLoyaltyAccountResponse:
+      type: object
+      description: A response that includes the loyalty account.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        loyalty_account:
+          $ref: '#/components/schemas/LoyaltyAccount'
+          description: The loyalty account.
+      example:
+        loyalty_account:
+          balance: 10
+          created_at: '2020-05-08T21:44:32Z'
+          customer_id: Q8002FAM9V1EZ0ADB2T5609X6NET1H0
+          id: 79b807d2-d786-46a9-933b-918028d7a8c5
+          lifetime_points: 20
+          mapping:
+            created_at: '2020-05-08T21:44:32Z'
+            id: 66aaab3f-da99-49ed-8b19-b87f851c844f
+            phone_number: '+14155551234'
+          program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          updated_at: '2020-05-08T21:44:32Z'
+    LoyaltyPromotion:
+      type: object
+      description: 'Represents a promotion for a [loyalty program](entity:LoyaltyProgram). Loyalty promotions enable buyers
+
+        to earn extra points on top of those earned from the base program.
+
+
+        A loyalty program can have a maximum of 10 loyalty promotions with an `ACTIVE` or `SCHEDULED` status.'
+      x-release-status: PUBLIC
+      required:
+      - name
+      - incentive
+      - available_time
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the promotion.
+          minLength: 1
+          maxLength: 255
+          readOnly: true
+        name:
+          type: string
+          description: The name of the promotion.
+          minLength: 1
+          maxLength: 70
+        incentive:
+          $ref: '#/components/schemas/LoyaltyPromotionIncentive'
+          description: 'The points incentive for the promotion. This field defines whether promotion points
+
+            are earned by multiplying base program points or by adding a specified number of points.'
+        available_time:
+          $ref: '#/components/schemas/LoyaltyPromotionAvailableTimeData'
+          description: The scheduling information that defines when purchases can qualify to earn points from an `ACTIVE` promotion.
+        trigger_limit:
+          $ref: '#/components/schemas/LoyaltyPromotionTriggerLimit'
+          description: 'The number of times a buyer can earn promotion points during a specified interval.
+
+            If not specified, buyers can trigger the promotion an unlimited number of times.'
+          nullable: true
+        status:
+          $ref: '#/components/schemas/LoyaltyPromotionStatus'
+          description: 'The current status of the promotion.
+
+            See [LoyaltyPromotionStatus](#type-loyaltypromotionstatus) for possible values'
+          readOnly: true
+        created_at:
+          type: string
+          description: The timestamp of when the promotion was created, in RFC 3339 format.
+          readOnly: true
+        canceled_at:
+          type: string
+          description: The timestamp of when the promotion was canceled, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the promotion was last updated, in RFC 3339 format.
+          readOnly: true
+        loyalty_program_id:
+          type: string
+          description: The ID of the [loyalty program](entity:LoyaltyProgram) associated with the promotion.
+          readOnly: true
+        minimum_spend_amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The minimum purchase amount required to earn promotion points. If specified, this amount is positive.
+          nullable: true
+        qualifying_item_variation_ids:
+          type: array
+          items:
+            type: string
+          description: 'The IDs of any qualifying `ITEM_VARIATION` [catalog objects](entity:CatalogObject). If specified,
+
+            the purchase must include at least one of these items to qualify for the promotion.
+
+
+            This option is valid only if the base loyalty program uses a `VISIT` or `SPEND` accrual rule.
+
+            With `SPEND` accrual rules, make sure that qualifying promotional items are not excluded.
+
+
+            You can specify `qualifying_item_variation_ids` or `qualifying_category_ids` for a given promotion, but not both.'
+          nullable: true
+        qualifying_category_ids:
+          type: array
+          items:
+            type: string
+          description: 'The IDs of any qualifying `CATEGORY` [catalog objects](entity:CatalogObject). If specified,
+
+            the purchase must include at least one item from one of these categories to qualify for the promotion.
+
+
+            This option is valid only if the base loyalty program uses a `VISIT` or `SPEND` accrual rule.
+
+            With `SPEND` accrual rules, make sure that qualifying promotional items are not excluded.
+
+
+            You can specify `qualifying_category_ids` or `qualifying_item_variation_ids` for a promotion, but not both.'
+          nullable: true
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type: integer
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+          nullable: true
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+          nullable: true
+    LoyaltyAccountExpiringPointDeadline:
+      type: object
+      description: Represents a set of points for a loyalty account that are scheduled to expire on a specific date.
+      x-release-status: PUBLIC
+      required:
+      - points
+      - expires_at
+      properties:
+        points:
+          type: integer
+          description: The number of points scheduled to expire at the `expires_at` timestamp.
+        expires_at:
+          type: string
+          description: The timestamp of when the points are scheduled to expire, in RFC 3339 format.
+          minLength: 1
+    LoyaltyEventFilter:
+      type: object
+      description: "The filtering criteria. If the request specifies multiple filters, \nthe endpoint uses a logical AND to evaluate them."
+      x-release-status: PUBLIC
+      properties:
+        loyalty_account_filter:
+          $ref: '#/components/schemas/LoyaltyEventLoyaltyAccountFilter'
+          description: Filter events by loyalty account.
+          nullable: true
+        type_filter:
+          $ref: '#/components/schemas/LoyaltyEventTypeFilter'
+          description: Filter events by event type.
+          nullable: true
+        date_time_filter:
+          $ref: '#/components/schemas/LoyaltyEventDateTimeFilter'
+          description: "Filter events by date time range. \nFor each range, the start time is inclusive and the end time \nis exclusive."
+          nullable: true
+        location_filter:
+          $ref: '#/components/schemas/LoyaltyEventLocationFilter'
+          description: Filter events by location.
+          nullable: true
+        order_filter:
+          $ref: '#/components/schemas/LoyaltyEventOrderFilter'
+          description: Filter events by the order associated with the event.
+          nullable: true
+    AdjustLoyaltyPointsRequest:
+      type: object
+      description: Represents an [AdjustLoyaltyPoints](api-endpoint:Loyalty-AdjustLoyaltyPoints) request.
+      x-release-status: PUBLIC
+      x-params-example: ?account_id=5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+      required:
+      - idempotency_key
+      - adjust_points
+      properties:
+        idempotency_key:
+          type: string
+          description: "A unique string that identifies this `AdjustLoyaltyPoints` request. \nKeys can be any valid string, but must be unique for every request."
+          minLength: 1
+          maxLength: 128
+        adjust_points:
+          $ref: '#/components/schemas/LoyaltyEventAdjustPoints'
+          description: 'The points to add or subtract and the reason for the adjustment. To add points, specify a positive integer.
+
+            To subtract points, specify a negative integer.'
+        allow_negative_balance:
+          type: boolean
+          description: 'Indicates whether to allow a negative adjustment to result in a negative balance. If `true`, a negative
+
+            balance is allowed when subtracting points. If `false`, Square returns a `BAD_REQUEST` error when subtracting
+
+            the specified number of points would result in a negative balance. The default value is `false`.'
+          nullable: true
+      example:
+        adjust_points:
+          points: 10
+          reason: Complimentary points
+        idempotency_key: bc29a517-3dc9-450e-aa76-fae39ee849d1
+    DeleteLoyaltyRewardResponse:
+      type: object
+      description: A response returned by the API call.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    LoyaltyAccount:
+      type: object
+      description: 'Describes a loyalty account in a [loyalty program](entity:LoyaltyProgram). For more information, see
+
+        [Create and Retrieve Loyalty Accounts](https://developer.squareup.com/docs/loyalty-api/loyalty-accounts).'
+      x-release-status: PUBLIC
+      required:
+      - program_id
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the loyalty account.
+          maxLength: 36
+          readOnly: true
+        program_id:
+          type: string
+          description: The Square-assigned ID of the [loyalty program](entity:LoyaltyProgram) to which the account belongs.
+          minLength: 1
+          maxLength: 36
+        balance:
+          type: integer
+          description: 'The available point balance in the loyalty account. If points are scheduled to expire, they are listed in the `expiring_point_deadlines` field.
+
+
+            Your application should be able to handle loyalty accounts that have a negative point balance (`balance` is less than 0). This might occur if a seller makes a manual adjustment or as a result of a refund or exchange.'
+          readOnly: true
+        lifetime_points:
+          type: integer
+          description: The total points accrued during the lifetime of the account.
+          readOnly: true
+        customer_id:
+          type: string
+          description: The Square-assigned ID of the [customer](entity:Customer) that is associated with the account.
+          nullable: true
+        enrolled_at:
+          type: string
+          description: "The timestamp when the buyer joined the loyalty program, in RFC 3339 format. This field is used to display the **Enrolled On** or **Member Since** date in first-party Square products.\n\nIf this field is not set in a `CreateLoyaltyAccount` request, Square populates it after the buyer's first action on their account \n(when `AccumulateLoyaltyPoints` or `CreateLoyaltyReward` is called). In first-party flows, Square populates the field when the buyer agrees to the terms of service in Square Point of Sale. \n\nThis field is typically specified in a `CreateLoyaltyAccount` request when creating a loyalty account for a buyer who already interacted with their account. \nFor example, you would set this field when migrating accounts from an external system. The timestamp in the request can represent a current or previous date and time, but it cannot be set for the future."
+          nullable: true
+        created_at:
+          type: string
+          description: The timestamp when the loyalty account was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the loyalty account was last updated, in RFC 3339 format.
+          readOnly: true
+        mapping:
+          $ref: '#/components/schemas/LoyaltyAccountMapping'
+          description: 'The mapping that associates the loyalty account with a buyer. Currently,
+
+            a loyalty account can only be mapped to a buyer by phone number.
+
+
+            To create a loyalty account, you must specify the `mapping` field, with the buyer''s phone number
+
+            in the `phone_number` field.'
+          nullable: true
+        expiring_point_deadlines:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyAccountExpiringPointDeadline'
+          description: "The schedule for when points expire in the loyalty account balance. This field is present only if the account has points that are scheduled to expire. \n\nThe total number of points in this field equals the number of points in the `balance` field."
+          nullable: true
+    AdjustLoyaltyPointsResponse:
+      type: object
+      description: Represents an [AdjustLoyaltyPoints](api-endpoint:Loyalty-AdjustLoyaltyPoints) request.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        event:
+          $ref: '#/components/schemas/LoyaltyEvent'
+          description: The resulting event data for the adjustment.
+      example:
+        event:
+          adjust_points:
+            loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+            points: 10
+            reason: Complimentary points
+          created_at: '2020-05-08T21:42:32Z'
+          id: 613a6fca-8d67-39d0-bad2-3b4bc45c8637
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          source: LOYALTY_API
+          type: ADJUST_POINTS
+    RedeemLoyaltyRewardRequest:
+      type: object
+      description: A request to redeem a loyalty reward.
+      x-release-status: PUBLIC
+      x-params-example: ?reward_id=9f18ac21-233a-31c3-be77-b45840f5a810
+      required:
+      - idempotency_key
+      - location_id
+      properties:
+        idempotency_key:
+          type: string
+          description: "A unique string that identifies this `RedeemLoyaltyReward` request. \nKeys can be any valid string, but must be unique for every request."
+          minLength: 1
+          maxLength: 128
+        location_id:
+          type: string
+          description: The ID of the [location](entity:Location) where the reward is redeemed.
+          minLength: 1
+      example:
+        idempotency_key: 98adc7f7-6963-473b-b29c-f3c9cdd7d994
+        location_id: P034NEENMD09F
+    LoyaltyEventLoyaltyAccountFilter:
+      type: object
+      description: Filter events by loyalty account.
+      x-release-status: PUBLIC
+      required:
+      - loyalty_account_id
+      properties:
+        loyalty_account_id:
+          type: string
+          description: The ID of the [loyalty account](entity:LoyaltyAccount) associated with loyalty events.
+          minLength: 1
+    CreateLoyaltyAccountResponse:
+      type: object
+      description: A response that includes loyalty account created.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        loyalty_account:
+          $ref: '#/components/schemas/LoyaltyAccount'
+          description: The newly created loyalty account.
+      example:
+        loyalty_account:
+          balance: 0
+          created_at: '2020-05-08T21:44:32Z'
+          customer_id: QPTXM8PQNX3Q726ZYHPMNP46XC
+          id: 79b807d2-d786-46a9-933b-918028d7a8c5
+          lifetime_points: 0
+          mapping:
+            created_at: '2020-05-08T21:44:32Z'
+            id: 66aaab3f-da99-49ed-8b19-b87f851c844f
+            phone_number: '+14155551234'
+          program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          updated_at: '2020-05-08T21:44:32Z'
+    SearchLoyaltyEventsResponse:
+      type: object
+      description: "A response that contains loyalty events that satisfy the search \ncriteria, in order by the `created_at` date."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyEvent'
+          description: The loyalty events that satisfy the search criteria.
+        cursor:
+          type: string
+          description: "The pagination cursor to be used in a subsequent \nrequest. If empty, this is the final response. \nFor more information, \nsee [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        events:
+        - accumulate_points:
+            loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+            order_id: PyATxhYLfsMqpVkcKJITPydgEYfZY
+            points: 5
+          created_at: '2020-05-08T22:01:30Z'
+          id: c27c8465-806e-36f2-b4b3-71f5887b5ba8
+          location_id: P034NEENMD09F
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          source: LOYALTY_API
+          type: ACCUMULATE_POINTS
+        - created_at: '2020-05-08T22:01:15Z'
+          id: e4a5cbc3-a4d0-3779-98e9-e578885d9430
+          location_id: P034NEENMD09F
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          redeem_reward:
+            loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+            order_id: PyATxhYLfsMqpVkcKJITPydgEYfZY
+            reward_id: d03f79f4-815f-3500-b851-cc1e68a457f9
+          source: LOYALTY_API
+          type: REDEEM_REWARD
+        - create_reward:
+            loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+            points: -10
+            reward_id: d03f79f4-815f-3500-b851-cc1e68a457f9
+          created_at: '2020-05-08T22:00:44Z'
+          id: 5e127479-0b03-3671-ab1e-15faea8b7188
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          source: LOYALTY_API
+          type: CREATE_REWARD
+    RetrieveLoyaltyPromotionResponse:
+      type: object
+      description: Represents a [RetrieveLoyaltyPromotionPromotions](api-endpoint:Loyalty-RetrieveLoyaltyPromotion) response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        loyalty_promotion:
+          $ref: '#/components/schemas/LoyaltyPromotion'
+          description: The retrieved loyalty promotion.
+      example:
+        loyalty_promotion:
+          available_time:
+            start_date: '2022-08-16'
+            time_periods:
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220816T160000
+
+              DURATION:PT2H
+
+              RRULE:FREQ=WEEKLY;BYDAY=TU
+
+              END:VEVENT'
+          created_at: '2022-08-16T08:38:54Z'
+          id: loypromo_f0f9b849-725e-378d-b810-511237e07b67
+          incentive:
+            points_multiplier_data:
+              multiplier: '3.000'
+              points_multiplier: 3
+            type: POINTS_MULTIPLIER
+          loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          minimum_spend_amount_money:
+            amount: 2000
+            currency: USD
+          name: Tuesday Happy Hour Promo
+          qualifying_item_variation_ids:
+          - CJ3RYL56ITAKMD4VRCM7XERS
+          - AT3RYLR3TUA9C34VRCB7X5RR
+          status: ACTIVE
+          trigger_limit:
+            interval: DAY
+            times: 1
+          updated_at: '2022-08-16T08:38:54Z'
+    LoyaltyProgramAccrualRuleItemVariationData:
+      type: object
+      description: Represents additional data for rules with the `ITEM_VARIATION` accrual type.
+      x-release-status: PUBLIC
+      required:
+      - item_variation_id
+      properties:
+        item_variation_id:
+          type: string
+          description: 'The ID of the `ITEM_VARIATION` [catalog object](entity:CatalogObject) that buyers can purchase to earn
+
+            points.'
+          minLength: 1
+    LoyaltyEventDeleteReward:
+      type: object
+      description: Provides metadata when the event `type` is `DELETE_REWARD`.
+      x-release-status: PUBLIC
+      required:
+      - loyalty_program_id
+      - points
+      properties:
+        loyalty_program_id:
+          type: string
+          description: The ID of the [loyalty program](entity:LoyaltyProgram).
+          minLength: 1
+          maxLength: 36
+          readOnly: true
+        reward_id:
+          type: string
+          description: 'The ID of the deleted [loyalty reward](entity:LoyaltyReward).
+
+            This field is returned only if the event source is `LOYALTY_API`.'
+          maxLength: 36
+          readOnly: true
+        points:
+          type: integer
+          description: The number of points returned to the loyalty account.
+          readOnly: true
+    SearchLoyaltyAccountsResponse:
+      type: object
+      description: A response that includes loyalty accounts that satisfy the search criteria.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        loyalty_accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyAccount'
+          description: "The loyalty accounts that met the search criteria,  \nin order of creation date."
+        cursor:
+          type: string
+          description: "The pagination cursor to use in a subsequent \nrequest. If empty, this is the final response.\nFor more information, \nsee [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        loyalty_accounts:
+        - balance: 10
+          created_at: '2020-05-08T21:44:32Z'
+          customer_id: Q8002FAM9V1EZ0ADB2T5609X6NET1H0
+          id: 79b807d2-d786-46a9-933b-918028d7a8c5
+          lifetime_points: 20
+          mapping:
+            created_at: '2020-05-08T21:44:32Z'
+            id: 66aaab3f-da99-49ed-8b19-b87f851c844f
+            phone_number: '+14155551234'
+          program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          updated_at: '2020-05-08T21:44:32Z'
+    LoyaltyPromotionIncentivePointsAdditionData:
+      type: object
+      description: Represents the metadata for a `POINTS_ADDITION` type of [loyalty promotion incentive](entity:LoyaltyPromotionIncentive).
+      x-release-status: PUBLIC
+      required:
+      - points_addition
+      properties:
+        points_addition:
+          type: integer
+          description: 'The number of additional points to earn each time the promotion is triggered. For example,
+
+            suppose a purchase qualifies for 5 points from the base loyalty program. If the purchase also
+
+            qualifies for a `POINTS_ADDITION` promotion incentive with a `points_addition` of 3, the buyer
+
+            earns a total of 8 points (5 program points + 3 promotion points = 8 points).'
+          minimum: 1
+    LoyaltyProgramExpirationPolicy:
+      type: object
+      description: Describes when the loyalty program expires.
+      x-release-status: PUBLIC
+      required:
+      - expiration_duration
+      properties:
+        expiration_duration:
+          type: string
+          description: "The number of months before points expire, in `P[n]M` RFC 3339 duration format. For example, a value of `P12M` represents a duration of 12 months. \nPoints are valid through the last day of the month in which they are scheduled to expire. For example, with a  `P12M` duration, points earned on July 6, 2020 expire on August 1, 2021."
+          minLength: 1
+    CatalogObjectReference:
+      type: object
+      description: 'A reference to a Catalog object at a specific version. In general this is
+
+        used as an entry point into a graph of catalog objects, where the objects exist
+
+        at a specific version.'
+      x-release-status: PUBLIC
+      properties:
+        object_id:
+          type: string
+          description: The ID of the referenced object.
+          nullable: true
+        catalog_version:
+          type: integer
+          description: The version of the object.
+          format: int64
+          nullable: true
+    CreateLoyaltyRewardRequest:
+      type: object
+      description: A request to create a loyalty reward.
+      x-release-status: PUBLIC
+      required:
+      - reward
+      - idempotency_key
+      properties:
+        reward:
+          $ref: '#/components/schemas/LoyaltyReward'
+          description: The reward to create.
+        idempotency_key:
+          type: string
+          description: "A unique string that identifies this `CreateLoyaltyReward` request. \nKeys can be any valid string, but must be unique for every request."
+          minLength: 1
+          maxLength: 128
+      example:
+        idempotency_key: 18c2e5ea-a620-4b1f-ad60-7b167285e451
+        reward:
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          order_id: RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY
+          reward_tier_id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    LoyaltyProgramStatus:
+      type: string
+      enum:
+      - INACTIVE
+      - ACTIVE
+      x-enum-elements:
+      - name: INACTIVE
+        description: "The loyalty program does not have an active subscription. \nLoyalty API requests fail."
+      - name: ACTIVE
+        description: The program is fully functional. The program has an active subscription.
+      description: Indicates whether the program is currently active.
+      x-release-status: PUBLIC
+    ListLoyaltyProgramsResponse:
+      type: object
+      description: A response that contains all loyalty programs.
+      x-release-status: DEPRECATED
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        programs:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyProgram'
+          description: A list of `LoyaltyProgram` for the merchant.
+      example:
+        programs:
+        - accrual_rules:
+          - accrual_type: SPEND
+            points: 1
+            spend_data:
+              amount_money:
+                amount: 100
+                currency: USD
+              excluded_category_ids:
+              - 7ZERJKO5PVYXCVUHV2JCZ2UG
+              - FQKAOJE5C4FIMF5A2URMLW6V
+              excluded_item_variation_ids:
+              - CBZXBUVVTYUBZGQO44RHMR6B
+              - EDILT24Z2NISEXDKGY6HP7XV
+              tax_mode: BEFORE_TAX
+          created_at: '2020-04-20T16:55:11Z'
+          id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          location_ids:
+          - P034NEENMD09F
+          reward_tiers:
+          - created_at: '2020-04-20T16:55:11Z'
+            definition:
+              discount_type: FIXED_PERCENTAGE
+              percentage_discount: '10'
+              scope: ORDER
+            id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+            name: 10% off entire sale
+            points: 10
+            pricing_rule_reference:
+              catalog_version: '1605486402527'
+              object_id: 74C4JSHESNLTB2A7ITO5HO6F
+          status: ACTIVE
+          terminology:
+            one: Point
+            other: Points
+          updated_at: '2020-05-01T02:00:02Z'
+    LoyaltyPromotionTriggerLimit:
+      type: object
+      description: 'Represents the number of times a buyer can earn points during a [loyalty promotion](entity:LoyaltyPromotion).
+
+        If this field is not set, buyers can trigger the promotion an unlimited number of times to earn points during
+
+        the time that the promotion is available.
+
+
+        A purchase that is disqualified from earning points because of this limit might qualify for another active promotion.'
+      x-release-status: PUBLIC
+      required:
+      - times
+      properties:
+        times:
+          type: integer
+          description: The maximum number of times a buyer can trigger the promotion during the specified `interval`.
+          minimum: 1
+          maximum: 30
+        interval:
+          $ref: '#/components/schemas/LoyaltyPromotionTriggerLimitInterval'
+          description: 'The time period the limit applies to.
+
+            See [LoyaltyPromotionTriggerLimitInterval](#type-loyaltypromotiontriggerlimitinterval) for possible values'
+          nullable: true
+    LoyaltyPromotionIncentive:
+      type: object
+      description: 'Represents how points for a [loyalty promotion](entity:LoyaltyPromotion) are calculated,
+
+        either by multiplying the points earned from the base program or by adding a specified number
+
+        of points to the points earned from the base program.'
+      x-release-status: PUBLIC
+      required:
+      - type
+      properties:
+        type:
+          $ref: '#/components/schemas/LoyaltyPromotionIncentiveType'
+          description: 'The type of points incentive.
+
+            See [LoyaltyPromotionIncentiveType](#type-loyaltypromotionincentivetype) for possible values'
+        points_multiplier_data:
+          $ref: '#/components/schemas/LoyaltyPromotionIncentivePointsMultiplierData'
+          description: Additional data for a `POINTS_MULTIPLIER` incentive type.
+          nullable: true
+        points_addition_data:
+          $ref: '#/components/schemas/LoyaltyPromotionIncentivePointsAdditionData'
+          description: Additional data for a `POINTS_ADDITION` incentive type.
+          nullable: true
+    LoyaltyProgramAccrualRuleVisitData:
+      type: object
+      description: Represents additional data for rules with the `VISIT` accrual type.
+      x-release-status: PUBLIC
+      required:
+      - tax_mode
+      properties:
+        minimum_amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The minimum purchase required during the visit to quality for points.
+          nullable: true
+        tax_mode:
+          $ref: '#/components/schemas/LoyaltyProgramAccrualRuleTaxMode'
+          description: "Indicates how taxes should be treated when calculating the purchase amount to determine whether the visit qualifies for points. \nThis setting applies only if `minimum_amount_money` is specified.\nSee [LoyaltyProgramAccrualRuleTaxMode](#type-loyaltyprogramaccrualruletaxmode) for possible values"
+    LoyaltyProgramAccrualRule:
+      type: object
+      description: Represents an accrual rule, which defines how buyers can earn points from the base [loyalty program](entity:LoyaltyProgram).
+      x-release-status: PUBLIC
+      required:
+      - accrual_type
+      properties:
+        accrual_type:
+          $ref: '#/components/schemas/LoyaltyProgramAccrualRuleType'
+          description: 'The type of the accrual rule that defines how buyers can earn points.
+
+            See [LoyaltyProgramAccrualRuleType](#type-loyaltyprogramaccrualruletype) for possible values'
+        points:
+          type: integer
+          description: "The number of points that \nbuyers earn based on the `accrual_type`."
+          minimum: 1
+          nullable: true
+        visit_data:
+          $ref: '#/components/schemas/LoyaltyProgramAccrualRuleVisitData'
+          description: Additional data for rules with the `VISIT` accrual type.
+          nullable: true
+        spend_data:
+          $ref: '#/components/schemas/LoyaltyProgramAccrualRuleSpendData'
+          description: Additional data for rules with the `SPEND` accrual type.
+          nullable: true
+        item_variation_data:
+          $ref: '#/components/schemas/LoyaltyProgramAccrualRuleItemVariationData'
+          description: Additional data for rules with the `ITEM_VARIATION` accrual type.
+          nullable: true
+        category_data:
+          $ref: '#/components/schemas/LoyaltyProgramAccrualRuleCategoryData'
+          description: Additional data for rules with the `CATEGORY` accrual type.
+          nullable: true
+    SearchLoyaltyRewardsRequest:
+      type: object
+      description: A request to search for loyalty rewards.
+      x-release-status: PUBLIC
+      properties:
+        query:
+          $ref: '#/components/schemas/SearchLoyaltyRewardsRequestLoyaltyRewardQuery'
+          description: "The search criteria for the request. \nIf empty, the endpoint retrieves all loyalty rewards in the loyalty program."
+        limit:
+          type: integer
+          description: The maximum number of results to return in the response. The default value is 30.
+          minimum: 1
+          maximum: 30
+        cursor:
+          type: string
+          description: "A pagination cursor returned by a previous call to \nthis endpoint. Provide this to retrieve the next set of \nresults for the original query.\nFor more information, \nsee [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        limit: 10
+        query:
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+    LoyaltyEventQuery:
+      type: object
+      description: Represents a query used to search for loyalty events.
+      x-release-status: PUBLIC
+      properties:
+        filter:
+          $ref: '#/components/schemas/LoyaltyEventFilter'
+          description: The query filter criteria.
+          nullable: true
+    LoyaltyPromotionIncentiveType:
+      type: string
+      enum:
+      - POINTS_MULTIPLIER
+      - POINTS_ADDITION
+      x-enum-elements:
+      - name: POINTS_MULTIPLIER
+        description: 'Multiply the number of points earned from the base loyalty program.
+
+          For example, "Earn double points."'
+      - name: POINTS_ADDITION
+        description: 'Add a specified number of points to those earned from the base loyalty program.
+
+          For example, "Earn 10 additional points."'
+      description: 'Indicates the type of points incentive for a [loyalty promotion](entity:LoyaltyPromotion),
+
+        which is used to determine how buyers can earn points from the promotion.'
+      x-release-status: PUBLIC
+    LoyaltyProgramRewardDefinitionType:
+      type: string
+      enum:
+      - FIXED_AMOUNT
+      - FIXED_PERCENTAGE
+      x-enum-elements:
+      - name: FIXED_AMOUNT
+        description: The fixed amount discounted.
+      - name: FIXED_PERCENTAGE
+        description: The fixed percentage discounted.
+      description: 'The type of discount the reward tier offers. DEPRECATED at version 2020-12-16. Discount details
+
+        are now defined using a catalog pricing rule and other catalog objects. For more information, see
+
+        [Getting discount details for a reward tier](https://developer.squareup.com/docs/loyalty-api/loyalty-rewards#get-discount-details).'
+      x-release-status: DEPRECATED
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    ListLoyaltyPromotionsResponse:
+      type: object
+      description: 'Represents a [ListLoyaltyPromotions](api-endpoint:Loyalty-ListLoyaltyPromotions) response.
+
+        One of `loyalty_promotions`, an empty object, or `errors` is present in the response.
+
+        If additional results are available, the `cursor` field is also present along with `loyalty_promotions`.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        loyalty_promotions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyPromotion'
+          description: The retrieved loyalty promotions.
+        cursor:
+          type: string
+          description: 'The cursor to use in your next call to this endpoint to retrieve the next page of results
+
+            for your original request. This field is present only if the request succeeded and additional
+
+            results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+      example:
+        loyalty_promotions:
+        - available_time:
+            start_date: '2022-08-16'
+            time_periods:
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220816T160000
+
+              DURATION:PT2H
+
+              RRULE:FREQ=WEEKLY;BYDAY=TU
+
+              END:VEVENT'
+          created_at: '2022-08-16T08:38:54Z'
+          id: loypromo_f0f9b849-725e-378d-b810-511237e07b67
+          incentive:
+            points_multiplier_data:
+              multiplier: '3.000'
+              points_multiplier: 3
+            type: POINTS_MULTIPLIER
+          loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          name: Tuesday Happy Hour Promo
+          qualifying_item_variation_ids:
+          - CJ3RYL56ITAKMD4VRCM7XERS
+          - AT3RYLR3TUA9C34VRCB7X5RR
+          status: ACTIVE
+          trigger_limit:
+            interval: DAY
+            times: 1
+          updated_at: '2022-08-16T08:38:54Z'
+        - available_time:
+            end_date: '2022-08-01'
+            start_date: '2022-07-01'
+            time_periods:
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220704T090000
+
+              DURATION:PT8H
+
+              RRULE:FREQ=WEEKLY;UNTIL=20220801T000000;BYDAY=MO
+
+              END:VEVENT'
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220705T090000
+
+              DURATION:PT8H
+
+              RRULE:FREQ=WEEKLY;UNTIL=20220801T000000;BYDAY=TU
+
+              END:VEVENT'
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220706T090000
+
+              DURATION:PT8H
+
+              RRULE:FREQ=WEEKLY;UNTIL=20220801T000000;BYDAY=WE
+
+              END:VEVENT'
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220707T090000
+
+              DURATION:PT8H
+
+              RRULE:FREQ=WEEKLY;UNTIL=20220801T000000;BYDAY=TH
+
+              END:VEVENT'
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220701T090000
+
+              DURATION:PT8H
+
+              RRULE:FREQ=WEEKLY;UNTIL=20220801T000000;BYDAY=FR
+
+              END:VEVENT'
+          created_at: '2022-06-27T15:37:38Z'
+          id: loypromo_e696f057-2286-35ff-8108-132241328106
+          incentive:
+            points_multiplier_data:
+              multiplier: '2.000'
+              points_multiplier: 2
+            type: POINTS_MULTIPLIER
+          loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          minimum_spend_amount_money:
+            amount: 2000
+            currency: USD
+          name: July Special
+          qualifying_category_ids:
+          - XTQPYLR3IIU9C44VRCB3XD12
+          status: ENDED
+          trigger_limit:
+            interval: ALL_TIME
+            times: 5
+          updated_at: '2022-06-27T15:37:38Z'
+    AccumulateLoyaltyPointsResponse:
+      type: object
+      description: Represents an [AccumulateLoyaltyPoints](api-endpoint:Loyalty-AccumulateLoyaltyPoints) response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        event:
+          $ref: '#/components/schemas/LoyaltyEvent'
+          description: The resulting loyalty event. Starting in Square version 2022-08-17, this field is no longer returned.
+          x-release-status: DEPRECATED
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyEvent'
+          description: 'The resulting loyalty events. If the purchase qualifies for points, the `ACCUMULATE_POINTS` event
+
+            is always included. When using the Orders API, the `ACCUMULATE_PROMOTION_POINTS` event is included
+
+            if the purchase also qualifies for a loyalty promotion.'
+      example:
+        events:
+        - accumulate_points:
+            loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+            order_id: RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY
+            points: 6
+          created_at: '2020-05-08T21:41:12Z'
+          id: ee46aafd-1af6-3695-a385-276e2ef0be26
+          location_id: P034NEENMD09F
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          source: LOYALTY_API
+          type: ACCUMULATE_POINTS
+    LoyaltyProgramAccrualRuleSpendData:
+      type: object
+      description: Represents additional data for rules with the `SPEND` accrual type.
+      x-release-status: PUBLIC
+      required:
+      - amount_money
+      - tax_mode
+      properties:
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: "The amount that buyers must spend to earn points. \nFor example, given an \"Earn 1 point for every $10 spent\" accrual rule, a buyer who spends $105 earns 10 points."
+        excluded_category_ids:
+          type: array
+          items:
+            type: string
+          description: 'The IDs of any `CATEGORY` catalog objects that are excluded from points accrual.
+
+
+            You can use the [BatchRetrieveCatalogObjects](api-endpoint:Catalog-BatchRetrieveCatalogObjects)
+
+            endpoint to retrieve information about the excluded categories.'
+          nullable: true
+        excluded_item_variation_ids:
+          type: array
+          items:
+            type: string
+          description: 'The IDs of any `ITEM_VARIATION` catalog objects that are excluded from points accrual.
+
+
+            You can use the [BatchRetrieveCatalogObjects](api-endpoint:Catalog-BatchRetrieveCatalogObjects)
+
+            endpoint to retrieve information about the excluded item variations.'
+          nullable: true
+        tax_mode:
+          $ref: '#/components/schemas/LoyaltyProgramAccrualRuleTaxMode'
+          description: 'Indicates how taxes should be treated when calculating the purchase amount used for points accrual.
+
+            See [LoyaltyProgramAccrualRuleTaxMode](#type-loyaltyprogramaccrualruletaxmode) for possible values'
+    CreateLoyaltyRewardResponse:
+      type: object
+      description: A response that includes the loyalty reward created.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        reward:
+          $ref: '#/components/schemas/LoyaltyReward'
+          description: The loyalty reward created.
+      example:
+        reward:
+          created_at: '2020-05-01T21:49:54Z'
+          id: a8f43ebe-2ad6-3001-bdd5-7d7c2da08943
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          order_id: RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY
+          points: 10
+          reward_tier_id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+          status: ISSUED
+          updated_at: '2020-05-01T21:49:54Z'
+    LoyaltyEventAccumulatePromotionPoints:
+      type: object
+      description: Provides metadata when the event `type` is `ACCUMULATE_PROMOTION_POINTS`.
+      x-release-status: PUBLIC
+      required:
+      - points
+      - order_id
+      properties:
+        loyalty_program_id:
+          type: string
+          description: The Square-assigned ID of the [loyalty program](entity:LoyaltyProgram).
+          maxLength: 36
+          readOnly: true
+        loyalty_promotion_id:
+          type: string
+          description: The Square-assigned ID of the [loyalty promotion](entity:LoyaltyPromotion).
+          minLength: 1
+          maxLength: 255
+          readOnly: true
+        points:
+          type: integer
+          description: The number of points earned by the event.
+          readOnly: true
+        order_id:
+          type: string
+          description: 'The ID of the [order](entity:Order) for which the buyer earned the promotion points.
+
+            Only applications that use the Orders API to process orders can trigger this event.'
+          minLength: 1
+          readOnly: true
+    LoyaltyPromotionStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - ENDED
+      - CANCELED
+      - SCHEDULED
+      x-enum-elements:
+      - name: ACTIVE
+        description: 'The loyalty promotion is currently active. Buyers can earn points for purchases
+
+          that meet the promotion conditions, such as the promotion''s `available_time`.'
+      - name: ENDED
+        description: 'The loyalty promotion has ended because the specified `end_date` was reached.
+
+          `ENDED` is a terminal status.'
+      - name: CANCELED
+        description: The loyalty promotion was canceled. `CANCELED` is a terminal status.
+      - name: SCHEDULED
+        description: 'The loyalty promotion is scheduled to start in the future. Square changes the
+
+          promotion status to `ACTIVE` when the `start_date` is reached.'
+      description: Indicates the status of a [loyalty promotion](entity:LoyaltyPromotion).
+      x-release-status: PUBLIC
+    CreateLoyaltyPromotionRequest:
+      type: object
+      description: Represents a [CreateLoyaltyPromotion](api-endpoint:Loyalty-CreateLoyaltyPromotion) request.
+      x-release-status: PUBLIC
+      x-params-example: ?program_id=d619f755-2d17-41f3-990d-c04ecedd64dd
+      required:
+      - loyalty_promotion
+      - idempotency_key
+      properties:
+        loyalty_promotion:
+          $ref: '#/components/schemas/LoyaltyPromotion'
+          description: The loyalty promotion to create.
+        idempotency_key:
+          type: string
+          description: 'A unique identifier for this request, which is used to ensure idempotency. For more information,
+
+            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          minLength: 1
+          maxLength: 128
+      example:
+        idempotency_key: ec78c477-b1c3-4899-a209-a4e71337c996
+        loyalty_promotion:
+          available_time:
+            time_periods:
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220816T160000
+
+              DURATION:PT2H
+
+              RRULE:FREQ=WEEKLY;BYDAY=TU
+
+              END:VEVENT'
+          incentive:
+            points_multiplier_data:
+              multiplier: '3.0'
+            type: POINTS_MULTIPLIER
+          minimum_spend_amount_money:
+            amount: 2000
+            currency: USD
+          name: Tuesday Happy Hour Promo
+          qualifying_category_ids:
+          - XTQPYLR3IIU9C44VRCB3XD12
+          trigger_limit:
+            interval: DAY
+            times: 1
+    LoyaltyProgramTerminology:
+      type: object
+      description: Represents the naming used for loyalty points.
+      x-release-status: PUBLIC
+      required:
+      - one
+      - other
+      properties:
+        one:
+          type: string
+          description: A singular unit for a point (for example, 1 point is called 1 star).
+          minLength: 1
+        other:
+          type: string
+          description: A plural unit for point (for example, 10 points is called 10 stars).
+          minLength: 1
+    RedeemLoyaltyRewardResponse:
+      type: object
+      description: A response that includes the `LoyaltyEvent` published for redeeming the reward.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        event:
+          $ref: '#/components/schemas/LoyaltyEvent'
+          description: The `LoyaltyEvent` for redeeming the reward.
+      example:
+        event:
+          created_at: '2020-05-08T21:56:00Z'
+          id: 67377a6e-dbdc-369d-aa16-2e7ed422e71f
+          location_id: P034NEENMD09F
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          redeem_reward:
+            loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+            reward_id: 9f18ac21-233a-31c3-be77-b45840f5a810
+          source: LOYALTY_API
+          type: REDEEM_REWARD
+    AccumulateLoyaltyPointsRequest:
+      type: object
+      description: Represents an [AccumulateLoyaltyPoints](api-endpoint:Loyalty-AccumulateLoyaltyPoints) request.
+      x-release-status: PUBLIC
+      x-params-example: ?account_id=5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+      required:
+      - accumulate_points
+      - idempotency_key
+      - location_id
+      properties:
+        accumulate_points:
+          $ref: '#/components/schemas/LoyaltyEventAccumulatePoints'
+          description: "The points to add to the account. \nIf you are using the Orders API to manage orders, specify the order ID.\nOtherwise, specify the points to add."
+        idempotency_key:
+          type: string
+          description: "A unique string that identifies the `AccumulateLoyaltyPoints` request. \nKeys can be any valid string but must be unique for every request."
+          minLength: 1
+          maxLength: 128
+        location_id:
+          type: string
+          description: The [location](entity:Location) where the purchase was made.
+      example:
+        accumulate_points:
+          order_id: RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY
+        idempotency_key: 58b90739-c3e8-4b11-85f7-e636d48d72cb
+        location_id: P034NEENMD09F
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    LoyaltyEventLocationFilter:
+      type: object
+      description: Filter events by location.
+      x-release-status: PUBLIC
+      required:
+      - location_ids
+      properties:
+        location_ids:
+          type: array
+          items:
+            type: string
+          description: "The [location](entity:Location) IDs for loyalty events to query.\nIf multiple values are specified, the endpoint uses \na logical OR to combine them."
+    LoyaltyEventTypeFilter:
+      type: object
+      description: Filter events by event type.
+      x-release-status: PUBLIC
+      required:
+      - types
+      properties:
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyEventType'
+          description: "The loyalty event types used to filter the result.\nIf multiple values are specified, the endpoint uses a \nlogical OR to combine them.\nSee [LoyaltyEventType](#type-loyaltyeventtype) for possible values"
+    LoyaltyProgramAccrualRuleTaxMode:
+      type: string
+      enum:
+      - BEFORE_TAX
+      - AFTER_TAX
+      x-enum-elements:
+      - name: BEFORE_TAX
+        description: Exclude taxes from the purchase amount used for loyalty points accrual.
+      - name: AFTER_TAX
+        description: Include taxes in the purchase amount used for loyalty points accrual.
+      description: "Indicates how taxes should be treated when calculating the purchase amount used for loyalty points accrual. \nThis setting applies only to `SPEND` accrual rules or `VISIT` accrual rules that have a minimum spend requirement."
+      x-release-status: PUBLIC
+    CancelLoyaltyPromotionResponse:
+      type: object
+      description: 'Represents a [CancelLoyaltyPromotion](api-endpoint:Loyalty-CancelLoyaltyPromotion) response.
+
+        Either `loyalty_promotion` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        loyalty_promotion:
+          $ref: '#/components/schemas/LoyaltyPromotion'
+          description: The canceled loyalty promotion.
+      example:
+        loyalty_promotion:
+          available_time:
+            start_date: '2022-08-16'
+            time_periods:
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220816T160000
+
+              DURATION:PT2H
+
+              RRULE:FREQ=WEEKLY;BYDAY=TU
+
+              END:VEVENT'
+          canceled_at: '2022-08-17T12:42:49Z'
+          created_at: '2022-08-16T08:38:54Z'
+          id: loypromo_f0f9b849-725e-378d-b810-511237e07b67
+          incentive:
+            points_multiplier_data:
+              multiplier: '3.000'
+              points_multiplier: 3
+            type: POINTS_MULTIPLIER
+          loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          minimum_spend_amount_money:
+            amount: 2000
+            currency: USD
+          name: Tuesday Happy Hour Promo
+          qualifying_category_ids:
+          - XTQPYLR3IIU9C44VRCB3XD12
+          status: CANCELED
+          trigger_limit:
+            interval: DAY
+            times: 1
+          updated_at: '2022-08-17T12:42:49Z'
+    LoyaltyProgramAccrualRuleType:
+      type: string
+      enum:
+      - VISIT
+      - SPEND
+      - ITEM_VARIATION
+      - CATEGORY
+      x-enum-elements:
+      - name: VISIT
+        description: "A visit-based accrual rule. A buyer earns points for each visit. \nYou can specify the minimum purchase required."
+      - name: SPEND
+        description: "A spend-based accrual rule. A buyer earns points based on the amount \nspent."
+      - name: ITEM_VARIATION
+        description: "An accrual rule based on an item variation. For example, accrue \npoints for purchasing a coffee."
+      - name: CATEGORY
+        description: "An accrual rule based on an item category. For example, accrue points \nfor purchasing any item in the \"hot drink\" category: coffee, tea, or hot cocoa."
+      description: The type of the accrual rule that defines how buyers can earn points.
+      x-release-status: PUBLIC
+    LoyaltyPromotionTriggerLimitInterval:
+      type: string
+      enum:
+      - ALL_TIME
+      - DAY
+      x-enum-elements:
+      - name: ALL_TIME
+        description: 'The limit applies to the entire time that the promotion is active. For example, if `times`
+
+          is set to 1 and `time_period` is set to `ALL_TIME`, a buyer can earn promotion points a maximum
+
+          of one time during the promotion.'
+      - name: DAY
+        description: 'The limit applies per day, according to the `available_time` schedule specified for the promotion.
+
+          For example, if the `times` field of the trigger limit is set to 1, a buyer can trigger the promotion
+
+          a maximum of once per day.'
+      description: 'Indicates the time period that the [trigger limit](entity:LoyaltyPromotionTriggerLimit) applies to,
+
+        which is used to determine the number of times a buyer can earn points for a [loyalty promotion](entity:LoyaltyPromotion).'
+      x-release-status: PUBLIC
+    LoyaltyReward:
+      type: object
+      description: "Represents a contract to redeem loyalty points for a [reward tier](entity:LoyaltyProgramRewardTier) discount. Loyalty rewards can be in an ISSUED, REDEEMED, or DELETED state. \nFor more information, see [Manage loyalty rewards](https://developer.squareup.com/docs/loyalty-api/loyalty-rewards)."
+      x-release-status: PUBLIC
+      required:
+      - loyalty_account_id
+      - reward_tier_id
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the loyalty reward.
+          maxLength: 36
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/LoyaltyRewardStatus'
+          description: 'The status of a loyalty reward.
+
+            See [LoyaltyRewardStatus](#type-loyaltyrewardstatus) for possible values'
+          readOnly: true
+        loyalty_account_id:
+          type: string
+          description: The Square-assigned ID of the [loyalty account](entity:LoyaltyAccount) to which the reward belongs.
+          minLength: 1
+          maxLength: 36
+        reward_tier_id:
+          type: string
+          description: The Square-assigned ID of the [reward tier](entity:LoyaltyProgramRewardTier) used to create the reward.
+          minLength: 1
+          maxLength: 36
+        points:
+          type: integer
+          description: The number of loyalty points used for the reward.
+          minimum: 1
+          readOnly: true
+        order_id:
+          type: string
+          description: The Square-assigned ID of the [order](entity:Order) to which the reward is attached.
+          nullable: true
+        created_at:
+          type: string
+          description: The timestamp when the reward was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the reward was last updated, in RFC 3339 format.
+          readOnly: true
+        redeemed_at:
+          type: string
+          description: The timestamp when the reward was redeemed, in RFC 3339 format.
+          readOnly: true
+    LoyaltyEventType:
+      type: string
+      enum:
+      - ACCUMULATE_POINTS
+      - CREATE_REWARD
+      - REDEEM_REWARD
+      - DELETE_REWARD
+      - ADJUST_POINTS
+      - EXPIRE_POINTS
+      - OTHER
+      - ACCUMULATE_PROMOTION_POINTS
+      x-enum-elements:
+      - name: ACCUMULATE_POINTS
+        description: 'Points are added to a loyalty account for a purchase that
+
+          qualified for points based on an [accrual rule](entity:LoyaltyProgramAccrualRule).'
+      - name: CREATE_REWARD
+        description: A [loyalty reward](entity:LoyaltyReward) is created.
+      - name: REDEEM_REWARD
+        description: A loyalty reward is redeemed.
+      - name: DELETE_REWARD
+        description: A loyalty reward is deleted.
+      - name: ADJUST_POINTS
+        description: Loyalty points are manually adjusted.
+      - name: EXPIRE_POINTS
+        description: "Loyalty points are expired according to the \nexpiration policy of the loyalty program."
+      - name: OTHER
+        description: Some other loyalty event occurred.
+      - name: ACCUMULATE_PROMOTION_POINTS
+        description: ' Points are added to a loyalty account for a purchase that
+
+          qualified for a [loyalty promotion](entity:LoyaltyPromotion).'
+      description: The type of the loyalty event.
+      x-release-status: PUBLIC
+    TimeRange:
+      type: object
+      description: 'Represents a generic time range. The start and end values are
+
+        represented in RFC 3339 format. Time ranges are customized to be
+
+        inclusive or exclusive based on the needs of a particular endpoint.
+
+        Refer to the relevant endpoint-specific documentation to determine
+
+        how time ranges are handled.'
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type: string
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            starts.'
+          nullable: true
+        end_at:
+          type: string
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            ends.'
+          nullable: true
+    LoyaltyEventSource:
+      type: string
+      enum:
+      - SQUARE
+      - LOYALTY_API
+      x-enum-elements:
+      - name: SQUARE
+        description: The event is generated by the Square Point of Sale (POS).
+      - name: LOYALTY_API
+        description: The event is generated by something other than the Square Point of Sale that used the Loyalty API.
+      description: Defines whether the event was generated by the Square Point of Sale.
+      x-release-status: PUBLIC
+    SearchLoyaltyRewardsResponse:
+      type: object
+      description: A response that includes the loyalty rewards satisfying the search criteria.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        rewards:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyReward'
+          description: 'The loyalty rewards that satisfy the search criteria.
+
+            These are returned in descending order by `updated_at`.'
+        cursor:
+          type: string
+          description: "The pagination cursor to be used in a subsequent \nrequest. If empty, this is the final response."
+      example:
+        rewards:
+        - created_at: '2020-05-08T22:00:44Z'
+          id: d03f79f4-815f-3500-b851-cc1e68a457f9
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          order_id: PyATxhYLfsMqpVkcKJITPydgEYfZY
+          points: 10
+          redeemed_at: '2020-05-08T22:01:17Z'
+          reward_tier_id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+          status: REDEEMED
+          updated_at: '2020-05-08T22:01:17Z'
+        - created_at: '2020-05-08T21:55:42Z'
+          id: 9f18ac21-233a-31c3-be77-b45840f5a810
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          points: 10
+          redeemed_at: '2020-05-08T21:56:00Z'
+          reward_tier_id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+          status: REDEEMED
+          updated_at: '2020-05-08T21:56:00Z'
+        - created_at: '2020-05-01T21:49:54Z'
+          id: a8f43ebe-2ad6-3001-bdd5-7d7c2da08943
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          order_id: 5NB69ZNh3FbsOs1ox43bh1xrli6YY
+          points: 10
+          reward_tier_id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+          status: DELETED
+          updated_at: '2020-05-08T21:55:10Z'
+        - created_at: '2020-05-01T20:20:37Z'
+          id: a051254c-f840-3b45-8cf1-50bcd38ff92a
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          order_id: LQQ16znvi2VIUKPVhUfJefzr1eEZY
+          points: 10
+          reward_tier_id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+          status: ISSUED
+          updated_at: '2020-05-01T20:20:40Z'
+    LoyaltyEventExpirePoints:
+      type: object
+      description: Provides metadata when the event `type` is `EXPIRE_POINTS`.
+      x-release-status: PUBLIC
+      required:
+      - loyalty_program_id
+      - points
+      properties:
+        loyalty_program_id:
+          type: string
+          description: The Square-assigned ID of the [loyalty program](entity:LoyaltyProgram).
+          minLength: 1
+          maxLength: 36
+          readOnly: true
+        points:
+          type: integer
+          description: The number of points expired.
+    LoyaltyPromotionAvailableTimeData:
+      type: object
+      description: 'Represents scheduling information that determines when purchases can qualify to earn points
+
+        from a [loyalty promotion](entity:LoyaltyPromotion).'
+      x-release-status: PUBLIC
+      required:
+      - time_periods
+      properties:
+        start_date:
+          type: string
+          description: 'The date that the promotion starts, in `YYYY-MM-DD` format. Square populates this field
+
+            based on the provided `time_periods`.'
+          readOnly: true
+        end_date:
+          type: string
+          description: 'The date that the promotion ends, in `YYYY-MM-DD` format. Square populates this field
+
+            based on the provided `time_periods`. If an end date is not specified, an `ACTIVE` promotion
+
+            remains available until it is canceled.'
+          readOnly: true
+        time_periods:
+          type: array
+          items:
+            type: string
+          description: "A list of [iCalendar (RFC 5545) events](https://tools.ietf.org/html/rfc5545#section-3.6.1)\n(`VEVENT`). Each event represents an available time period per day or days of the week. \nA day can have a maximum of one available time period.\n\nOnly `DTSTART`, `DURATION`, and `RRULE` are supported. `DTSTART` and `DURATION` are required and\ntimestamps must be in local (unzoned) time format. Include `RRULE` to specify recurring promotions,\nan end date (using the `UNTIL` keyword), or both. For more information, see\n[Available time](https://developer.squareup.com/docs/loyalty-api/loyalty-promotions#available-time).\n\nNote that `BEGIN:VEVENT` and `END:VEVENT` are optional in a `CreateLoyaltyPromotion` request\nbut are always included in the response."
+    LoyaltyEventOther:
+      type: object
+      description: Provides metadata when the event `type` is `OTHER`.
+      x-release-status: PUBLIC
+      required:
+      - loyalty_program_id
+      - points
+      properties:
+        loyalty_program_id:
+          type: string
+          description: The Square-assigned ID of the [loyalty program](entity:LoyaltyProgram).
+          minLength: 1
+          maxLength: 36
+          readOnly: true
+        points:
+          type: integer
+          description: The number of points added or removed.
+    LoyaltyProgramAccrualRuleCategoryData:
+      type: object
+      description: Represents additional data for rules with the `CATEGORY` accrual type.
+      x-release-status: PUBLIC
+      required:
+      - category_id
+      properties:
+        category_id:
+          type: string
+          description: 'The ID of the `CATEGORY` [catalog object](entity:CatalogObject) that buyers can purchase to earn
+
+            points.'
+          minLength: 1
+    LoyaltyEventCreateReward:
+      type: object
+      description: Provides metadata when the event `type` is `CREATE_REWARD`.
+      x-release-status: PUBLIC
+      required:
+      - loyalty_program_id
+      - points
+      properties:
+        loyalty_program_id:
+          type: string
+          description: The ID of the [loyalty program](entity:LoyaltyProgram).
+          minLength: 1
+          maxLength: 36
+          readOnly: true
+        reward_id:
+          type: string
+          description: 'The Square-assigned ID of the created [loyalty reward](entity:LoyaltyReward).
+
+            This field is returned only if the event source is `LOYALTY_API`.'
+          maxLength: 36
+          readOnly: true
+        points:
+          type: integer
+          description: The loyalty points used to create the reward.
+          readOnly: true
+    LoyaltyAccountMapping:
+      type: object
+      description: "Represents the mapping that associates a loyalty account with a buyer. \n\nCurrently, a loyalty account can only be mapped to a buyer by phone number. For more information, see \n[Loyalty Overview](https://developer.squareup.com/docs/loyalty/overview)."
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the mapping.
+          maxLength: 36
+          readOnly: true
+        created_at:
+          type: string
+          description: The timestamp when the mapping was created, in RFC 3339 format.
+          readOnly: true
+        phone_number:
+          type: string
+          description: The phone number of the buyer, in E.164 format. For example, "+14155551111".
+          nullable: true
+    SearchLoyaltyEventsRequest:
+      type: object
+      description: A request to search for loyalty events.
+      x-release-status: PUBLIC
+      properties:
+        query:
+          $ref: '#/components/schemas/LoyaltyEventQuery'
+          description: "A set of one or more predefined query filters to apply when \nsearching for loyalty events. The endpoint performs a logical AND to \nevaluate multiple filters and performs a logical OR on arrays  \nthat specifies multiple field values."
+        limit:
+          type: integer
+          description: "The maximum number of results to include in the response. \nThe last page might contain fewer events. \nThe default is 30 events."
+          minimum: 1
+          maximum: 30
+        cursor:
+          type: string
+          description: 'A pagination cursor returned by a previous call to this endpoint.
+
+            Provide this to retrieve the next set of results for your original query.
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+      example:
+        limit: 30
+        query:
+          filter:
+            order_filter:
+              order_id: PyATxhYLfsMqpVkcKJITPydgEYfZY
+    LoyaltyEventRedeemReward:
+      type: object
+      description: Provides metadata when the event `type` is `REDEEM_REWARD`.
+      x-release-status: PUBLIC
+      required:
+      - loyalty_program_id
+      properties:
+        loyalty_program_id:
+          type: string
+          description: The ID of the [loyalty program](entity:LoyaltyProgram).
+          minLength: 1
+          maxLength: 36
+          readOnly: true
+        reward_id:
+          type: string
+          description: 'The ID of the redeemed [loyalty reward](entity:LoyaltyReward).
+
+            This field is returned only if the event source is `LOYALTY_API`.'
+          maxLength: 36
+          readOnly: true
+        order_id:
+          type: string
+          description: 'The ID of the [order](entity:Order) that redeemed the reward.
+
+            This field is returned only if the Orders API is used to process orders.'
+          readOnly: true
+    LoyaltyProgram:
+      type: object
+      description: "Represents a Square loyalty program. Loyalty programs define how buyers can earn points and redeem points for rewards. \nSquare sellers can have only one loyalty program, which is created and managed from the Seller Dashboard. \nFor more information, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview)."
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: "The Square-assigned ID of the loyalty program. Updates to \nthe loyalty program do not modify the identifier."
+          maxLength: 36
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/LoyaltyProgramStatus'
+          description: 'Whether the program is currently active.
+
+            See [LoyaltyProgramStatus](#type-loyaltyprogramstatus) for possible values'
+          nullable: true
+        reward_tiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyProgramRewardTier'
+          description: The list of rewards for buyers, sorted by ascending points.
+          nullable: true
+        expiration_policy:
+          $ref: '#/components/schemas/LoyaltyProgramExpirationPolicy'
+          description: If present, details for how points expire.
+          nullable: true
+        terminology:
+          $ref: '#/components/schemas/LoyaltyProgramTerminology'
+          description: A cosmetic name for the “points” currency.
+          nullable: true
+        location_ids:
+          type: array
+          items:
+            type: string
+          description: The [locations](entity:Location) at which the program is active.
+          nullable: true
+        created_at:
+          type: string
+          description: The timestamp when the program was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the reward was last updated, in RFC 3339 format.
+          readOnly: true
+        accrual_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyProgramAccrualRule'
+          description: 'Defines how buyers can earn loyalty points from the base loyalty program.
+
+            To check for associated [loyalty promotions](entity:LoyaltyPromotion) that enable
+
+            buyers to earn extra points, call [ListLoyaltyPromotions](api-endpoint:Loyalty-ListLoyaltyPromotions).'
+          nullable: true
+    CalculateLoyaltyPointsResponse:
+      type: object
+      description: Represents a [CalculateLoyaltyPoints](api-endpoint:Loyalty-CalculateLoyaltyPoints) response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        points:
+          type: integer
+          description: The number of points that the buyer can earn from the base loyalty program.
+        promotion_points:
+          type: integer
+          description: 'The number of points that the buyer can earn from a loyalty promotion. To be eligible
+
+            to earn promotion points, the purchase must first qualify for program points. When `order_id`
+
+            is not provided in the request, this value is always 0.'
+      example:
+        points: 6
+        promotion_points: 12
+    LoyaltyProgramRewardDefinitionScope:
+      type: string
+      enum:
+      - ORDER
+      - ITEM_VARIATION
+      - CATEGORY
+      x-enum-elements:
+      - name: ORDER
+        description: The discount applies to the entire order.
+      - name: ITEM_VARIATION
+        description: The discount applies only to specific item variations.
+      - name: CATEGORY
+        description: The discount applies only to items in the given categories.
+      description: 'Indicates the scope of the reward tier. DEPRECATED at version 2020-12-16. Discount details
+
+        are now defined using a catalog pricing rule and other catalog objects. For more information, see
+
+        [Getting discount details for a reward tier](https://developer.squareup.com/docs/loyalty-api/loyalty-rewards#get-discount-details).'
+      x-release-status: DEPRECATED
+    LoyaltyEventDateTimeFilter:
+      type: object
+      description: Filter events by date time range.
+      x-release-status: PUBLIC
+      required:
+      - created_at
+      properties:
+        created_at:
+          $ref: '#/components/schemas/TimeRange'
+          description: The `created_at` date time range used to filter the result.
+    SearchLoyaltyAccountsRequest:
+      type: object
+      description: A request to search for loyalty accounts.
+      x-release-status: PUBLIC
+      properties:
+        query:
+          $ref: '#/components/schemas/SearchLoyaltyAccountsRequestLoyaltyAccountQuery'
+          description: The search criteria for the request.
+        limit:
+          type: integer
+          description: The maximum number of results to include in the response. The default value is 30.
+          minimum: 1
+          maximum: 200
+        cursor:
+          type: string
+          description: "A pagination cursor returned by a previous call to \nthis endpoint. Provide this to retrieve the next set of \nresults for the original query.\n\nFor more information, \nsee [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        limit: 10
+        query:
+          mappings:
+          - phone_number: '+14155551234'
+    LoyaltyProgramRewardDefinition:
+      type: object
+      description: 'Provides details about the reward tier discount. DEPRECATED at version 2020-12-16. Discount details
+
+        are now defined using a catalog pricing rule and other catalog objects. For more information, see
+
+        [Getting discount details for a reward tier](https://developer.squareup.com/docs/loyalty-api/loyalty-rewards#get-discount-details).'
+      x-release-status: DEPRECATED
+      required:
+      - scope
+      - discount_type
+      properties:
+        scope:
+          $ref: '#/components/schemas/LoyaltyProgramRewardDefinitionScope'
+          description: 'Indicates the scope of the reward tier. DEPRECATED at version 2020-12-16. You can find this information in the
+
+            `product_set_data` field of the `PRODUCT_SET` catalog object referenced by the pricing rule. For `ORDER` scopes,
+
+            `all_products` is true. For `ITEM_VARIATION` or `CATEGORY` scopes, `product_ids_any` is a list of
+
+            catalog object IDs of the given type.
+
+            See [LoyaltyProgramRewardDefinitionScope](#type-loyaltyprogramrewarddefinitionscope) for possible values'
+          readOnly: true
+        discount_type:
+          $ref: '#/components/schemas/LoyaltyProgramRewardDefinitionType'
+          description: 'The type of discount the reward tier offers. DEPRECATED at version 2020-12-16. You can find this information
+
+            in the `discount_data.discount_type` field of the `DISCOUNT` catalog object referenced by the pricing rule.
+
+            See [LoyaltyProgramRewardDefinitionType](#type-loyaltyprogramrewarddefinitiontype) for possible values'
+          readOnly: true
+        percentage_discount:
+          type: string
+          description: 'The fixed percentage of the discount. Present if `discount_type` is `FIXED_PERCENTAGE`.
+
+            For example, a 7.25% off discount will be represented as "7.25". DEPRECATED at version 2020-12-16. You can find this
+
+            information in the `discount_data.percentage` field of the `DISCOUNT` catalog object referenced by the pricing rule.'
+          readOnly: true
+        catalog_object_ids:
+          type: array
+          items:
+            type: string
+          description: 'The list of catalog objects to which this reward can be applied. They are either all item-variation ids or category ids, depending on the `type` field.
+
+            DEPRECATED at version 2020-12-16. You can find this information in the `product_set_data.product_ids_any` field
+
+            of the `PRODUCT_SET` catalog object referenced by the pricing rule.'
+          readOnly: true
+        fixed_discount_money:
+          $ref: '#/components/schemas/Money'
+          description: "The amount of the discount. Present if `discount_type` is `FIXED_AMOUNT`. For example, $5 off.\nDEPRECATED at version 2020-12-16. You can find this information in the `discount_data.amount_money` field of the \n`DISCOUNT` catalog object referenced by the pricing rule."
+          readOnly: true
+        max_discount_money:
+          $ref: '#/components/schemas/Money'
+          description: 'When `discount_type` is `FIXED_PERCENTAGE`, the maximum discount amount that can be applied.
+
+            DEPRECATED at version 2020-12-16. You can find this information in the `discount_data.maximum_amount_money` field
+
+            of the `DISCOUNT` catalog object referenced by the the pricing rule.'
+          readOnly: true
+    LoyaltyPromotionIncentivePointsMultiplierData:
+      type: object
+      description: Represents the metadata for a `POINTS_MULTIPLIER` type of [loyalty promotion incentive](entity:LoyaltyPromotionIncentive).
+      x-release-status: PUBLIC
+      properties:
+        points_multiplier:
+          type: integer
+          description: 'The multiplier used to calculate the number of points earned each time the promotion
+
+            is triggered. For example, suppose a purchase qualifies for 5 points from the base loyalty program.
+
+            If the purchase also qualifies for a `POINTS_MULTIPLIER` promotion incentive with a `points_multiplier`
+
+            of 3, the buyer earns a total of 15 points (5 program points x 3 promotion multiplier = 15 points).
+
+
+            DEPRECATED at version 2023-08-16. Replaced by the `multiplier` field.
+
+
+            One of the following is required when specifying a points multiplier:
+
+            - (Recommended) The `multiplier` field.
+
+            - This deprecated `points_multiplier` field. If provided in the request, Square also returns `multiplier`
+
+            with the equivalent value.'
+          minimum: 2
+          maximum: 10
+          x-release-status: DEPRECATED
+          nullable: true
+        multiplier:
+          type: string
+          description: 'The multiplier used to calculate the number of points earned each time the promotion is triggered,
+
+            specified as a string representation of a decimal. Square supports multipliers up to 10x, with three
+
+            point precision for decimal multipliers. For example, suppose a purchase qualifies for 4 points from the
+
+            base loyalty program. If the purchase also qualifies for a `POINTS_MULTIPLIER` promotion incentive with a
+
+            `multiplier` of "1.5", the buyer earns a total of 6 points (4 program points x 1.5 promotion multiplier = 6 points).
+
+            Fractional points are dropped.
+
+
+            One of the following is required when specifying a points multiplier:
+
+            - (Recommended) This `multiplier` field.
+
+            - The deprecated `points_multiplier` field. If provided in the request, Square also returns `multiplier`
+
+            with the equivalent value.'
+          maxLength: 5
+          nullable: true
+    LoyaltyEvent:
+      type: object
+      description: "Provides information about a loyalty event. \nFor more information, see [Search for Balance-Changing Loyalty Events](https://developer.squareup.com/docs/loyalty-api/loyalty-events)."
+      x-release-status: PUBLIC
+      required:
+      - id
+      - type
+      - created_at
+      - loyalty_account_id
+      - source
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the loyalty event.
+          minLength: 1
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/LoyaltyEventType'
+          description: 'The type of the loyalty event.
+
+            See [LoyaltyEventType](#type-loyaltyeventtype) for possible values'
+          readOnly: true
+        created_at:
+          type: string
+          description: The timestamp when the event was created, in RFC 3339 format.
+          minLength: 1
+          readOnly: true
+        accumulate_points:
+          $ref: '#/components/schemas/LoyaltyEventAccumulatePoints'
+          description: Provides metadata when the event `type` is `ACCUMULATE_POINTS`.
+          readOnly: true
+        create_reward:
+          $ref: '#/components/schemas/LoyaltyEventCreateReward'
+          description: Provides metadata when the event `type` is `CREATE_REWARD`.
+          readOnly: true
+        redeem_reward:
+          $ref: '#/components/schemas/LoyaltyEventRedeemReward'
+          description: Provides metadata when the event `type` is `REDEEM_REWARD`.
+          readOnly: true
+        delete_reward:
+          $ref: '#/components/schemas/LoyaltyEventDeleteReward'
+          description: Provides metadata when the event `type` is `DELETE_REWARD`.
+          readOnly: true
+        adjust_points:
+          $ref: '#/components/schemas/LoyaltyEventAdjustPoints'
+          description: Provides metadata when the event `type` is `ADJUST_POINTS`.
+          readOnly: true
+        loyalty_account_id:
+          type: string
+          description: The ID of the [loyalty account](entity:LoyaltyAccount) associated with the event.
+          minLength: 1
+          maxLength: 36
+          readOnly: true
+        location_id:
+          type: string
+          description: The ID of the [location](entity:Location) where the event occurred.
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/LoyaltyEventSource'
+          description: 'Defines whether the event was generated by the Square Point of Sale.
+
+            See [LoyaltyEventSource](#type-loyaltyeventsource) for possible values'
+          readOnly: true
+        expire_points:
+          $ref: '#/components/schemas/LoyaltyEventExpirePoints'
+          description: Provides metadata when the event `type` is `EXPIRE_POINTS`.
+          readOnly: true
+        other_event:
+          $ref: '#/components/schemas/LoyaltyEventOther'
+          description: Provides metadata when the event `type` is `OTHER`.
+          readOnly: true
+        accumulate_promotion_points:
+          $ref: '#/components/schemas/LoyaltyEventAccumulatePromotionPoints'
+          description: Provides metadata when the event `type` is `ACCUMULATE_PROMOTION_POINTS`.
+          readOnly: true
+    LoyaltyEventOrderFilter:
+      type: object
+      description: Filter events by the order associated with the event.
+      x-release-status: PUBLIC
+      required:
+      - order_id
+      properties:
+        order_id:
+          type: string
+          description: The ID of the [order](entity:Order) associated with the event.
+          minLength: 1
+    CreateLoyaltyAccountRequest:
+      type: object
+      description: A request to create a new loyalty account.
+      x-release-status: PUBLIC
+      required:
+      - loyalty_account
+      - idempotency_key
+      properties:
+        loyalty_account:
+          $ref: '#/components/schemas/LoyaltyAccount'
+          description: The loyalty account to create.
+        idempotency_key:
+          type: string
+          description: "A unique string that identifies this `CreateLoyaltyAccount` request. \nKeys can be any valid string, but must be unique for every request."
+          minLength: 1
+          maxLength: 128
+      example:
+        idempotency_key: ec78c477-b1c3-4899-a209-a4e71337c996
+        loyalty_account:
+          mapping:
+            phone_number: '+14155551234'
+          program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+    RetrieveLoyaltyProgramResponse:
+      type: object
+      description: A response that contains the loyalty program.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        program:
+          $ref: '#/components/schemas/LoyaltyProgram'
+          description: The loyalty program that was requested.
+      example:
+        program:
+          accrual_rules:
+          - accrual_type: SPEND
+            points: 1
+            spend_data:
+              amount_money:
+                amount: 100
+                currency: USD
+              excluded_category_ids:
+              - 7ZERJKO5PVYXCVUHV2JCZ2UG
+              - FQKAOJE5C4FIMF5A2URMLW6V
+              excluded_item_variation_ids:
+              - CBZXBUVVTYUBZGQO44RHMR6B
+              - EDILT24Z2NISEXDKGY6HP7XV
+              tax_mode: BEFORE_TAX
+          created_at: '2020-04-20T16:55:11Z'
+          id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          location_ids:
+          - P034NEENMD09F
+          reward_tiers:
+          - created_at: '2020-04-20T16:55:11Z'
+            definition:
+              discount_type: FIXED_PERCENTAGE
+              percentage_discount: '10'
+              scope: ORDER
+            id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+            name: 10% off entire sale
+            points: 10
+            pricing_rule_reference:
+              catalog_version: '1605486402527'
+              object_id: 74C4JSHESNLTB2A7ITO5HO6F
+          status: ACTIVE
+          terminology:
+            one: Point
+            other: Points
+          updated_at: '2020-05-01T02:00:02Z'
+    RetrieveLoyaltyRewardResponse:
+      type: object
+      description: A response that includes the loyalty reward.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        reward:
+          $ref: '#/components/schemas/LoyaltyReward'
+          description: The loyalty reward retrieved.
+      example:
+        reward:
+          created_at: '2020-05-08T21:55:42Z'
+          id: 9f18ac21-233a-31c3-be77-b45840f5a810
+          loyalty_account_id: 5adcb100-07f1-4ee7-b8c6-6bb9ebc474bd
+          points: 10
+          redeemed_at: '2020-05-08T21:56:00Z'
+          reward_tier_id: e1b39225-9da5-43d1-a5db-782cdd8ad94f
+          status: REDEEMED
+          updated_at: '2020-05-08T21:56:00Z'
+    LoyaltyEventAccumulatePoints:
+      type: object
+      description: Provides metadata when the event `type` is `ACCUMULATE_POINTS`.
+      x-release-status: PUBLIC
+      properties:
+        loyalty_program_id:
+          type: string
+          description: The ID of the [loyalty program](entity:LoyaltyProgram).
+          maxLength: 36
+          readOnly: true
+        points:
+          type: integer
+          description: The number of points accumulated by the event.
+          minimum: 1
+          nullable: true
+        order_id:
+          type: string
+          description: 'The ID of the [order](entity:Order) for which the buyer accumulated the points.
+
+            This field is returned only if the Orders API is used to process orders.'
+          nullable: true
+    CalculateLoyaltyPointsRequest:
+      type: object
+      description: Represents a [CalculateLoyaltyPoints](api-endpoint:Loyalty-CalculateLoyaltyPoints) request.
+      x-release-status: PUBLIC
+      x-params-example: ?program_id=d619f755-2d17-41f3-990d-c04ecedd64dd
+      properties:
+        order_id:
+          type: string
+          description: 'The [order](entity:Order) ID for which to calculate the points.
+
+            Specify this field if your application uses the Orders API to process orders.
+
+            Otherwise, specify the `transaction_amount_money`.'
+          nullable: true
+        transaction_amount_money:
+          $ref: '#/components/schemas/Money'
+          description: "The purchase amount for which to calculate the points. \nSpecify this field if your application does not use the Orders API to process orders.\nOtherwise, specify the `order_id`."
+          nullable: true
+        loyalty_account_id:
+          type: string
+          description: 'The ID of the target [loyalty account](entity:LoyaltyAccount). Optionally specify this field
+
+            if your application uses the Orders API to process orders.
+
+
+            If specified, the `promotion_points` field in the response shows the number of points the buyer would
+
+            earn from the purchase. In this case, Square uses the account ID to determine whether the promotion''s
+
+            `trigger_limit` (the maximum number of times that a buyer can trigger the promotion) has been reached.
+
+            If not specified, the `promotion_points` field shows the number of points the purchase qualifies
+
+            for regardless of the trigger limit.'
+          minLength: 1
+          maxLength: 36
+          nullable: true
+      example:
+        loyalty_account_id: 79b807d2-d786-46a9-933b-918028d7a8c5
+        order_id: RFZfrdtm3mhO1oGzf5Cx7fEMsmGZY
+    CreateLoyaltyPromotionResponse:
+      type: object
+      description: 'Represents a [CreateLoyaltyPromotion](api-endpoint:Loyalty-CreateLoyaltyPromotion) response.
+
+        Either `loyalty_promotion` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        loyalty_promotion:
+          $ref: '#/components/schemas/LoyaltyPromotion'
+          description: The new loyalty promotion.
+      example:
+        loyalty_promotion:
+          available_time:
+            start_date: '2022-08-16'
+            time_periods:
+            - 'BEGIN:VEVENT
+
+              DTSTART:20220816T160000
+
+              DURATION:PT2H
+
+              RRULE:FREQ=WEEKLY;BYDAY=TU
+
+              END:VEVENT'
+          created_at: '2022-08-16T08:38:54Z'
+          id: loypromo_f0f9b849-725e-378d-b810-511237e07b67
+          incentive:
+            points_multiplier_data:
+              multiplier: '3.000'
+              points_multiplier: 3
+            type: POINTS_MULTIPLIER
+          loyalty_program_id: d619f755-2d17-41f3-990d-c04ecedd64dd
+          minimum_spend_amount_money:
+            amount: 2000
+            currency: USD
+          name: Tuesday Happy Hour Promo
+          qualifying_category_ids:
+          - XTQPYLR3IIU9C44VRCB3XD12
+          status: ACTIVE
+          trigger_limit:
+            interval: DAY
+            times: 1
+          updated_at: '2022-08-16T08:38:54Z'
+    LoyaltyProgramRewardTier:
+      type: object
+      description: Represents a reward tier in a loyalty program. A reward tier defines how buyers can redeem points for a reward, such as the number of points required and the value and scope of the discount. A loyalty program can offer multiple reward tiers.
+      x-release-status: PUBLIC
+      required:
+      - points
+      - pricing_rule_reference
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the reward tier.
+          maxLength: 36
+          readOnly: true
+        points:
+          type: integer
+          description: The points exchanged for the reward tier.
+          minimum: 1
+        name:
+          type: string
+          description: The name of the reward tier.
+          readOnly: true
+        definition:
+          $ref: '#/components/schemas/LoyaltyProgramRewardDefinition'
+          description: 'Provides details about the reward tier definition.
+
+            DEPRECATED at version 2020-12-16. Replaced by the `pricing_rule_reference` field.'
+          readOnly: true
+          x-release-status: DEPRECATED
+        created_at:
+          type: string
+          description: The timestamp when the reward tier was created, in RFC 3339 format.
+          readOnly: true
+        pricing_rule_reference:
+          $ref: '#/components/schemas/CatalogObjectReference'
+          description: 'A reference to the specific version of a `PRICING_RULE` catalog object that contains information about the reward tier discount.
+
+
+            Use `object_id` and `catalog_version` with the [RetrieveCatalogObject](api-endpoint:Catalog-RetrieveCatalogObject) endpoint
+
+            to get discount details. Make sure to set `include_related_objects` to true in the request to retrieve all catalog objects
+
+            that define the discount. For more information, see [Getting discount details for a reward tier](https://developer.squareup.com/docs/loyalty-api/loyalty-rewards#get-discount-details).'
+    SearchLoyaltyRewardsRequestLoyaltyRewardQuery:
+      type: object
+      description: The set of search requirements.
+      x-release-status: PUBLIC
+      required:
+      - loyalty_account_id
+      properties:
+        loyalty_account_id:
+          type: string
+          description: The ID of the [loyalty account](entity:LoyaltyAccount) to which the loyalty reward belongs.
+          minLength: 1
+        status:
+          $ref: '#/components/schemas/LoyaltyRewardStatus'
+          description: 'The status of the loyalty reward.
+
+            See [LoyaltyRewardStatus](#type-loyaltyrewardstatus) for possible values'
+          nullable: true
+    LoyaltyRewardStatus:
+      type: string
+      enum:
+      - ISSUED
+      - REDEEMED
+      - DELETED
+      x-enum-elements:
+      - name: ISSUED
+        description: The reward is issued.
+      - name: REDEEMED
+        description: The reward is redeemed.
+      - name: DELETED
+        description: The reward is deleted.
+      description: The status of the loyalty reward.
+      x-release-status: PUBLIC
+    SearchLoyaltyAccountsRequestLoyaltyAccountQuery:
+      type: object
+      description: The search criteria for the loyalty accounts.
+      x-release-status: PUBLIC
+      properties:
+        mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyAccountMapping'
+          description: "The set of mappings to use in the loyalty account search.  \n\nThis cannot be combined with `customer_ids`.  \n\nMax: 30 mappings"
+          nullable: true
+        customer_ids:
+          type: array
+          items:
+            type: string
+          description: "The set of customer IDs to use in the loyalty account search.  \n\nThis cannot be combined with `mappings`.  \n\nMax: 30 customer IDs"
+          nullable: true
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-additional-headers:
+      - name: Square-Version
+        description: Square Connect API versions
+        schema:
+          default: '2025-01-23'
+      flows:
+        authorizationCode:
+          authorizationUrl: https://connect.squareup.com/oauth2/authorize
+          tokenUrl: https://connect.squareup.com/oauth2/token
+          scopes:
+            ADDON_CONFIGURATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants write access for third-party Add-ons to read configurations of their Add-ons, for example, when calling `RetrieveConfiguration` endpoint.'
+            ADDON_CONFIGURATIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access for third-party Add-ons to store configurations of their Add-ons, for example, when calling `CreateConfiguration` endpoint.'
+            APPOINTMENTS_ALL_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to all of a seller''s booking information, calendar, and business details.
+
+              This permission must be accompanied by the `APPOINTMENTS_READ` permission.'
+            APPOINTMENTS_ALL_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to all booking details, including double-booking a seller.
+
+              This permission must be accompanied by the `APPOINTMENTS_WRITE` permission.'
+            APPOINTMENTS_BUSINESS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to booking business settings. For example, to call the
+
+              ListTeamMemberBookingProfiles endpoint.'
+            APPOINTMENTS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to booking information. For example, to call the
+
+              RetrieveBooking endpoint.'
+            APPOINTMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to booking information. For example, to call the CreateBooking endpoint.'
+            BANK_ACCOUNTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to bank account information associated with the targeted
+
+              Square account. For example, to call the Connect v1 ListBankAccounts endpoint.'
+            CASH_DRAWER_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to cash drawer shift information. For example, to call the
+
+              ListCashDrawerShifts endpoint.'
+            CHANNELS_CREATE: '__HTTP Method__: `POST`
+
+
+              Grants write access to create channels, for example, when calling the
+
+              `CreateChannel` endpoint.'
+            CHANNELS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to view channels, for example, when calling the
+
+              `RetrieveChannel` endpoint.'
+            CHANNELS_UPDATE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to update channels, for example, when calling the
+
+              `UpdateChannel` endpoint.'
+            CUSTOMERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to customer information. For example, to call the
+
+              ListCustomers endpoint.'
+            CUSTOMERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to customer information. For example, to create and update
+
+              customer profiles.'
+            DEVICES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to device information. For example, to
+
+              call the `GetDevice` and `ListDevices` endpoints.'
+            DEVICE_CREDENTIAL_MANAGEMENT: '__HTTP Method__: `POST`, `GET`
+
+
+              Grants read/write access to device credentials information. For example, to
+
+              call the CreateDeviceCode endpoint.'
+            DISPUTES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to dispute information. For example, to call the RetrieveDispute
+
+              endpoint.'
+            DISPUTES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to dispute information. For example, to call the SubmitEvidence
+
+              endpoint.'
+            EMPLOYEES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee profile information. For example, to call the
+
+              Connect v1 Employees API.'
+            EMPLOYEES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee profile information. For example, to create
+
+              and modify employee profiles.'
+            GIFTCARDS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to gift card information. For example, to call the RetrieveGiftCard
+
+              endpoint.'
+            GIFTCARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to gift card information. For example, to call the CreateGiftCard
+
+              endpoint.'
+            INVENTORY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to inventory information. For example, to call the
+
+              RetrieveInventoryCount endpoint.'
+            INVENTORY_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to inventory information. For example, to call the
+
+              BatchChangeInventory endpoint.'
+            INVOICES_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to invoice information. For example, to call the ListInvoices endpoint.'
+            INVOICES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to invoice information. For example, to call the CreateInvoice endpoint.'
+            ITEMS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to product catalog information. For example, to obtain objects in a product catalog.'
+            ITEMS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to product catalog information. For example, to modify or
+
+              add to a product catalog.'
+            LOYALTY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to loyalty information. For example, to call the
+
+              ListLoyaltyPrograms endpoint.'
+            LOYALTY_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to loyalty information. For example, to call the
+
+              CreateLoyaltyAccount endpoint.'
+            MERCHANT_PROFILE_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to business and location information. For example, to
+
+              obtain a location ID for subsequent activity.'
+            MERCHANT_PROFILE_WRITE: '__HTTP Method__: `POST`, `PUT`
+
+
+              Grants write access to business and location information. For example, to create a new location or
+
+              update the business hours at an existing location.'
+            ONLINE_STORE_SITE_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store site details.'
+            ONLINE_STORE_SNIPPETS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store snippets on published websites.'
+            ONLINE_STORE_SNIPPETS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Write access to ECOM online store snippets on published websites.'
+            ORDERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to order information. For example, to call the
+
+              BatchRetrieveOrders endpoint.'
+            ORDERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to order information. For example, to call the
+
+              CreateCheckout endpoint.'
+            PAYMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to transaction and refund information. For example, to call
+
+              the RetrieveTransaction endpoint.'
+            PAYMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to transaction and refunds information. For example, to
+
+              process payments with the Payments or Checkout API.'
+            PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allow third party applications to deduct a portion of each transaction amount.
+
+              __Required__ to use multiparty transaction functionality with the Payments
+
+              API.'
+            PAYMENTS_WRITE_IN_PERSON: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to payments and refunds information. For example, to
+
+              process in-person payments.'
+            PAYMENTS_WRITE_SHARED_ONFILE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allows the developer to process payments on behalf of a seller using a shared on file payment method.'
+            PAYOUTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to payouts and payout entries information. For example,
+
+              to call the Connect v2 `ListPayouts` endpoint.'
+            PERMISSION_SETS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to Permission Sets. For example, to
+
+              call the `ListPermissionSets` and `RetrievePermissionSet` endpoints.'
+            PERMISSION_SETS_WRITE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to Permission Sets.'
+            RESERVATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to reservation information, for example, when calling the
+
+              `RetrieveReservation` endpoint.'
+            RESERVATIONS_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to reservation information, for example, when calling the
+
+              `CreateReservation` endpoint.'
+            RESTAURANT_CHECKS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to check information, for example, when calling the
+
+              `RetrieveCheck` endpoint.'
+            SETTLEMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to settlement (deposit) information. For example, to call
+
+              the Connect v1 ListSettlements endpoint.'
+            SUBSCRIPTIONS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to subscription information. For example, to call the RetrieveSubscription
+
+              endpoint.'
+            SUBSCRIPTIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to subscription information. For example, to call the CreateSubscription
+
+              endpoint.'
+            TIMECARDS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard information. For example, to call the
+
+              Connect v2 SearchShifts endpoint.'
+            TIMECARDS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard settings information. For example, to
+
+              call the GetBreakType endpoint.'
+            TIMECARDS_SETTINGS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee timecard settings information. For example, to
+
+              call the UpdateBreakType endpoint.'
+            TIMECARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee shift information. For example, to create
+
+              and modify employee shifts.'
+            VENDOR_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to vendor information, for example, when calling the
+
+              `RetrieveVendor` endpoint.'
+            VENDOR_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to vendor information, for example, when calling the
+
+              `BulkUpdateVendors` endpoint.'
+    oauth2ClientSecret:
+      type: apiKey
+      in: header
+      name: Authorization
+x-fern-global-headers:
+- header: Square-Version
+  name: version
+  optional: true
+  env: VERSION
+  type: literal<"2025-01-23">

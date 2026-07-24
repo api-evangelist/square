@@ -1,0 +1,4917 @@
+openapi: 3.0.0
+info:
+  version: '2.0'
+  title: Square ApplePay Customers API
+  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  termsOfService: https://connect.squareup.com/tos
+  contact:
+    name: Square Developer Platform
+    email: developers@squareup.com
+    url: https://squareup.com/developers
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  externalDocs:
+    description: 'Read the official documentation here:'
+    url: https://docs.connect.squareup.com/
+  x-server-configuration:
+    default-environment: production
+    default-server: default
+    environments:
+    - name: production
+      servers:
+      - name: default
+        url: https://connect.squareup.com
+    - name: sandbox
+      servers:
+      - name: default
+        url: https://connect.squareupsandbox.com
+    - name: custom
+      servers:
+      - name: default
+        url: '{custom_url}'
+    parameters:
+    - name: custom_url
+      description: Sets the base URL requests are made to. Defaults to `https://connect.squareup.com`
+      type: string
+      example: https://connect.squareup.com
+  x-square-generic-error-codes:
+  - ACCESS_TOKEN_EXPIRED
+  - ACCESS_TOKEN_REVOKED
+  - API_VERSION_INCOMPATIBLE
+  - APPLICATION_DISABLED
+  - ARRAY_EMPTY
+  - ARRAY_LENGTH_TOO_LONG
+  - ARRAY_LENGTH_TOO_SHORT
+  - BAD_CERTIFICATE
+  - BAD_GATEWAY
+  - BAD_REQUEST
+  - CONFLICT
+  - CONFLICTING_PARAMETERS
+  - CURRENCY_MISMATCH
+  - EXPECTED_ARRAY
+  - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+  - EXPECTED_BOOLEAN
+  - EXPECTED_FLOAT
+  - EXPECTED_INTEGER
+  - EXPECTED_JSON_BODY
+  - EXPECTED_MAP
+  - EXPECTED_OBJECT
+  - EXPECTED_STRING
+  - FORBIDDEN
+  - GATEWAY_TIMEOUT
+  - GONE
+  - IDEMPOTENCY_KEY_REUSED
+  - INCORRECT_TYPE
+  - INSUFFICIENT_SCOPES
+  - INTERNAL_SERVER_ERROR
+  - INVALID_ARRAY_VALUE
+  - INVALID_CONTENT_TYPE
+  - INVALID_CURSOR
+  - INVALID_ENUM_VALUE
+  - INVALID_FORM_VALUE
+  - INVALID_SORT_ORDER
+  - INVALID_SQUARE_VERSION_FORMAT
+  - INVALID_TIME
+  - INVALID_TIME_RANGE
+  - INVALID_VALUE
+  - LOCATION_MISMATCH
+  - MAP_KEY_LENGTH_TOO_LONG
+  - MAP_KEY_LENGTH_TOO_SHORT
+  - MERCHANT_SUBSCRIPTION_NOT_FOUND
+  - METHOD_NOT_ALLOWED
+  - MISSING_REQUIRED_PARAMETER
+  - NOT_ACCEPTABLE
+  - NOT_FOUND
+  - NOT_IMPLEMENTED
+  - NO_FIELDS_SET
+  - RATE_LIMITED
+  - REQUEST_ENTITY_TOO_LARGE
+  - REQUEST_TIMEOUT
+  - SANDBOX_NOT_SUPPORTED
+  - SERVICE_UNAVAILABLE
+  - TOO_MANY_MAP_ENTRIES
+  - UNAUTHORIZED
+  - UNEXPECTED_VALUE
+  - UNKNOWN_BODY_PARAMETER
+  - UNKNOWN_QUERY_PARAMETER
+  - UNPROCESSABLE_ENTITY
+  - UNSUPPORTED_MEDIA_TYPE
+  - V1_ACCESS_TOKEN
+  - V1_APPLICATION
+  - VALUE_EMPTY
+  - VALUE_REGEX_MISMATCH
+  - VALUE_TOO_HIGH
+  - VALUE_TOO_LONG
+  - VALUE_TOO_LOW
+  - VALUE_TOO_SHORT
+servers:
+- url: https://connect.squareup.com
+  variables: {}
+tags:
+- name: Customers
+paths:
+  /v2/customers:
+    get:
+      tags:
+      - Customers
+      summary: Square List Customers
+      operationId: ListCustomers
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Lists customer profiles associated with a Square account.
+
+
+        Under normal operating conditions, newly created or updated customer profiles become available
+
+        for the listing operation in well under 30 seconds. Occasionally, propagation of the new or updated
+
+        profiles can take closer to one minute or longer, especially during network incidents and outages.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+      parameters:
+      - name: cursor
+        description: 'A pagination cursor returned by a previous call to this endpoint.
+
+          Provide this cursor to retrieve the next set of results for your original query.
+
+
+          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: limit
+        description: 'The maximum number of results to return in a single page. This limit is advisory. The response might contain more or fewer results.
+
+          If the specified limit is less than 1 or greater than 100, Square returns a `400 VALUE_TOO_LOW` or `400 VALUE_TOO_HIGH` error. The default value is 100.
+
+
+          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: sort_field
+        description: 'Indicates how customers should be sorted.
+
+
+          The default value is `DEFAULT`.'
+        schema:
+          $ref: '#/components/schemas/CustomerSortField'
+        in: query
+        required: false
+      - name: sort_order
+        description: 'Indicates whether customers should be sorted in ascending (`ASC`) or
+
+          descending (`DESC`) order.
+
+
+          The default value is `ASC`.'
+        schema:
+          $ref: '#/components/schemas/SortOrder'
+        in: query
+        required: false
+      - name: count
+        description: 'Indicates whether to return the total count of customers in the `count` field of the response.
+
+
+          The default value is `false`.'
+        schema:
+          type: boolean
+          default: false
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCustomersResponse'
+    post:
+      tags:
+      - Customers
+      summary: Square Create Customer
+      operationId: CreateCustomer
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Creates a new customer for a business.
+
+
+        You must provide at least one of the following values in your request to this
+
+        endpoint:
+
+
+        - `given_name`
+
+        - `family_name`
+
+        - `company_name`
+
+        - `email_address`
+
+        - `phone_number`'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCustomerResponse'
+      x-endpoint-errors:
+      - error-code: INVALID_EMAIL_ADDRESS
+      - error-code: INVALID_PHONE_NUMBER
+      - error-code: INVALID_TIME
+      - error-code: VALUE_TOO_LONG
+  /v2/customers/bulk-create:
+    post:
+      tags:
+      - Customers
+      summary: Square Bulk Create Customers
+      operationId: BulkCreateCustomers
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Creates multiple [customer profiles](entity:Customer) for a business.
+
+
+        This endpoint takes a map of individual create requests and returns a map of responses.
+
+
+        You must provide at least one of the following values in each create request:
+
+
+        - `given_name`
+
+        - `family_name`
+
+        - `company_name`
+
+        - `email_address`
+
+        - `phone_number`'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCreateCustomersRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkCreateCustomersResponse'
+  /v2/customers/bulk-delete:
+    post:
+      tags:
+      - Customers
+      summary: Square Bulk Delete Customers
+      operationId: BulkDeleteCustomers
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deletes multiple customer profiles.
+
+
+        The endpoint takes a list of customer IDs and returns a map of responses.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkDeleteCustomersRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkDeleteCustomersResponse'
+  /v2/customers/bulk-retrieve:
+    post:
+      tags:
+      - Customers
+      summary: Square Bulk Retrieve Customers
+      operationId: BulkRetrieveCustomers
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Retrieves multiple customer profiles.
+
+
+        This endpoint takes a list of customer IDs and returns a map of responses.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRetrieveCustomersRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkRetrieveCustomersResponse'
+  /v2/customers/bulk-update:
+    post:
+      tags:
+      - Customers
+      summary: Square Bulk Update Customers
+      operationId: BulkUpdateCustomers
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Updates multiple customer profiles.
+
+
+        This endpoint takes a map of individual update requests and returns a map of responses.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkUpdateCustomersRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkUpdateCustomersResponse'
+  /v2/customers/search:
+    post:
+      tags:
+      - Customers
+      summary: Square Search Customers
+      operationId: SearchCustomers
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Searches the customer profiles associated with a Square account using one or more supported query filters.
+
+
+        Calling `SearchCustomers` without any explicit query filter returns all
+
+        customer profiles ordered alphabetically based on `given_name` and
+
+        `family_name`.
+
+
+        Under normal operating conditions, newly created or updated customer profiles become available
+
+        for the search operation in well under 30 seconds. Occasionally, propagation of the new or updated
+
+        profiles can take closer to one minute or longer, especially during network incidents and outages.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchCustomersRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchCustomersResponse'
+  /v2/customers/{customer_id}:
+    delete:
+      tags:
+      - Customers
+      summary: Square Delete Customer
+      operationId: DeleteCustomer
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deletes a customer profile from a business.
+
+
+        To delete a customer profile that was created by merging existing profiles, you must use the ID of the newly created profile.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters:
+      - name: customer_id
+        description: The ID of the customer to delete.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: version
+        description: 'The current version of the customer profile.
+
+
+          As a best practice, you should include this parameter to enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency) control.  For more information, see [Delete a customer profile](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#delete-customer-profile).'
+        schema:
+          type: integer
+          format: int64
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCustomerResponse'
+    get:
+      tags:
+      - Customers
+      summary: Square Retrieve Customer
+      operationId: RetrieveCustomer
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns details for a single customer.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+      parameters:
+      - name: customer_id
+        description: The ID of the customer to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveCustomerResponse'
+    put:
+      tags:
+      - Customers
+      summary: Square Update Customer
+      operationId: UpdateCustomer
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Updates a customer profile. This endpoint supports sparse updates, so only new or changed fields are required in the request.
+
+        To add or update a field, specify the new value. To remove a field, specify `null`.
+
+
+        To update a customer profile that was created by merging existing profiles, you must use the ID of the newly created profile.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters:
+      - name: customer_id
+        description: The ID of the customer to update.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCustomerResponse'
+      x-endpoint-errors:
+      - error-code: INVALID_EMAIL_ADDRESS
+      - error-code: INVALID_PHONE_NUMBER
+      - error-code: INVALID_TIME
+      - error-code: VALUE_TOO_LONG
+  /v2/customers/{customer_id}/cards:
+    post:
+      tags:
+      - Customers
+      summary: Square Create Customer Card
+      operationId: CreateCustomerCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Adds a card on file to an existing customer.
+
+
+        As with charges, calls to `CreateCustomerCard` are idempotent. Multiple
+
+        calls with the same card nonce return the same card record that was created
+
+        with the provided nonce during the _first_ call.'
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-06-16'
+        replacedBy: CreateCard
+        guideUrl: https://developer.squareup.com/docs/customers-api/what-it-does#deprecated-createcustomercard-endpoint
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters:
+      - name: customer_id
+        description: The Square ID of the customer profile the card is linked to.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerCardRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCustomerCardResponse'
+      x-endpoint-errors:
+      - error-code: CARD_EXPIRED
+      - error-code: CARD_PROCESSING_NOT_ENABLED
+      - error-code: CARD_TOKEN_EXPIRED
+      - error-code: CARD_TOKEN_USED
+      - error-code: INVALID_CARD
+      - error-code: INVALID_CARD_DATA
+      - error-code: INVALID_EXPIRATION
+      - error-code: UNSUPPORTED_ENTRY_METHOD
+      - error-code: VERIFY_AVS_FAILURE
+      - error-code: VERIFY_CVV_FAILURE
+  /v2/customers/{customer_id}/cards/{card_id}:
+    delete:
+      tags:
+      - Customers
+      summary: Square Delete Customer Card
+      operationId: DeleteCustomerCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Removes a card on file from a customer.
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2021-06-16'
+        replacedBy: DisableCard
+        guideUrl: https://developer.squareup.com/docs/customers-api/what-it-does#deprecated-deletecustomercard-endpoint
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters:
+      - name: customer_id
+        description: The ID of the customer that the card on file belongs to.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: card_id
+        description: The ID of the card on file to delete.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCustomerCardResponse'
+  /v2/customers/{customer_id}/groups/{group_id}:
+    delete:
+      tags:
+      - Customers
+      summary: Square Remove Group from Customer
+      operationId: RemoveGroupFromCustomer
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Removes a group membership from a customer.
+
+
+        The customer is identified by the `customer_id` value
+
+        and the customer group is identified by the `group_id` value.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters:
+      - name: customer_id
+        description: The ID of the customer to remove from the group.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: group_id
+        description: The ID of the customer group to remove the customer from.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveGroupFromCustomerResponse'
+    put:
+      tags:
+      - Customers
+      summary: Square Add Group to Customer
+      operationId: AddGroupToCustomer
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Adds a group membership to a customer.
+
+
+        The customer is identified by the `customer_id` value
+
+        and the customer group is identified by the `group_id` value.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_WRITE
+      parameters:
+      - name: customer_id
+        description: The ID of the customer to add to a group.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: group_id
+        description: The ID of the customer group to add the customer to.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddGroupToCustomerResponse'
+components:
+  schemas:
+    Address:
+      type: object
+      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
+      x-release-status: PUBLIC
+      properties:
+        address_line_1:
+          type: string
+          description: 'The first line of the address.
+
+
+            Fields that start with `address_line` provide the address''s most specific
+
+            details, like street number, street name, and building name. They do *not*
+
+            provide less specific details like city, state/province, or country (these
+
+            details are provided in other fields).'
+          nullable: true
+        address_line_2:
+          type: string
+          description: The second line of the address, if any.
+          nullable: true
+        address_line_3:
+          type: string
+          description: The third line of the address, if any.
+          nullable: true
+        locality:
+          type: string
+          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+          nullable: true
+        sublocality:
+          type: string
+          description: A civil region within the address's `locality`, if any.
+          nullable: true
+        sublocality_2:
+          type: string
+          description: A civil region within the address's `sublocality`, if any.
+          nullable: true
+        sublocality_3:
+          type: string
+          description: A civil region within the address's `sublocality_2`, if any.
+          nullable: true
+        administrative_district_level_1:
+          type: string
+          description: 'A civil entity within the address''s country. In the US, this
+
+            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
+          nullable: true
+        administrative_district_level_2:
+          type: string
+          description: 'A civil entity within the address''s `administrative_district_level_1`.
+
+            In the US, this is the county.'
+          nullable: true
+        administrative_district_level_3:
+          type: string
+          description: 'A civil entity within the address''s `administrative_district_level_2`,
+
+            if any.'
+          nullable: true
+        postal_code:
+          type: string
+          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+          nullable: true
+        country:
+          $ref: '#/components/schemas/Country'
+          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
+
+            See [Country](#type-country) for possible values'
+          nullable: true
+        first_name:
+          type: string
+          description: Optional first name when it's representing recipient.
+          nullable: true
+        last_name:
+          type: string
+          description: Optional last name when it's representing recipient.
+          nullable: true
+    BulkCreateCustomersResponse:
+      type: object
+      description: 'Defines the fields included in the response body from the
+
+        [BulkCreateCustomers](api-endpoint:Customers-BulkCreateCustomers) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        responses:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CreateCustomerResponse'
+          description: 'A map of responses that correspond to individual create requests, represented by
+
+            key-value pairs.
+
+
+            Each key is the idempotency key that was provided for a create request and each value
+
+            is the corresponding response.
+
+            If the request succeeds, the value is the new customer profile.
+
+            If the request fails, the value contains any errors that occurred during the request.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any top-level errors that prevented the bulk operation from running.
+      example:
+        responses:
+          8bb76c4f-e35d-4c5b-90de-1194cd9179f4:
+            customer:
+              address:
+                address_line_1: 500 Electric Ave
+                address_line_2: Suite 600
+                administrative_district_level_1: NY
+                country: US
+                locality: New York
+                postal_code: '10003'
+              created_at: '2024-03-23T20:21:54.859Z'
+              creation_source: THIRD_PARTY
+              email_address: Amelia.Earhart@example.com
+              family_name: Earhart
+              given_name: Amelia
+              id: 8DDA5NZVBZFGAX0V3HPF81HHE0
+              note: a customer
+              phone_number: +1-212-555-4240
+              preferences:
+                email_unsubscribed: false
+              reference_id: YOUR_REFERENCE_ID
+              updated_at: '2024-03-23T20:21:54.859Z'
+              version: 0
+          d1689f23-b25d-4932-b2f0-aed00f5e2029:
+            customer:
+              address:
+                address_line_1: 500 Electric Ave
+                address_line_2: Suite 601
+                administrative_district_level_1: NY
+                country: US
+                locality: New York
+                postal_code: '10003'
+              created_at: '2024-03-23T20:21:54.859Z'
+              creation_source: THIRD_PARTY
+              email_address: Marie.Curie@example.com
+              family_name: Curie
+              given_name: Marie
+              id: N18CPRVXR5214XPBBA6BZQWF3C
+              note: another customer
+              phone_number: +1-212-444-4240
+              preferences:
+                email_unsubscribed: false
+              reference_id: YOUR_REFERENCE_ID
+              updated_at: '2024-03-23T20:21:54.859Z'
+              version: 0
+    FloatNumberRange:
+      type: object
+      description: Specifies a decimal number range.
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type: string
+          description: A decimal value indicating where the range starts.
+          nullable: true
+        end_at:
+          type: string
+          description: A decimal value indicating where the range ends.
+          nullable: true
+    Country:
+      type: string
+      enum:
+      - ZZ
+      - AD
+      - AE
+      - AF
+      - AG
+      - AI
+      - AL
+      - AM
+      - AO
+      - AQ
+      - AR
+      - AS
+      - AT
+      - AU
+      - AW
+      - AX
+      - AZ
+      - BA
+      - BB
+      - BD
+      - BE
+      - BF
+      - BG
+      - BH
+      - BI
+      - BJ
+      - BL
+      - BM
+      - BN
+      - BO
+      - BQ
+      - BR
+      - BS
+      - BT
+      - BV
+      - BW
+      - BY
+      - BZ
+      - CA
+      - CC
+      - CD
+      - CF
+      - CG
+      - CH
+      - CI
+      - CK
+      - CL
+      - CM
+      - CN
+      - CO
+      - CR
+      - CU
+      - CV
+      - CW
+      - CX
+      - CY
+      - CZ
+      - DE
+      - DJ
+      - DK
+      - DM
+      - DO
+      - DZ
+      - EC
+      - EE
+      - EG
+      - EH
+      - ER
+      - ES
+      - ET
+      - FI
+      - FJ
+      - FK
+      - FM
+      - FO
+      - FR
+      - GA
+      - GB
+      - GD
+      - GE
+      - GF
+      - GG
+      - GH
+      - GI
+      - GL
+      - GM
+      - GN
+      - GP
+      - GQ
+      - GR
+      - GS
+      - GT
+      - GU
+      - GW
+      - GY
+      - HK
+      - HM
+      - HN
+      - HR
+      - HT
+      - HU
+      - ID
+      - IE
+      - IL
+      - IM
+      - IN
+      - IO
+      - IQ
+      - IR
+      - IS
+      - IT
+      - JE
+      - JM
+      - JO
+      - JP
+      - KE
+      - KG
+      - KH
+      - KI
+      - KM
+      - KN
+      - KP
+      - KR
+      - KW
+      - KY
+      - KZ
+      - LA
+      - LB
+      - LC
+      - LI
+      - LK
+      - LR
+      - LS
+      - LT
+      - LU
+      - LV
+      - LY
+      - MA
+      - MC
+      - MD
+      - ME
+      - MF
+      - MG
+      - MH
+      - MK
+      - ML
+      - MM
+      - MN
+      - MO
+      - MP
+      - MQ
+      - MR
+      - MS
+      - MT
+      - MU
+      - MV
+      - MW
+      - MX
+      - MY
+      - MZ
+      - NA
+      - NC
+      - NE
+      - NF
+      - NG
+      - NI
+      - NL
+      - 'NO'
+      - NP
+      - NR
+      - NU
+      - NZ
+      - OM
+      - PA
+      - PE
+      - PF
+      - PG
+      - PH
+      - PK
+      - PL
+      - PM
+      - PN
+      - PR
+      - PS
+      - PT
+      - PW
+      - PY
+      - QA
+      - RE
+      - RO
+      - RS
+      - RU
+      - RW
+      - SA
+      - SB
+      - SC
+      - SD
+      - SE
+      - SG
+      - SH
+      - SI
+      - SJ
+      - SK
+      - SL
+      - SM
+      - SN
+      - SO
+      - SR
+      - SS
+      - ST
+      - SV
+      - SX
+      - SY
+      - SZ
+      - TC
+      - TD
+      - TF
+      - TG
+      - TH
+      - TJ
+      - TK
+      - TL
+      - TM
+      - TN
+      - TO
+      - TR
+      - TT
+      - TV
+      - TW
+      - TZ
+      - UA
+      - UG
+      - UM
+      - US
+      - UY
+      - UZ
+      - VA
+      - VC
+      - VE
+      - VG
+      - VI
+      - VN
+      - VU
+      - WF
+      - WS
+      - YE
+      - YT
+      - ZA
+      - ZM
+      - ZW
+      x-enum-elements:
+      - name: ZZ
+        description: Unknown
+      - name: AD
+        description: Andorra
+      - name: AE
+        description: United Arab Emirates
+      - name: AF
+        description: Afghanistan
+      - name: AG
+        description: Antigua and Barbuda
+      - name: AI
+        description: Anguilla
+      - name: AL
+        description: Albania
+      - name: AM
+        description: Armenia
+      - name: AO
+        description: Angola
+      - name: AQ
+        description: Antartica
+      - name: AR
+        description: Argentina
+      - name: AS
+        description: American Samoa
+      - name: AT
+        description: Austria
+      - name: AU
+        description: Australia
+      - name: AW
+        description: Aruba
+      - name: AX
+        description: Åland Islands
+      - name: AZ
+        description: Azerbaijan
+      - name: BA
+        description: Bosnia and Herzegovina
+      - name: BB
+        description: Barbados
+      - name: BD
+        description: Bangladesh
+      - name: BE
+        description: Belgium
+      - name: BF
+        description: Burkina Faso
+      - name: BG
+        description: Bulgaria
+      - name: BH
+        description: Bahrain
+      - name: BI
+        description: Burundi
+      - name: BJ
+        description: Benin
+      - name: BL
+        description: Saint Barthélemy
+      - name: BM
+        description: Bermuda
+      - name: BN
+        description: Brunei
+      - name: BO
+        description: Bolivia
+      - name: BQ
+        description: Bonaire
+      - name: BR
+        description: Brazil
+      - name: BS
+        description: Bahamas
+      - name: BT
+        description: Bhutan
+      - name: BV
+        description: Bouvet Island
+      - name: BW
+        description: Botswana
+      - name: BY
+        description: Belarus
+      - name: BZ
+        description: Belize
+      - name: CA
+        description: Canada
+      - name: CC
+        description: Cocos Islands
+      - name: CD
+        description: Democratic Republic of the Congo
+      - name: CF
+        description: Central African Republic
+      - name: CG
+        description: Congo
+      - name: CH
+        description: Switzerland
+      - name: CI
+        description: Ivory Coast
+      - name: CK
+        description: Cook Islands
+      - name: CL
+        description: Chile
+      - name: CM
+        description: Cameroon
+      - name: CN
+        description: China
+      - name: CO
+        description: Colombia
+      - name: CR
+        description: Costa Rica
+      - name: CU
+        description: Cuba
+      - name: CV
+        description: Cabo Verde
+      - name: CW
+        description: Curaçao
+      - name: CX
+        description: Christmas Island
+      - name: CY
+        description: Cyprus
+      - name: CZ
+        description: Czechia
+      - name: DE
+        description: Germany
+      - name: DJ
+        description: Djibouti
+      - name: DK
+        description: Denmark
+      - name: DM
+        description: Dominica
+      - name: DO
+        description: Dominican Republic
+      - name: DZ
+        description: Algeria
+      - name: EC
+        description: Ecuador
+      - name: EE
+        description: Estonia
+      - name: EG
+        description: Egypt
+      - name: EH
+        description: Western Sahara
+      - name: ER
+        description: Eritrea
+      - name: ES
+        description: Spain
+      - name: ET
+        description: Ethiopia
+      - name: FI
+        description: Finland
+      - name: FJ
+        description: Fiji
+      - name: FK
+        description: Falkland Islands
+      - name: FM
+        description: Federated States of Micronesia
+      - name: FO
+        description: Faroe Islands
+      - name: FR
+        description: France
+      - name: GA
+        description: Gabon
+      - name: GB
+        description: United Kingdom
+      - name: GD
+        description: Grenada
+      - name: GE
+        description: Georgia
+      - name: GF
+        description: French Guiana
+      - name: GG
+        description: Guernsey
+      - name: GH
+        description: Ghana
+      - name: GI
+        description: Gibraltar
+      - name: GL
+        description: Greenland
+      - name: GM
+        description: Gambia
+      - name: GN
+        description: Guinea
+      - name: GP
+        description: Guadeloupe
+      - name: GQ
+        description: Equatorial Guinea
+      - name: GR
+        description: Greece
+      - name: GS
+        description: South Georgia and the South Sandwich Islands
+      - name: GT
+        description: Guatemala
+      - name: GU
+        description: Guam
+      - name: GW
+        description: Guinea-Bissau
+      - name: GY
+        description: Guyana
+      - name: HK
+        description: Hong Kong
+      - name: HM
+        description: Heard Island and McDonald Islands
+      - name: HN
+        description: Honduras
+      - name: HR
+        description: Croatia
+      - name: HT
+        description: Haiti
+      - name: HU
+        description: Hungary
+      - name: ID
+        description: Indonesia
+      - name: IE
+        description: Ireland
+      - name: IL
+        description: Israel
+      - name: IM
+        description: Isle of Man
+      - name: IN
+        description: India
+      - name: IO
+        description: British Indian Ocean Territory
+      - name: IQ
+        description: Iraq
+      - name: IR
+        description: Iran
+      - name: IS
+        description: Iceland
+      - name: IT
+        description: Italy
+      - name: JE
+        description: Jersey
+      - name: JM
+        description: Jamaica
+      - name: JO
+        description: Jordan
+      - name: JP
+        description: Japan
+      - name: KE
+        description: Kenya
+      - name: KG
+        description: Kyrgyzstan
+      - name: KH
+        description: Cambodia
+      - name: KI
+        description: Kiribati
+      - name: KM
+        description: Comoros
+      - name: KN
+        description: Saint Kitts and Nevis
+      - name: KP
+        description: Democratic People's Republic of Korea
+      - name: KR
+        description: Republic of Korea
+      - name: KW
+        description: Kuwait
+      - name: KY
+        description: Cayman Islands
+      - name: KZ
+        description: Kazakhstan
+      - name: LA
+        description: Lao People's Democratic Republic
+      - name: LB
+        description: Lebanon
+      - name: LC
+        description: Saint Lucia
+      - name: LI
+        description: Liechtenstein
+      - name: LK
+        description: Sri Lanka
+      - name: LR
+        description: Liberia
+      - name: LS
+        description: Lesotho
+      - name: LT
+        description: Lithuania
+      - name: LU
+        description: Luxembourg
+      - name: LV
+        description: Latvia
+      - name: LY
+        description: Libya
+      - name: MA
+        description: Morocco
+      - name: MC
+        description: Monaco
+      - name: MD
+        description: Moldova
+      - name: ME
+        description: Montenegro
+      - name: MF
+        description: Saint Martin
+      - name: MG
+        description: Madagascar
+      - name: MH
+        description: Marshall Islands
+      - name: MK
+        description: North Macedonia
+      - name: ML
+        description: Mali
+      - name: MM
+        description: Myanmar
+      - name: MN
+        description: Mongolia
+      - name: MO
+        description: Macao
+      - name: MP
+        description: Northern Mariana Islands
+      - name: MQ
+        description: Martinique
+      - name: MR
+        description: Mauritania
+      - name: MS
+        description: Montserrat
+      - name: MT
+        description: Malta
+      - name: MU
+        description: Mauritius
+      - name: MV
+        description: Maldives
+      - name: MW
+        description: Malawi
+      - name: MX
+        description: Mexico
+      - name: MY
+        description: Malaysia
+      - name: MZ
+        description: Mozambique
+      - name: NA
+        description: Namibia
+      - name: NC
+        description: New Caledonia
+      - name: NE
+        description: Niger
+      - name: NF
+        description: Norfolk Island
+      - name: NG
+        description: Nigeria
+      - name: NI
+        description: Nicaragua
+      - name: NL
+        description: Netherlands
+      - name: 'NO'
+        description: Norway
+      - name: NP
+        description: Nepal
+      - name: NR
+        description: Nauru
+      - name: NU
+        description: Niue
+      - name: NZ
+        description: New Zealand
+      - name: OM
+        description: Oman
+      - name: PA
+        description: Panama
+      - name: PE
+        description: Peru
+      - name: PF
+        description: French Polynesia
+      - name: PG
+        description: Papua New Guinea
+      - name: PH
+        description: Philippines
+      - name: PK
+        description: Pakistan
+      - name: PL
+        description: Poland
+      - name: PM
+        description: Saint Pierre and Miquelon
+      - name: PN
+        description: Pitcairn
+      - name: PR
+        description: Puerto Rico
+      - name: PS
+        description: Palestine
+      - name: PT
+        description: Portugal
+      - name: PW
+        description: Palau
+      - name: PY
+        description: Paraguay
+      - name: QA
+        description: Qatar
+      - name: RE
+        description: Réunion
+      - name: RO
+        description: Romania
+      - name: RS
+        description: Serbia
+      - name: RU
+        description: Russia
+      - name: RW
+        description: Rwanda
+      - name: SA
+        description: Saudi Arabia
+      - name: SB
+        description: Solomon Islands
+      - name: SC
+        description: Seychelles
+      - name: SD
+        description: Sudan
+      - name: SE
+        description: Sweden
+      - name: SG
+        description: Singapore
+      - name: SH
+        description: Saint Helena, Ascension and Tristan da Cunha
+      - name: SI
+        description: Slovenia
+      - name: SJ
+        description: Svalbard and Jan Mayen
+      - name: SK
+        description: Slovakia
+      - name: SL
+        description: Sierra Leone
+      - name: SM
+        description: San Marino
+      - name: SN
+        description: Senegal
+      - name: SO
+        description: Somalia
+      - name: SR
+        description: Suriname
+      - name: SS
+        description: South Sudan
+      - name: ST
+        description: Sao Tome and Principe
+      - name: SV
+        description: El Salvador
+      - name: SX
+        description: Sint Maarten
+      - name: SY
+        description: Syrian Arab Republic
+      - name: SZ
+        description: Eswatini
+      - name: TC
+        description: Turks and Caicos Islands
+      - name: TD
+        description: Chad
+      - name: TF
+        description: French Southern Territories
+      - name: TG
+        description: Togo
+      - name: TH
+        description: Thailand
+      - name: TJ
+        description: Tajikistan
+      - name: TK
+        description: Tokelau
+      - name: TL
+        description: Timor-Leste
+      - name: TM
+        description: Turkmenistan
+      - name: TN
+        description: Tunisia
+      - name: TO
+        description: Tonga
+      - name: TR
+        description: Turkey
+      - name: TT
+        description: Trinidad and Tobago
+      - name: TV
+        description: Tuvalu
+      - name: TW
+        description: Taiwan
+      - name: TZ
+        description: Tanzania
+      - name: UA
+        description: Ukraine
+      - name: UG
+        description: Uganda
+      - name: UM
+        description: United States Minor Outlying Islands
+      - name: US
+        description: United States of America
+      - name: UY
+        description: Uruguay
+      - name: UZ
+        description: Uzbekistan
+      - name: VA
+        description: Vatican City
+      - name: VC
+        description: Saint Vincent and the Grenadines
+      - name: VE
+        description: Venezuela
+      - name: VG
+        description: British Virgin Islands
+      - name: VI
+        description: U.S. Virgin Islands
+      - name: VN
+        description: Vietnam
+      - name: VU
+        description: Vanuatu
+      - name: WF
+        description: Wallis and Futuna
+      - name: WS
+        description: Samoa
+      - name: YE
+        description: Yemen
+      - name: YT
+        description: Mayotte
+      - name: ZA
+        description: South Africa
+      - name: ZM
+        description: Zambia
+      - name: ZW
+        description: Zimbabwe
+      description: 'Indicates the country associated with another entity, such as a business.
+
+        Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
+      x-release-status: PUBLIC
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    Customer:
+      type: object
+      description: Represents a Square customer profile in the Customer Directory of a Square seller.
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: "A unique Square-assigned ID for the customer profile.\n\nIf you need this ID for an API request, use the ID returned when you created the customer profile or call the [SearchCustomers](api-endpoint:Customers-SearchCustomers) \nor [ListCustomers](api-endpoint:Customers-ListCustomers) endpoint."
+        created_at:
+          type: string
+          description: The timestamp when the customer profile was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the customer profile was last updated, in RFC 3339 format.
+          readOnly: true
+        given_name:
+          type: string
+          description: The given name (that is, the first name) associated with the customer profile.
+          nullable: true
+        family_name:
+          type: string
+          description: The family name (that is, the last name) associated with the customer profile.
+          nullable: true
+        nickname:
+          type: string
+          description: A nickname for the customer profile.
+          nullable: true
+        company_name:
+          type: string
+          description: A business name associated with the customer profile.
+          nullable: true
+        email_address:
+          type: string
+          description: The email address associated with the customer profile.
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+          description: The physical address associated with the customer profile.
+          nullable: true
+        phone_number:
+          type: string
+          description: The phone number associated with the customer profile.
+          nullable: true
+        birthday:
+          type: string
+          description: 'The birthday associated with the customer profile, in `YYYY-MM-DD` format. For example, `1998-09-21`
+
+            represents September 21, 1998, and `0000-09-21` represents September 21 (without a birth year).'
+          nullable: true
+        reference_id:
+          type: string
+          description: 'An optional second ID used to associate the customer profile with an
+
+            entity in another system.'
+          nullable: true
+        note:
+          type: string
+          description: A custom note associated with the customer profile.
+          nullable: true
+        preferences:
+          $ref: '#/components/schemas/CustomerPreferences'
+          description: Represents general customer preferences.
+          nullable: true
+        creation_source:
+          $ref: '#/components/schemas/CustomerCreationSource'
+          description: 'The method used to create the customer profile.
+
+            See [CustomerCreationSource](#type-customercreationsource) for possible values'
+          nullable: true
+        group_ids:
+          type: array
+          items:
+            type: string
+          description: The IDs of [customer groups](entity:CustomerGroup) the customer belongs to.
+          nullable: true
+        segment_ids:
+          type: array
+          items:
+            type: string
+          description: The IDs of [customer segments](entity:CustomerSegment) the customer belongs to.
+          nullable: true
+        version:
+          type: integer
+          description: The Square-assigned version number of the customer profile. The version number is incremented each time an update is committed to the customer profile, except for changes to customer segment membership.
+          format: int64
+        tax_ids:
+          $ref: '#/components/schemas/CustomerTaxIds'
+          description: "The tax ID associated with the customer profile. This field is present only for customers of sellers in EU countries or the United Kingdom. \nFor more information, see [Customer tax IDs](https://developer.squareup.com/docs/customers-api/what-it-does#customer-tax-ids)."
+          nullable: true
+    BulkCreateCustomerData:
+      type: object
+      description: 'Defines the customer data provided in individual create requests for a
+
+        [BulkCreateCustomers](api-endpoint:Customers-BulkCreateCustomers) operation.'
+      x-release-status: PUBLIC
+      properties:
+        given_name:
+          type: string
+          description: The given name (that is, the first name) associated with the customer profile.
+          maxLength: 300
+          nullable: true
+        family_name:
+          type: string
+          description: The family name (that is, the last name) associated with the customer profile.
+          maxLength: 300
+          nullable: true
+        company_name:
+          type: string
+          description: A business name associated with the customer profile.
+          maxLength: 500
+          nullable: true
+        nickname:
+          type: string
+          description: A nickname for the customer profile.
+          maxLength: 100
+          nullable: true
+        email_address:
+          type: string
+          description: The email address associated with the customer profile.
+          maxLength: 254
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+          description: 'The physical address associated with the customer profile. For maximum length constraints,
+
+            see [Customer addresses](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#address).
+
+            The `first_name` and `last_name` fields are ignored if they are present in the request.'
+          nullable: true
+        phone_number:
+          type: string
+          description: 'The phone number associated with the customer profile. The phone number must be valid
+
+            and can contain 9–16 digits, with an optional `+` prefix and country code. For more information,
+
+            see [Customer phone numbers](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#phone-number).'
+          nullable: true
+        reference_id:
+          type: string
+          description: 'An optional second ID used to associate the customer profile with an
+
+            entity in another system.'
+          maxLength: 100
+          nullable: true
+        note:
+          type: string
+          description: A custom note associated with the customer profile.
+          nullable: true
+        birthday:
+          type: string
+          description: 'The birthday associated with the customer profile, in `YYYY-MM-DD` or `MM-DD` format.
+
+            For example, specify `1998-09-21` for September 21, 1998, or `09-21` for September 21.
+
+            Birthdays are returned in `YYYY-MM-DD` format, where `YYYY` is the specified birth year or
+
+            `0000` if a birth year is not specified.'
+          nullable: true
+        tax_ids:
+          $ref: '#/components/schemas/CustomerTaxIds'
+          description: 'The tax ID associated with the customer profile. This field is available only for
+
+            customers of sellers in EU countries or the United Kingdom. For more information, see
+
+            [Customer tax IDs](https://developer.squareup.com/docs/customers-api/what-it-does#customer-tax-ids).'
+          nullable: true
+    CustomerTextFilter:
+      type: object
+      description: "A filter to select customers based on exact or fuzzy matching of\ncustomer attributes against a specified query. Depending on the customer attributes, \nthe filter can be case-sensitive. This filter can be exact or fuzzy, but it cannot be both."
+      x-release-status: PUBLIC
+      properties:
+        exact:
+          type: string
+          description: Use the exact filter to select customers whose attributes match exactly the specified query.
+          nullable: true
+        fuzzy:
+          type: string
+          description: "Use the fuzzy filter to select customers whose attributes match the specified query \nin a fuzzy manner. When the fuzzy option is used, search queries are tokenized, and then \neach query token must be matched somewhere in the searched attribute. For single token queries, \nthis is effectively the same behavior as a partial match operation."
+          nullable: true
+    DeleteCustomerResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `DeleteCustomer` endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/DeleteCustomer/DeleteCustomerResponse.csharp
+        java: /sdk_samples/DeleteCustomer/DeleteCustomerResponse.java
+        javascript: /sdk_samples/DeleteCustomer/DeleteCustomerResponse.javascript
+        php: /sdk_samples/DeleteCustomer/DeleteCustomerResponse.php
+        python: /sdk_samples/DeleteCustomer/DeleteCustomerResponse.python
+        ruby: /sdk_samples/DeleteCustomer/DeleteCustomerResponse.ruby
+    CustomerCustomAttributeFilterValue:
+      type: object
+      description: "A type-specific filter used in a [custom attribute filter](entity:CustomerCustomAttributeFilter) to search based on the value \nof a customer-related [custom attribute](entity:CustomAttribute)."
+      x-release-status: PUBLIC
+      properties:
+        email:
+          $ref: '#/components/schemas/CustomerTextFilter'
+          description: 'A filter for a query based on the value of an `Email`-type custom attribute. This filter is case-insensitive and can
+
+            include `exact` or `fuzzy`, but not both.
+
+
+            For an `exact` match, provide the complete email address.
+
+
+            For a `fuzzy` match, provide a query expression containing one or more query tokens to match against the email address. Square removes
+
+            any punctuation (including periods (.), underscores (_), and the @ symbol) and tokenizes the email addresses on spaces. A match is found
+
+            if a tokenized email address contains all the tokens in the search query, irrespective of the token order. For example, `Steven gmail`
+
+            matches steven.jones@gmail.com and mygmail@stevensbakery.com.'
+          nullable: true
+        phone:
+          $ref: '#/components/schemas/CustomerTextFilter'
+          description: 'A filter for a query based on the value of a `PhoneNumber`-type custom attribute. This filter is case-insensitive and
+
+            can include `exact` or `fuzzy`, but not both.
+
+
+            For an `exact` match, provide the complete phone number. This is always an E.164-compliant phone number that starts
+
+            with the + sign followed by the country code and subscriber number. For example, the format for a US phone number is +12061112222.
+
+
+            For a `fuzzy` match, provide a query expression containing one or more query tokens to match against the phone number.
+
+            Square removes any punctuation and tokenizes the expression on spaces. A match is found if a tokenized phone number contains
+
+            all the tokens in the search query, irrespective of the token order. For example, `415 123 45` is tokenized to `415`, `123`, and `45`,
+
+            which matches +14151234567 and +12345674158, but does not match +1234156780. Similarly, the expression `415` matches
+
+            +14151234567, +12345674158, and +1234156780.'
+          nullable: true
+        text:
+          $ref: '#/components/schemas/CustomerTextFilter'
+          description: "A filter for a query based on the value of a `String`-type custom attribute. This filter is case-insensitive and \ncan include `exact` or `fuzzy`, but not both.\n\nFor an `exact` match, provide the complete string.\n\nFor a `fuzzy` match, provide a query expression containing one or more query tokens in any order that contain complete words\nto match against the string. Square tokenizes the expression using a grammar-based tokenizer. For example, the expressions `quick brown`,\n`brown quick`, and `quick fox` match \"The quick brown fox jumps over the lazy dog\". However, `quick foxes` and `qui` do not match."
+          nullable: true
+        selection:
+          $ref: '#/components/schemas/FilterValue'
+          description: "A filter for a query based on the display name for a `Selection`-type custom attribute value. This filter is case-sensitive\nand can contain `any`, `all`, or both. The `none` condition is not supported.\n\nProvide the display name of each item that you want to search for. To find the display names for the selection, use the \n[Customer Custom Attributes API](api:CustomerCustomAttributes) to retrieve the corresponding custom attribute definition\nand then check the `schema.items.names` field. For more information, see\n[Search based on selection](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#custom-attribute-value-filter-selection).\n\nNote that when a `Selection`-type custom attribute is assigned to a customer profile, the custom attribute value is a list of one\nor more UUIDs (sourced from the `schema.items.enum` field) that map to the item names. These UUIDs are unique per seller."
+          nullable: true
+        date:
+          $ref: '#/components/schemas/TimeRange'
+          description: 'A filter for a query based on the value of a `Date`-type custom attribute.
+
+
+            Provide a date range for this filter using `start_at`, `end_at`, or both. Range boundaries are inclusive. Dates can be specified
+
+            in `YYYY-MM-DD` format or as RFC 3339 timestamps.'
+          nullable: true
+        number:
+          $ref: '#/components/schemas/FloatNumberRange'
+          description: 'A filter for a query based on the value of a `Number`-type custom attribute, which can be an integer or a decimal with up to
+
+            5 digits of precision.
+
+
+            Provide a numerical range for this filter using `start_at`, `end_at`, or both. Range boundaries are inclusive. Numbers are specified
+
+            as decimals or integers. The absolute value of range boundaries must not exceed `(2^63-1)/10^5`, or 92233720368547.'
+          nullable: true
+        boolean:
+          type: boolean
+          description: A filter for a query based on the value of a `Boolean`-type custom attribute.
+          nullable: true
+        address:
+          $ref: '#/components/schemas/CustomerAddressFilter'
+          description: A filter for a query based on the value of an `Address`-type custom attribute. The filter can include `postal_code`, `country`, or both.
+          nullable: true
+    BulkRetrieveCustomersResponse:
+      type: object
+      description: 'Defines the fields included in the response body from the
+
+        [BulkRetrieveCustomers](api-endpoint:Customers-BulkRetrieveCustomers) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        responses:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RetrieveCustomerResponse'
+          description: 'A map of responses that correspond to individual retrieve requests, represented by
+
+            key-value pairs.
+
+
+            Each key is the customer ID that was specified for a retrieve request and each value
+
+            is the corresponding response.
+
+            If the request succeeds, the value is the requested customer profile.
+
+            If the request fails, the value contains any errors that occurred during the request.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any top-level errors that prevented the bulk operation from running.
+      example:
+        responses:
+          2GYD7WNXF7BJZW1PMGNXZ3Y8M8:
+            errors:
+            - category: INVALID_REQUEST_ERROR
+              code: NOT_FOUND
+              detail: Customer with ID `2GYD7WNXF7BJZW1PMGNXZ3Y8M8` not found.
+          8DDA5NZVBZFGAX0V3HPF81HHE0:
+            customer:
+              birthday: '1897-07-24'
+              created_at: '2024-01-19T00:27:54.59Z'
+              creation_source: THIRD_PARTY
+              email_address: New.Amelia.Earhart@example.com
+              family_name: Earhart
+              given_name: Amelia
+              id: 8DDA5NZVBZFGAX0V3HPF81HHE0
+              note: updated customer note
+              preferences:
+                email_unsubscribed: false
+              updated_at: '2024-01-19T00:38:06Z'
+              version: 3
+          N18CPRVXR5214XPBBA6BZQWF3C:
+            customer:
+              created_at: '2024-01-19T00:27:54.59Z'
+              creation_source: THIRD_PARTY
+              family_name: Curie
+              given_name: Marie
+              id: N18CPRVXR5214XPBBA6BZQWF3C
+              preferences:
+                email_unsubscribed: false
+              updated_at: '2024-01-19T00:38:06Z'
+              version: 1
+    CustomerCreationSource:
+      type: string
+      enum:
+      - OTHER
+      - APPOINTMENTS
+      - COUPON
+      - DELETION_RECOVERY
+      - DIRECTORY
+      - EGIFTING
+      - EMAIL_COLLECTION
+      - FEEDBACK
+      - IMPORT
+      - INVOICES
+      - LOYALTY
+      - MARKETING
+      - MERGE
+      - ONLINE_STORE
+      - INSTANT_PROFILE
+      - TERMINAL
+      - THIRD_PARTY
+      - THIRD_PARTY_IMPORT
+      - UNMERGE_RECOVERY
+      x-enum-elements:
+      - name: OTHER
+        description: 'The default creation source. This source is typically used for backward/future
+
+          compatibility when the original source of a customer profile is
+
+          unrecognized. For example, when older clients do not support newer
+
+          source types.'
+      - name: APPOINTMENTS
+        description: 'The customer profile was created automatically when an appointment
+
+          was scheduled.'
+      - name: COUPON
+        description: 'The customer profile was created automatically when a coupon was issued
+
+          using Square Point of Sale.'
+      - name: DELETION_RECOVERY
+        description: 'The customer profile was restored through Square''s deletion recovery
+
+          process.'
+      - name: DIRECTORY
+        description: "The customer profile was created manually through Square Seller Dashboard or the \nPoint of Sale application."
+      - name: EGIFTING
+        description: 'The customer profile was created automatically when a gift card was
+
+          issued using Square Point of Sale. Customer profiles are created for
+
+          both the buyer and the recipient of the gift card.'
+      - name: EMAIL_COLLECTION
+        description: 'The customer profile was created through Square Point of Sale when
+
+          signing up for marketing emails during checkout.'
+      - name: FEEDBACK
+        description: 'The customer profile was created automatically when providing feedback
+
+          through a digital receipt.'
+      - name: IMPORT
+        description: 'The customer profile was created automatically when importing customer
+
+          data through Square Seller Dashboard.'
+      - name: INVOICES
+        description: The customer profile was created automatically during an invoice payment.
+      - name: LOYALTY
+        description: 'The customer profile was created automatically when customers provide a
+
+          phone number for loyalty reward programs during checkout.'
+      - name: MARKETING
+        description: 'The customer profile was created as the result of a campaign managed
+
+          through Square’s Facebook integration.'
+      - name: MERGE
+        description: 'The customer profile was created as the result of explicitly merging
+
+          multiple customer profiles through the Square Seller Dashboard or the Point of
+
+          Sale application.'
+      - name: ONLINE_STORE
+        description: 'The customer profile was created through Square''s Online Store solution
+
+          (legacy service).'
+      - name: INSTANT_PROFILE
+        description: 'The customer profile was created automatically as the result of a successful
+
+          transaction that did not explicitly link to an existing customer profile.'
+      - name: TERMINAL
+        description: The customer profile was created through Square's Virtual Terminal.
+      - name: THIRD_PARTY
+        description: The customer profile was created through a Square API call.
+      - name: THIRD_PARTY_IMPORT
+        description: 'The customer profile was created by a third-party product and imported
+
+          through an official integration.'
+      - name: UNMERGE_RECOVERY
+        description: 'The customer profile was restored through Square''s unmerge recovery
+
+          process.'
+      description: Indicates the method used to create the customer profile.
+      x-release-status: PUBLIC
+    CardPrepaidType:
+      type: string
+      enum:
+      - UNKNOWN_PREPAID_TYPE
+      - NOT_PREPAID
+      - PREPAID
+      x-enum-elements:
+      - name: UNKNOWN_PREPAID_TYPE
+        description: ''
+      - name: NOT_PREPAID
+        description: ''
+      - name: PREPAID
+        description: ''
+      description: Indicates a card's prepaid type, such as `NOT_PREPAID` or `PREPAID`.
+      x-release-status: PUBLIC
+    CustomerPreferences:
+      type: object
+      description: Represents communication preferences for the customer profile.
+      x-release-status: PUBLIC
+      properties:
+        email_unsubscribed:
+          type: boolean
+          description: Indicates whether the customer has unsubscribed from marketing campaign emails. A value of `true` means that the customer chose to opt out of email marketing from the current Square seller or from all Square sellers. This value is read-only from the Customers API.
+          nullable: true
+    CustomerAddressFilter:
+      type: object
+      description: 'The customer address filter. This filter is used in a [CustomerCustomAttributeFilterValue](entity:CustomerCustomAttributeFilterValue) filter when
+
+        searching by an `Address`-type custom attribute.'
+      x-release-status: PUBLIC
+      properties:
+        postal_code:
+          $ref: '#/components/schemas/CustomerTextFilter'
+          description: The postal code to search for. Only an `exact` match is supported.
+          nullable: true
+        country:
+          $ref: '#/components/schemas/Country'
+          description: 'The country code to search for.
+
+            See [Country](#type-country) for possible values'
+          nullable: true
+    RetrieveCustomerResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `RetrieveCustomer` endpoint.
+
+
+        Either `errors` or `customer` is present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        customer:
+          $ref: '#/components/schemas/Customer'
+          description: The requested customer.
+      example:
+        customer:
+          address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          created_at: '2016-03-23T20:21:54.859Z'
+          creation_source: THIRD_PARTY
+          email_address: Amelia.Earhart@example.com
+          family_name: Earhart
+          given_name: Amelia
+          group_ids:
+          - 545AXB44B4XXWMVQ4W8SBT3HHF
+          id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          note: a customer
+          phone_number: +1-212-555-4240
+          preferences:
+            email_unsubscribed: false
+          reference_id: YOUR_REFERENCE_ID
+          segment_ids:
+          - 1KB9JE5EGJXCW.REACHABLE
+          updated_at: '2016-03-23T20:21:54.859Z'
+          version: 1
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/RetrieveCustomer/RetrieveCustomerResponse.csharp
+        java: /sdk_samples/RetrieveCustomer/RetrieveCustomerResponse.java
+        javascript: /sdk_samples/RetrieveCustomer/RetrieveCustomerResponse.javascript
+        php: /sdk_samples/RetrieveCustomer/RetrieveCustomerResponse.php
+        python: /sdk_samples/RetrieveCustomer/RetrieveCustomerResponse.python
+        ruby: /sdk_samples/RetrieveCustomer/RetrieveCustomerResponse.ruby
+    CustomerFilter:
+      type: object
+      description: 'Represents the filtering criteria in a [search query](entity:CustomerQuery) that defines how to filter
+
+        customer profiles returned in [SearchCustomers](api-endpoint:Customers-SearchCustomers) results.'
+      x-release-status: PUBLIC
+      properties:
+        creation_source:
+          $ref: '#/components/schemas/CustomerCreationSourceFilter'
+          description: A filter to select customers based on their creation source.
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/TimeRange'
+          description: A filter to select customers based on when they were created.
+        updated_at:
+          $ref: '#/components/schemas/TimeRange'
+          description: A filter to select customers based on when they were last updated.
+        email_address:
+          $ref: '#/components/schemas/CustomerTextFilter'
+          description: "A filter to [select customers by their email address](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#search-by-email-address) \nvisible to the seller. \nThis filter is case-insensitive.\n\nFor [exact matching](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#exact-search-by-email-address), this\nfilter causes the search to return customer profiles \nwhose `email_address` field value are identical to the email address provided\nin the query.\n\nFor [fuzzy matching](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#fuzzy-search-by-email-address), \nthis filter causes the search to return customer profiles \nwhose `email_address` field value has a token-wise partial match against the filtering \nexpression in the query. For example, with `Steven gmail` provided in a search\nquery, the search returns customers whose email address is `steven.johnson@gmail.com` \nor `mygmail@stevensbakery.com`. Square removes any punctuation (including periods (.),\nunderscores (_), and the @ symbol) and tokenizes the email addresses on spaces. A match is\nfound if a tokenized email address contains all the tokens in the search query, \nirrespective of the token order."
+          nullable: true
+        phone_number:
+          $ref: '#/components/schemas/CustomerTextFilter'
+          description: 'A filter to [select customers by their phone numbers](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#search-by-phone-number)
+
+            visible to the seller.
+
+
+            For [exact matching](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#exact-search-by-phone-number),
+
+            this filter returns customers whose phone number matches the specified query expression. The number in the query must be of an
+
+            E.164-compliant form. In particular, it must include the leading `+` sign followed by a country code and then a subscriber number.
+
+            For example, the standard E.164 form of a US phone number is `+12062223333` and an E.164-compliant variation is `+1 (206) 222-3333`.
+
+            To match the query expression, stored customer phone numbers are converted to the standard E.164 form.
+
+
+            For [fuzzy matching](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#fuzzy-search-by-phone-number),
+
+            this filter returns customers whose phone number matches the token or tokens provided in the query expression. For example, with `415`
+
+            provided in a search query, the search returns customers with the phone numbers `+1-415-212-1200`, `+1-212-415-1234`, and `+1 (551) 234-1567`.
+
+            Similarly, a search query of `415 123` returns customers with the phone numbers `+1-212-415-1234` and `+1 (551) 234-1567` but not
+
+            `+1-212-415-1200`. A match is found if a tokenized phone number contains all the tokens in the search query, irrespective of the token order.'
+          nullable: true
+        reference_id:
+          $ref: '#/components/schemas/CustomerTextFilter'
+          description: "A filter to [select customers by their reference IDs](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#search-by-reference-id).\nThis filter is case-insensitive.\n\n[Exact matching](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#exact-search-by-reference-id) \nof a customer's reference ID against a query's reference ID is evaluated as an\nexact match between two strings, character by character in the given order.\n\n[Fuzzy matching](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#fuzzy-search-by-reference-id) \nof stored reference IDs against queried reference IDs works \nexactly the same as fuzzy matching on email addresses. Non-alphanumeric characters \nare replaced by spaces to tokenize stored and queried reference IDs. A match is found\nif a tokenized stored reference ID contains all tokens specified in any order in the query. For example,\na query of `NYC M` matches customer profiles with the `reference_id` value of `NYC_M_35_JOHNSON`\nand `NYC_27_MURRAY`."
+          nullable: true
+        group_ids:
+          $ref: '#/components/schemas/FilterValue'
+          description: 'A filter to select customers based on the [groups](entity:CustomerGroup) they belong to.
+
+            Group membership is controlled by sellers and developers.
+
+
+            The `group_ids` filter has the following syntax:
+
+            ```
+
+            "group_ids": {
+
+            "any":  ["{group_a_id}", "{group_b_id}", ...],
+
+            "all":  ["{group_1_id}", "{group_2_id}", ...],
+
+            "none": ["{group_i_id}", "{group_ii_id}", ...]
+
+            }
+
+            ```
+
+
+            You can use any combination of the `any`, `all`, and `none` fields in the filter.
+
+            With `any`, the search returns customers in groups `a` or `b` or any other group specified in the list.
+
+            With `all`, the search returns customers in groups `1` and `2` and all other groups specified in the list.
+
+            With `none`, the search returns customers not in groups `i` or `ii` or any other group specified in the list.
+
+
+            If any of the search conditions are not met, including when an invalid or non-existent group ID is provided,
+
+            the result is an empty object (`{}`).'
+          nullable: true
+        custom_attribute:
+          $ref: '#/components/schemas/CustomerCustomAttributeFilters'
+          description: "A filter to select customers based on one or more custom attributes.  \nThis filter can contain up to 10 custom attribute filters. Each custom attribute filter specifies filtering criteria for a target custom\nattribute. If multiple custom attribute filters are provided, they are combined as an `AND` operation.\n\nTo be valid for a search, the custom attributes must be visible to the requesting application. For more information, including example queries,\nsee [Search by custom attribute](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#search-by-custom-attribute).\n\nSquare returns matching customer profiles, which do not contain custom attributes. To retrieve customer-related custom attributes,\nuse the [Customer Custom Attributes API](api:CustomerCustomAttributes). For example, you can call\n[RetrieveCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-RetrieveCustomerCustomAttribute) using a customer ID from the result set."
+          nullable: true
+        segment_ids:
+          $ref: '#/components/schemas/FilterValue'
+          description: ' A filter to select customers based on the [segments](entity:CustomerSegment) they belong to.
+
+            Segment membership is dynamic and adjusts automatically based on whether customers meet the segment criteria.
+
+
+            You can provide up to three segment IDs in the filter, using any combination of the `all`, `any`, and `none` fields.
+
+            For the following example, the results include customers who belong to both segment A and segment B but do not belong to segment C.
+
+
+            ```
+
+            "segment_ids": {
+
+            "all":  ["{segment_A_id}", "{segment_B_id}"],
+
+            "none":  ["{segment_C_id}"]
+
+            }
+
+            ```
+
+
+            If an invalid or non-existent segment ID is provided in the filter, Square stops processing the request
+
+            and returns a `400 BAD_REQUEST` error that includes the segment ID.'
+          nullable: true
+    FilterValue:
+      type: object
+      description: 'A filter to select resources based on an exact field value. For any given
+
+        value, the value can only be in one property. Depending on the field, either
+
+        all properties can be set or only a subset will be available.
+
+
+        Refer to the documentation of the field.'
+      x-release-status: BETA
+      properties:
+        all:
+          type: array
+          items:
+            type: string
+          description: A list of terms that must be present on the field of the resource.
+          nullable: true
+        any:
+          type: array
+          items:
+            type: string
+          description: 'A list of terms where at least one of them must be present on the
+
+            field of the resource.'
+          nullable: true
+        none:
+          type: array
+          items:
+            type: string
+          description: A list of terms that must not be present on the field the resource
+          nullable: true
+    SearchCustomersRequest:
+      type: object
+      description: 'Defines the fields that are included in the request body of a request to the
+
+        `SearchCustomers` endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        cursor:
+          type: string
+          description: 'Include the pagination cursor in subsequent calls to this endpoint to retrieve
+
+            the next set of results associated with the original query.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        limit:
+          type: integer
+          description: 'The maximum number of results to return in a single page. This limit is advisory. The response might contain more or fewer results.
+
+            If the specified limit is invalid, Square returns a `400 VALUE_TOO_LOW` or `400 VALUE_TOO_HIGH` error. The default value is 100.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+          format: int64
+          minimum: 1
+          maximum: 100
+        query:
+          $ref: '#/components/schemas/CustomerQuery'
+          description: 'The filtering and sorting criteria for the search request. If a query is not specified,
+
+            Square returns all customer profiles ordered alphabetically by `given_name` and `family_name`.'
+        count:
+          type: boolean
+          description: 'Indicates whether to return the total count of matching customers in the `count` field of the response.
+
+
+            The default value is `false`.'
+      example:
+        limit: 2
+        query:
+          filter:
+            created_at:
+              end_at: '2018-02-01T00:00:00-00:00'
+              start_at: '2018-01-01T00:00:00-00:00'
+            creation_source:
+              rule: INCLUDE
+              values:
+              - THIRD_PARTY
+            email_address:
+              fuzzy: example.com
+            group_ids:
+              all:
+              - 545AXB44B4XXWMVQ4W8SBT3HHF
+          sort:
+            field: CREATED_AT
+            order: ASC
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/SearchCustomers/SearchCustomersRequest.csharp
+        java: /sdk_samples/SearchCustomers/SearchCustomersRequest.java
+        javascript: /sdk_samples/SearchCustomers/SearchCustomersRequest.javascript
+        php: /sdk_samples/SearchCustomers/SearchCustomersRequest.php
+        python: /sdk_samples/SearchCustomers/SearchCustomersRequest.python
+        ruby: /sdk_samples/SearchCustomers/SearchCustomersRequest.ruby
+    DeleteCustomerCardResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `DeleteCustomerCard` endpoint.'
+      x-release-status: DEPRECATED
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/DeleteCustomerCard/DeleteCustomerCardResponse.csharp
+        java: /sdk_samples/DeleteCustomerCard/DeleteCustomerCardResponse.java
+        javascript: /sdk_samples/DeleteCustomerCard/DeleteCustomerCardResponse.javascript
+        php: /sdk_samples/DeleteCustomerCard/DeleteCustomerCardResponse.php
+        python: /sdk_samples/DeleteCustomerCard/DeleteCustomerCardResponse.python
+        ruby: /sdk_samples/DeleteCustomerCard/DeleteCustomerCardResponse.ruby
+    CardCoBrand:
+      type: string
+      enum:
+      - UNKNOWN
+      - AFTERPAY
+      - CLEARPAY
+      x-enum-elements:
+      - name: UNKNOWN
+        description: ''
+      - name: AFTERPAY
+        description: ''
+      - name: CLEARPAY
+        description: ''
+      description: Indicates the brand for a co-branded card.
+      x-release-status: PUBLIC
+    SearchCustomersResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `SearchCustomers` endpoint.
+
+
+        Either `errors` or `customers` is present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        customers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
+          description: 'The customer profiles that match the search query. If any search condition is not met, the result is an empty object (`{}`).
+
+            Only customer profiles with public information (`given_name`, `family_name`, `company_name`, `email_address`, or `phone_number`)
+
+            are included in the response.'
+        cursor:
+          type: string
+          description: 'A pagination cursor that can be used during subsequent calls
+
+            to `SearchCustomers` to retrieve the next set of results associated
+
+            with the original query. Pagination cursors are only present when
+
+            a request succeeds and additional results are available.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        count:
+          type: integer
+          description: 'The total count of customers associated with the Square account that match the search query. Only customer profiles with
+
+            public information (`given_name`, `family_name`, `company_name`, `email_address`, or `phone_number`) are counted. This field is
+
+            present only if `count` is set to `true` in the request.'
+          format: int64
+      example:
+        cursor: 9dpS093Uy12AzeE
+        customers:
+        - address:
+            address_line_1: 505 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          created_at: '2018-01-23T20:21:54.859Z'
+          creation_source: DIRECTORY
+          email_address: james.bond@example.com
+          family_name: Bond
+          given_name: James
+          group_ids:
+          - 545AXB44B4XXWMVQ4W8SBT3HHF
+          id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          phone_number: +1-212-555-4250
+          preferences:
+            email_unsubscribed: false
+          reference_id: YOUR_REFERENCE_ID_2
+          segment_ids:
+          - 1KB9JE5EGJXCW.REACHABLE
+          updated_at: '2020-04-20T10:02:43.083Z'
+          version: 7
+        - address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          created_at: '2018-01-30T14:10:54.859Z'
+          creation_source: THIRD_PARTY
+          email_address: amelia.earhart@example.com
+          family_name: Earhart
+          given_name: Amelia
+          group_ids:
+          - 545AXB44B4XXWMVQ4W8SBT3HHF
+          id: A9641GZW2H7Z56YYSD41Q12HDW
+          note: a customer
+          phone_number: +1-212-555-9238
+          preferences:
+            email_unsubscribed: false
+          reference_id: YOUR_REFERENCE_ID_1
+          segment_ids:
+          - 1KB9JE5EGJXCW.REACHABLE
+          updated_at: '2018-03-08T18:25:21.342Z'
+          version: 1
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/SearchCustomers/SearchCustomersResponse.csharp
+        java: /sdk_samples/SearchCustomers/SearchCustomersResponse.java
+        javascript: /sdk_samples/SearchCustomers/SearchCustomersResponse.javascript
+        php: /sdk_samples/SearchCustomers/SearchCustomersResponse.php
+        python: /sdk_samples/SearchCustomers/SearchCustomersResponse.python
+        ruby: /sdk_samples/SearchCustomers/SearchCustomersResponse.ruby
+    UpdateCustomerRequest:
+      type: object
+      description: 'Defines the body parameters that can be included in a request to the
+
+        `UpdateCustomer` endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        given_name:
+          type: string
+          description: 'The given name (that is, the first name) associated with the customer profile.
+
+
+            The maximum length for this value is 300 characters.'
+          nullable: true
+        family_name:
+          type: string
+          description: 'The family name (that is, the last name) associated with the customer profile.
+
+
+            The maximum length for this value is 300 characters.'
+          nullable: true
+        company_name:
+          type: string
+          description: 'A business name associated with the customer profile.
+
+
+            The maximum length for this value is 500 characters.'
+          nullable: true
+        nickname:
+          type: string
+          description: 'A nickname for the customer profile.
+
+
+            The maximum length for this value is 100 characters.'
+          nullable: true
+        email_address:
+          type: string
+          description: 'The email address associated with the customer profile.
+
+
+            The maximum length for this value is 254 characters.'
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+          description: 'The physical address associated with the customer profile. Only new or changed fields are required in the request.
+
+
+            For maximum length constraints, see [Customer addresses](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#address).
+
+            The `first_name` and `last_name` fields are ignored if they are present in the request.'
+          nullable: true
+        phone_number:
+          type: string
+          description: 'The phone number associated with the customer profile. The phone number must be valid and can contain
+
+            9–16 digits, with an optional `+` prefix and country code. For more information, see
+
+            [Customer phone numbers](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#phone-number).'
+          nullable: true
+        reference_id:
+          type: string
+          description: 'An optional second ID used to associate the customer profile with an
+
+            entity in another system.
+
+
+            The maximum length for this value is 100 characters.'
+          nullable: true
+        note:
+          type: string
+          description: A custom note associated with the customer profile.
+          nullable: true
+        birthday:
+          type: string
+          description: 'The birthday associated with the customer profile, in `YYYY-MM-DD` or `MM-DD` format. For example,
+
+            specify `1998-09-21` for September 21, 1998, or `09-21` for September 21. Birthdays are returned in `YYYY-MM-DD`
+
+            format, where `YYYY` is the specified birth year or `0000` if a birth year is not specified.'
+          nullable: true
+        version:
+          type: integer
+          description: 'The current version of the customer profile.
+
+
+            As a best practice, you should include this field to enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency) control. For more information, see [Update a customer profile](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#update-a-customer-profile).'
+          format: int64
+        tax_ids:
+          $ref: '#/components/schemas/CustomerTaxIds'
+          description: 'The tax ID associated with the customer profile. This field is available only for customers of sellers
+
+            in EU countries or the United Kingdom. For more information,
+
+            see [Customer tax IDs](https://developer.squareup.com/docs/customers-api/what-it-does#customer-tax-ids).'
+          nullable: true
+      example:
+        email_address: New.Amelia.Earhart@example.com
+        note: updated customer note
+        phone_number: null
+        version: 2
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/UpdateCustomer/UpdateCustomerRequest.csharp
+        java: /sdk_samples/UpdateCustomer/UpdateCustomerRequest.java
+        javascript: /sdk_samples/UpdateCustomer/UpdateCustomerRequest.javascript
+        php: /sdk_samples/UpdateCustomer/UpdateCustomerRequest.php
+        python: /sdk_samples/UpdateCustomer/UpdateCustomerRequest.python
+        ruby: /sdk_samples/UpdateCustomer/UpdateCustomerRequest.ruby
+    BulkUpdateCustomerData:
+      type: object
+      description: 'Defines the customer data provided in individual update requests for a
+
+        [BulkUpdateCustomers](api-endpoint:Customers-BulkUpdateCustomers) operation.'
+      x-release-status: PUBLIC
+      properties:
+        given_name:
+          type: string
+          description: The given name (that is, the first name) associated with the customer profile.
+          maxLength: 300
+          nullable: true
+        family_name:
+          type: string
+          description: The family name (that is, the last name) associated with the customer profile.
+          maxLength: 300
+          nullable: true
+        company_name:
+          type: string
+          description: A business name associated with the customer profile.
+          maxLength: 500
+          nullable: true
+        nickname:
+          type: string
+          description: A nickname for the customer profile.
+          maxLength: 100
+          nullable: true
+        email_address:
+          type: string
+          description: The email address associated with the customer profile.
+          maxLength: 254
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+          description: 'The physical address associated with the customer profile. For maximum length constraints,
+
+            see [Customer addresses](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#address).
+
+            The `first_name` and `last_name` fields are ignored if they are present in the request.'
+          nullable: true
+        phone_number:
+          type: string
+          description: 'The phone number associated with the customer profile. The phone number must be valid
+
+            and can contain 9–16 digits, with an optional `+` prefix and country code. For more information,
+
+            see [Customer phone numbers](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#phone-number).'
+          nullable: true
+        reference_id:
+          type: string
+          description: 'An optional second ID used to associate the customer profile with an
+
+            entity in another system.'
+          maxLength: 100
+          nullable: true
+        note:
+          type: string
+          description: An custom note associates with the customer profile.
+          nullable: true
+        birthday:
+          type: string
+          description: 'The birthday associated with the customer profile, in `YYYY-MM-DD` or `MM-DD` format.
+
+            For example, specify `1998-09-21` for September 21, 1998, or `09-21` for September 21.
+
+            Birthdays are returned in `YYYY-MM-DD` format, where `YYYY` is the specified birth year or
+
+            `0000` if a birth year is not specified.'
+          nullable: true
+        tax_ids:
+          $ref: '#/components/schemas/CustomerTaxIds'
+          description: 'The tax ID associated with the customer profile. This field is available only for
+
+            customers of sellers in EU countries or the United Kingdom. For more information, see
+
+            [Customer tax IDs](https://developer.squareup.com/docs/customers-api/what-it-does#customer-tax-ids).'
+          nullable: true
+        version:
+          type: integer
+          description: 'The current version of the customer profile.
+
+
+            As a best practice, you should include this field to enable
+
+            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
+
+            control.'
+          format: int64
+    BulkCreateCustomersRequest:
+      type: object
+      description: 'Defines the body parameters that can be included in requests to the
+
+        [BulkCreateCustomers](api-endpoint:Customers-BulkCreateCustomers) endpoint.'
+      x-release-status: PUBLIC
+      required:
+      - customers
+      properties:
+        customers:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BulkCreateCustomerData'
+          description: 'A map of 1 to 100 individual create requests, represented by `idempotency key: { customer data }`
+
+            key-value pairs.
+
+
+            Each key is an [idempotency key](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency)
+
+            that uniquely identifies the create request. Each value contains the customer data used to create the
+
+            customer profile.'
+      example:
+        customers:
+          8bb76c4f-e35d-4c5b-90de-1194cd9179f0:
+            address:
+              address_line_1: 500 Electric Ave
+              address_line_2: Suite 600
+              administrative_district_level_1: NY
+              country: US
+              locality: New York
+              postal_code: '10003'
+            email_address: Amelia.Earhart@example.com
+            family_name: Earhart
+            given_name: Amelia
+            note: a customer
+            phone_number: +1-212-555-4240
+            reference_id: YOUR_REFERENCE_ID
+          d1689f23-b25d-4932-b2f0-aed00f5e2029:
+            address:
+              address_line_1: 500 Electric Ave
+              address_line_2: Suite 601
+              administrative_district_level_1: NY
+              country: US
+              locality: New York
+              postal_code: '10003'
+            email_address: Marie.Curie@example.com
+            family_name: Curie
+            given_name: Marie
+            note: another customer
+            phone_number: +1-212-444-4240
+            reference_id: YOUR_REFERENCE_ID
+    CustomerCustomAttributeFilters:
+      type: object
+      description: 'The custom attribute filters in a set of [customer filters](entity:CustomerFilter) used in a search query. Use this filter
+
+        to search based on [custom attributes](entity:CustomAttribute) that are assigned to customer profiles. For more information, see
+
+        [Search by custom attribute](https://developer.squareup.com/docs/customers-api/use-the-api/search-customers#search-by-custom-attribute).'
+      x-release-status: PUBLIC
+      properties:
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerCustomAttributeFilter'
+          description: 'The custom attribute filters. Each filter must specify `key` and include the `filter` field with a type-specific filter,
+
+            the `updated_at` field, or both. The provided keys must be unique within the list of custom attribute filters.'
+          nullable: true
+    CreateCustomerResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [CreateCustomer](api-endpoint:Customers-CreateCustomer) or
+
+        [BulkCreateCustomers](api-endpoint:Customers-BulkCreateCustomers) endpoint.
+
+
+        Either `errors` or `customer` is present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        customer:
+          $ref: '#/components/schemas/Customer'
+          description: The created customer.
+      example:
+        customer:
+          address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          created_at: '2016-03-23T20:21:54.859Z'
+          creation_source: THIRD_PARTY
+          email_address: Amelia.Earhart@example.com
+          family_name: Earhart
+          given_name: Amelia
+          id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          note: a customer
+          phone_number: +1-212-555-4240
+          preferences:
+            email_unsubscribed: false
+          reference_id: YOUR_REFERENCE_ID
+          updated_at: '2016-03-23T20:21:54.859Z'
+          version: 0
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/CreateCustomer/CreateCustomerResponse.csharp
+        java: /sdk_samples/CreateCustomer/CreateCustomerResponse.java
+        javascript: /sdk_samples/CreateCustomer/CreateCustomerResponse.javascript
+        php: /sdk_samples/CreateCustomer/CreateCustomerResponse.php
+        python: /sdk_samples/CreateCustomer/CreateCustomerResponse.python
+        ruby: /sdk_samples/CreateCustomer/CreateCustomerResponse.ruby
+    BulkDeleteCustomersResponse:
+      type: object
+      description: 'Defines the fields included in the response body from the
+
+        [BulkDeleteCustomers](api-endpoint:Customers-BulkDeleteCustomers) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        responses:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DeleteCustomerResponse'
+          description: 'A map of responses that correspond to individual delete requests, represented by
+
+            key-value pairs.
+
+
+            Each key is the customer ID that was specified for a delete request and each value
+
+            is the corresponding response.
+
+            If the request succeeds, the value is an empty object (`{ }`).
+
+            If the request fails, the value contains any errors that occurred during the request.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any top-level errors that prevented the bulk operation from running.
+      example:
+        responses:
+          2GYD7WNXF7BJZW1PMGNXZ3Y8M8:
+            errors:
+            - category: INVALID_REQUEST_ERROR
+              code: NOT_FOUND
+              detail: Customer with ID `2GYD7WNXF7BJZW1PMGNXZ3Y8M8` not found.
+          8DDA5NZVBZFGAX0V3HPF81HHE0: {}
+          N18CPRVXR5214XPBBA6BZQWF3C: {}
+    CustomerCreationSourceFilter:
+      type: object
+      description: 'The creation source filter.
+
+
+        If one or more creation sources are set, customer profiles are included in,
+
+        or excluded from, the result if they match at least one of the filter criteria.'
+      x-release-status: PUBLIC
+      properties:
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerCreationSource'
+          description: 'The list of creation sources used as filtering criteria.
+
+            See [CustomerCreationSource](#type-customercreationsource) for possible values'
+          nullable: true
+        rule:
+          $ref: '#/components/schemas/CustomerInclusionExclusion'
+          description: 'Indicates whether a customer profile matching the filter criteria
+
+            should be included in the result or excluded from the result.
+
+
+            Default: `INCLUDE`.
+
+            See [CustomerInclusionExclusion](#type-customerinclusionexclusion) for possible values'
+          nullable: true
+    Card:
+      type: object
+      description: 'Represents the payment details of a card to be used for payments. These
+
+        details are determined by the payment token generated by Web Payments SDK.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: Unique ID for this card. Generated by Square.
+          maxLength: 64
+          readOnly: true
+        card_brand:
+          $ref: '#/components/schemas/CardBrand'
+          description: 'The card''s brand.
+
+            See [CardBrand](#type-cardbrand) for possible values'
+          readOnly: true
+        last_4:
+          type: string
+          description: The last 4 digits of the card number.
+          maxLength: 4
+          readOnly: true
+        exp_month:
+          type: integer
+          description: The expiration month of the associated card as an integer between 1 and 12.
+          format: int64
+          nullable: true
+        exp_year:
+          type: integer
+          description: The four-digit year of the card's expiration date.
+          format: int64
+          nullable: true
+        cardholder_name:
+          type: string
+          description: The name of the cardholder.
+          maxLength: 96
+          nullable: true
+        billing_address:
+          $ref: '#/components/schemas/Address'
+          description: The billing address for this card.
+          nullable: true
+        fingerprint:
+          type: string
+          description: 'Intended as a Square-assigned identifier, based
+
+            on the card number, to identify the card across multiple locations within a
+
+            single application.'
+          maxLength: 255
+          readOnly: true
+        customer_id:
+          type: string
+          description: '**Required** The ID of a customer created using the Customers API to be associated with the card.'
+          nullable: true
+        merchant_id:
+          type: string
+          description: The ID of the merchant associated with the card.
+          readOnly: true
+        reference_id:
+          type: string
+          description: 'An optional user-defined reference ID that associates this card with
+
+            another entity in an external system. For example, a customer ID from an
+
+            external customer management system.'
+          maxLength: 128
+          nullable: true
+        enabled:
+          type: boolean
+          description: Indicates whether or not a card can be used for payments.
+          readOnly: true
+        card_type:
+          $ref: '#/components/schemas/CardType'
+          description: 'The type of the card.
+
+            The Card object includes this field only in response to Payments API calls.
+
+            See [CardType](#type-cardtype) for possible values'
+          readOnly: true
+        prepaid_type:
+          $ref: '#/components/schemas/CardPrepaidType'
+          description: 'Indicates whether the Card is prepaid or not.
+
+            The Card object includes this field only in response to Payments API calls.
+
+            See [CardPrepaidType](#type-cardprepaidtype) for possible values'
+          readOnly: true
+        bin:
+          type: string
+          description: 'The first six digits of the card number, known as the Bank Identification Number (BIN). Only the Payments API
+
+            returns this field.'
+          maxLength: 6
+          readOnly: true
+        version:
+          type: integer
+          description: 'Current version number of the card. Increments with each card update. Requests to update an
+
+            existing Card object will be rejected unless the version in the request matches the current
+
+            version for the Card.'
+          format: int64
+        card_co_brand:
+          $ref: '#/components/schemas/CardCoBrand'
+          description: 'The card''s co-brand if available. For example, an Afterpay virtual card would have a
+
+            co-brand of AFTERPAY.
+
+            See [CardCoBrand](#type-cardcobrand) for possible values'
+          readOnly: true
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    CardType:
+      type: string
+      enum:
+      - UNKNOWN_CARD_TYPE
+      - CREDIT
+      - DEBIT
+      x-enum-elements:
+      - name: UNKNOWN_CARD_TYPE
+        description: ''
+      - name: CREDIT
+        description: ''
+      - name: DEBIT
+        description: ''
+      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
+      x-release-status: PUBLIC
+    AddGroupToCustomerResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [AddGroupToCustomer](api-endpoint:Customers-AddGroupToCustomer) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    CustomerSort:
+      type: object
+      description: 'Represents the sorting criteria in a [search query](entity:CustomerQuery) that defines how to sort
+
+        customer profiles returned in [SearchCustomers](api-endpoint:Customers-SearchCustomers) results.'
+      x-release-status: PUBLIC
+      properties:
+        field:
+          $ref: '#/components/schemas/CustomerSortField'
+          description: 'Indicates the fields to use as the sort key, which is either the default set of fields or `created_at`.
+
+
+            The default value is `DEFAULT`.
+
+            See [CustomerSortField](#type-customersortfield) for possible values'
+          nullable: true
+        order:
+          $ref: '#/components/schemas/SortOrder'
+          description: 'Indicates the order in which results should be sorted based on the
+
+            sort field value. Strings use standard alphabetic comparison
+
+            to determine order. Strings representing numbers are sorted as strings.
+
+
+            The default value is `ASC`.
+
+            See [SortOrder](#type-sortorder) for possible values'
+          nullable: true
+    UpdateCustomerResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [UpdateCustomer](api-endpoint:Customers-UpdateCustomer) or
+
+        [BulkUpdateCustomers](api-endpoint:Customers-BulkUpdateCustomers) endpoint.
+
+
+        Either `errors` or `customer` is present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        customer:
+          $ref: '#/components/schemas/Customer'
+          description: The updated customer.
+      example:
+        customer:
+          address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          created_at: '2016-03-23T20:21:54.859Z'
+          creation_source: THIRD_PARTY
+          email_address: New.Amelia.Earhart@example.com
+          family_name: Earhart
+          given_name: Amelia
+          id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          note: updated customer note
+          preferences:
+            email_unsubscribed: false
+          reference_id: YOUR_REFERENCE_ID
+          updated_at: '2016-05-15T20:21:55Z'
+          version: 3
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/UpdateCustomer/UpdateCustomerResponse.csharp
+        java: /sdk_samples/UpdateCustomer/UpdateCustomerResponse.java
+        javascript: /sdk_samples/UpdateCustomer/UpdateCustomerResponse.javascript
+        php: /sdk_samples/UpdateCustomer/UpdateCustomerResponse.php
+        python: /sdk_samples/UpdateCustomer/UpdateCustomerResponse.python
+        ruby: /sdk_samples/UpdateCustomer/UpdateCustomerResponse.ruby
+    CardBrand:
+      type: string
+      enum:
+      - OTHER_BRAND
+      - VISA
+      - MASTERCARD
+      - AMERICAN_EXPRESS
+      - DISCOVER
+      - DISCOVER_DINERS
+      - JCB
+      - CHINA_UNIONPAY
+      - SQUARE_GIFT_CARD
+      - SQUARE_CAPITAL_CARD
+      - INTERAC
+      - EFTPOS
+      - FELICA
+      - EBT
+      x-enum-elements:
+      - name: OTHER_BRAND
+        description: ''
+      - name: VISA
+        description: ''
+      - name: MASTERCARD
+        description: ''
+      - name: AMERICAN_EXPRESS
+        description: ''
+      - name: DISCOVER
+        description: ''
+      - name: DISCOVER_DINERS
+        description: ''
+      - name: JCB
+        description: ''
+      - name: CHINA_UNIONPAY
+        description: ''
+      - name: SQUARE_GIFT_CARD
+        description: ''
+      - name: SQUARE_CAPITAL_CARD
+        description: ''
+      - name: INTERAC
+        description: ''
+      - name: EFTPOS
+        description: ''
+      - name: FELICA
+        description: ''
+      - name: EBT
+        description: ''
+      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
+      x-release-status: PUBLIC
+    CreateCustomerCardResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `CreateCustomerCard` endpoint.
+
+
+        Either `errors` or `card` is present in a given response (never both).'
+      x-release-status: DEPRECATED
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        card:
+          $ref: '#/components/schemas/Card'
+          description: The created card on file.
+      example:
+        card:
+          billing_address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          card_brand: VISA
+          cardholder_name: Amelia Earhart
+          exp_month: 11
+          exp_year: 2018
+          id: icard-card_id
+          last_4: '1111'
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/CreateCustomerCard/CreateCustomerCardResponse.csharp
+        java: /sdk_samples/CreateCustomerCard/CreateCustomerCardResponse.java
+        javascript: /sdk_samples/CreateCustomerCard/CreateCustomerCardResponse.javascript
+        php: /sdk_samples/CreateCustomerCard/CreateCustomerCardResponse.php
+        python: /sdk_samples/CreateCustomerCard/CreateCustomerCardResponse.python
+        ruby: /sdk_samples/CreateCustomerCard/CreateCustomerCardResponse.ruby
+    CustomerSortField:
+      type: string
+      enum:
+      - DEFAULT
+      - CREATED_AT
+      x-enum-elements:
+      - name: DEFAULT
+        description: 'Use the default sort key. By default, customers are sorted
+
+          alphanumerically by concatenating their `given_name` and `family_name`. If
+
+          neither name field is set, string comparison is performed using one of the
+
+          remaining fields in the following order: `company_name`, `email`,
+
+          `phone_number`.'
+      - name: CREATED_AT
+        description: Use the creation date attribute (`created_at`) of customer profiles as the sort key.
+      description: Specifies customer attributes as the sort key to customer profiles returned from a search.
+      x-release-status: PUBLIC
+    TimeRange:
+      type: object
+      description: 'Represents a generic time range. The start and end values are
+
+        represented in RFC 3339 format. Time ranges are customized to be
+
+        inclusive or exclusive based on the needs of a particular endpoint.
+
+        Refer to the relevant endpoint-specific documentation to determine
+
+        how time ranges are handled.'
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type: string
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            starts.'
+          nullable: true
+        end_at:
+          type: string
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            ends.'
+          nullable: true
+    BulkRetrieveCustomersRequest:
+      type: object
+      description: 'Defines the body parameters that can be included in requests to the
+
+        [BulkRetrieveCustomers](api-endpoint:Customers-BulkRetrieveCustomers) endpoint.'
+      x-release-status: PUBLIC
+      required:
+      - customer_ids
+      properties:
+        customer_ids:
+          type: array
+          items:
+            type: string
+          description: The IDs of the [customer profiles](entity:Customer) to retrieve.
+      example:
+        customer_ids:
+        - 8DDA5NZVBZFGAX0V3HPF81HHE0
+        - N18CPRVXR5214XPBBA6BZQWF3C
+        - 2GYD7WNXF7BJZW1PMGNXZ3Y8M8
+    ListCustomersResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `ListCustomers` endpoint.
+
+
+        Either `errors` or `customers` is present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        customers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
+          description: 'The customer profiles associated with the Square account or an empty object (`{}`) if none are found.
+
+            Only customer profiles with public information (`given_name`, `family_name`, `company_name`, `email_address`, or
+
+            `phone_number`) are included in the response.'
+        cursor:
+          type: string
+          description: 'A pagination cursor to retrieve the next set of results for the
+
+            original query. A cursor is only present if the request succeeded and additional results
+
+            are available.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        count:
+          type: integer
+          description: 'The total count of customers associated with the Square account. Only customer profiles with public information
+
+            (`given_name`, `family_name`, `company_name`, `email_address`, or `phone_number`) are counted. This field is present
+
+            only if `count` is set to `true` in the request.'
+          format: int64
+      example:
+        customers:
+        - address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          created_at: '2016-03-23T20:21:54.859Z'
+          creation_source: THIRD_PARTY
+          email_address: Amelia.Earhart@example.com
+          family_name: Earhart
+          given_name: Amelia
+          group_ids:
+          - 545AXB44B4XXWMVQ4W8SBT3HHF
+          id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          note: a customer
+          phone_number: +1-212-555-4240
+          preferences:
+            email_unsubscribed: false
+          reference_id: YOUR_REFERENCE_ID
+          segment_ids:
+          - 1KB9JE5EGJXCW.REACHABLE
+          updated_at: '2016-03-23T20:21:55Z'
+          version: 1
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/ListCustomers/ListCustomersResponse.csharp
+        java: /sdk_samples/ListCustomers/ListCustomersResponse.java
+        javascript: /sdk_samples/ListCustomers/ListCustomersResponse.javascript
+        php: /sdk_samples/ListCustomers/ListCustomersResponse.php
+        python: /sdk_samples/ListCustomers/ListCustomersResponse.python
+        ruby: /sdk_samples/ListCustomers/ListCustomersResponse.ruby
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
+    CreateCustomerCardRequest:
+      type: object
+      description: 'Defines the fields that are included in the request body of a request
+
+        to the `CreateCustomerCard` endpoint.'
+      x-release-status: DEPRECATED
+      required:
+      - card_nonce
+      properties:
+        card_nonce:
+          type: string
+          description: 'A card nonce representing the credit card to link to the customer.
+
+
+            Card nonces are generated by the Square payment form when customers enter
+
+            their card information. For more information, see
+
+            [Walkthrough: Integrate Square Payments in a Website](https://developer.squareup.com/docs/web-payments/take-card-payment).
+
+
+            __NOTE:__ Card nonces generated by digital wallets (such as Apple Pay)
+
+            cannot be used to create a customer card.'
+        billing_address:
+          $ref: '#/components/schemas/Address'
+          description: 'Address information for the card on file.
+
+
+            __NOTE:__ If a billing address is provided in the request, the
+
+            `CreateCustomerCardRequest.billing_address.postal_code` must match
+
+            the postal code encoded in the card nonce.'
+        cardholder_name:
+          type: string
+          description: The full name printed on the credit card.
+        verification_token:
+          type: string
+          description: 'An identifying token generated by [Payments.verifyBuyer()](https://developer.squareup.com/reference/sdks/web/payments/objects/Payments#Payments.verifyBuyer).
+
+            Verification tokens encapsulate customer device information and 3-D Secure
+
+            challenge results to indicate that Square has verified the buyer identity.'
+      example:
+        billing_address:
+          address_line_1: 500 Electric Ave
+          address_line_2: Suite 600
+          administrative_district_level_1: NY
+          country: US
+          locality: New York
+          postal_code: '10003'
+        card_nonce: YOUR_CARD_NONCE
+        cardholder_name: Amelia Earhart
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/CreateCustomerCard/CreateCustomerCardRequest.csharp
+        java: /sdk_samples/CreateCustomerCard/CreateCustomerCardRequest.java
+        javascript: /sdk_samples/CreateCustomerCard/CreateCustomerCardRequest.javascript
+        php: /sdk_samples/CreateCustomerCard/CreateCustomerCardRequest.php
+        python: /sdk_samples/CreateCustomerCard/CreateCustomerCardRequest.python
+        ruby: /sdk_samples/CreateCustomerCard/CreateCustomerCardRequest.ruby
+    BulkUpdateCustomersResponse:
+      type: object
+      description: 'Defines the fields included in the response body from the
+
+        [BulkUpdateCustomers](api-endpoint:Customers-BulkUpdateCustomers) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        responses:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UpdateCustomerResponse'
+          description: 'A map of responses that correspond to individual update requests, represented by
+
+            key-value pairs.
+
+
+            Each key is the customer ID that was specified for an update request and each value
+
+            is the corresponding response.
+
+            If the request succeeds, the value is the updated customer profile.
+
+            If the request fails, the value contains any errors that occurred during the request.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any top-level errors that prevented the bulk operation from running.
+      example:
+        responses:
+          8DDA5NZVBZFGAX0V3HPF81HHE0:
+            customer:
+              birthday: '1897-07-24'
+              created_at: '2024-01-19T00:27:54.59Z'
+              creation_source: THIRD_PARTY
+              email_address: New.Amelia.Earhart@example.com
+              family_name: Earhart
+              given_name: Amelia
+              id: 8DDA5NZVBZFGAX0V3HPF81HHE0
+              note: updated customer note
+              preferences:
+                email_unsubscribed: false
+              updated_at: '2024-01-19T00:38:06Z'
+              version: 3
+          N18CPRVXR5214XPBBA6BZQWF3C:
+            customer:
+              created_at: '2024-01-19T00:27:54.59Z'
+              creation_source: THIRD_PARTY
+              family_name: Curie
+              given_name: Marie
+              id: N18CPRVXR5214XPBBA6BZQWF3C
+              preferences:
+                email_unsubscribed: false
+              updated_at: '2024-01-19T00:38:06Z'
+              version: 1
+    BulkDeleteCustomersRequest:
+      type: object
+      description: 'Defines the body parameters that can be included in requests to the
+
+        [BulkDeleteCustomers](api-endpoint:Customers-BulkDeleteCustomers) endpoint.'
+      x-release-status: PUBLIC
+      required:
+      - customer_ids
+      properties:
+        customer_ids:
+          type: array
+          items:
+            type: string
+          description: The IDs of the [customer profiles](entity:Customer) to delete.
+      example:
+        customer_ids:
+        - 8DDA5NZVBZFGAX0V3HPF81HHE0
+        - N18CPRVXR5214XPBBA6BZQWF3C
+        - 2GYD7WNXF7BJZW1PMGNXZ3Y8M8
+    RemoveGroupFromCustomerResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [RemoveGroupFromCustomer](api-endpoint:Customers-RemoveGroupFromCustomer)
+
+        endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    CreateCustomerRequest:
+      type: object
+      description: 'Defines the body parameters that can be included in a request to the
+
+        `CreateCustomer` endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        idempotency_key:
+          type: string
+          description: "The idempotency key for the request.\tFor more information, see\n[Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency)."
+        given_name:
+          type: string
+          description: 'The given name (that is, the first name) associated with the customer profile.
+
+
+            The maximum length for this value is 300 characters.'
+        family_name:
+          type: string
+          description: 'The family name (that is, the last name) associated with the customer profile.
+
+
+            The maximum length for this value is 300 characters.'
+        company_name:
+          type: string
+          description: 'A business name associated with the customer profile.
+
+
+            The maximum length for this value is 500 characters.'
+        nickname:
+          type: string
+          description: 'A nickname for the customer profile.
+
+
+            The maximum length for this value is 100 characters.'
+        email_address:
+          type: string
+          description: 'The email address associated with the customer profile.
+
+
+            The maximum length for this value is 254 characters.'
+        address:
+          $ref: '#/components/schemas/Address'
+          description: "The physical address associated with the customer profile. For maximum length constraints, see \n[Customer addresses](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#address).\nThe `first_name` and `last_name` fields are ignored if they are present in the request."
+        phone_number:
+          type: string
+          description: 'The phone number associated with the customer profile. The phone number must be valid and can contain
+
+            9–16 digits, with an optional `+` prefix and country code. For more information, see
+
+            [Customer phone numbers](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#phone-number).'
+        reference_id:
+          type: string
+          description: 'An optional second ID used to associate the customer profile with an
+
+            entity in another system.
+
+
+            The maximum length for this value is 100 characters.'
+        note:
+          type: string
+          description: A custom note associated with the customer profile.
+        birthday:
+          type: string
+          description: 'The birthday associated with the customer profile, in `YYYY-MM-DD` or `MM-DD` format. For example,
+
+            specify `1998-09-21` for September 21, 1998, or `09-21` for September 21. Birthdays are returned in `YYYY-MM-DD`
+
+            format, where `YYYY` is the specified birth year or `0000` if a birth year is not specified.'
+        tax_ids:
+          $ref: '#/components/schemas/CustomerTaxIds'
+          description: 'The tax ID associated with the customer profile. This field is available only for customers of sellers
+
+            in EU countries or the United Kingdom. For more information,
+
+            see [Customer tax IDs](https://developer.squareup.com/docs/customers-api/what-it-does#customer-tax-ids).'
+      example:
+        address:
+          address_line_1: 500 Electric Ave
+          address_line_2: Suite 600
+          administrative_district_level_1: NY
+          country: US
+          locality: New York
+          postal_code: '10003'
+        email_address: Amelia.Earhart@example.com
+        family_name: Earhart
+        given_name: Amelia
+        note: a customer
+        phone_number: +1-212-555-4240
+        reference_id: YOUR_REFERENCE_ID
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/CreateCustomer/CreateCustomerRequest.csharp
+        java: /sdk_samples/CreateCustomer/CreateCustomerRequest.java
+        javascript: /sdk_samples/CreateCustomer/CreateCustomerRequest.javascript
+        php: /sdk_samples/CreateCustomer/CreateCustomerRequest.php
+        python: /sdk_samples/CreateCustomer/CreateCustomerRequest.python
+        ruby: /sdk_samples/CreateCustomer/CreateCustomerRequest.ruby
+    BulkUpdateCustomersRequest:
+      type: object
+      description: 'Defines the body parameters that can be included in requests to the
+
+        [BulkUpdateCustomers](api-endpoint:Customers-BulkUpdateCustomers) endpoint.'
+      x-release-status: PUBLIC
+      required:
+      - customers
+      properties:
+        customers:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BulkUpdateCustomerData'
+          description: 'A map of 1 to 100 individual update requests, represented by `customer ID: { customer data }`
+
+            key-value pairs.
+
+
+            Each key is the ID of the [customer profile](entity:Customer) to update. To update a customer profile
+
+            that was created by merging existing profiles, provide the ID of the newly created profile.
+
+
+            Each value contains the updated customer data. Only new or changed fields are required. To add or
+
+            update a field, specify the new value. To remove a field, specify `null`.'
+      example:
+        customers:
+          8DDA5NZVBZFGAX0V3HPF81HHE0:
+            email_address: New.Amelia.Earhart@example.com
+            note: updated customer note
+            phone_number: null
+            version: 2
+          N18CPRVXR5214XPBBA6BZQWF3C:
+            family_name: Curie
+            given_name: Marie
+            version: 0
+    CustomerQuery:
+      type: object
+      description: Represents filtering and sorting criteria for a [SearchCustomers](api-endpoint:Customers-SearchCustomers) request.
+      x-release-status: PUBLIC
+      properties:
+        filter:
+          $ref: '#/components/schemas/CustomerFilter'
+          description: 'The filtering criteria for the search query. A query can contain multiple filters in any combination.
+
+            Multiple filters are combined as `AND` statements.
+
+
+            __Note:__ Combining multiple filters as `OR` statements is not supported. Instead, send multiple single-filter
+
+            searches and join the result sets.'
+          nullable: true
+        sort:
+          $ref: '#/components/schemas/CustomerSort'
+          description: "Sorting criteria for query results. The default behavior is to sort \ncustomers alphabetically by `given_name` and `family_name`."
+          nullable: true
+    CustomerTaxIds:
+      type: object
+      description: "Represents the tax ID associated with a [customer profile](entity:Customer). The corresponding `tax_ids` field is available only for customers of sellers in EU countries or the United Kingdom. \nFor more information, see [Customer tax IDs](https://developer.squareup.com/docs/customers-api/what-it-does#customer-tax-ids)."
+      x-release-status: PUBLIC
+      properties:
+        eu_vat:
+          type: string
+          description: The EU VAT identification number for the customer. For example, `IE3426675K`. The ID can contain alphanumeric characters only.
+          maxLength: 20
+          nullable: true
+    CustomerCustomAttributeFilter:
+      type: object
+      description: 'The custom attribute filter. Use this filter in a set of [custom attribute filters](entity:CustomerCustomAttributeFilters) to search
+
+        based on the value or last updated date of a customer-related [custom attribute](entity:CustomAttribute).'
+      x-release-status: PUBLIC
+      required:
+      - key
+      properties:
+        key:
+          type: string
+          description: 'The `key` of the [custom attribute](entity:CustomAttribute) to filter by. The key is the identifier of the custom attribute
+
+            (and the corresponding custom attribute definition) and can be retrieved using the [Customer Custom Attributes API](api:CustomerCustomAttributes).'
+        filter:
+          $ref: '#/components/schemas/CustomerCustomAttributeFilterValue'
+          description: 'A filter that corresponds to the data type of the target custom attribute. For example, provide the `phone` filter to
+
+            search based on the value of a `PhoneNumber`-type custom attribute. The data type is specified by the schema field of the custom attribute definition,
+
+            which can be retrieved using the [Customer Custom Attributes API](api:CustomerCustomAttributes).
+
+
+            You must provide this `filter` field, the `updated_at` field, or both.'
+          nullable: true
+        updated_at:
+          $ref: '#/components/schemas/TimeRange'
+          description: 'The date range for when the custom attribute was last updated. The date range can include `start_at`, `end_at`, or
+
+            both. Range boundaries are inclusive. Dates are specified as RFC 3339 timestamps.
+
+
+            You must provide this `updated_at` field, the `filter` field, or both.'
+    CustomerInclusionExclusion:
+      type: string
+      enum:
+      - INCLUDE
+      - EXCLUDE
+      x-enum-elements:
+      - name: INCLUDE
+        description: 'Customers should be included in the result set when they match the
+
+          filtering criteria.'
+      - name: EXCLUDE
+        description: 'Customers should be excluded from the result set when they match
+
+          the filtering criteria.'
+      description: 'Indicates whether customers should be included in, or excluded from,
+
+        the result set when they match the filtering criteria.'
+      x-release-status: PUBLIC
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-additional-headers:
+      - name: Square-Version
+        description: Square Connect API versions
+        schema:
+          default: '2025-01-23'
+      flows:
+        authorizationCode:
+          authorizationUrl: https://connect.squareup.com/oauth2/authorize
+          tokenUrl: https://connect.squareup.com/oauth2/token
+          scopes:
+            ADDON_CONFIGURATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants write access for third-party Add-ons to read configurations of their Add-ons, for example, when calling `RetrieveConfiguration` endpoint.'
+            ADDON_CONFIGURATIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access for third-party Add-ons to store configurations of their Add-ons, for example, when calling `CreateConfiguration` endpoint.'
+            APPOINTMENTS_ALL_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to all of a seller''s booking information, calendar, and business details.
+
+              This permission must be accompanied by the `APPOINTMENTS_READ` permission.'
+            APPOINTMENTS_ALL_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to all booking details, including double-booking a seller.
+
+              This permission must be accompanied by the `APPOINTMENTS_WRITE` permission.'
+            APPOINTMENTS_BUSINESS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to booking business settings. For example, to call the
+
+              ListTeamMemberBookingProfiles endpoint.'
+            APPOINTMENTS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to booking information. For example, to call the
+
+              RetrieveBooking endpoint.'
+            APPOINTMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to booking information. For example, to call the CreateBooking endpoint.'
+            BANK_ACCOUNTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to bank account information associated with the targeted
+
+              Square account. For example, to call the Connect v1 ListBankAccounts endpoint.'
+            CASH_DRAWER_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to cash drawer shift information. For example, to call the
+
+              ListCashDrawerShifts endpoint.'
+            CHANNELS_CREATE: '__HTTP Method__: `POST`
+
+
+              Grants write access to create channels, for example, when calling the
+
+              `CreateChannel` endpoint.'
+            CHANNELS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to view channels, for example, when calling the
+
+              `RetrieveChannel` endpoint.'
+            CHANNELS_UPDATE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to update channels, for example, when calling the
+
+              `UpdateChannel` endpoint.'
+            CUSTOMERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to customer information. For example, to call the
+
+              ListCustomers endpoint.'
+            CUSTOMERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to customer information. For example, to create and update
+
+              customer profiles.'
+            DEVICES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to device information. For example, to
+
+              call the `GetDevice` and `ListDevices` endpoints.'
+            DEVICE_CREDENTIAL_MANAGEMENT: '__HTTP Method__: `POST`, `GET`
+
+
+              Grants read/write access to device credentials information. For example, to
+
+              call the CreateDeviceCode endpoint.'
+            DISPUTES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to dispute information. For example, to call the RetrieveDispute
+
+              endpoint.'
+            DISPUTES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to dispute information. For example, to call the SubmitEvidence
+
+              endpoint.'
+            EMPLOYEES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee profile information. For example, to call the
+
+              Connect v1 Employees API.'
+            EMPLOYEES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee profile information. For example, to create
+
+              and modify employee profiles.'
+            GIFTCARDS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to gift card information. For example, to call the RetrieveGiftCard
+
+              endpoint.'
+            GIFTCARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to gift card information. For example, to call the CreateGiftCard
+
+              endpoint.'
+            INVENTORY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to inventory information. For example, to call the
+
+              RetrieveInventoryCount endpoint.'
+            INVENTORY_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to inventory information. For example, to call the
+
+              BatchChangeInventory endpoint.'
+            INVOICES_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to invoice information. For example, to call the ListInvoices endpoint.'
+            INVOICES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to invoice information. For example, to call the CreateInvoice endpoint.'
+            ITEMS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to product catalog information. For example, to obtain objects in a product catalog.'
+            ITEMS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to product catalog information. For example, to modify or
+
+              add to a product catalog.'
+            LOYALTY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to loyalty information. For example, to call the
+
+              ListLoyaltyPrograms endpoint.'
+            LOYALTY_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to loyalty information. For example, to call the
+
+              CreateLoyaltyAccount endpoint.'
+            MERCHANT_PROFILE_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to business and location information. For example, to
+
+              obtain a location ID for subsequent activity.'
+            MERCHANT_PROFILE_WRITE: '__HTTP Method__: `POST`, `PUT`
+
+
+              Grants write access to business and location information. For example, to create a new location or
+
+              update the business hours at an existing location.'
+            ONLINE_STORE_SITE_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store site details.'
+            ONLINE_STORE_SNIPPETS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store snippets on published websites.'
+            ONLINE_STORE_SNIPPETS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Write access to ECOM online store snippets on published websites.'
+            ORDERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to order information. For example, to call the
+
+              BatchRetrieveOrders endpoint.'
+            ORDERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to order information. For example, to call the
+
+              CreateCheckout endpoint.'
+            PAYMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to transaction and refund information. For example, to call
+
+              the RetrieveTransaction endpoint.'
+            PAYMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to transaction and refunds information. For example, to
+
+              process payments with the Payments or Checkout API.'
+            PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allow third party applications to deduct a portion of each transaction amount.
+
+              __Required__ to use multiparty transaction functionality with the Payments
+
+              API.'
+            PAYMENTS_WRITE_IN_PERSON: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to payments and refunds information. For example, to
+
+              process in-person payments.'
+            PAYMENTS_WRITE_SHARED_ONFILE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allows the developer to process payments on behalf of a seller using a shared on file payment method.'
+            PAYOUTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to payouts and payout entries information. For example,
+
+              to call the Connect v2 `ListPayouts` endpoint.'
+            PERMISSION_SETS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to Permission Sets. For example, to
+
+              call the `ListPermissionSets` and `RetrievePermissionSet` endpoints.'
+            PERMISSION_SETS_WRITE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to Permission Sets.'
+            RESERVATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to reservation information, for example, when calling the
+
+              `RetrieveReservation` endpoint.'
+            RESERVATIONS_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to reservation information, for example, when calling the
+
+              `CreateReservation` endpoint.'
+            RESTAURANT_CHECKS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to check information, for example, when calling the
+
+              `RetrieveCheck` endpoint.'
+            SETTLEMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to settlement (deposit) information. For example, to call
+
+              the Connect v1 ListSettlements endpoint.'
+            SUBSCRIPTIONS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to subscription information. For example, to call the RetrieveSubscription
+
+              endpoint.'
+            SUBSCRIPTIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to subscription information. For example, to call the CreateSubscription
+
+              endpoint.'
+            TIMECARDS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard information. For example, to call the
+
+              Connect v2 SearchShifts endpoint.'
+            TIMECARDS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard settings information. For example, to
+
+              call the GetBreakType endpoint.'
+            TIMECARDS_SETTINGS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee timecard settings information. For example, to
+
+              call the UpdateBreakType endpoint.'
+            TIMECARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee shift information. For example, to create
+
+              and modify employee shifts.'
+            VENDOR_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to vendor information, for example, when calling the
+
+              `RetrieveVendor` endpoint.'
+            VENDOR_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to vendor information, for example, when calling the
+
+              `BulkUpdateVendors` endpoint.'
+    oauth2ClientSecret:
+      type: apiKey
+      in: header
+      name: Authorization
+x-fern-global-headers:
+- header: Square-Version
+  name: version
+  optional: true
+  env: VERSION
+  type: literal<"2025-01-23">

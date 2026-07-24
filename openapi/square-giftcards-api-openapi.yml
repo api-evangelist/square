@@ -1,0 +1,2526 @@
+openapi: 3.0.0
+info:
+  version: '2.0'
+  title: Square ApplePay GiftCards API
+  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  termsOfService: https://connect.squareup.com/tos
+  contact:
+    name: Square Developer Platform
+    email: developers@squareup.com
+    url: https://squareup.com/developers
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  externalDocs:
+    description: 'Read the official documentation here:'
+    url: https://docs.connect.squareup.com/
+  x-server-configuration:
+    default-environment: production
+    default-server: default
+    environments:
+    - name: production
+      servers:
+      - name: default
+        url: https://connect.squareup.com
+    - name: sandbox
+      servers:
+      - name: default
+        url: https://connect.squareupsandbox.com
+    - name: custom
+      servers:
+      - name: default
+        url: '{custom_url}'
+    parameters:
+    - name: custom_url
+      description: Sets the base URL requests are made to. Defaults to `https://connect.squareup.com`
+      type: string
+      example: https://connect.squareup.com
+  x-square-generic-error-codes:
+  - ACCESS_TOKEN_EXPIRED
+  - ACCESS_TOKEN_REVOKED
+  - API_VERSION_INCOMPATIBLE
+  - APPLICATION_DISABLED
+  - ARRAY_EMPTY
+  - ARRAY_LENGTH_TOO_LONG
+  - ARRAY_LENGTH_TOO_SHORT
+  - BAD_CERTIFICATE
+  - BAD_GATEWAY
+  - BAD_REQUEST
+  - CONFLICT
+  - CONFLICTING_PARAMETERS
+  - CURRENCY_MISMATCH
+  - EXPECTED_ARRAY
+  - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+  - EXPECTED_BOOLEAN
+  - EXPECTED_FLOAT
+  - EXPECTED_INTEGER
+  - EXPECTED_JSON_BODY
+  - EXPECTED_MAP
+  - EXPECTED_OBJECT
+  - EXPECTED_STRING
+  - FORBIDDEN
+  - GATEWAY_TIMEOUT
+  - GONE
+  - IDEMPOTENCY_KEY_REUSED
+  - INCORRECT_TYPE
+  - INSUFFICIENT_SCOPES
+  - INTERNAL_SERVER_ERROR
+  - INVALID_ARRAY_VALUE
+  - INVALID_CONTENT_TYPE
+  - INVALID_CURSOR
+  - INVALID_ENUM_VALUE
+  - INVALID_FORM_VALUE
+  - INVALID_SORT_ORDER
+  - INVALID_SQUARE_VERSION_FORMAT
+  - INVALID_TIME
+  - INVALID_TIME_RANGE
+  - INVALID_VALUE
+  - LOCATION_MISMATCH
+  - MAP_KEY_LENGTH_TOO_LONG
+  - MAP_KEY_LENGTH_TOO_SHORT
+  - MERCHANT_SUBSCRIPTION_NOT_FOUND
+  - METHOD_NOT_ALLOWED
+  - MISSING_REQUIRED_PARAMETER
+  - NOT_ACCEPTABLE
+  - NOT_FOUND
+  - NOT_IMPLEMENTED
+  - NO_FIELDS_SET
+  - RATE_LIMITED
+  - REQUEST_ENTITY_TOO_LARGE
+  - REQUEST_TIMEOUT
+  - SANDBOX_NOT_SUPPORTED
+  - SERVICE_UNAVAILABLE
+  - TOO_MANY_MAP_ENTRIES
+  - UNAUTHORIZED
+  - UNEXPECTED_VALUE
+  - UNKNOWN_BODY_PARAMETER
+  - UNKNOWN_QUERY_PARAMETER
+  - UNPROCESSABLE_ENTITY
+  - UNSUPPORTED_MEDIA_TYPE
+  - V1_ACCESS_TOKEN
+  - V1_APPLICATION
+  - VALUE_EMPTY
+  - VALUE_REGEX_MISMATCH
+  - VALUE_TOO_HIGH
+  - VALUE_TOO_LONG
+  - VALUE_TOO_LOW
+  - VALUE_TOO_SHORT
+servers:
+- url: https://connect.squareup.com
+  variables: {}
+tags:
+- name: GiftCards
+paths:
+  /v2/gift-cards:
+    get:
+      tags:
+      - GiftCards
+      summary: Square List Gift Cards
+      operationId: ListGiftCards
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: "Lists all gift cards. You can specify optional filters to retrieve \na subset of the gift cards. Results are sorted by `created_at` in ascending order."
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_READ
+      parameters:
+      - name: type
+        description: 'If a [type](entity:GiftCardType) is provided, the endpoint returns gift cards of the specified type.
+
+          Otherwise, the endpoint returns gift cards of all types.'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: state
+        description: 'If a [state](entity:GiftCardStatus) is provided, the endpoint returns the gift cards in the specified state.
+
+          Otherwise, the endpoint returns the gift cards of all states.'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: limit
+        description: 'If a limit is provided, the endpoint returns only the specified number of results per page.
+
+          The maximum value is 200. The default value is 30.
+
+          For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: cursor
+        description: "A pagination cursor returned by a previous call to this endpoint.\nProvide this cursor to retrieve the next set of results for the original query.\nIf a cursor is not provided, the endpoint returns the first page of the results. \nFor more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination)."
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: customer_id
+        description: If a customer ID is provided, the endpoint returns only the gift cards linked to the specified customer.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListGiftCardsResponse'
+    post:
+      tags:
+      - GiftCards
+      summary: Square Create Gift Card
+      operationId: CreateGiftCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Creates a digital gift card or registers a physical (plastic) gift card. The resulting gift card
+
+        has a `PENDING` state. To activate a gift card so that it can be redeemed for purchases, call
+
+        [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) and create an `ACTIVATE`
+
+        activity with the initial balance. Alternatively, you can use [RefundPayment](api-endpoint:Refunds-RefundPayment)
+
+        to refund a payment to the new gift card.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGiftCardRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateGiftCardResponse'
+      x-endpoint-errors:
+      - error-code: TEMPORARY_ERROR
+  /v2/gift-cards/from-gan:
+    post:
+      tags:
+      - GiftCards
+      summary: Square Retrieve Gift Card from GAN
+      operationId: RetrieveGiftCardFromGAN
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a gift card using the gift card account number (GAN).
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveGiftCardFromGANRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveGiftCardFromGANResponse'
+  /v2/gift-cards/from-nonce:
+    post:
+      tags:
+      - GiftCards
+      summary: Square Retrieve Gift Card from Nonce
+      operationId: RetrieveGiftCardFromNonce
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a gift card using a secure payment token that represents the gift card.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveGiftCardFromNonceRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveGiftCardFromNonceResponse'
+      x-endpoint-errors:
+      - error-code: CARD_TOKEN_EXPIRED
+      - error-code: CARD_TOKEN_USED
+  /v2/gift-cards/{gift_card_id}/link-customer:
+    post:
+      tags:
+      - GiftCards
+      summary: Square Link Customer to Gift Card
+      operationId: LinkCustomerToGiftCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Links a customer to a gift card, which is also referred to as adding a card on file.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_WRITE
+      parameters:
+      - name: gift_card_id
+        description: The ID of the gift card to be linked.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkCustomerToGiftCardRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkCustomerToGiftCardResponse'
+  /v2/gift-cards/{gift_card_id}/unlink-customer:
+    post:
+      tags:
+      - GiftCards
+      summary: Square Unlink Customer from Gift Card
+      operationId: UnlinkCustomerFromGiftCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Unlinks a customer from a gift card, which is also referred to as removing a card on file.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_WRITE
+      parameters:
+      - name: gift_card_id
+        description: The ID of the gift card to be unlinked.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnlinkCustomerFromGiftCardRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnlinkCustomerFromGiftCardResponse'
+  /v2/gift-cards/{id}:
+    get:
+      tags:
+      - GiftCards
+      summary: Square Retrieve Gift Card
+      operationId: RetrieveGiftCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a gift card using the gift card ID.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_READ
+      parameters:
+      - name: id
+        description: The ID of the gift card to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveGiftCardResponse'
+components:
+  schemas:
+    UnlinkCustomerFromGiftCardRequest:
+      type: object
+      description: A request to unlink a customer from a gift card.
+      x-release-status: PUBLIC
+      x-params-example: ?gift_card_id=gftc:71ea002277a34f8a945e284b04822edb
+      required:
+      - customer_id
+      properties:
+        customer_id:
+          type: string
+          description: The ID of the customer to unlink from the gift card.
+          minLength: 1
+          maxLength: 191
+      example:
+        customer_id: GKY0FZ3V717AH8Q2D821PNT2ZW
+    RetrieveGiftCardFromGANResponse:
+      type: object
+      description: 'A response that contains a `GiftCard`. This response might contain a set of `Error` objects
+
+        if the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: A gift card that was fetched, if present. It returns empty if an error occurred.
+      example:
+        gift_card:
+          balance_money:
+            amount: 5000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320001001635'
+          gan_source: SQUARE
+          id: gftc:6944163553804e439d89adb47caf806a
+          state: ACTIVE
+          type: DIGITAL
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    CreateGiftCardRequest:
+      type: object
+      description: Represents a [CreateGiftCard](api-endpoint:GiftCards-CreateGiftCard) request.
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      - location_id
+      - gift_card
+      properties:
+        idempotency_key:
+          type: string
+          description: "A unique identifier for this request, used to ensure idempotency. For more information, \nsee [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency)."
+          minLength: 1
+          maxLength: 128
+        location_id:
+          type: string
+          description: "The ID of the [location](entity:Location) where the gift card should be registered for \nreporting purposes. Gift cards can be redeemed at any of the seller's locations."
+          minLength: 1
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: "The gift card to create. The `type` field is required for this request. The `gan_source` \nand `gan` fields are included as follows: \n\nTo direct Square to generate a 16-digit GAN, omit `gan_source` and `gan`.\n\nTo provide a custom GAN, include `gan_source` and `gan`.\n- For `gan_source`, specify `OTHER`. \n- For `gan`, provide a custom GAN containing 8 to 20 alphanumeric characters. The GAN must be \nunique for the seller and cannot start with the same bank identification number (BIN) as major \ncredit cards. Do not use GANs that are easy to guess (such as 12345678) because they greatly \nincrease the risk of fraud. It is the responsibility of the developer to ensure the security \nof their custom GANs. For more information, see \n[Custom GANs](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api#custom-gans). \n\nTo register an unused, physical gift card that the seller previously ordered from Square, \ninclude `gan` and provide the GAN that is printed on the gift card."
+      example:
+        gift_card:
+          type: DIGITAL
+        idempotency_key: NC9Tm69EjbjtConu
+        location_id: 81FN9BNFZTKS4
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type: integer
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+          nullable: true
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+          nullable: true
+    UnlinkCustomerFromGiftCardResponse:
+      type: object
+      description: "A response that contains the unlinked `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: "The gift card with the ID of the unlinked customer removed from the `customer_ids` field. \nIf no other customers are linked, the `customer_ids` field is also removed."
+      example:
+        gift_card:
+          balance_money:
+            amount: 2500
+            currency: USD
+          created_at: '2021-03-25T05:13:01Z'
+          gan: '7783320005440920'
+          gan_source: SQUARE
+          id: gftc:71ea002277a34f8a945e284b04822edb
+          state: ACTIVE
+          type: DIGITAL
+    CreateGiftCardResponse:
+      type: object
+      description: 'A response that contains a `GiftCard`. The response might contain a set of `Error` objects if the request
+
+        resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The new gift card.
+      example:
+        gift_card:
+          balance_money:
+            amount: 0
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320006753271'
+          gan_source: SQUARE
+          id: gftc:6cbacbb64cf54e2ca9f573d619038059
+          state: PENDING
+          type: DIGITAL
+    RetrieveGiftCardFromNonceRequest:
+      type: object
+      description: A request to retrieve a gift card by using a payment token.
+      x-release-status: PUBLIC
+      required:
+      - nonce
+      properties:
+        nonce:
+          type: string
+          description: "The payment token of the gift card to retrieve. Payment tokens are generated by the \nWeb Payments SDK or In-App Payments SDK."
+          minLength: 1
+      example:
+        nonce: cnon:7783322135245171
+    GiftCardStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - DEACTIVATED
+      - BLOCKED
+      - PENDING
+      x-enum-elements:
+      - name: ACTIVE
+        description: The gift card is active and can be used as a payment source.
+      - name: DEACTIVATED
+        description: Any activity that changes the gift card balance is permanently forbidden.
+      - name: BLOCKED
+        description: Any activity that changes the gift card balance is temporarily forbidden.
+      - name: PENDING
+        description: 'The gift card is pending activation.
+
+          This is the initial state when a gift card is created. Typically, you''ll call
+
+          [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) to create an
+
+          `ACTIVATE` activity that activates the gift card with an initial balance before first use.'
+      description: Indicates the gift card state.
+      x-release-status: PUBLIC
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    LinkCustomerToGiftCardRequest:
+      type: object
+      description: A request to link a customer to a gift card.
+      x-release-status: PUBLIC
+      x-params-example: ?gift_card_id=gftc:71ea002277a34f8a945e284b04822edb
+      required:
+      - customer_id
+      properties:
+        customer_id:
+          type: string
+          description: The ID of the customer to link to the gift card.
+          minLength: 1
+          maxLength: 191
+      example:
+        customer_id: GKY0FZ3V717AH8Q2D821PNT2ZW
+    LinkCustomerToGiftCardResponse:
+      type: object
+      description: "A response that contains the linked `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The gift card with the ID of the linked customer listed in the `customer_ids` field.
+      example:
+        gift_card:
+          balance_money:
+            amount: 2500
+            currency: USD
+          created_at: '2021-03-25T05:13:01Z'
+          customer_ids:
+          - GKY0FZ3V717AH8Q2D821PNT2ZW
+          gan: '7783320005440920'
+          gan_source: SQUARE
+          id: gftc:71ea002277a34f8a945e284b04822edb
+          state: ACTIVE
+          type: DIGITAL
+    RetrieveGiftCardFromNonceResponse:
+      type: object
+      description: "A response that contains a `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The retrieved gift card.
+      example:
+        gift_card:
+          balance_money:
+            amount: 5000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320001001635'
+          gan_source: SQUARE
+          id: gftc:6944163553804e439d89adb47caf806a
+          state: ACTIVE
+          type: DIGITAL
+    ListGiftCardsResponse:
+      type: object
+      description: "A response that contains a list of `GiftCard` objects. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/GiftCard'
+          description: The requested gift cards or an empty object if none are found.
+        cursor:
+          type: string
+          description: 'When a response is truncated, it includes a cursor that you can use in a
+
+            subsequent request to retrieve the next set of gift cards. If a cursor is not present, this is
+
+            the final response.
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
+      example:
+        cursor: JbFmyvUpaNKsfC1hoLSA4WlqkgkZXTWeKuStajR5BkP7OE0ETAbeWSi6U6u7sH
+        gift_cards:
+        - balance_money:
+            amount: 3900
+            currency: USD
+          created_at: '2021-06-09T22:26:54.000Z'
+          gan: '7783320008524605'
+          gan_source: SQUARE
+          id: gftc:00113070ba5745f0b2377c1b9570cb03
+          state: ACTIVE
+          type: DIGITAL
+        - balance_money:
+            amount: 2000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320002692465'
+          gan_source: SQUARE
+          id: gftc:00128a12725b41e58e0de1d20497a9dd
+          state: ACTIVE
+          type: DIGITAL
+    GiftCardGANSource:
+      type: string
+      enum:
+      - SQUARE
+      - OTHER
+      x-enum-elements:
+      - name: SQUARE
+        description: The GAN is generated by Square.
+      - name: OTHER
+        description: "The GAN is provided by a non-Square system. For more information, see \n[Custom GANs](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api#custom-gans) or \n[Third-party gift cards](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api#third-party-gift-cards)."
+      description: "Indicates the source that generated the gift card \naccount number (GAN)."
+      x-release-status: PUBLIC
+    GiftCard:
+      type: object
+      description: Represents a Square gift card.
+      x-release-status: PUBLIC
+      required:
+      - type
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the gift card.
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/GiftCardType'
+          description: 'The gift card type.
+
+            See [Type](#type-type) for possible values'
+        gan_source:
+          $ref: '#/components/schemas/GiftCardGANSource'
+          description: 'The source that generated the gift card account number (GAN). The default value is `SQUARE`.
+
+            See [GANSource](#type-gansource) for possible values'
+          nullable: true
+        state:
+          $ref: '#/components/schemas/GiftCardStatus'
+          description: 'The current gift card state.
+
+            See [Status](#type-status) for possible values'
+          readOnly: true
+        balance_money:
+          $ref: '#/components/schemas/Money'
+          description: The current gift card balance. This balance is always greater than or equal to zero.
+          readOnly: true
+        gan:
+          type: string
+          description: "The gift card account number (GAN). Buyers can use the GAN to make purchases or check \nthe gift card balance."
+          nullable: true
+        created_at:
+          type: string
+          description: "The timestamp when the gift card was created, in RFC 3339 format. \nIn the case of a digital gift card, it is the time when you create a card \n(using the Square Point of Sale application, Seller Dashboard, or Gift Cards API).  \nIn the case of a plastic gift card, it is the time when Square associates the card with the \nseller at the time of activation."
+          readOnly: true
+        customer_ids:
+          type: array
+          items:
+            type: string
+          description: The IDs of the [customer profiles](entity:Customer) to whom this gift card is linked.
+          readOnly: true
+    GiftCardType:
+      type: string
+      enum:
+      - PHYSICAL
+      - DIGITAL
+      x-enum-elements:
+      - name: PHYSICAL
+        description: A plastic gift card.
+      - name: DIGITAL
+        description: A digital gift card.
+      description: Indicates the gift card type.
+      x-release-status: PUBLIC
+    RetrieveGiftCardResponse:
+      type: object
+      description: 'A response that contains a `GiftCard`. The response might contain a set of `Error` objects
+
+        if the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The gift card retrieved.
+      example:
+        gift_card:
+          balance_money:
+            amount: 1000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320001001635'
+          gan_source: SQUARE
+          id: gftc:00113070ba5745f0b2377c1b9570cb03
+          state: ACTIVE
+          type: DIGITAL
+    RetrieveGiftCardFromGANRequest:
+      type: object
+      description: A request to retrieve gift cards by their GANs.
+      x-release-status: PUBLIC
+      required:
+      - gan
+      properties:
+        gan:
+          type: string
+          description: 'The gift card account number (GAN) of the gift card to retrieve.
+
+            The maximum length of a GAN is 255 digits to account for third-party GANs that have been imported.
+
+            Square-issued gift cards have 16-digit GANs.'
+          minLength: 1
+          maxLength: 255
+      example:
+        gan: '7783320001001635'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-additional-headers:
+      - name: Square-Version
+        description: Square Connect API versions
+        schema:
+          default: '2025-01-23'
+      flows:
+        authorizationCode:
+          authorizationUrl: https://connect.squareup.com/oauth2/authorize
+          tokenUrl: https://connect.squareup.com/oauth2/token
+          scopes:
+            ADDON_CONFIGURATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants write access for third-party Add-ons to read configurations of their Add-ons, for example, when calling `RetrieveConfiguration` endpoint.'
+            ADDON_CONFIGURATIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access for third-party Add-ons to store configurations of their Add-ons, for example, when calling `CreateConfiguration` endpoint.'
+            APPOINTMENTS_ALL_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to all of a seller''s booking information, calendar, and business details.
+
+              This permission must be accompanied by the `APPOINTMENTS_READ` permission.'
+            APPOINTMENTS_ALL_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to all booking details, including double-booking a seller.
+
+              This permission must be accompanied by the `APPOINTMENTS_WRITE` permission.'
+            APPOINTMENTS_BUSINESS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to booking business settings. For example, to call the
+
+              ListTeamMemberBookingProfiles endpoint.'
+            APPOINTMENTS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to booking information. For example, to call the
+
+              RetrieveBooking endpoint.'
+            APPOINTMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to booking information. For example, to call the CreateBooking endpoint.'
+            BANK_ACCOUNTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to bank account information associated with the targeted
+
+              Square account. For example, to call the Connect v1 ListBankAccounts endpoint.'
+            CASH_DRAWER_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to cash drawer shift information. For example, to call the
+
+              ListCashDrawerShifts endpoint.'
+            CHANNELS_CREATE: '__HTTP Method__: `POST`
+
+
+              Grants write access to create channels, for example, when calling the
+
+              `CreateChannel` endpoint.'
+            CHANNELS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to view channels, for example, when calling the
+
+              `RetrieveChannel` endpoint.'
+            CHANNELS_UPDATE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to update channels, for example, when calling the
+
+              `UpdateChannel` endpoint.'
+            CUSTOMERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to customer information. For example, to call the
+
+              ListCustomers endpoint.'
+            CUSTOMERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to customer information. For example, to create and update
+
+              customer profiles.'
+            DEVICES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to device information. For example, to
+
+              call the `GetDevice` and `ListDevices` endpoints.'
+            DEVICE_CREDENTIAL_MANAGEMENT: '__HTTP Method__: `POST`, `GET`
+
+
+              Grants read/write access to device credentials information. For example, to
+
+              call the CreateDeviceCode endpoint.'
+            DISPUTES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to dispute information. For example, to call the RetrieveDispute
+
+              endpoint.'
+            DISPUTES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to dispute information. For example, to call the SubmitEvidence
+
+              endpoint.'
+            EMPLOYEES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee profile information. For example, to call the
+
+              Connect v1 Employees API.'
+            EMPLOYEES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee profile information. For example, to create
+
+              and modify employee profiles.'
+            GIFTCARDS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to gift card information. For example, to call the RetrieveGiftCard
+
+              endpoint.'
+            GIFTCARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to gift card information. For example, to call the CreateGiftCard
+
+              endpoint.'
+            INVENTORY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to inventory information. For example, to call the
+
+              RetrieveInventoryCount endpoint.'
+            INVENTORY_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to inventory information. For example, to call the
+
+              BatchChangeInventory endpoint.'
+            INVOICES_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to invoice information. For example, to call the ListInvoices endpoint.'
+            INVOICES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to invoice information. For example, to call the CreateInvoice endpoint.'
+            ITEMS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to product catalog information. For example, to obtain objects in a product catalog.'
+            ITEMS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to product catalog information. For example, to modify or
+
+              add to a product catalog.'
+            LOYALTY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to loyalty information. For example, to call the
+
+              ListLoyaltyPrograms endpoint.'
+            LOYALTY_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to loyalty information. For example, to call the
+
+              CreateLoyaltyAccount endpoint.'
+            MERCHANT_PROFILE_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to business and location information. For example, to
+
+              obtain a location ID for subsequent activity.'
+            MERCHANT_PROFILE_WRITE: '__HTTP Method__: `POST`, `PUT`
+
+
+              Grants write access to business and location information. For example, to create a new location or
+
+              update the business hours at an existing location.'
+            ONLINE_STORE_SITE_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store site details.'
+            ONLINE_STORE_SNIPPETS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store snippets on published websites.'
+            ONLINE_STORE_SNIPPETS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Write access to ECOM online store snippets on published websites.'
+            ORDERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to order information. For example, to call the
+
+              BatchRetrieveOrders endpoint.'
+            ORDERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to order information. For example, to call the
+
+              CreateCheckout endpoint.'
+            PAYMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to transaction and refund information. For example, to call
+
+              the RetrieveTransaction endpoint.'
+            PAYMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to transaction and refunds information. For example, to
+
+              process payments with the Payments or Checkout API.'
+            PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allow third party applications to deduct a portion of each transaction amount.
+
+              __Required__ to use multiparty transaction functionality with the Payments
+
+              API.'
+            PAYMENTS_WRITE_IN_PERSON: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to payments and refunds information. For example, to
+
+              process in-person payments.'
+            PAYMENTS_WRITE_SHARED_ONFILE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allows the developer to process payments on behalf of a seller using a shared on file payment method.'
+            PAYOUTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to payouts and payout entries information. For example,
+
+              to call the Connect v2 `ListPayouts` endpoint.'
+            PERMISSION_SETS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to Permission Sets. For example, to
+
+              call the `ListPermissionSets` and `RetrievePermissionSet` endpoints.'
+            PERMISSION_SETS_WRITE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to Permission Sets.'
+            RESERVATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to reservation information, for example, when calling the
+
+              `RetrieveReservation` endpoint.'
+            RESERVATIONS_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to reservation information, for example, when calling the
+
+              `CreateReservation` endpoint.'
+            RESTAURANT_CHECKS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to check information, for example, when calling the
+
+              `RetrieveCheck` endpoint.'
+            SETTLEMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to settlement (deposit) information. For example, to call
+
+              the Connect v1 ListSettlements endpoint.'
+            SUBSCRIPTIONS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to subscription information. For example, to call the RetrieveSubscription
+
+              endpoint.'
+            SUBSCRIPTIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to subscription information. For example, to call the CreateSubscription
+
+              endpoint.'
+            TIMECARDS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard information. For example, to call the
+
+              Connect v2 SearchShifts endpoint.'
+            TIMECARDS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard settings information. For example, to
+
+              call the GetBreakType endpoint.'
+            TIMECARDS_SETTINGS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee timecard settings information. For example, to
+
+              call the UpdateBreakType endpoint.'
+            TIMECARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee shift information. For example, to create
+
+              and modify employee shifts.'
+            VENDOR_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to vendor information, for example, when calling the
+
+              `RetrieveVendor` endpoint.'
+            VENDOR_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to vendor information, for example, when calling the
+
+              `BulkUpdateVendors` endpoint.'
+    oauth2ClientSecret:
+      type: apiKey
+      in: header
+      name: Authorization
+x-fern-global-headers:
+- header: Square-Version
+  name: version
+  optional: true
+  env: VERSION
+  type: literal<"2025-01-23">

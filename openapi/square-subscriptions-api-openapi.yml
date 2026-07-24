@@ -1,0 +1,3591 @@
+openapi: 3.0.0
+info:
+  version: '2.0'
+  title: Square ApplePay Subscriptions API
+  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  termsOfService: https://connect.squareup.com/tos
+  contact:
+    name: Square Developer Platform
+    email: developers@squareup.com
+    url: https://squareup.com/developers
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  externalDocs:
+    description: 'Read the official documentation here:'
+    url: https://docs.connect.squareup.com/
+  x-server-configuration:
+    default-environment: production
+    default-server: default
+    environments:
+    - name: production
+      servers:
+      - name: default
+        url: https://connect.squareup.com
+    - name: sandbox
+      servers:
+      - name: default
+        url: https://connect.squareupsandbox.com
+    - name: custom
+      servers:
+      - name: default
+        url: '{custom_url}'
+    parameters:
+    - name: custom_url
+      description: Sets the base URL requests are made to. Defaults to `https://connect.squareup.com`
+      type: string
+      example: https://connect.squareup.com
+  x-square-generic-error-codes:
+  - ACCESS_TOKEN_EXPIRED
+  - ACCESS_TOKEN_REVOKED
+  - API_VERSION_INCOMPATIBLE
+  - APPLICATION_DISABLED
+  - ARRAY_EMPTY
+  - ARRAY_LENGTH_TOO_LONG
+  - ARRAY_LENGTH_TOO_SHORT
+  - BAD_CERTIFICATE
+  - BAD_GATEWAY
+  - BAD_REQUEST
+  - CONFLICT
+  - CONFLICTING_PARAMETERS
+  - CURRENCY_MISMATCH
+  - EXPECTED_ARRAY
+  - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+  - EXPECTED_BOOLEAN
+  - EXPECTED_FLOAT
+  - EXPECTED_INTEGER
+  - EXPECTED_JSON_BODY
+  - EXPECTED_MAP
+  - EXPECTED_OBJECT
+  - EXPECTED_STRING
+  - FORBIDDEN
+  - GATEWAY_TIMEOUT
+  - GONE
+  - IDEMPOTENCY_KEY_REUSED
+  - INCORRECT_TYPE
+  - INSUFFICIENT_SCOPES
+  - INTERNAL_SERVER_ERROR
+  - INVALID_ARRAY_VALUE
+  - INVALID_CONTENT_TYPE
+  - INVALID_CURSOR
+  - INVALID_ENUM_VALUE
+  - INVALID_FORM_VALUE
+  - INVALID_SORT_ORDER
+  - INVALID_SQUARE_VERSION_FORMAT
+  - INVALID_TIME
+  - INVALID_TIME_RANGE
+  - INVALID_VALUE
+  - LOCATION_MISMATCH
+  - MAP_KEY_LENGTH_TOO_LONG
+  - MAP_KEY_LENGTH_TOO_SHORT
+  - MERCHANT_SUBSCRIPTION_NOT_FOUND
+  - METHOD_NOT_ALLOWED
+  - MISSING_REQUIRED_PARAMETER
+  - NOT_ACCEPTABLE
+  - NOT_FOUND
+  - NOT_IMPLEMENTED
+  - NO_FIELDS_SET
+  - RATE_LIMITED
+  - REQUEST_ENTITY_TOO_LARGE
+  - REQUEST_TIMEOUT
+  - SANDBOX_NOT_SUPPORTED
+  - SERVICE_UNAVAILABLE
+  - TOO_MANY_MAP_ENTRIES
+  - UNAUTHORIZED
+  - UNEXPECTED_VALUE
+  - UNKNOWN_BODY_PARAMETER
+  - UNKNOWN_QUERY_PARAMETER
+  - UNPROCESSABLE_ENTITY
+  - UNSUPPORTED_MEDIA_TYPE
+  - V1_ACCESS_TOKEN
+  - V1_APPLICATION
+  - VALUE_EMPTY
+  - VALUE_REGEX_MISMATCH
+  - VALUE_TOO_HIGH
+  - VALUE_TOO_LONG
+  - VALUE_TOO_LOW
+  - VALUE_TOO_SHORT
+servers:
+- url: https://connect.squareup.com
+  variables: {}
+tags:
+- name: Subscriptions
+paths:
+  /v2/subscriptions:
+    post:
+      tags:
+      - Subscriptions
+      summary: Square Create Subscription
+      operationId: CreateSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Enrolls a customer in a subscription.
+
+
+        If you provide a card on file in the request, Square charges the card for
+
+        the subscription. Otherwise, Square sends an invoice to the customer''s email
+
+        address. The subscription starts immediately, unless the request includes
+
+        the optional `start_date`. Each individual subscription is associated with a particular location.
+
+
+        For more information, see [Create a subscription](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#create-a-subscription).'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+        - PAYMENTS_WRITE
+        - SUBSCRIPTIONS_WRITE
+        - ITEMS_READ
+        - ORDERS_WRITE
+        - INVOICES_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSubscriptionResponse'
+      x-endpoint-errors:
+      - error-code: CARD_PROCESSING_NOT_ENABLED
+      - error-code: CUSTOMER_MISSING_EMAIL
+      - error-code: CUSTOMER_MISSING_NAME
+      - error-code: CUSTOMER_NOT_FOUND
+      - error-code: INVALID_CARD
+      - error-code: INVALID_DATE
+  /v2/subscriptions/bulk-swap-plan:
+    post:
+      tags:
+      - Subscriptions
+      summary: Square Bulk Swap Plan
+      operationId: BulkSwapPlan
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Schedules a plan variation change for all active subscriptions under a given plan
+
+        variation. For more information, see [Swap Subscription Plan Variations](https://developer.squareup.com/docs/subscriptions-api/swap-plan-variations).'
+      x-release-status: BETA
+      security:
+      - oauth2:
+        - SUBSCRIPTIONS_WRITE
+        - SUBSCRIPTIONS_READ
+        - ITEMS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSwapPlanRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSwapPlanResponse'
+      x-endpoint-errors:
+      - error-code: CARD_PROCESSING_NOT_ENABLED
+      - error-code: CUSTOMER_NOT_FOUND
+  /v2/subscriptions/search:
+    post:
+      tags:
+      - Subscriptions
+      summary: Square Search Subscriptions
+      operationId: SearchSubscriptions
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Searches for subscriptions.
+
+
+        Results are ordered chronologically by subscription creation date. If
+
+        the request specifies more than one location ID,
+
+        the endpoint orders the result
+
+        by location ID, and then by creation date within each location. If no locations are given
+
+        in the query, all locations are searched.
+
+
+        You can also optionally specify `customer_ids` to search by customer.
+
+        If left unset, all customers
+
+        associated with the specified locations are returned.
+
+        If the request specifies customer IDs, the endpoint orders results
+
+        first by location, within location by customer ID, and within
+
+        customer by subscription creation date.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - SUBSCRIPTIONS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchSubscriptionsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchSubscriptionsResponse'
+      x-endpoint-errors:
+      - error-code: CUSTOMER_NOT_FOUND
+  /v2/subscriptions/{subscription_id}:
+    get:
+      tags:
+      - Subscriptions
+      summary: Square Retrieve Subscription
+      operationId: RetrieveSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a specific subscription.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - SUBSCRIPTIONS_READ
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: include
+        description: "A query parameter to specify related information to be included in the response. \n\nThe supported query parameter values are: \n\n- `actions`: to include scheduled actions on the targeted subscription."
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveSubscriptionResponse'
+    put:
+      tags:
+      - Subscriptions
+      summary: Square Update Subscription
+      operationId: UpdateSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Updates a subscription by modifying or clearing `subscription` field values.
+
+        To clear a field, set its value to `null`.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+        - PAYMENTS_WRITE
+        - SUBSCRIPTIONS_WRITE
+        - ITEMS_READ
+        - ORDERS_WRITE
+        - INVOICES_WRITE
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription to update.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriptionRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSubscriptionResponse'
+      x-endpoint-errors:
+      - error-code: CUSTOMER_NOT_FOUND
+      - error-code: INVALID_CARD
+  /v2/subscriptions/{subscription_id}/actions/{action_id}:
+    delete:
+      tags:
+      - Subscriptions
+      summary: Square Delete Subscription Action
+      operationId: DeleteSubscriptionAction
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Deletes a scheduled action for a subscription.
+      x-release-status: BETA
+      security:
+      - oauth2:
+        - SUBSCRIPTIONS_WRITE
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription the targeted action is to act upon.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: action_id
+        description: The ID of the targeted action to be deleted.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteSubscriptionActionResponse'
+  /v2/subscriptions/{subscription_id}/billing-anchor:
+    post:
+      tags:
+      - Subscriptions
+      summary: Square Change Billing Anchor Date
+      operationId: ChangeBillingAnchorDate
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Changes the [billing anchor date](https://developer.squareup.com/docs/subscriptions-api/subscription-billing#billing-dates)
+
+        for a subscription.'
+      x-release-status: BETA
+      security:
+      - oauth2:
+        - SUBSCRIPTIONS_WRITE
+        - SUBSCRIPTIONS_READ
+        - ITEMS_READ
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription to update the billing anchor date.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeBillingAnchorDateRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeBillingAnchorDateResponse'
+  /v2/subscriptions/{subscription_id}/cancel:
+    post:
+      tags:
+      - Subscriptions
+      summary: Square Cancel Subscription
+      operationId: CancelSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: "Schedules a `CANCEL` action to cancel an active subscription. This \nsets the `canceled_date` field to the end of the active billing period. After this date, \nthe subscription status changes from ACTIVE to CANCELED."
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - SUBSCRIPTIONS_WRITE
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription to cancel.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelSubscriptionResponse'
+  /v2/subscriptions/{subscription_id}/events:
+    get:
+      tags:
+      - Subscriptions
+      summary: Square List Subscription Events
+      operationId: ListSubscriptionEvents
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Lists all [events](https://developer.squareup.com/docs/subscriptions-api/actions-events) for a specific subscription.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - SUBSCRIPTIONS_READ
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription to retrieve the events for.
+        schema:
+          type: string
+        in: path
+        required: true
+      - name: cursor
+        description: "When the total number of resulting subscription events exceeds the limit of a paged response, \nspecify the cursor returned from a preceding response here to fetch the next set of results.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: limit
+        description: 'The upper limit on the number of subscription events to return
+
+          in a paged response.'
+        schema:
+          type: integer
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSubscriptionEventsResponse'
+  /v2/subscriptions/{subscription_id}/pause:
+    post:
+      tags:
+      - Subscriptions
+      summary: Square Pause Subscription
+      operationId: PauseSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Schedules a `PAUSE` action to pause an active subscription.
+      x-release-status: BETA
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+        - PAYMENTS_WRITE
+        - SUBSCRIPTIONS_WRITE
+        - ITEMS_READ
+        - ORDERS_WRITE
+        - INVOICES_WRITE
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription to pause.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PauseSubscriptionRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PauseSubscriptionResponse'
+      x-endpoint-errors:
+      - error-code: CARD_PROCESSING_NOT_ENABLED
+      - error-code: CUSTOMER_NOT_FOUND
+      - error-code: INVALID_PAUSE_LENGTH
+      - error-code: INVALID_DATE
+  /v2/subscriptions/{subscription_id}/resume:
+    post:
+      tags:
+      - Subscriptions
+      summary: Square Resume Subscription
+      operationId: ResumeSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Schedules a `RESUME` action to resume a paused or a deactivated subscription.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+        - PAYMENTS_WRITE
+        - SUBSCRIPTIONS_WRITE
+        - ITEMS_READ
+        - ORDERS_WRITE
+        - INVOICES_WRITE
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription to resume.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResumeSubscriptionRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResumeSubscriptionResponse'
+      x-endpoint-errors:
+      - error-code: CARD_PROCESSING_NOT_ENABLED
+      - error-code: CUSTOMER_MISSING_EMAIL
+      - error-code: CUSTOMER_MISSING_NAME
+      - error-code: CUSTOMER_NOT_FOUND
+      - error-code: INVALID_CARD
+      - error-code: INVALID_DATE
+  /v2/subscriptions/{subscription_id}/swap-plan:
+    post:
+      tags:
+      - Subscriptions
+      summary: Square Swap Plan
+      operationId: SwapPlan
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: "Schedules a `SWAP_PLAN` action to swap a subscription plan variation in an existing subscription. \nFor more information, see [Swap Subscription Plan Variations](https://developer.squareup.com/docs/subscriptions-api/swap-plan-variations)."
+      x-release-status: BETA
+      security:
+      - oauth2:
+        - CUSTOMERS_READ
+        - PAYMENTS_WRITE
+        - SUBSCRIPTIONS_WRITE
+        - ITEMS_READ
+        - ORDERS_WRITE
+        - INVOICES_WRITE
+      parameters:
+      - name: subscription_id
+        description: The ID of the subscription to swap the subscription plan for.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SwapPlanRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwapPlanResponse'
+      x-endpoint-errors:
+      - error-code: CARD_PROCESSING_NOT_ENABLED
+      - error-code: CUSTOMER_NOT_FOUND
+components:
+  schemas:
+    CancelSubscriptionResponse:
+      type: object
+      description: "Defines output parameters in a response from the \n[CancelSubscription](api-endpoint:Subscriptions-CancelSubscription) endpoint."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The specified subscription scheduled for cancellation according to the action created by the request.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: A list of a single `CANCEL` action scheduled for the subscription.
+          x-release-status: BETA
+      example:
+        subscription:
+          canceled_date: '2023-06-05'
+          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2022-01-19T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 910afd30-464a-4e00-a8d8-2296e
+          invoice_ids:
+          - inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          - inv:0-ChrcX_i3sNmfsHTGKhI4Wg2mceA
+          location_id: S8GWD5R9QB376
+          paid_until_date: '2023-12-31'
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2022-01-19'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 3
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    SearchSubscriptionsQuery:
+      type: object
+      description: Represents a query, consisting of specified query expressions, used to search for subscriptions.
+      x-release-status: PUBLIC
+      properties:
+        filter:
+          $ref: '#/components/schemas/SearchSubscriptionsFilter'
+          description: A list of query expressions.
+          nullable: true
+    ListSubscriptionEventsResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [ListSubscriptionEvents](api-endpoint:Subscriptions-ListSubscriptionEvents).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription_events:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionEvent'
+          description: The retrieved subscription events.
+        cursor:
+          type: string
+          description: "When the total number of resulting subscription events exceeds the limit of a paged response, \nthe response includes a cursor for you to use in a subsequent request to fetch the next set of events.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        subscription_events:
+        - effective_date: '2020-04-24'
+          id: 06809161-3867-4598-8269-8aea5be4f9de
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: START_SUBSCRIPTION
+        - effective_date: '2020-05-01'
+          id: f2736603-cd2e-47ec-8675-f815fff54f88
+          info:
+            code: CUSTOMER_NO_NAME
+            detail: The customer with ID `V74BMG0GPS2KNCWJE1BTYJ37Y0` does not have a name on record.
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: DEACTIVATE_SUBSCRIPTION
+        - effective_date: '2022-05-01'
+          id: b426fc85-6859-450b-b0d0-fe3a5d1b565f
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: RESUME_SUBSCRIPTION
+        - effective_date: '2022-09-01'
+          id: 09f14de1-2f53-4dae-9091-49aa53f83d01
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: PAUSE_SUBSCRIPTION
+        - effective_date: '2022-12-01'
+          id: f28a73ac-1a1b-4b0f-8eeb-709a72945776
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: RESUME_SUBSCRIPTION
+        - effective_date: '2023-04-01'
+          id: 1eee8790-472d-4efe-8c69-8ad84e9cefe0
+          plan_variation_id: 02CD53CFA4d1498AFAD42
+          subscription_event_type: PLAN_CHANGE
+        - effective_date: '2023-06-21'
+          id: a0c08083-5db0-4800-85c7-d398de4fbb6e
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: STOP_SUBSCRIPTION
+    ChangeTiming:
+      type: string
+      enum:
+      - IMMEDIATE
+      - END_OF_BILLING_CYCLE
+      x-enum-elements:
+      - name: IMMEDIATE
+        description: The action occurs immediately.
+      - name: END_OF_BILLING_CYCLE
+        description: The action occurs at the end of the billing cycle.
+      description: Supported timings when a pending change, as an action, takes place to a subscription.
+      x-release-status: BETA
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type: integer
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+          nullable: true
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+          nullable: true
+    CreateSubscriptionRequest:
+      type: object
+      description: "Defines input parameters in a request to the \n[CreateSubscription](api-endpoint:Subscriptions-CreateSubscription) endpoint."
+      x-release-status: PUBLIC
+      required:
+      - location_id
+      - customer_id
+      properties:
+        idempotency_key:
+          type: string
+          description: 'A unique string that identifies this `CreateSubscription` request.
+
+            If you do not provide a unique string (or provide an empty string as the value),
+
+            the endpoint treats each request as independent.
+
+
+            For more information, see [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+        location_id:
+          type: string
+          description: The ID of the location the subscription is associated with.
+          minLength: 1
+        plan_variation_id:
+          type: string
+          description: The ID of the [subscription plan variation](https://developer.squareup.com/docs/subscriptions-api/plans-and-variations#plan-variations) created using the Catalog API.
+        customer_id:
+          type: string
+          description: The ID of the [customer](entity:Customer) subscribing to the subscription plan variation.
+          minLength: 1
+        start_date:
+          type: string
+          description: "The `YYYY-MM-DD`-formatted date to start the subscription. \nIf it is unspecified, the subscription starts immediately."
+        canceled_date:
+          type: string
+          description: "The `YYYY-MM-DD`-formatted date when the newly created subscription is scheduled for cancellation. \n\nThis date overrides the cancellation date set in the plan variation configuration.\nIf the cancellation date is earlier than the end date of a subscription cycle, the subscription stops\nat the canceled date and the subscriber is sent a prorated invoice at the beginning of the canceled cycle. \n\nWhen the subscription plan of the newly created subscription has a fixed number of cycles and the `canceled_date`\noccurs before the subscription plan expires, the specified `canceled_date` sets the date when the subscription \nstops through the end of the last cycle."
+        tax_percentage:
+          type: string
+          description: 'The tax to add when billing the subscription.
+
+            The percentage is expressed in decimal form, using a `''.''` as the decimal
+
+            separator and without a `''%''` sign. For example, a value of 7.5
+
+            corresponds to 7.5%.'
+          maxLength: 10
+        price_override_money:
+          $ref: '#/components/schemas/Money'
+          description: "A custom price which overrides the cost of a subscription plan variation with `STATIC` pricing.\nThis field does not affect itemized subscriptions with `RELATIVE` pricing. Instead, \nyou should edit the Subscription's [order template](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#phases-and-order-templates)."
+        card_id:
+          type: string
+          description: 'The ID of the [subscriber''s](entity:Customer) [card](entity:Card) to charge.
+
+            If it is not specified, the subscriber receives an invoice via email with a link to pay for their subscription.'
+        timezone:
+          type: string
+          description: 'The timezone that is used in date calculations for the subscription. If unset, defaults to
+
+            the location timezone. If a timezone is not configured for the location, defaults to "America/New_York".
+
+            Format: the IANA Timezone Database identifier for the location timezone. For
+
+            a list of time zones, see [List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).'
+        source:
+          $ref: '#/components/schemas/SubscriptionSource'
+          description: The origination details of the subscription.
+          x-release-status: BETA
+        monthly_billing_anchor_date:
+          type: integer
+          description: The day-of-the-month to change the billing date to.
+          minimum: 1
+          maximum: 31
+          x-release-status: BETA
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
+          description: array of phases for this subscription
+      example:
+        card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+        customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+        idempotency_key: 8193148c-9586-11e6-99f9-28cfe92138cf
+        location_id: S8GWD5R9QB376
+        phases:
+        - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+          ordinal: 0
+        plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+        source:
+          name: My Application
+        start_date: '2023-06-20'
+        timezone: America/Los_Angeles
+    SearchSubscriptionsRequest:
+      type: object
+      description: "Defines input parameters in a request to the \n[SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint."
+      x-release-status: PUBLIC
+      properties:
+        cursor:
+          type: string
+          description: "When the total number of resulting subscriptions exceeds the limit of a paged response, \nspecify the cursor returned from a preceding response here to fetch the next set of results.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+        limit:
+          type: integer
+          description: 'The upper limit on the number of subscriptions to return
+
+            in a paged response.'
+          minimum: 1
+        query:
+          $ref: '#/components/schemas/SearchSubscriptionsQuery'
+          description: 'A subscription query consisting of specified filtering conditions.
+
+
+            If this `query` field is unspecified, the `SearchSubscriptions` call will return all subscriptions.'
+        include:
+          type: array
+          items:
+            type: string
+          description: "An option to include related information in the response. \n\nThe supported values are: \n\n- `actions`: to include scheduled actions on the targeted subscriptions."
+          x-release-status: BETA
+      example:
+        query:
+          filter:
+            customer_ids:
+            - CHFGVKYY8RSV93M5KCYTG4PN0G
+            location_ids:
+            - S8GWD5R9QB376
+            source_names:
+            - My App
+    SubscriptionEventSubscriptionEventType:
+      type: string
+      enum:
+      - START_SUBSCRIPTION
+      - PLAN_CHANGE
+      - STOP_SUBSCRIPTION
+      - DEACTIVATE_SUBSCRIPTION
+      - RESUME_SUBSCRIPTION
+      - PAUSE_SUBSCRIPTION
+      - BILLING_ANCHOR_DATE_CHANGED
+      x-enum-elements:
+      - name: START_SUBSCRIPTION
+        description: The subscription was started.
+      - name: PLAN_CHANGE
+        description: The subscription plan was changed.
+      - name: STOP_SUBSCRIPTION
+        description: The subscription was stopped.
+      - name: DEACTIVATE_SUBSCRIPTION
+        description: The subscription was deactivated
+      - name: RESUME_SUBSCRIPTION
+        description: The subscription was resumed.
+      - name: PAUSE_SUBSCRIPTION
+        description: The subscription was paused.
+      - name: BILLING_ANCHOR_DATE_CHANGED
+        description: The billing anchor date was changed.
+      description: Supported types of an event occurred to a subscription.
+      x-release-status: PUBLIC
+    SubscriptionAction:
+      type: object
+      description: Represents an action as a pending change to a subscription.
+      x-release-status: BETA
+      properties:
+        id:
+          type: string
+          description: The ID of an action scoped to a subscription.
+        type:
+          $ref: '#/components/schemas/SubscriptionActionType'
+          description: 'The type of the action.
+
+            See [SubscriptionActionType](#type-subscriptionactiontype) for possible values'
+          nullable: true
+        effective_date:
+          type: string
+          description: The `YYYY-MM-DD`-formatted date when the action occurs on the subscription.
+          nullable: true
+        monthly_billing_anchor_date:
+          type: integer
+          description: The new billing anchor day value, for a `CHANGE_BILLING_ANCHOR_DATE` action.
+          nullable: true
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
+          description: A list of Phases, to pass phase-specific information used in the swap.
+          nullable: true
+        new_plan_variation_id:
+          type: string
+          description: The target subscription plan variation that a subscription switches to, for a `SWAP_PLAN` action.
+          nullable: true
+    ChangeBillingAnchorDateRequest:
+      type: object
+      description: 'Defines input parameters in a request to the
+
+        [ChangeBillingAnchorDate](api-endpoint:Subscriptions-ChangeBillingAnchorDate) endpoint.'
+      x-release-status: BETA
+      properties:
+        monthly_billing_anchor_date:
+          type: integer
+          description: The anchor day for the billing cycle.
+          minimum: 1
+          maximum: 31
+          nullable: true
+        effective_date:
+          type: string
+          description: 'The `YYYY-MM-DD`-formatted date when the scheduled `BILLING_ANCHOR_CHANGE` action takes
+
+            place on the subscription.
+
+
+            When this date is unspecified or falls within the current billing cycle, the billing anchor date
+
+            is changed immediately.'
+          nullable: true
+      example:
+        monthly_billing_anchor_date: 1
+    SubscriptionStatus:
+      type: string
+      enum:
+      - PENDING
+      - ACTIVE
+      - CANCELED
+      - DEACTIVATED
+      - PAUSED
+      x-enum-elements:
+      - name: PENDING
+        description: The subscription is pending to start in the future.
+      - name: ACTIVE
+        description: The subscription is active.
+      - name: CANCELED
+        description: The subscription is canceled.
+      - name: DEACTIVATED
+        description: The subscription is deactivated.
+      - name: PAUSED
+        description: The subscription is paused.
+      description: Supported subscription statuses.
+      x-release-status: PUBLIC
+    RetrieveSubscriptionResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [RetrieveSubscription](api-endpoint:Subscriptions-RetrieveSubscription) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The subscription retrieved.
+      example:
+        subscription:
+          card_id: ccof:IkWfpLj4tNHMyFii3GB
+          charged_through_date: '2023-11-20'
+          created_at: '2022-07-27T21:53:10Z'
+          customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          id: 8151fc89-da15-4eb9-a685-1a70883cebfc
+          invoice_ids:
+          - inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          - inv:0-ChrcX_i3sNmfsHTGKhI4Wg2mceA
+          location_id: S8GWD5R9QB376
+          paid_until_date: '2024-08-01'
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          price_override_money:
+            amount: 25000
+            currency: USD
+          source:
+            name: My Application
+          start_date: '2022-07-27'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+    PauseSubscriptionRequest:
+      type: object
+      description: 'Defines input parameters in a request to the
+
+        [PauseSubscription](api-endpoint:Subscriptions-PauseSubscription) endpoint.'
+      x-release-status: BETA
+      properties:
+        pause_effective_date:
+          type: string
+          description: 'The `YYYY-MM-DD`-formatted date when the scheduled `PAUSE` action takes place on the subscription.
+
+
+            When this date is unspecified or falls within the current billing cycle, the subscription is paused
+
+            on the starting date of the next billing cycle.'
+          nullable: true
+        pause_cycle_duration:
+          type: integer
+          description: "The number of billing cycles the subscription will be paused before it is reactivated. \n\nWhen this is set, a `RESUME` action is also scheduled to take place on the subscription at \nthe end of the specified pause cycle duration. In this case, neither `resume_effective_date` \nnor `resume_change_timing` may be specified."
+          format: int64
+          nullable: true
+        resume_effective_date:
+          type: string
+          description: "The date when the subscription is reactivated by a scheduled `RESUME` action. \nThis date must be at least one billing cycle ahead of `pause_effective_date`."
+          nullable: true
+        resume_change_timing:
+          $ref: '#/components/schemas/ChangeTiming'
+          description: "The timing whether the subscription is reactivated immediately or at the end of the billing cycle, relative to \n`resume_effective_date`.\nSee [ChangeTiming](#type-changetiming) for possible values"
+          nullable: true
+        pause_reason:
+          type: string
+          description: The user-provided reason to pause the subscription.
+          maxLength: 255
+          nullable: true
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    ResumeSubscriptionResponse:
+      type: object
+      description: "Defines output parameters in a response from the \n[ResumeSubscription](api-endpoint:Subscriptions-ResumeSubscription) endpoint."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The resumed subscription.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: A list of `RESUME` actions created by the request and scheduled for the subscription.
+          x-release-status: BETA
+      example:
+        actions:
+        - effective_date: '2023-09-01'
+          id: 18ff74f4-3da4-30c5-929f-7d6fca84f115
+          type: RESUME
+        subscription:
+          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+            ordinal: 0
+            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
+            uid: 873451e0-745b-4e87-ab0b-c574933fe616
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2023-06-20'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 1
+    UpdateSubscriptionRequest:
+      type: object
+      description: "Defines input parameters in a request to the \n[UpdateSubscription](api-endpoint:Subscriptions-UpdateSubscription) endpoint."
+      x-release-status: PUBLIC
+      properties:
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: 'The subscription object containing the current version, and fields to update.
+
+            Unset fields will be left at their current server values, and JSON `null` values will
+
+            be treated as a request to clear the relevant data.'
+          nullable: true
+      example:
+        subscription:
+          canceled_date: null
+          card_id: '{NEW CARD ID}'
+    DeleteSubscriptionActionResponse:
+      type: object
+      description: 'Defines output parameters in a response of the [DeleteSubscriptionAction](api-endpoint:Subscriptions-DeleteSubscriptionAction)
+
+        endpoint.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The subscription that has the specified action deleted.
+      example:
+        subscription:
+          card_id: ccof:IkWfpLj4tNHMyFii3GB
+          charged_through_date: '2023-11-20'
+          created_at: '2022-07-27T21:53:10Z'
+          customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          id: 8151fc89-da15-4eb9-a685-1a70883cebfc
+          invoice_ids:
+          - inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          - inv:0-ChrcX_i3sNmfsHTGKhI4Wg2mceA
+          location_id: S8GWD5R9QB376
+          paid_until_date: '2024-08-01'
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          price_override_money:
+            amount: 25000
+            currency: USD
+          source:
+            name: My Application
+          start_date: '2022-07-27'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+    SubscriptionEvent:
+      type: object
+      description: Describes changes to a subscription and the subscription status.
+      x-release-status: PUBLIC
+      required:
+      - id
+      - subscription_event_type
+      - effective_date
+      - plan_variation_id
+      properties:
+        id:
+          type: string
+          description: The ID of the subscription event.
+        subscription_event_type:
+          $ref: '#/components/schemas/SubscriptionEventSubscriptionEventType'
+          description: 'Type of the subscription event.
+
+            See [SubscriptionEventSubscriptionEventType](#type-subscriptioneventsubscriptioneventtype) for possible values'
+        effective_date:
+          type: string
+          description: The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) when the subscription event occurred.
+        monthly_billing_anchor_date:
+          type: integer
+          description: The day-of-the-month the billing anchor date was changed to, if applicable.
+          readOnly: true
+          x-release-status: BETA
+        info:
+          $ref: '#/components/schemas/SubscriptionEventInfo'
+          description: Additional information about the subscription event.
+          nullable: true
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
+          description: A list of Phases, to pass phase-specific information used in the swap.
+          nullable: true
+        plan_variation_id:
+          type: string
+          description: The ID of the subscription plan variation associated with the subscription.
+    Subscription:
+      type: object
+      description: 'Represents a subscription purchased by a customer.
+
+
+        For more information, see
+
+        [Manage Subscriptions](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions).'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the subscription.
+          maxLength: 255
+          readOnly: true
+        location_id:
+          type: string
+          description: The ID of the location associated with the subscription.
+          readOnly: true
+        plan_variation_id:
+          type: string
+          description: The ID of the subscribed-to [subscription plan variation](entity:CatalogSubscriptionPlanVariation).
+          readOnly: true
+        customer_id:
+          type: string
+          description: The ID of the subscribing [customer](entity:Customer) profile.
+          readOnly: true
+        start_date:
+          type: string
+          description: The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) to start the subscription.
+          readOnly: true
+        canceled_date:
+          type: string
+          description: "The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) to cancel the subscription, \nwhen the subscription status changes to `CANCELED` and the subscription billing stops.\n\nIf this field is not set, the subscription ends according its subscription plan.\n\nThis field cannot be updated, other than being cleared."
+          nullable: true
+        charged_through_date:
+          type: string
+          description: 'The `YYYY-MM-DD`-formatted date up to when the subscriber is invoiced for the
+
+            subscription.
+
+
+            After the invoice is sent for a given billing period,
+
+            this date will be the last day of the billing period.
+
+            For example,
+
+            suppose for the month of May a subscriber gets an invoice
+
+            (or charged the card) on May 1. For the monthly billing scenario,
+
+            this date is then set to May 31.'
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/SubscriptionStatus'
+          description: 'The current status of the subscription.
+
+            See [SubscriptionStatus](#type-subscriptionstatus) for possible values'
+          readOnly: true
+        tax_percentage:
+          type: string
+          description: 'The tax amount applied when billing the subscription. The
+
+            percentage is expressed in decimal form, using a `''.''` as the decimal
+
+            separator and without a `''%''` sign. For example, a value of `7.5`
+
+            corresponds to 7.5%.'
+          nullable: true
+        invoice_ids:
+          type: array
+          items:
+            type: string
+          description: 'The IDs of the [invoices](entity:Invoice) created for the
+
+            subscription, listed in order when the invoices were created
+
+            (newest invoices appear first).'
+          readOnly: true
+        price_override_money:
+          $ref: '#/components/schemas/Money'
+          description: "A custom price which overrides the cost of a subscription plan variation with `STATIC` pricing.\nThis field does not affect itemized subscriptions with `RELATIVE` pricing. Instead, \nyou should edit the Subscription's [order template](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#phases-and-order-templates)."
+          nullable: true
+        version:
+          type: integer
+          description: 'The version of the object. When updating an object, the version
+
+            supplied must match the version in the database, otherwise the write will
+
+            be rejected as conflicting.'
+          format: int64
+        created_at:
+          type: string
+          description: The timestamp when the subscription was created, in RFC 3339 format.
+          readOnly: true
+        card_id:
+          type: string
+          description: 'The ID of the [subscriber''s](entity:Customer) [card](entity:Card)
+
+            used to charge for the subscription.'
+          nullable: true
+        timezone:
+          type: string
+          description: 'Timezone that will be used in date calculations for the subscription.
+
+            Defaults to the timezone of the location based on `location_id`.
+
+            Format: the IANA Timezone Database identifier for the location timezone (for example, `America/Los_Angeles`).'
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/SubscriptionSource'
+          description: The origination details of the subscription.
+          x-release-status: BETA
+          nullable: true
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: "The list of scheduled actions on this subscription. It is set only in the response from  \n[RetrieveSubscription](api-endpoint:Subscriptions-RetrieveSubscription) with the query parameter\nof `include=actions` or from \n[SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) with the input parameter \nof `include:[\"actions\"]`."
+          x-release-status: BETA
+          nullable: true
+        monthly_billing_anchor_date:
+          type: integer
+          description: The day of the month on which the subscription will issue invoices and publish orders.
+          readOnly: true
+          x-release-status: BETA
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
+          description: array of phases for this subscription
+          readOnly: true
+    SearchSubscriptionsFilter:
+      type: object
+      description: "Represents a set of query expressions (filters) to narrow the scope of targeted subscriptions returned by \nthe [SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint."
+      x-release-status: PUBLIC
+      properties:
+        customer_ids:
+          type: array
+          items:
+            type: string
+          description: A filter to select subscriptions based on the subscribing customer IDs.
+          nullable: true
+        location_ids:
+          type: array
+          items:
+            type: string
+          description: A filter to select subscriptions based on the location.
+          nullable: true
+        source_names:
+          type: array
+          items:
+            type: string
+          description: A filter to select subscriptions based on the source application.
+          x-release-status: BETA
+          nullable: true
+    SubscriptionEventInfoCode:
+      type: string
+      enum:
+      - LOCATION_NOT_ACTIVE
+      - LOCATION_CANNOT_ACCEPT_PAYMENT
+      - CUSTOMER_DELETED
+      - CUSTOMER_NO_EMAIL
+      - CUSTOMER_NO_NAME
+      - USER_PROVIDED
+      x-enum-elements:
+      - name: LOCATION_NOT_ACTIVE
+        description: The location is not active.
+      - name: LOCATION_CANNOT_ACCEPT_PAYMENT
+        description: The location cannot accept payments.
+      - name: CUSTOMER_DELETED
+        description: The subscribing customer profile has been deleted.
+      - name: CUSTOMER_NO_EMAIL
+        description: The subscribing customer does not have an email.
+      - name: CUSTOMER_NO_NAME
+        description: The subscribing customer does not have a name.
+      - name: USER_PROVIDED
+        description: User-provided detail.
+      description: Supported info codes of a subscription event.
+      x-release-status: PUBLIC
+    PauseSubscriptionResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [PauseSubscription](api-endpoint:Subscriptions-PauseSubscription) endpoint.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The subscription to be paused by the scheduled `PAUSE` action.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: The list of a `PAUSE` action and a possible `RESUME` action created by the request.
+      example:
+        actions:
+        - effective_date: '2023-11-17'
+          id: 99b2439e-63f7-3ad5-95f7-ab2447a80673
+          type: PAUSE
+        subscription:
+          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+            ordinal: 0
+            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
+            uid: 873451e0-745b-4e87-ab0b-c574933fe616
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2023-06-20'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 1
+    SwapPlanResponse:
+      type: object
+      description: "Defines output parameters in a response of the \n[SwapPlan](api-endpoint:Subscriptions-SwapPlan) endpoint."
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The subscription with the updated subscription plan.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: A list of a `SWAP_PLAN` action created by the request.
+      example:
+        actions:
+        - effective_date: '2023-11-17'
+          id: f0a1dfdc-675b-3a14-a640-99f7ac1cee83
+          new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+          phases:
+          - order_template_id: uhhnjH9osVv3shUADwaC0b3hNxQZY
+            ordinal: 0
+          type: SWAP_PLAN
+        subscription:
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 9ba40961-995a-4a3d-8c53-048c40cafc13
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: E6oBY5WfQ2eN4pkYZwq4ka6n7KeZY
+            ordinal: 0
+            plan_phase_uid: C66BKH3ASTDYGJJCEZXQQSS7
+            uid: 98d6f53b-40e1-4714-8827-032fd923be25
+          plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+          price_override_money:
+            amount: 2000
+            currency: USD
+          source:
+            name: My Application
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 3
+    SearchSubscriptionsResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+          description: The subscriptions matching the specified query expressions.
+        cursor:
+          type: string
+          description: "When the total number of resulting subscription exceeds the limit of a paged response, \nthe response includes a cursor for you to use in a subsequent request to fetch the next set of results.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        subscriptions:
+        - canceled_date: '2021-10-30'
+          card_id: ccof:mueUsvgajChmjEbp4GB
+          charged_through_date: '2021-11-20'
+          created_at: '2021-10-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: de86fc96-8664-474b-af1a-abbe59cacf0e
+          location_id: S8GWD5R9QB376
+          paid_until_date: '2021-11-20'
+          plan_variation_id: L3TJVDHVBEQEGQDEZL2JJM7R
+          source:
+            name: My Application
+          start_date: '2021-10-20'
+          status: CANCELED
+          timezone: UTC
+        - charged_through_date: '2022-08-19'
+          created_at: '2022-01-19T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          invoice_ids:
+          - grebK0Q_l8H4fqoMMVvt-Q
+          - rcX_i3sNmHTGKhI4W2mceA
+          location_id: S8GWD5R9QB376
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          price_override_money:
+            amount: 1000
+            currency: USD
+          source:
+            name: My Application
+          start_date: '2022-01-19'
+          status: PAUSED
+          tax_percentage: '5'
+          timezone: America/Los_Angeles
+          version: 2
+        - card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+            ordinal: 0
+            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
+            uid: 873451e0-745b-4e87-ab0b-c574933fe616
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2023-06-20'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 1
+    BulkSwapPlanRequest:
+      type: object
+      description: 'Defines input parameters in a call to the
+
+        [BulkSwapPlan](api-endpoint:Subscriptions-BulkSwapPlan) endpoint.'
+      x-release-status: BETA
+      required:
+      - new_plan_variation_id
+      - old_plan_variation_id
+      - location_id
+      properties:
+        new_plan_variation_id:
+          type: string
+          description: 'The ID of the new subscription plan variation.
+
+
+            This field is required.'
+          minLength: 1
+        old_plan_variation_id:
+          type: string
+          description: 'The ID of the plan variation whose subscriptions should be swapped. Active subscriptions
+
+            using this plan variation will be subscribed to the new plan variation on their next billing
+
+            day.'
+          minLength: 1
+        location_id:
+          type: string
+          description: The ID of the location to associate with the swapped subscriptions.
+          minLength: 1
+      example:
+        location_id: S8GWD5R9QB376
+        new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+        old_plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+    BulkSwapPlanResponse:
+      type: object
+      description: 'Defines output parameters in a response of the
+
+        [BulkSwapPlan](api-endpoint:Subscriptions-BulkSwapPlan) endpoint.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        affected_subscriptions:
+          type: integer
+          description: The number of affected subscriptions.
+      example:
+        affected_subscriptions: 12
+    ChangeBillingAnchorDateResponse:
+      type: object
+      description: 'Defines output parameters in a request to the
+
+        [ChangeBillingAnchorDate](api-endpoint:Subscriptions-ChangeBillingAnchorDate) endpoint.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The specified subscription for updating billing anchor date.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: A list of a single billing anchor date change for the subscription.
+      example:
+        actions:
+        - effective_date: '2023-11-01'
+          id: f0a1dfdc-675b-3a14-a640-99f7ac1cee83
+          monthly_billing_anchor_date: 1
+          type: CHANGE_BILLING_ANCHOR_DATE
+        subscription:
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 9ba40961-995a-4a3d-8c53-048c40cafc13
+          location_id: S8GWD5R9QB376
+          monthly_billing_anchor_date: 20
+          phases:
+          - order_template_id: E6oBY5WfQ2eN4pkYZwq4ka6n7KeZY
+            ordinal: 0
+            plan_phase_uid: C66BKH3ASTDYGJJCEZXQQSS7
+            uid: 98d6f53b-40e1-4714-8827-032fd923be25
+          plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+          price_override_money:
+            amount: 2000
+            currency: USD
+          source:
+            name: My Application
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 3
+    CreateSubscriptionResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [CreateSubscription](api-endpoint:Subscriptions-CreateSubscription) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: 'The newly created subscription.
+
+
+            For more information, see
+
+            [Subscription object](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#subscription-object).'
+      example:
+        subscription:
+          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+            ordinal: 0
+            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
+            uid: 873451e0-745b-4e87-ab0b-c574933fe616
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2023-06-20'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 1
+    SwapPlanRequest:
+      type: object
+      description: 'Defines input parameters in a call to the
+
+        [SwapPlan](api-endpoint:Subscriptions-SwapPlan) endpoint.'
+      x-release-status: BETA
+      properties:
+        new_plan_variation_id:
+          type: string
+          description: 'The ID of the new subscription plan variation.
+
+
+            This field is required.'
+          nullable: true
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhaseInput'
+          description: A list of PhaseInputs, to pass phase-specific information used in the swap.
+          nullable: true
+      example:
+        new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+        phases:
+        - order_template_id: uhhnjH9osVv3shUADwaC0b3hNxQZY
+          ordinal: 0
+    PhaseInput:
+      type: object
+      description: Represents the arguments used to construct a new phase.
+      x-release-status: PUBLIC
+      required:
+      - ordinal
+      properties:
+        ordinal:
+          type: integer
+          description: index of phase in total subscription plan
+          format: int64
+        order_template_id:
+          type: string
+          description: id of order to be used in billing
+          nullable: true
+    UpdateSubscriptionResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [UpdateSubscription](api-endpoint:Subscriptions-UpdateSubscription) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The updated subscription.
+      example:
+        subscription:
+          card_id: '{NEW CARD ID}'
+          charged_through_date: '2023-03-13'
+          created_at: '2023-01-30T19:27:32Z'
+          customer_id: AM69AB81FT4479YH9HGWS1HZY8
+          id: 7217d8ca-1fee-4446-a9e5-8540b5d8c9bb
+          invoice_ids:
+          - inv:0-ChAPSfVYvNewckgf3x4iigN_ENMM
+          - inv:0-ChBQaCCLfjcm9WEUBGxvuydJENMM
+          location_id: LPJKHYR7WFDKN
+          plan_variation_id: XOUNEKCE6NSXQW5NTSQ73MMX
+          source:
+            name: My Application
+          start_date: '2023-01-30'
+          status: ACTIVE
+          timezone: UTC
+          version: 3
+    SubscriptionSource:
+      type: object
+      description: The origination details of the subscription.
+      x-release-status: BETA
+      properties:
+        name:
+          type: string
+          description: 'The name used to identify the place (physical or digital) that
+
+            a subscription originates. If unset, the name defaults to the name
+
+            of the application that created the subscription.'
+          maxLength: 255
+          nullable: true
+    ResumeSubscriptionRequest:
+      type: object
+      description: 'Defines input parameters in a request to the
+
+        [ResumeSubscription](api-endpoint:Subscriptions-ResumeSubscription) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        resume_effective_date:
+          type: string
+          description: The `YYYY-MM-DD`-formatted date when the subscription reactivated.
+          x-release-status: BETA
+          nullable: true
+        resume_change_timing:
+          $ref: '#/components/schemas/ChangeTiming'
+          description: 'The timing to resume a subscription, relative to the specified
+
+            `resume_effective_date` attribute value.
+
+            See [ChangeTiming](#type-changetiming) for possible values'
+          x-release-status: BETA
+          nullable: true
+    SubscriptionEventInfo:
+      type: object
+      description: Provides information about the subscription event.
+      x-release-status: PUBLIC
+      properties:
+        detail:
+          type: string
+          description: A human-readable explanation for the event.
+          nullable: true
+        code:
+          $ref: '#/components/schemas/SubscriptionEventInfoCode'
+          description: 'An info code indicating the subscription event that occurred.
+
+            See [InfoCode](#type-infocode) for possible values'
+          nullable: true
+    SubscriptionActionType:
+      type: string
+      enum:
+      - CANCEL
+      - PAUSE
+      - RESUME
+      - SWAP_PLAN
+      - CHANGE_BILLING_ANCHOR_DATE
+      x-enum-elements:
+      - name: CANCEL
+        description: The action to execute a scheduled cancellation of a subscription.
+      - name: PAUSE
+        description: The action to execute a scheduled pause of a subscription.
+      - name: RESUME
+        description: The action to execute a scheduled resumption of a subscription.
+      - name: SWAP_PLAN
+        description: The action to execute a scheduled swap of a subscription plan in a subscription.
+      - name: CHANGE_BILLING_ANCHOR_DATE
+        description: A billing anchor date change action.
+      description: Supported types of an action as a pending change to a subscription.
+      x-release-status: BETA
+    Phase:
+      type: object
+      description: Represents a phase, which can override subscription phases as defined by plan_id
+      x-release-status: PUBLIC
+      properties:
+        uid:
+          type: string
+          description: id of subscription phase
+          nullable: true
+        ordinal:
+          type: integer
+          description: index of phase in total subscription plan
+          format: int64
+          nullable: true
+        order_template_id:
+          type: string
+          description: id of order to be used in billing
+          nullable: true
+        plan_phase_uid:
+          type: string
+          description: the uid from the plan's phase in catalog
+          nullable: true
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-additional-headers:
+      - name: Square-Version
+        description: Square Connect API versions
+        schema:
+          default: '2025-01-23'
+      flows:
+        authorizationCode:
+          authorizationUrl: https://connect.squareup.com/oauth2/authorize
+          tokenUrl: https://connect.squareup.com/oauth2/token
+          scopes:
+            ADDON_CONFIGURATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants write access for third-party Add-ons to read configurations of their Add-ons, for example, when calling `RetrieveConfiguration` endpoint.'
+            ADDON_CONFIGURATIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access for third-party Add-ons to store configurations of their Add-ons, for example, when calling `CreateConfiguration` endpoint.'
+            APPOINTMENTS_ALL_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to all of a seller''s booking information, calendar, and business details.
+
+              This permission must be accompanied by the `APPOINTMENTS_READ` permission.'
+            APPOINTMENTS_ALL_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to all booking details, including double-booking a seller.
+
+              This permission must be accompanied by the `APPOINTMENTS_WRITE` permission.'
+            APPOINTMENTS_BUSINESS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to booking business settings. For example, to call the
+
+              ListTeamMemberBookingProfiles endpoint.'
+            APPOINTMENTS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to booking information. For example, to call the
+
+              RetrieveBooking endpoint.'
+            APPOINTMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to booking information. For example, to call the CreateBooking endpoint.'
+            BANK_ACCOUNTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to bank account information associated with the targeted
+
+              Square account. For example, to call the Connect v1 ListBankAccounts endpoint.'
+            CASH_DRAWER_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to cash drawer shift information. For example, to call the
+
+              ListCashDrawerShifts endpoint.'
+            CHANNELS_CREATE: '__HTTP Method__: `POST`
+
+
+              Grants write access to create channels, for example, when calling the
+
+              `CreateChannel` endpoint.'
+            CHANNELS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to view channels, for example, when calling the
+
+              `RetrieveChannel` endpoint.'
+            CHANNELS_UPDATE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to update channels, for example, when calling the
+
+              `UpdateChannel` endpoint.'
+            CUSTOMERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to customer information. For example, to call the
+
+              ListCustomers endpoint.'
+            CUSTOMERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to customer information. For example, to create and update
+
+              customer profiles.'
+            DEVICES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to device information. For example, to
+
+              call the `GetDevice` and `ListDevices` endpoints.'
+            DEVICE_CREDENTIAL_MANAGEMENT: '__HTTP Method__: `POST`, `GET`
+
+
+              Grants read/write access to device credentials information. For example, to
+
+              call the CreateDeviceCode endpoint.'
+            DISPUTES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to dispute information. For example, to call the RetrieveDispute
+
+              endpoint.'
+            DISPUTES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to dispute information. For example, to call the SubmitEvidence
+
+              endpoint.'
+            EMPLOYEES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee profile information. For example, to call the
+
+              Connect v1 Employees API.'
+            EMPLOYEES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee profile information. For example, to create
+
+              and modify employee profiles.'
+            GIFTCARDS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to gift card information. For example, to call the RetrieveGiftCard
+
+              endpoint.'
+            GIFTCARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to gift card information. For example, to call the CreateGiftCard
+
+              endpoint.'
+            INVENTORY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to inventory information. For example, to call the
+
+              RetrieveInventoryCount endpoint.'
+            INVENTORY_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to inventory information. For example, to call the
+
+              BatchChangeInventory endpoint.'
+            INVOICES_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to invoice information. For example, to call the ListInvoices endpoint.'
+            INVOICES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to invoice information. For example, to call the CreateInvoice endpoint.'
+            ITEMS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to product catalog information. For example, to obtain objects in a product catalog.'
+            ITEMS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to product catalog information. For example, to modify or
+
+              add to a product catalog.'
+            LOYALTY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to loyalty information. For example, to call the
+
+              ListLoyaltyPrograms endpoint.'
+            LOYALTY_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to loyalty information. For example, to call the
+
+              CreateLoyaltyAccount endpoint.'
+            MERCHANT_PROFILE_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to business and location information. For example, to
+
+              obtain a location ID for subsequent activity.'
+            MERCHANT_PROFILE_WRITE: '__HTTP Method__: `POST`, `PUT`
+
+
+              Grants write access to business and location information. For example, to create a new location or
+
+              update the business hours at an existing location.'
+            ONLINE_STORE_SITE_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store site details.'
+            ONLINE_STORE_SNIPPETS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store snippets on published websites.'
+            ONLINE_STORE_SNIPPETS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Write access to ECOM online store snippets on published websites.'
+            ORDERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to order information. For example, to call the
+
+              BatchRetrieveOrders endpoint.'
+            ORDERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to order information. For example, to call the
+
+              CreateCheckout endpoint.'
+            PAYMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to transaction and refund information. For example, to call
+
+              the RetrieveTransaction endpoint.'
+            PAYMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to transaction and refunds information. For example, to
+
+              process payments with the Payments or Checkout API.'
+            PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allow third party applications to deduct a portion of each transaction amount.
+
+              __Required__ to use multiparty transaction functionality with the Payments
+
+              API.'
+            PAYMENTS_WRITE_IN_PERSON: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to payments and refunds information. For example, to
+
+              process in-person payments.'
+            PAYMENTS_WRITE_SHARED_ONFILE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allows the developer to process payments on behalf of a seller using a shared on file payment method.'
+            PAYOUTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to payouts and payout entries information. For example,
+
+              to call the Connect v2 `ListPayouts` endpoint.'
+            PERMISSION_SETS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to Permission Sets. For example, to
+
+              call the `ListPermissionSets` and `RetrievePermissionSet` endpoints.'
+            PERMISSION_SETS_WRITE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to Permission Sets.'
+            RESERVATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to reservation information, for example, when calling the
+
+              `RetrieveReservation` endpoint.'
+            RESERVATIONS_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to reservation information, for example, when calling the
+
+              `CreateReservation` endpoint.'
+            RESTAURANT_CHECKS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to check information, for example, when calling the
+
+              `RetrieveCheck` endpoint.'
+            SETTLEMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to settlement (deposit) information. For example, to call
+
+              the Connect v1 ListSettlements endpoint.'
+            SUBSCRIPTIONS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to subscription information. For example, to call the RetrieveSubscription
+
+              endpoint.'
+            SUBSCRIPTIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to subscription information. For example, to call the CreateSubscription
+
+              endpoint.'
+            TIMECARDS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard information. For example, to call the
+
+              Connect v2 SearchShifts endpoint.'
+            TIMECARDS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard settings information. For example, to
+
+              call the GetBreakType endpoint.'
+            TIMECARDS_SETTINGS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee timecard settings information. For example, to
+
+              call the UpdateBreakType endpoint.'
+            TIMECARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee shift information. For example, to create
+
+              and modify employee shifts.'
+            VENDOR_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to vendor information, for example, when calling the
+
+              `RetrieveVendor` endpoint.'
+            VENDOR_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to vendor information, for example, when calling the
+
+              `BulkUpdateVendors` endpoint.'
+    oauth2ClientSecret:
+      type: apiKey
+      in: header
+      name: Authorization
+x-fern-global-headers:
+- header: Square-Version
+  name: version
+  optional: true
+  env: VERSION
+  type: literal<"2025-01-23">

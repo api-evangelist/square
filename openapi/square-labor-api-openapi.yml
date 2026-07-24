@@ -1,0 +1,3830 @@
+openapi: 3.0.0
+info:
+  version: '2.0'
+  title: Square ApplePay Labor API
+  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  termsOfService: https://connect.squareup.com/tos
+  contact:
+    name: Square Developer Platform
+    email: developers@squareup.com
+    url: https://squareup.com/developers
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  externalDocs:
+    description: 'Read the official documentation here:'
+    url: https://docs.connect.squareup.com/
+  x-server-configuration:
+    default-environment: production
+    default-server: default
+    environments:
+    - name: production
+      servers:
+      - name: default
+        url: https://connect.squareup.com
+    - name: sandbox
+      servers:
+      - name: default
+        url: https://connect.squareupsandbox.com
+    - name: custom
+      servers:
+      - name: default
+        url: '{custom_url}'
+    parameters:
+    - name: custom_url
+      description: Sets the base URL requests are made to. Defaults to `https://connect.squareup.com`
+      type: string
+      example: https://connect.squareup.com
+  x-square-generic-error-codes:
+  - ACCESS_TOKEN_EXPIRED
+  - ACCESS_TOKEN_REVOKED
+  - API_VERSION_INCOMPATIBLE
+  - APPLICATION_DISABLED
+  - ARRAY_EMPTY
+  - ARRAY_LENGTH_TOO_LONG
+  - ARRAY_LENGTH_TOO_SHORT
+  - BAD_CERTIFICATE
+  - BAD_GATEWAY
+  - BAD_REQUEST
+  - CONFLICT
+  - CONFLICTING_PARAMETERS
+  - CURRENCY_MISMATCH
+  - EXPECTED_ARRAY
+  - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+  - EXPECTED_BOOLEAN
+  - EXPECTED_FLOAT
+  - EXPECTED_INTEGER
+  - EXPECTED_JSON_BODY
+  - EXPECTED_MAP
+  - EXPECTED_OBJECT
+  - EXPECTED_STRING
+  - FORBIDDEN
+  - GATEWAY_TIMEOUT
+  - GONE
+  - IDEMPOTENCY_KEY_REUSED
+  - INCORRECT_TYPE
+  - INSUFFICIENT_SCOPES
+  - INTERNAL_SERVER_ERROR
+  - INVALID_ARRAY_VALUE
+  - INVALID_CONTENT_TYPE
+  - INVALID_CURSOR
+  - INVALID_ENUM_VALUE
+  - INVALID_FORM_VALUE
+  - INVALID_SORT_ORDER
+  - INVALID_SQUARE_VERSION_FORMAT
+  - INVALID_TIME
+  - INVALID_TIME_RANGE
+  - INVALID_VALUE
+  - LOCATION_MISMATCH
+  - MAP_KEY_LENGTH_TOO_LONG
+  - MAP_KEY_LENGTH_TOO_SHORT
+  - MERCHANT_SUBSCRIPTION_NOT_FOUND
+  - METHOD_NOT_ALLOWED
+  - MISSING_REQUIRED_PARAMETER
+  - NOT_ACCEPTABLE
+  - NOT_FOUND
+  - NOT_IMPLEMENTED
+  - NO_FIELDS_SET
+  - RATE_LIMITED
+  - REQUEST_ENTITY_TOO_LARGE
+  - REQUEST_TIMEOUT
+  - SANDBOX_NOT_SUPPORTED
+  - SERVICE_UNAVAILABLE
+  - TOO_MANY_MAP_ENTRIES
+  - UNAUTHORIZED
+  - UNEXPECTED_VALUE
+  - UNKNOWN_BODY_PARAMETER
+  - UNKNOWN_QUERY_PARAMETER
+  - UNPROCESSABLE_ENTITY
+  - UNSUPPORTED_MEDIA_TYPE
+  - V1_ACCESS_TOKEN
+  - V1_APPLICATION
+  - VALUE_EMPTY
+  - VALUE_REGEX_MISMATCH
+  - VALUE_TOO_HIGH
+  - VALUE_TOO_LONG
+  - VALUE_TOO_LOW
+  - VALUE_TOO_SHORT
+servers:
+- url: https://connect.squareup.com
+  variables: {}
+tags:
+- name: Labor
+paths:
+  /v2/labor/break-types:
+    get:
+      tags:
+      - Labor
+      summary: Square List Break Types
+      operationId: ListBreakTypes
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns a paginated list of `BreakType` instances for a business.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_SETTINGS_READ
+      parameters:
+      - name: location_id
+        description: 'Filter the returned `BreakType` results to only those that are associated with the
+
+          specified location.'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: limit
+        description: 'The maximum number of `BreakType` results to return per page. The number can range between 1
+
+          and 200. The default is 200.'
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: cursor
+        description: A pointer to the next page of `BreakType` results to fetch.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBreakTypesResponse'
+    post:
+      tags:
+      - Labor
+      summary: Square Create Break Type
+      operationId: CreateBreakType
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Creates a new `BreakType`.
+
+
+        A `BreakType` is a template for creating `Break` objects.
+
+        You must provide the following values in your request to this
+
+        endpoint:
+
+
+        - `location_id`
+
+        - `break_name`
+
+        - `expected_duration`
+
+        - `is_paid`
+
+
+        You can only have three `BreakType` instances per location. If you attempt to add a fourth
+
+        `BreakType` for a location, an `INVALID_REQUEST_ERROR` "Exceeded limit of 3 breaks per location."
+
+        is returned.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_SETTINGS_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBreakTypeRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateBreakTypeResponse'
+  /v2/labor/break-types/{id}:
+    delete:
+      tags:
+      - Labor
+      summary: Square Delete Break Type
+      operationId: DeleteBreakType
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Deletes an existing `BreakType`.
+
+
+        A `BreakType` can be deleted even if it is referenced from a `Shift`.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_SETTINGS_WRITE
+      parameters:
+      - name: id
+        description: The UUID for the `BreakType` being deleted.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteBreakTypeResponse'
+    get:
+      tags:
+      - Labor
+      summary: Square Get Break Type
+      operationId: GetBreakType
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns a single `BreakType` specified by `id`.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_SETTINGS_READ
+      parameters:
+      - name: id
+        description: The UUID for the `BreakType` being retrieved.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBreakTypeResponse'
+    put:
+      tags:
+      - Labor
+      summary: Square Update Break Type
+      operationId: UpdateBreakType
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Updates an existing `BreakType`.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_SETTINGS_WRITE
+        - TIMECARDS_SETTINGS_READ
+      parameters:
+      - name: id
+        description: ' The UUID for the `BreakType` being updated.'
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBreakTypeRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateBreakTypeResponse'
+  /v2/labor/employee-wages:
+    get:
+      tags:
+      - Labor
+      summary: Square List Employee Wages
+      operationId: ListEmployeeWages
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns a paginated list of `EmployeeWage` instances for a business.
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2020-08-26'
+        retirementDate: TBD
+        replacedBy: ListTeamMemberWages
+        guideUrl: https://developer.squareup.com/docs/labor-api/migrate-to-teams
+      security:
+      - oauth2:
+        - EMPLOYEES_READ
+      parameters:
+      - name: employee_id
+        description: Filter the returned wages to only those that are associated with the specified employee.
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: limit
+        description: 'The maximum number of `EmployeeWage` results to return per page. The number can range between
+
+          1 and 200. The default is 200.'
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: cursor
+        description: A pointer to the next page of `EmployeeWage` results to fetch.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEmployeeWagesResponse'
+  /v2/labor/employee-wages/{id}:
+    get:
+      tags:
+      - Labor
+      summary: Square Get Employee Wage
+      operationId: GetEmployeeWage
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns a single `EmployeeWage` specified by `id`.
+      x-release-status: DEPRECATED
+      deprecated: true
+      x-deprecation:
+        deprecationDate: '2020-08-26'
+        retirementDate: TBD
+        replacedBy: GetTeamMemberWage
+        guideUrl: https://developer.squareup.com/docs/labor-api/migrate-to-teams
+      security:
+      - oauth2:
+        - EMPLOYEES_READ
+      parameters:
+      - name: id
+        description: The UUID for the `EmployeeWage` being retrieved.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEmployeeWageResponse'
+  /v2/labor/shifts:
+    post:
+      tags:
+      - Labor
+      summary: Square Create Shift
+      operationId: CreateShift
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Creates a new `Shift`.
+
+
+        A `Shift` represents a complete workday for a single team member.
+
+        You must provide the following values in your request to this
+
+        endpoint:
+
+
+        - `location_id`
+
+        - `team_member_id`
+
+        - `start_at`
+
+
+        An attempt to create a new `Shift` can result in a `BAD_REQUEST` error when:
+
+        - The `status` of the new `Shift` is `OPEN` and the team member has another
+
+        shift with an `OPEN` status.
+
+        - The `start_at` date is in the future.
+
+        - The `start_at` or `end_at` date overlaps another shift for the same team member.
+
+        - The `Break` instances are set in the request and a break `start_at`
+
+        is before the `Shift.start_at`, a break `end_at` is after
+
+        the `Shift.end_at`, or both.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_WRITE
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateShiftRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateShiftResponse'
+  /v2/labor/shifts/search:
+    post:
+      tags:
+      - Labor
+      summary: Square Search Shifts
+      operationId: SearchShifts
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Returns a paginated list of `Shift` records for a business.
+
+        The list to be returned can be filtered by:
+
+        - Location IDs
+
+        - Team member IDs
+
+        - Shift status (`OPEN` or `CLOSED`)
+
+        - Shift start
+
+        - Shift end
+
+        - Workday details
+
+
+        The list can be sorted by:
+
+        - `START_AT`
+
+        - `END_AT`
+
+        - `CREATED_AT`
+
+        - `UPDATED_AT`'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_READ
+      parameters: []
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchShiftsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchShiftsResponse'
+  /v2/labor/shifts/{id}:
+    delete:
+      tags:
+      - Labor
+      summary: Square Delete Shift
+      operationId: DeleteShift
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Deletes a `Shift`.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_WRITE
+      parameters:
+      - name: id
+        description: The UUID for the `Shift` being deleted.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteShiftResponse'
+    get:
+      tags:
+      - Labor
+      summary: Square Get Shift
+      operationId: GetShift
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns a single `Shift` specified by `id`.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_READ
+      parameters:
+      - name: id
+        description: The UUID for the `Shift` being retrieved.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetShiftResponse'
+    put:
+      tags:
+      - Labor
+      summary: Square Update Shift
+      operationId: UpdateShift
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: 'Updates an existing `Shift`.
+
+
+        When adding a `Break` to a `Shift`, any earlier `Break` instances in the `Shift` have
+
+        the `end_at` property set to a valid RFC-3339 datetime string.
+
+
+        When closing a `Shift`, all `Break` instances in the `Shift` must be complete with `end_at`
+
+        set on each `Break`.'
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_WRITE
+        - TIMECARDS_READ
+      parameters:
+      - name: id
+        description: The ID of the object being updated.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateShiftRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateShiftResponse'
+  /v2/labor/team-member-wages:
+    get:
+      tags:
+      - Labor
+      summary: Square List Team Member Wages
+      operationId: ListTeamMemberWages
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns a paginated list of `TeamMemberWage` instances for a business.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - EMPLOYEES_READ
+      parameters:
+      - name: team_member_id
+        description: 'Filter the returned wages to only those that are associated with the
+
+          specified team member.'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: limit
+        description: 'The maximum number of `TeamMemberWage` results to return per page. The number can range between
+
+          1 and 200. The default is 200.'
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: cursor
+        description: A pointer to the next page of `EmployeeWage` results to fetch.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTeamMemberWagesResponse'
+  /v2/labor/team-member-wages/{id}:
+    get:
+      tags:
+      - Labor
+      summary: Square Get Team Member Wage
+      operationId: GetTeamMemberWage
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns a single `TeamMemberWage` specified by `id`.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - EMPLOYEES_READ
+      parameters:
+      - name: id
+        description: The UUID for the `TeamMemberWage` being retrieved.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTeamMemberWageResponse'
+  /v2/labor/workweek-configs:
+    get:
+      tags:
+      - Labor
+      summary: Square List Workweek Configs
+      operationId: ListWorkweekConfigs
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Returns a list of `WorkweekConfig` instances for a business.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_SETTINGS_READ
+      parameters:
+      - name: limit
+        description: The maximum number of `WorkweekConfigs` results to return per page.
+        schema:
+          type: integer
+        in: query
+        required: false
+      - name: cursor
+        description: A pointer to the next page of `WorkweekConfig` results to fetch.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWorkweekConfigsResponse'
+  /v2/labor/workweek-configs/{id}:
+    put:
+      tags:
+      - Labor
+      summary: Square Update Workweek Config
+      operationId: UpdateWorkweekConfig
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Updates a `WorkweekConfig`.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - TIMECARDS_SETTINGS_WRITE
+        - TIMECARDS_SETTINGS_READ
+      parameters:
+      - name: id
+        description: The UUID for the `WorkweekConfig` object being updated.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWorkweekConfigRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateWorkweekConfigResponse'
+components:
+  schemas:
+    Break:
+      type: object
+      description: A record of an employee's break during a shift.
+      x-release-status: PUBLIC
+      required:
+      - start_at
+      - break_type_id
+      - name
+      - expected_duration
+      - is_paid
+      properties:
+        id:
+          type: string
+          description: The UUID for this object.
+        start_at:
+          type: string
+          description: 'RFC 3339; follows the same timezone information as `Shift`. Precision up to
+
+            the minute is respected; seconds are truncated.'
+          minLength: 1
+        end_at:
+          type: string
+          description: 'RFC 3339; follows the same timezone information as `Shift`. Precision up to
+
+            the minute is respected; seconds are truncated.'
+          nullable: true
+        break_type_id:
+          type: string
+          description: The `BreakType` that this `Break` was templated on.
+          minLength: 1
+        name:
+          type: string
+          description: A human-readable name.
+          minLength: 1
+        expected_duration:
+          type: string
+          description: 'Format: RFC-3339 P[n]Y[n]M[n]DT[n]H[n]M[n]S. The expected length of
+
+            the break.'
+          minLength: 1
+        is_paid:
+          type: boolean
+          description: 'Whether this break counts towards time worked for compensation
+
+            purposes.'
+    ListTeamMemberWagesResponse:
+      type: object
+      description: 'The response to a request for a set of `TeamMemberWage` objects. The response contains
+
+        a set of `TeamMemberWage` objects.'
+      x-release-status: PUBLIC
+      properties:
+        team_member_wages:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMemberWage'
+          description: A page of `TeamMemberWage` results.
+        cursor:
+          type: string
+          description: 'The value supplied in the subsequent request to fetch the next page
+
+            of `TeamMemberWage` results.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        cursor: 2fofTniCgT0yIPAq26kmk0YyFQJZfbWkh73OOnlTHmTAx13NgED
+        team_member_wages:
+        - hourly_rate:
+            amount: 3250
+            currency: USD
+          id: pXS3qCv7BERPnEGedM4S8mhm
+          job_id: jxJNN6eCJsLrhg5UFJrDWDGE
+          team_member_id: 33fJchumvVdJwxV0H6L9
+          tip_eligible: false
+          title: Manager
+        - hourly_rate:
+            amount: 2600
+            currency: USD
+          id: rZduCkzYDUVL3ovh1sQgbue6
+          job_id: gcbz15vKGnMKmaWJJ152kjim
+          team_member_id: 33fJchumvVdJwxV0H6L9
+          tip_eligible: true
+          title: Cook
+        - hourly_rate:
+            amount: 1600
+            currency: USD
+          id: FxLbs5KpPUHa8wyt5ctjubDX
+          job_id: FzbJAtt9qEWncK1BWgVCxQ6M
+          team_member_id: 33fJchumvVdJwxV0H6L9
+          tip_eligible: true
+          title: Barista
+        - hourly_rate:
+            amount: 1700
+            currency: USD
+          id: vD1wCgijMDR3cX5TPnu7VXto
+          job_id: N4YKVLzFj3oGtNocqoYHYpW3
+          team_member_id: 33fJchumvVdJwxV0H6L9
+          tip_eligible: true
+          title: Cashier
+    WorkweekConfig:
+      type: object
+      description: 'Sets the day of the week and hour of the day that a business starts a
+
+        workweek. This is used to calculate overtime pay.'
+      x-release-status: PUBLIC
+      required:
+      - start_of_week
+      - start_of_day_local_time
+      properties:
+        id:
+          type: string
+          description: The UUID for this object.
+        start_of_week:
+          $ref: '#/components/schemas/Weekday'
+          description: 'The day of the week on which a business week starts for
+
+            compensation purposes.
+
+            See [Weekday](#type-weekday) for possible values'
+        start_of_day_local_time:
+          type: string
+          description: 'The local time at which a business week starts. Represented as a
+
+            string in `HH:MM` format (`HH:MM:SS` is also accepted, but seconds are
+
+            truncated).'
+          minLength: 1
+        version:
+          type: integer
+          description: 'Used for resolving concurrency issues. The request fails if the version
+
+            provided does not match the server version at the time of the request. If not provided,
+
+            Square executes a blind write; potentially overwriting data from another
+
+            write.'
+        created_at:
+          type: string
+          description: A read-only timestamp in RFC 3339 format; presented in UTC.
+          readOnly: true
+        updated_at:
+          type: string
+          description: A read-only timestamp in RFC 3339 format; presented in UTC.
+          readOnly: true
+    ShiftSort:
+      type: object
+      description: Sets the sort order of search results.
+      x-release-status: PUBLIC
+      properties:
+        field:
+          $ref: '#/components/schemas/ShiftSortField'
+          description: 'The field to sort on.
+
+            See [ShiftSortField](#type-shiftsortfield) for possible values'
+          nullable: true
+        order:
+          $ref: '#/components/schemas/SortOrder'
+          description: 'The order in which results are returned. Defaults to DESC.
+
+            See [SortOrder](#type-sortorder) for possible values'
+          nullable: true
+    UpdateShiftResponse:
+      type: object
+      description: 'The response to a request to update a `Shift`. The response contains
+
+        the updated `Shift` object and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        shift:
+          $ref: '#/components/schemas/Shift'
+          description: The updated `Shift`.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        shift:
+          breaks:
+          - break_type_id: REGS1EQR1TPZ5
+            end_at: '2019-01-25T06:16:00-05:00'
+            expected_duration: PT5M
+            id: X7GAQYVVRRG6P
+            is_paid: true
+            name: Tea Break
+            start_at: '2019-01-25T06:11:00-05:00'
+          created_at: '2019-02-28T00:39:02Z'
+          declared_cash_tip_money:
+            amount: 500
+            currency: USD
+          employee_id: ormj0jJJZ5OZIzxrZYJI
+          end_at: '2019-01-25T13:11:00-05:00'
+          id: K0YH4CV5462JB
+          location_id: PAA1RJZZKXBFG
+          start_at: '2019-01-25T03:11:00-05:00'
+          status: CLOSED
+          team_member_id: ormj0jJJZ5OZIzxrZYJI
+          timezone: America/New_York
+          updated_at: '2019-02-28T00:42:41Z'
+          version: 2
+          wage:
+            hourly_rate:
+              amount: 1500
+              currency: USD
+            job_id: dZtrPh5GSDGugyXGByesVp51
+            tip_eligible: true
+            title: Bartender
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    SearchShiftsRequest:
+      type: object
+      description: A request for a filtered and sorted set of `Shift` objects.
+      x-release-status: PUBLIC
+      properties:
+        query:
+          $ref: '#/components/schemas/ShiftQuery'
+          description: Query filters.
+        limit:
+          type: integer
+          description: The number of resources in a page (200 by default).
+          minimum: 1
+          maximum: 200
+        cursor:
+          type: string
+          description: An opaque cursor for fetching the next page.
+      example:
+        limit: 100
+        query:
+          filter:
+            workday:
+              date_range:
+                end_date: '2019-02-03'
+                start_date: '2019-01-20'
+              default_timezone: America/Los_Angeles
+              match_shifts_by: START_AT
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    DeleteShiftResponse:
+      type: object
+      description: "The response to a request to delete a `Shift`. The response might contain a set of \n`Error` objects if the request resulted in errors."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type: integer
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+          nullable: true
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+          nullable: true
+    Shift:
+      type: object
+      description: 'A record of the hourly rate, start, and end times for a single work shift
+
+        for an employee. This might include a record of the start and end times for breaks
+
+        taken during the shift.'
+      x-release-status: PUBLIC
+      required:
+      - location_id
+      - start_at
+      properties:
+        id:
+          type: string
+          description: The UUID for this object.
+          maxLength: 255
+        employee_id:
+          type: string
+          description: The ID of the employee this shift belongs to. DEPRECATED at version 2020-08-26. Use `team_member_id` instead.
+          x-release-status: DEPRECATED
+          nullable: true
+        location_id:
+          type: string
+          description: 'The ID of the location this shift occurred at. The location should be based on
+
+            where the employee clocked in.'
+          minLength: 1
+        timezone:
+          type: string
+          description: 'The read-only convenience value that is calculated from the location based
+
+            on the `location_id`. Format: the IANA timezone database identifier for the
+
+            location timezone.'
+          nullable: true
+        start_at:
+          type: string
+          description: 'RFC 3339; shifted to the location timezone + offset. Precision up to the
+
+            minute is respected; seconds are truncated.'
+          minLength: 1
+        end_at:
+          type: string
+          description: 'RFC 3339; shifted to the timezone + offset. Precision up to the minute is
+
+            respected; seconds are truncated.'
+          nullable: true
+        wage:
+          $ref: '#/components/schemas/ShiftWage'
+          description: 'Job and pay related information. If the wage is not set on create, it defaults to a wage
+
+            of zero. If the title is not set on create, it defaults to the name of the role the employee
+
+            is assigned to, if any.'
+          nullable: true
+        breaks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Break'
+          description: A list of all the paid or unpaid breaks that were taken during this shift.
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ShiftStatus'
+          description: 'Describes the working state of the current `Shift`.
+
+            See [ShiftStatus](#type-shiftstatus) for possible values'
+          nullable: true
+        version:
+          type: integer
+          description: 'Used for resolving concurrency issues. The request fails if the version
+
+            provided does not match the server version at the time of the request. If not provided,
+
+            Square executes a blind write; potentially overwriting data from another
+
+            write.'
+        created_at:
+          type: string
+          description: A read-only timestamp in RFC 3339 format; presented in UTC.
+          readOnly: true
+        updated_at:
+          type: string
+          description: A read-only timestamp in RFC 3339 format; presented in UTC.
+          readOnly: true
+        team_member_id:
+          type: string
+          description: The ID of the team member this shift belongs to. Replaced `employee_id` at version "2020-08-26".
+          nullable: true
+        declared_cash_tip_money:
+          $ref: '#/components/schemas/Money'
+          description: The tips declared by the team member for the shift.
+          nullable: true
+    ListEmployeeWagesResponse:
+      type: object
+      description: 'The response to a request for a set of `EmployeeWage` objects. The response contains
+
+        a set of `EmployeeWage` objects.'
+      x-release-status: DEPRECATED
+      properties:
+        employee_wages:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeWage'
+          description: A page of `EmployeeWage` results.
+        cursor:
+          type: string
+          description: 'The value supplied in the subsequent request to fetch the next page
+
+            of `EmployeeWage` results.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        cursor: 2fofTniCgT0yIPAq26kmk0YyFQJZfbWkh73OOnlTHmTAx13NgED
+        employee_wages:
+        - employee_id: 33fJchumvVdJwxV0H6L9
+          hourly_rate:
+            amount: 3250
+            currency: USD
+          id: pXS3qCv7BERPnEGedM4S8mhm
+          title: Manager
+        - employee_id: 33fJchumvVdJwxV0H6L9
+          hourly_rate:
+            amount: 2600
+            currency: USD
+          id: rZduCkzYDUVL3ovh1sQgbue6
+          title: Cook
+        - employee_id: 33fJchumvVdJwxV0H6L9
+          hourly_rate:
+            amount: 1600
+            currency: USD
+          id: FxLbs5KpPUHa8wyt5ctjubDX
+          title: Barista
+        - employee_id: 33fJchumvVdJwxV0H6L9
+          hourly_rate:
+            amount: 1700
+            currency: USD
+          id: vD1wCgijMDR3cX5TPnu7VXto
+          title: Cashier
+    BreakType:
+      type: object
+      description: 'A defined break template that sets an expectation for possible `Break`
+
+        instances on a `Shift`.'
+      x-release-status: PUBLIC
+      required:
+      - location_id
+      - break_name
+      - expected_duration
+      - is_paid
+      properties:
+        id:
+          type: string
+          description: The UUID for this object.
+          maxLength: 255
+        location_id:
+          type: string
+          description: The ID of the business location this type of break applies to.
+          minLength: 1
+        break_name:
+          type: string
+          description: 'A human-readable name for this type of break. The name is displayed to
+
+            employees in Square products.'
+          minLength: 1
+        expected_duration:
+          type: string
+          description: 'Format: RFC-3339 P[n]Y[n]M[n]DT[n]H[n]M[n]S. The expected length of
+
+            this break. Precision less than minutes is truncated.
+
+
+            Example for break expected duration of 15 minutes: T15M'
+          minLength: 1
+        is_paid:
+          type: boolean
+          description: 'Whether this break counts towards time worked for compensation
+
+            purposes.'
+        version:
+          type: integer
+          description: 'Used for resolving concurrency issues. The request fails if the version
+
+            provided does not match the server version at the time of the request. If a value is not
+
+            provided, Square''s servers execute a "blind" write; potentially
+
+            overwriting another writer''s data.'
+        created_at:
+          type: string
+          description: A read-only timestamp in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: A read-only timestamp in RFC 3339 format.
+          readOnly: true
+    SearchShiftsResponse:
+      type: object
+      description: 'The response to a request for `Shift` objects. The response contains
+
+        the requested `Shift` objects and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        shifts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shift'
+          description: Shifts.
+        cursor:
+          type: string
+          description: An opaque cursor for fetching the next page.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        shifts:
+        - breaks:
+          - break_type_id: REGS1EQR1TPZ5
+            end_at: '2019-01-21T06:11:00-05:00'
+            expected_duration: PT10M
+            id: SJW7X6AKEJQ65
+            is_paid: true
+            name: Tea Break
+            start_at: '2019-01-21T06:11:00-05:00'
+          created_at: '2019-01-24T01:12:03Z'
+          declared_cash_tip_money:
+            amount: 500
+            currency: USD
+          employee_id: ormj0jJJZ5OZIzxrZYJI
+          end_at: '2019-01-21T13:11:00-05:00'
+          id: X714F3HA6D1PT
+          location_id: PAA1RJZZKXBFG
+          start_at: '2019-01-21T03:11:00-05:00'
+          status: CLOSED
+          team_member_id: ormj0jJJZ5OZIzxrZYJI
+          timezone: America/New_York
+          updated_at: '2019-02-07T22:21:08Z'
+          version: 6
+          wage:
+            hourly_rate:
+              amount: 1100
+              currency: USD
+            job_id: FzbJAtt9qEWncK1BWgVCxQ6M
+            tip_eligible: true
+            title: Barista
+        - breaks:
+          - break_type_id: WQX00VR99F53J
+            end_at: '2019-01-23T14:40:00-05:00'
+            expected_duration: PT10M
+            id: BKS6VR7WR748A
+            is_paid: true
+            name: Tea Break
+            start_at: '2019-01-23T14:30:00-05:00'
+          - break_type_id: P6Q468ZFRN1AC
+            end_at: '2019-01-22T12:44:00-05:00'
+            expected_duration: PT15M
+            id: BQFEZSHFZSC51
+            is_paid: false
+            name: Coffee Break
+            start_at: '2019-01-22T12:30:00-05:00'
+          created_at: '2019-01-23T23:32:45Z'
+          declared_cash_tip_money:
+            amount: 0
+            currency: USD
+          employee_id: 33fJchumvVdJwxV0H6L9
+          end_at: '2019-01-22T13:02:00-05:00'
+          id: GDHYBZYWK0P2V
+          location_id: PAA1RJZZKXBFG
+          start_at: '2019-01-22T12:02:00-05:00'
+          status: CLOSED
+          team_member_id: 33fJchumvVdJwxV0H6L9
+          timezone: America/New_York
+          updated_at: '2019-01-24T00:56:25Z'
+          version: 16
+          wage:
+            hourly_rate:
+              amount: 1600
+              currency: USD
+            job_id: gcbz15vKGnMKmaWJJ152kjim
+            tip_eligible: true
+            title: Cook
+    GetBreakTypeResponse:
+      type: object
+      description: 'The response to a request to get a `BreakType`. The response contains
+
+        the requested `BreakType` objects and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        break_type:
+          $ref: '#/components/schemas/BreakType'
+          description: The response object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        break_type:
+          break_name: Lunch Break
+          created_at: '2019-02-21T17:50:00Z'
+          expected_duration: PT30M
+          id: lA0mj_RSOprNPwMUXdYp
+          is_paid: true
+          location_id: 059SB0E0WCNWS
+          updated_at: '2019-02-21T17:50:00Z'
+          version: 1
+    GetShiftResponse:
+      type: object
+      description: 'A response to a request to get a `Shift`. The response contains
+
+        the requested `Shift` object and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        shift:
+          $ref: '#/components/schemas/Shift'
+          description: The requested `Shift`.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        shift:
+          breaks:
+          - break_type_id: 92EPDRQKJ5088
+            end_at: '2019-02-23T20:00:00-05:00'
+            expected_duration: PT1H
+            id: M9BBKEPQAQD2T
+            is_paid: true
+            name: Lunch Break
+            start_at: '2019-02-23T19:00:00-05:00'
+          created_at: '2019-02-27T00:12:12Z'
+          declared_cash_tip_money:
+            amount: 500
+            currency: USD
+          employee_id: D71KRMQof6cXGUW0aAv7
+          end_at: '2019-02-23T21:00:00-05:00'
+          id: T35HMQSN89SV4
+          location_id: PAA1RJZZKXBFG
+          start_at: '2019-02-23T18:00:00-05:00'
+          status: CLOSED
+          team_member_id: D71KRMQof6cXGUW0aAv7
+          timezone: America/New_York
+          updated_at: '2019-02-27T00:12:12Z'
+          version: 1
+          wage:
+            hourly_rate:
+              amount: 1457
+              currency: USD
+            job_id: N4YKVLzFj3oGtNocqoYHYpW3
+            tip_eligible: true
+            title: Cashier
+    UpdateBreakTypeResponse:
+      type: object
+      description: 'A response to a request to update a `BreakType`. The response contains
+
+        the requested `BreakType` objects and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        break_type:
+          $ref: '#/components/schemas/BreakType'
+          description: The response object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        break_type:
+          break_name: Lunch
+          created_at: '2018-06-12T20:19:12Z'
+          expected_duration: PT50M
+          id: Q6JSJS6D4DBCH
+          is_paid: true
+          location_id: 26M7H24AZ9N6R
+          updated_at: '2019-02-26T23:12:59Z'
+          version: 2
+    GetTeamMemberWageResponse:
+      type: object
+      description: 'A response to a request to get a `TeamMemberWage`. The response contains
+
+        the requested `TeamMemberWage` objects and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        team_member_wage:
+          $ref: '#/components/schemas/TeamMemberWage'
+          description: The requested `TeamMemberWage` object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        team_member_wage:
+          hourly_rate:
+            amount: 2000
+            currency: USD
+          id: pXS3qCv7BERPnEGedM4S8mhm
+          job_id: jxJNN6eCJsLrhg5UFJrDWDGE
+          team_member_id: 33fJchumvVdJwxV0H6L9
+          tip_eligible: false
+          title: Manager
+    CreateShiftRequest:
+      type: object
+      description: Represents a request to create a `Shift`.
+      x-release-status: PUBLIC
+      required:
+      - shift
+      properties:
+        idempotency_key:
+          type: string
+          description: A unique string value to ensure the idempotency of the operation.
+          maxLength: 128
+        shift:
+          $ref: '#/components/schemas/Shift'
+          description: The `Shift` to be created.
+      example:
+        idempotency_key: HIDSNG5KS478L
+        shift:
+          breaks:
+          - break_type_id: REGS1EQR1TPZ5
+            end_at: '2019-01-25T06:16:00-05:00'
+            expected_duration: PT5M
+            is_paid: true
+            name: Tea Break
+            start_at: '2019-01-25T06:11:00-05:00'
+          declared_cash_tip_money:
+            amount: 500
+            currency: USD
+          end_at: '2019-01-25T13:11:00-05:00'
+          location_id: PAA1RJZZKXBFG
+          start_at: '2019-01-25T03:11:00-05:00'
+          team_member_id: ormj0jJJZ5OZIzxrZYJI
+          wage:
+            hourly_rate:
+              amount: 1100
+              currency: USD
+            tip_eligible: true
+            title: Barista
+    ShiftWage:
+      type: object
+      description: The hourly wage rate used to compensate an employee for this shift.
+      x-release-status: PUBLIC
+      properties:
+        title:
+          type: string
+          description: The name of the job performed during this shift.
+          nullable: true
+        hourly_rate:
+          $ref: '#/components/schemas/Money'
+          description: 'Can be a custom-set hourly wage or the calculated effective hourly
+
+            wage based on the annual wage and hours worked per week.'
+          nullable: true
+        job_id:
+          type: string
+          description: 'The id of the job performed during this shift. Square
+
+            labor-reporting UIs might group shifts together by id. This cannot be used to retrieve the job.'
+          readOnly: true
+        tip_eligible:
+          type: boolean
+          description: Whether team members are eligible for tips when working this job.
+          nullable: true
+    DeleteBreakTypeResponse:
+      type: object
+      description: "The response to a request to delete a `BreakType`. The response might contain a set \nof `Error` objects if the request resulted in errors."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    ShiftWorkdayMatcher:
+      type: string
+      enum:
+      - START_AT
+      - END_AT
+      - INTERSECTION
+      x-enum-elements:
+      - name: START_AT
+        description: All shifts that start on or after the specified workday
+      - name: END_AT
+        description: All shifts that end on or before the specified workday
+      - name: INTERSECTION
+        description: All shifts that start between the start and end workdays (inclusive)
+      description: Defines the logic used to apply a workday filter.
+      x-release-status: PUBLIC
+    ShiftFilter:
+      type: object
+      description: 'Defines a filter used in a search for `Shift` records. `AND` logic is
+
+        used by Square''s servers to apply each filter property specified.'
+      x-release-status: PUBLIC
+      properties:
+        location_ids:
+          type: array
+          items:
+            type: string
+          description: Fetch shifts for the specified location.
+          nullable: true
+        employee_ids:
+          type: array
+          items:
+            type: string
+          description: Fetch shifts for the specified employees. DEPRECATED at version 2020-08-26. Use `team_member_ids` instead.
+          x-release-status: DEPRECATED
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ShiftFilterStatus'
+          description: 'Fetch a `Shift` instance by `Shift.status`.
+
+            See [ShiftFilterStatus](#type-shiftfilterstatus) for possible values'
+          nullable: true
+        start:
+          $ref: '#/components/schemas/TimeRange'
+          description: Fetch `Shift` instances that start in the time range - Inclusive.
+          nullable: true
+        end:
+          $ref: '#/components/schemas/TimeRange'
+          description: Fetch the `Shift` instances that end in the time range - Inclusive.
+          nullable: true
+        workday:
+          $ref: '#/components/schemas/ShiftWorkday'
+          description: Fetch the `Shift` instances based on the workday date range.
+          nullable: true
+        team_member_ids:
+          type: array
+          items:
+            type: string
+          description: Fetch shifts for the specified team members. Replaced `employee_ids` at version "2020-08-26".
+          nullable: true
+    UpdateBreakTypeRequest:
+      type: object
+      description: A request to update a `BreakType`.
+      x-release-status: PUBLIC
+      required:
+      - break_type
+      properties:
+        break_type:
+          $ref: '#/components/schemas/BreakType'
+          description: The updated `BreakType`.
+      example:
+        break_type:
+          break_name: Lunch
+          expected_duration: PT50M
+          is_paid: true
+          location_id: 26M7H24AZ9N6R
+          version: 1
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    ListWorkweekConfigsResponse:
+      type: object
+      description: 'The response to a request for a set of `WorkweekConfig` objects. The response contains
+
+        the requested `WorkweekConfig` objects and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        workweek_configs:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkweekConfig'
+          description: A page of `WorkweekConfig` results.
+        cursor:
+          type: string
+          description: 'The value supplied in the subsequent request to fetch the next page of
+
+            `WorkweekConfig` results.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        cursor: 2fofTniCgT0yIPAq26kmk0YyFQJZfbWkh73OOnlTHmTAx13NgED
+        workweek_configs:
+        - created_at: '2016-02-04T00:58:24Z'
+          id: FY4VCAQN700GM
+          start_of_day_local_time: '10:00'
+          start_of_week: MON
+          updated_at: '2019-02-28T01:04:35Z'
+          version: 11
+    ShiftQuery:
+      type: object
+      description: The parameters of a `Shift` search query, which includes filter and sort options.
+      x-release-status: PUBLIC
+      properties:
+        filter:
+          $ref: '#/components/schemas/ShiftFilter'
+          description: Query filter options.
+          nullable: true
+        sort:
+          $ref: '#/components/schemas/ShiftSort'
+          description: Sort order details.
+          nullable: true
+    CreateBreakTypeRequest:
+      type: object
+      description: A request to create a new `BreakType`.
+      x-release-status: PUBLIC
+      required:
+      - break_type
+      properties:
+        idempotency_key:
+          type: string
+          description: A unique string value to ensure the idempotency of the operation.
+          maxLength: 128
+        break_type:
+          $ref: '#/components/schemas/BreakType'
+          description: The `BreakType` to be created.
+      example:
+        break_type:
+          break_name: Lunch Break
+          expected_duration: PT30M
+          is_paid: true
+          location_id: CGJN03P1D08GF
+        idempotency_key: PAD3NG5KSN2GL
+    GetEmployeeWageResponse:
+      type: object
+      description: 'A response to a request to get an `EmployeeWage`. The response contains
+
+        the requested `EmployeeWage` objects and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: DEPRECATED
+      properties:
+        employee_wage:
+          $ref: '#/components/schemas/EmployeeWage'
+          description: The requested `EmployeeWage` object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        employee_wage:
+          employee_id: 33fJchumvVdJwxV0H6L9
+          hourly_rate:
+            amount: 2000
+            currency: USD
+          id: pXS3qCv7BERPnEGedM4S8mhm
+          title: Manager
+    TimeRange:
+      type: object
+      description: 'Represents a generic time range. The start and end values are
+
+        represented in RFC 3339 format. Time ranges are customized to be
+
+        inclusive or exclusive based on the needs of a particular endpoint.
+
+        Refer to the relevant endpoint-specific documentation to determine
+
+        how time ranges are handled.'
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type: string
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            starts.'
+          nullable: true
+        end_at:
+          type: string
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            ends.'
+          nullable: true
+    UpdateShiftRequest:
+      type: object
+      description: A request to update a `Shift` object.
+      x-release-status: PUBLIC
+      required:
+      - shift
+      properties:
+        shift:
+          $ref: '#/components/schemas/Shift'
+          description: The updated `Shift` object.
+      example:
+        shift:
+          breaks:
+          - break_type_id: REGS1EQR1TPZ5
+            end_at: '2019-01-25T06:16:00-05:00'
+            expected_duration: PT5M
+            id: X7GAQYVVRRG6P
+            is_paid: true
+            name: Tea Break
+            start_at: '2019-01-25T06:11:00-05:00'
+          declared_cash_tip_money:
+            amount: 500
+            currency: USD
+          end_at: '2019-01-25T13:11:00-05:00'
+          location_id: PAA1RJZZKXBFG
+          start_at: '2019-01-25T03:11:00-05:00'
+          team_member_id: ormj0jJJZ5OZIzxrZYJI
+          version: 1
+          wage:
+            hourly_rate:
+              amount: 1500
+              currency: USD
+            tip_eligible: true
+            title: Bartender
+    ShiftFilterStatus:
+      type: string
+      enum:
+      - OPEN
+      - CLOSED
+      x-enum-elements:
+      - name: OPEN
+        description: Shifts that have been started and not ended.
+      - name: CLOSED
+        description: Shifts that have been started and ended.
+      description: Specifies the `status` of `Shift` records to be returned.
+      x-release-status: PUBLIC
+    EmployeeWage:
+      type: object
+      description: The hourly wage rate that an employee earns on a `Shift` for doing the job specified by the `title` property of this object. Deprecated at version 2020-08-26. Use [TeamMemberWage](entity:TeamMemberWage).
+      x-release-status: DEPRECATED
+      properties:
+        id:
+          type: string
+          description: The UUID for this object.
+        employee_id:
+          type: string
+          description: The `Employee` that this wage is assigned to.
+          nullable: true
+        title:
+          type: string
+          description: The job title that this wage relates to.
+          nullable: true
+        hourly_rate:
+          $ref: '#/components/schemas/Money'
+          description: 'Can be a custom-set hourly wage or the calculated effective hourly
+
+            wage based on the annual wage and hours worked per week.'
+          nullable: true
+    ListBreakTypesResponse:
+      type: object
+      description: 'The response to a request for a set of `BreakType` objects. The response contains
+
+        the requested `BreakType` objects and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        break_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/BreakType'
+          description: ' A page of `BreakType` results.'
+        cursor:
+          type: string
+          description: 'The value supplied in the subsequent request to fetch the next page
+
+            of `BreakType` results.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        break_types:
+        - break_name: Coffee Break
+          created_at: '2019-01-22T20:47:37Z'
+          expected_duration: PT5M
+          id: REGS1EQR1TPZ5
+          is_paid: false
+          location_id: PAA1RJZZKXBFG
+          updated_at: '2019-01-22T20:47:37Z'
+          version: 1
+        - break_name: Lunch Break
+          created_at: '2019-01-25T19:26:30Z'
+          expected_duration: PT1H
+          id: 92EPDRQKJ5088
+          is_paid: true
+          location_id: PAA1RJZZKXBFG
+          updated_at: '2019-01-25T19:26:30Z'
+          version: 3
+        cursor: 2fofTniCgT0yIPAq26kmk0YyFQJZfbWkh73OOnlTHmTAx13NgED
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
+    UpdateWorkweekConfigRequest:
+      type: object
+      description: A request to update a `WorkweekConfig` object.
+      x-release-status: PUBLIC
+      required:
+      - workweek_config
+      properties:
+        workweek_config:
+          $ref: '#/components/schemas/WorkweekConfig'
+          description: The updated `WorkweekConfig` object.
+      example:
+        workweek_config:
+          start_of_day_local_time: '10:00'
+          start_of_week: MON
+          version: 10
+    ShiftSortField:
+      type: string
+      enum:
+      - START_AT
+      - END_AT
+      - CREATED_AT
+      - UPDATED_AT
+      x-enum-elements:
+      - name: START_AT
+        description: The start date/time of a `Shift`
+      - name: END_AT
+        description: The end date/time of a `Shift`
+      - name: CREATED_AT
+        description: The date/time that a `Shift` is created
+      - name: UPDATED_AT
+        description: The most recent date/time that a `Shift` is updated
+      description: Enumerates the `Shift` fields to sort on.
+      x-release-status: PUBLIC
+    ShiftWorkday:
+      type: object
+      description: 'A `Shift` search query filter parameter that sets a range of days that
+
+        a `Shift` must start or end in before passing the filter condition.'
+      x-release-status: PUBLIC
+      properties:
+        date_range:
+          $ref: '#/components/schemas/DateRange'
+          description: Dates for fetching the shifts.
+          nullable: true
+        match_shifts_by:
+          $ref: '#/components/schemas/ShiftWorkdayMatcher'
+          description: 'The strategy on which the dates are applied.
+
+            See [ShiftWorkdayMatcher](#type-shiftworkdaymatcher) for possible values'
+          nullable: true
+        default_timezone:
+          type: string
+          description: 'Location-specific timezones convert workdays to datetime filters.
+
+            Every location included in the query must have a timezone or this field
+
+            must be provided as a fallback. Format: the IANA timezone database
+
+            identifier for the relevant timezone.'
+          nullable: true
+    TeamMemberWage:
+      type: object
+      description: 'The hourly wage rate that a team member earns on a `Shift` for doing the job
+
+        specified by the `title` property of this object.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: The UUID for this object.
+        team_member_id:
+          type: string
+          description: The `TeamMember` that this wage is assigned to.
+          nullable: true
+        title:
+          type: string
+          description: The job title that this wage relates to.
+          nullable: true
+        hourly_rate:
+          $ref: '#/components/schemas/Money'
+          description: 'Can be a custom-set hourly wage or the calculated effective hourly
+
+            wage based on the annual wage and hours worked per week.'
+          nullable: true
+        job_id:
+          type: string
+          description: 'An identifier for the job that this wage relates to. This cannot be
+
+            used to retrieve the job.'
+          nullable: true
+        tip_eligible:
+          type: boolean
+          description: Whether team members are eligible for tips when working this job.
+          nullable: true
+    Weekday:
+      type: string
+      enum:
+      - MON
+      - TUE
+      - WED
+      - THU
+      - FRI
+      - SAT
+      - SUN
+      x-enum-elements:
+      - name: MON
+        description: Monday
+      - name: TUE
+        description: Tuesday
+      - name: WED
+        description: Wednesday
+      - name: THU
+        description: Thursday
+      - name: FRI
+        description: Friday
+      - name: SAT
+        description: Saturday
+      - name: SUN
+        description: Sunday
+      description: The days of the week.
+      x-release-status: PUBLIC
+    CreateShiftResponse:
+      type: object
+      description: 'The response to a request to create a `Shift`. The response contains
+
+        the created `Shift` object and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        shift:
+          $ref: '#/components/schemas/Shift'
+          description: The `Shift` that was created on the request.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        shift:
+          breaks:
+          - break_type_id: REGS1EQR1TPZ5
+            end_at: '2019-01-25T06:16:00-05:00'
+            expected_duration: PT5M
+            id: X7GAQYVVRRG6P
+            is_paid: true
+            name: Tea Break
+            start_at: '2019-01-25T06:11:00-05:00'
+          created_at: '2019-02-28T00:39:02Z'
+          declared_cash_tip_money:
+            amount: 500
+            currency: USD
+          employee_id: ormj0jJJZ5OZIzxrZYJI
+          end_at: '2019-01-25T13:11:00-05:00'
+          id: K0YH4CV5462JB
+          location_id: PAA1RJZZKXBFG
+          start_at: '2019-01-25T03:11:00-05:00'
+          status: CLOSED
+          team_member_id: ormj0jJJZ5OZIzxrZYJI
+          timezone: America/New_York
+          updated_at: '2019-02-28T00:39:02Z'
+          version: 1
+          wage:
+            hourly_rate:
+              amount: 1100
+              currency: USD
+            job_id: FzbJAtt9qEWncK1BWgVCxQ6M
+            tip_eligible: true
+            title: Barista
+    DateRange:
+      type: object
+      description: 'A range defined by two dates. Used for filtering a query for Connect v2
+
+        objects that have date properties.'
+      x-release-status: PUBLIC
+      properties:
+        start_date:
+          type: string
+          description: 'A string in `YYYY-MM-DD` format, such as `2017-10-31`, per the ISO 8601
+
+            extended format for calendar dates.
+
+            The beginning of a date range (inclusive).'
+          nullable: true
+        end_date:
+          type: string
+          description: 'A string in `YYYY-MM-DD` format, such as `2017-10-31`, per the ISO 8601
+
+            extended format for calendar dates.
+
+            The end of a date range (inclusive).'
+          nullable: true
+    CreateBreakTypeResponse:
+      type: object
+      description: 'The response to the request to create a `BreakType`. The response contains
+
+        the created `BreakType` object and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        break_type:
+          $ref: '#/components/schemas/BreakType'
+          description: The `BreakType` that was created by the request.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        break_type:
+          break_name: Lunch Break
+          created_at: '2019-02-26T22:42:54Z'
+          expected_duration: PT30M
+          id: 49SSVDJG76WF3
+          is_paid: true
+          location_id: CGJN03P1D08GF
+          updated_at: '2019-02-26T22:42:54Z'
+          version: 1
+    ShiftStatus:
+      type: string
+      enum:
+      - OPEN
+      - CLOSED
+      x-enum-elements:
+      - name: OPEN
+        description: Employee started a work shift and the shift is not complete
+      - name: CLOSED
+        description: Employee started and ended a work shift.
+      description: Enumerates the possible status of a `Shift`.
+      x-release-status: PUBLIC
+    UpdateWorkweekConfigResponse:
+      type: object
+      description: 'The response to a request to update a `WorkweekConfig` object. The response contains
+
+        the updated `WorkweekConfig` object and might contain a set of `Error` objects if
+
+        the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        workweek_config:
+          $ref: '#/components/schemas/WorkweekConfig'
+          description: The response object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        workweek_config:
+          created_at: '2016-02-04T00:58:24Z'
+          id: FY4VCAQN700GM
+          start_of_day_local_time: '10:00'
+          start_of_week: MON
+          updated_at: '2019-02-28T01:04:35Z'
+          version: 11
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-additional-headers:
+      - name: Square-Version
+        description: Square Connect API versions
+        schema:
+          default: '2025-01-23'
+      flows:
+        authorizationCode:
+          authorizationUrl: https://connect.squareup.com/oauth2/authorize
+          tokenUrl: https://connect.squareup.com/oauth2/token
+          scopes:
+            ADDON_CONFIGURATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants write access for third-party Add-ons to read configurations of their Add-ons, for example, when calling `RetrieveConfiguration` endpoint.'
+            ADDON_CONFIGURATIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access for third-party Add-ons to store configurations of their Add-ons, for example, when calling `CreateConfiguration` endpoint.'
+            APPOINTMENTS_ALL_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to all of a seller''s booking information, calendar, and business details.
+
+              This permission must be accompanied by the `APPOINTMENTS_READ` permission.'
+            APPOINTMENTS_ALL_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to all booking details, including double-booking a seller.
+
+              This permission must be accompanied by the `APPOINTMENTS_WRITE` permission.'
+            APPOINTMENTS_BUSINESS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to booking business settings. For example, to call the
+
+              ListTeamMemberBookingProfiles endpoint.'
+            APPOINTMENTS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to booking information. For example, to call the
+
+              RetrieveBooking endpoint.'
+            APPOINTMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to booking information. For example, to call the CreateBooking endpoint.'
+            BANK_ACCOUNTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to bank account information associated with the targeted
+
+              Square account. For example, to call the Connect v1 ListBankAccounts endpoint.'
+            CASH_DRAWER_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to cash drawer shift information. For example, to call the
+
+              ListCashDrawerShifts endpoint.'
+            CHANNELS_CREATE: '__HTTP Method__: `POST`
+
+
+              Grants write access to create channels, for example, when calling the
+
+              `CreateChannel` endpoint.'
+            CHANNELS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to view channels, for example, when calling the
+
+              `RetrieveChannel` endpoint.'
+            CHANNELS_UPDATE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to update channels, for example, when calling the
+
+              `UpdateChannel` endpoint.'
+            CUSTOMERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to customer information. For example, to call the
+
+              ListCustomers endpoint.'
+            CUSTOMERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to customer information. For example, to create and update
+
+              customer profiles.'
+            DEVICES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to device information. For example, to
+
+              call the `GetDevice` and `ListDevices` endpoints.'
+            DEVICE_CREDENTIAL_MANAGEMENT: '__HTTP Method__: `POST`, `GET`
+
+
+              Grants read/write access to device credentials information. For example, to
+
+              call the CreateDeviceCode endpoint.'
+            DISPUTES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to dispute information. For example, to call the RetrieveDispute
+
+              endpoint.'
+            DISPUTES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to dispute information. For example, to call the SubmitEvidence
+
+              endpoint.'
+            EMPLOYEES_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee profile information. For example, to call the
+
+              Connect v1 Employees API.'
+            EMPLOYEES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee profile information. For example, to create
+
+              and modify employee profiles.'
+            GIFTCARDS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to gift card information. For example, to call the RetrieveGiftCard
+
+              endpoint.'
+            GIFTCARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to gift card information. For example, to call the CreateGiftCard
+
+              endpoint.'
+            INVENTORY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to inventory information. For example, to call the
+
+              RetrieveInventoryCount endpoint.'
+            INVENTORY_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to inventory information. For example, to call the
+
+              BatchChangeInventory endpoint.'
+            INVOICES_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to invoice information. For example, to call the ListInvoices endpoint.'
+            INVOICES_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to invoice information. For example, to call the CreateInvoice endpoint.'
+            ITEMS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to product catalog information. For example, to obtain objects in a product catalog.'
+            ITEMS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to product catalog information. For example, to modify or
+
+              add to a product catalog.'
+            LOYALTY_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to loyalty information. For example, to call the
+
+              ListLoyaltyPrograms endpoint.'
+            LOYALTY_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to loyalty information. For example, to call the
+
+              CreateLoyaltyAccount endpoint.'
+            MERCHANT_PROFILE_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to business and location information. For example, to
+
+              obtain a location ID for subsequent activity.'
+            MERCHANT_PROFILE_WRITE: '__HTTP Method__: `POST`, `PUT`
+
+
+              Grants write access to business and location information. For example, to create a new location or
+
+              update the business hours at an existing location.'
+            ONLINE_STORE_SITE_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store site details.'
+            ONLINE_STORE_SNIPPETS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Read access to ECOM online store snippets on published websites.'
+            ONLINE_STORE_SNIPPETS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Write access to ECOM online store snippets on published websites.'
+            ORDERS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to order information. For example, to call the
+
+              BatchRetrieveOrders endpoint.'
+            ORDERS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to order information. For example, to call the
+
+              CreateCheckout endpoint.'
+            PAYMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to transaction and refund information. For example, to call
+
+              the RetrieveTransaction endpoint.'
+            PAYMENTS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to transaction and refunds information. For example, to
+
+              process payments with the Payments or Checkout API.'
+            PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allow third party applications to deduct a portion of each transaction amount.
+
+              __Required__ to use multiparty transaction functionality with the Payments
+
+              API.'
+            PAYMENTS_WRITE_IN_PERSON: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to payments and refunds information. For example, to
+
+              process in-person payments.'
+            PAYMENTS_WRITE_SHARED_ONFILE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Allows the developer to process payments on behalf of a seller using a shared on file payment method.'
+            PAYOUTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to payouts and payout entries information. For example,
+
+              to call the Connect v2 `ListPayouts` endpoint.'
+            PERMISSION_SETS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to Permission Sets. For example, to
+
+              call the `ListPermissionSets` and `RetrievePermissionSet` endpoints.'
+            PERMISSION_SETS_WRITE: '__HTTP Method__: `PUT`
+
+
+              Grants write access to Permission Sets.'
+            RESERVATIONS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to reservation information, for example, when calling the
+
+              `RetrieveReservation` endpoint.'
+            RESERVATIONS_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to reservation information, for example, when calling the
+
+              `CreateReservation` endpoint.'
+            RESTAURANT_CHECKS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to check information, for example, when calling the
+
+              `RetrieveCheck` endpoint.'
+            SETTLEMENTS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to settlement (deposit) information. For example, to call
+
+              the Connect v1 ListSettlements endpoint.'
+            SUBSCRIPTIONS_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to subscription information. For example, to call the RetrieveSubscription
+
+              endpoint.'
+            SUBSCRIPTIONS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to subscription information. For example, to call the CreateSubscription
+
+              endpoint.'
+            TIMECARDS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard information. For example, to call the
+
+              Connect v2 SearchShifts endpoint.'
+            TIMECARDS_SETTINGS_READ: '__HTTP Method__: `GET`
+
+
+              Grants read access to employee timecard settings information. For example, to
+
+              call the GetBreakType endpoint.'
+            TIMECARDS_SETTINGS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee timecard settings information. For example, to
+
+              call the UpdateBreakType endpoint.'
+            TIMECARDS_WRITE: '__HTTP Method__: `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to employee shift information. For example, to create
+
+              and modify employee shifts.'
+            VENDOR_READ: '__HTTP Method__: `GET`, `POST`
+
+
+              Grants read access to vendor information, for example, when calling the
+
+              `RetrieveVendor` endpoint.'
+            VENDOR_WRITE: '__HTTP Method__:  `POST`, `PUT`, `DELETE`
+
+
+              Grants write access to vendor information, for example, when calling the
+
+              `BulkUpdateVendors` endpoint.'
+    oauth2ClientSecret:
+      type: apiKey
+      in: header
+      name: Authorization
+x-fern-global-headers:
+- header: Square-Version
+  name: version
+  optional: true
+  env: VERSION
+  type: literal<"2025-01-23">
