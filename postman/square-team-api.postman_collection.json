@@ -1,0 +1,1647 @@
+{
+  "info": {
+    "_postman_id": "ba362604-c79e-454e-8fde-dc325cb97bc5",
+    "name": "Square ApplePay Team API",
+    "description": "Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. \n\nContact Support:\n Name: Square Developer Platform\n Email: developers@squareup.com",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T03:04:40.000Z",
+    "updatedAt": "2026-07-28T03:04:40.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-ba362604-c79e-454e-8fde-dc325cb97bc5"
+  },
+  "item": [
+    {
+      "name": "v2",
+      "item": [
+        {
+          "name": "team-members",
+          "item": [
+            {
+              "name": "bulk-create",
+              "item": [
+                {
+                  "name": "Square Bulk Create Team Members",
+                  "id": "89e9760d-ddfc-456f-977c-1b533cf3e1f5",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "oauth2",
+                      "oauth2": [
+                        {
+                          "key": "scope",
+                          "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                          "type": "string"
+                        },
+                        {
+                          "key": "accessTokenUrl",
+                          "value": "https://connect.squareup.com/oauth2/token",
+                          "type": "string"
+                        },
+                        {
+                          "key": "authUrl",
+                          "value": "https://connect.squareup.com/oauth2/authorize",
+                          "type": "string"
+                        },
+                        {
+                          "key": "grant_type",
+                          "value": "authorization_code",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"team_members\": {\n    \"sint2ec\": {\n      \"idempotency_key\": \"<string>\",\n      \"team_member\": {\n        \"id\": \"<string>\",\n        \"reference_id\": \"<string>\",\n        \"is_owner\": \"<boolean>\",\n        \"status\": \"ACTIVE\",\n        \"given_name\": \"<string>\",\n        \"family_name\": \"<string>\",\n        \"email_address\": \"<string>\",\n        \"phone_number\": \"<string>\",\n        \"created_at\": \"<string>\",\n        \"updated_at\": \"<string>\",\n        \"assigned_locations\": {\n          \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n          \"location_ids\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        \"wage_setting\": {\n          \"team_member_id\": \"<string>\",\n          \"job_assignments\": [\n            {\n              \"pay_type\": \"SALARY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"KPW\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"FKP\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            },\n            {\n              \"pay_type\": \"SALARY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"GBP\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"HNL\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            }\n          ],\n          \"is_overtime_exempt\": \"<boolean>\",\n          \"version\": \"<integer>\",\n          \"created_at\": \"<string>\",\n          \"updated_at\": \"<string>\"\n        }\n      }\n    }\n  }\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/team-members/bulk-create",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "team-members",
+                        "bulk-create"
+                      ]
+                    },
+                    "description": "Creates multiple `TeamMember` objects. The created `TeamMember` objects are returned on successful creates.\nThis process is non-transactional and processes as much of the request as possible. If one of the creates in\nthe request cannot be successfully processed, the request is not marked as failed, but the body of the response\ncontains explicit error information for the failed create.\n\nLearn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#bulk-create-team-members)."
+                  },
+                  "response": [
+                    {
+                      "id": "4f89895c-c401-4446-989a-625cc9ca237a",
+                      "name": "Success",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"team_members\": {\n    \"sint2ec\": {\n      \"idempotency_key\": \"<string>\",\n      \"team_member\": {\n        \"id\": \"<string>\",\n        \"reference_id\": \"<string>\",\n        \"is_owner\": \"<boolean>\",\n        \"status\": \"ACTIVE\",\n        \"given_name\": \"<string>\",\n        \"family_name\": \"<string>\",\n        \"email_address\": \"<string>\",\n        \"phone_number\": \"<string>\",\n        \"created_at\": \"<string>\",\n        \"updated_at\": \"<string>\",\n        \"assigned_locations\": {\n          \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n          \"location_ids\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        \"wage_setting\": {\n          \"team_member_id\": \"<string>\",\n          \"job_assignments\": [\n            {\n              \"pay_type\": \"SALARY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"KPW\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"FKP\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            },\n            {\n              \"pay_type\": \"SALARY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"GBP\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"HNL\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            }\n          ],\n          \"is_overtime_exempt\": \"<boolean>\",\n          \"version\": \"<integer>\",\n          \"created_at\": \"<string>\",\n          \"updated_at\": \"<string>\"\n        }\n      }\n    }\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/bulk-create",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            "bulk-create"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"team_members\": {\n    \"dolore_64\": {\n      \"team_member\": {\n        \"id\": \"<string>\",\n        \"reference_id\": \"<string>\",\n        \"is_owner\": \"<boolean>\",\n        \"status\": \"ACTIVE\",\n        \"given_name\": \"<string>\",\n        \"family_name\": \"<string>\",\n        \"email_address\": \"<string>\",\n        \"phone_number\": \"<string>\",\n        \"created_at\": \"<string>\",\n        \"updated_at\": \"<string>\",\n        \"assigned_locations\": {\n          \"assignment_type\": \"ALL_CURRENT_AND_FUTURE_LOCATIONS\",\n          \"location_ids\": [\n            \"<string>\"\n          ]\n        },\n        \"wage_setting\": {\n          \"team_member_id\": \"<string>\",\n          \"job_assignments\": [\n            {\n              \"pay_type\": \"HOURLY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"MNT\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"XPT\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            }\n          ],\n          \"is_overtime_exempt\": \"<boolean>\",\n          \"version\": \"<integer>\",\n          \"created_at\": \"<string>\",\n          \"updated_at\": \"<string>\"\n        }\n      },\n      \"errors\": [\n        {\n          \"category\": \"REFUND_ERROR\",\n          \"code\": \"CARD_PROCESSING_NOT_ENABLED\",\n          \"detail\": \"<string>\",\n          \"field\": \"<string>\"\n        }\n      ]\n    },\n    \"minim_7\": {\n      \"team_member\": {\n        \"id\": \"<string>\",\n        \"reference_id\": \"<string>\",\n        \"is_owner\": \"<boolean>\",\n        \"status\": \"INACTIVE\",\n        \"given_name\": \"<string>\",\n        \"family_name\": \"<string>\",\n        \"email_address\": \"<string>\",\n        \"phone_number\": \"<string>\",\n        \"created_at\": \"<string>\",\n        \"updated_at\": \"<string>\",\n        \"assigned_locations\": {\n          \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n          \"location_ids\": [\n            \"<string>\"\n          ]\n        },\n        \"wage_setting\": {\n          \"team_member_id\": \"<string>\",\n          \"job_assignments\": [\n            {\n              \"pay_type\": \"HOURLY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"CDF\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"JPY\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            }\n          ],\n          \"is_overtime_exempt\": \"<boolean>\",\n          \"version\": \"<integer>\",\n          \"created_at\": \"<string>\",\n          \"updated_at\": \"<string>\"\n        }\n      },\n      \"errors\": [\n        {\n          \"category\": \"PAYMENT_METHOD_ERROR\",\n          \"code\": \"UNKNOWN_BODY_PARAMETER\",\n          \"detail\": \"<string>\",\n          \"field\": \"<string>\"\n        }\n      ]\n    }\n  },\n  \"errors\": [\n    {\n      \"category\": \"INVALID_REQUEST_ERROR\",\n      \"code\": \"CARD_DECLINED_CALL_ISSUER\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-4f89895c-c401-4446-989a-625cc9ca237a"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-89e9760d-ddfc-456f-977c-1b533cf3e1f5"
+                }
+              ],
+              "id": "46a1229a-a512-4bad-91c0-89d62c1e1c43",
+              "createdAt": "2026-07-28T03:04:41.000Z",
+              "updatedAt": "2026-07-28T03:04:41.000Z",
+              "uid": "35240-46a1229a-a512-4bad-91c0-89d62c1e1c43"
+            },
+            {
+              "name": "bulk-update",
+              "item": [
+                {
+                  "name": "Square Bulk Update Team Members",
+                  "id": "7c5a6c26-3909-4b4a-b917-2ae2a14be464",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "oauth2",
+                      "oauth2": [
+                        {
+                          "key": "scope",
+                          "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                          "type": "string"
+                        },
+                        {
+                          "key": "accessTokenUrl",
+                          "value": "https://connect.squareup.com/oauth2/token",
+                          "type": "string"
+                        },
+                        {
+                          "key": "authUrl",
+                          "value": "https://connect.squareup.com/oauth2/authorize",
+                          "type": "string"
+                        },
+                        {
+                          "key": "grant_type",
+                          "value": "authorization_code",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"team_members\": {\n    \"Lorem_970\": {\n      \"team_member\": {\n        \"id\": \"<string>\",\n        \"reference_id\": \"<string>\",\n        \"is_owner\": \"<boolean>\",\n        \"status\": \"INACTIVE\",\n        \"given_name\": \"<string>\",\n        \"family_name\": \"<string>\",\n        \"email_address\": \"<string>\",\n        \"phone_number\": \"<string>\",\n        \"created_at\": \"<string>\",\n        \"updated_at\": \"<string>\",\n        \"assigned_locations\": {\n          \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n          \"location_ids\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        \"wage_setting\": {\n          \"team_member_id\": \"<string>\",\n          \"job_assignments\": [\n            {\n              \"pay_type\": \"HOURLY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"BZD\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"DJF\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            },\n            {\n              \"pay_type\": \"HOURLY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"IRR\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"BTN\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            }\n          ],\n          \"is_overtime_exempt\": \"<boolean>\",\n          \"version\": \"<integer>\",\n          \"created_at\": \"<string>\",\n          \"updated_at\": \"<string>\"\n        }\n      }\n    }\n  }\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/team-members/bulk-update",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "team-members",
+                        "bulk-update"
+                      ]
+                    },
+                    "description": "Updates multiple `TeamMember` objects. The updated `TeamMember` objects are returned on successful updates.\nThis process is non-transactional and processes as much of the request as possible. If one of the updates in\nthe request cannot be successfully processed, the request is not marked as failed, but the body of the response\ncontains explicit error information for the failed update.\nLearn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#bulk-update-team-members)."
+                  },
+                  "response": [
+                    {
+                      "id": "d477a750-88ae-48a1-b0c7-221f3c1adb07",
+                      "name": "Success",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"team_members\": {\n    \"Lorem_970\": {\n      \"team_member\": {\n        \"id\": \"<string>\",\n        \"reference_id\": \"<string>\",\n        \"is_owner\": \"<boolean>\",\n        \"status\": \"INACTIVE\",\n        \"given_name\": \"<string>\",\n        \"family_name\": \"<string>\",\n        \"email_address\": \"<string>\",\n        \"phone_number\": \"<string>\",\n        \"created_at\": \"<string>\",\n        \"updated_at\": \"<string>\",\n        \"assigned_locations\": {\n          \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n          \"location_ids\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        \"wage_setting\": {\n          \"team_member_id\": \"<string>\",\n          \"job_assignments\": [\n            {\n              \"pay_type\": \"HOURLY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"BZD\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"DJF\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            },\n            {\n              \"pay_type\": \"HOURLY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"IRR\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"BTN\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            }\n          ],\n          \"is_overtime_exempt\": \"<boolean>\",\n          \"version\": \"<integer>\",\n          \"created_at\": \"<string>\",\n          \"updated_at\": \"<string>\"\n        }\n      }\n    }\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/bulk-update",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            "bulk-update"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"team_members\": {\n    \"velit_1\": {\n      \"team_member\": {\n        \"id\": \"<string>\",\n        \"reference_id\": \"<string>\",\n        \"is_owner\": \"<boolean>\",\n        \"status\": \"ACTIVE\",\n        \"given_name\": \"<string>\",\n        \"family_name\": \"<string>\",\n        \"email_address\": \"<string>\",\n        \"phone_number\": \"<string>\",\n        \"created_at\": \"<string>\",\n        \"updated_at\": \"<string>\",\n        \"assigned_locations\": {\n          \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n          \"location_ids\": [\n            \"<string>\"\n          ]\n        },\n        \"wage_setting\": {\n          \"team_member_id\": \"<string>\",\n          \"job_assignments\": [\n            {\n              \"pay_type\": \"HOURLY\",\n              \"job_title\": \"<string>\",\n              \"hourly_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"UGX\"\n              },\n              \"annual_rate\": {\n                \"amount\": \"<long>\",\n                \"currency\": \"CRC\"\n              },\n              \"weekly_hours\": \"<integer>\",\n              \"job_id\": \"<string>\"\n            }\n          ],\n          \"is_overtime_exempt\": \"<boolean>\",\n          \"version\": \"<integer>\",\n          \"created_at\": \"<string>\",\n          \"updated_at\": \"<string>\"\n        }\n      },\n      \"errors\": [\n        {\n          \"category\": \"REFUND_ERROR\",\n          \"code\": \"EXPECTED_MAP\",\n          \"detail\": \"<string>\",\n          \"field\": \"<string>\"\n        }\n      ]\n    }\n  },\n  \"errors\": [\n    {\n      \"category\": \"PAYMENT_METHOD_ERROR\",\n      \"code\": \"UNSUPPORTED_SOURCE_TYPE\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-d477a750-88ae-48a1-b0c7-221f3c1adb07"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-7c5a6c26-3909-4b4a-b917-2ae2a14be464"
+                }
+              ],
+              "id": "6da1fad8-0895-4e2d-bebd-af1b8a83c07c",
+              "createdAt": "2026-07-28T03:04:41.000Z",
+              "updatedAt": "2026-07-28T03:04:41.000Z",
+              "uid": "35240-6da1fad8-0895-4e2d-bebd-af1b8a83c07c"
+            },
+            {
+              "name": "jobs",
+              "item": [
+                {
+                  "name": "{job_id}",
+                  "item": [
+                    {
+                      "name": "Square Retrieve Job",
+                      "id": "f81af3b2-38fd-48d3-8a3b-60d2b5ea8985",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "auth": {
+                          "type": "oauth2",
+                          "oauth2": [
+                            {
+                              "key": "scope",
+                              "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                              "type": "string"
+                            },
+                            {
+                              "key": "accessTokenUrl",
+                              "value": "https://connect.squareup.com/oauth2/token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "authUrl",
+                              "value": "https://connect.squareup.com/oauth2/authorize",
+                              "type": "string"
+                            },
+                            {
+                              "key": "grant_type",
+                              "value": "authorization_code",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/jobs/:job_id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            "jobs",
+                            ":job_id"
+                          ],
+                          "variable": [
+                            {
+                              "id": "556b3cf1-ac0a-4ffe-b36a-e0c66e19d5f5",
+                              "key": "job_id",
+                              "value": "<string>",
+                              "description": "(Required) The ID of the job to retrieve."
+                            }
+                          ]
+                        },
+                        "description": "Retrieves a specified job."
+                      },
+                      "response": [
+                        {
+                          "id": "5f738fe3-2fe4-4b62-90c1-0425443995f8",
+                          "name": "Success",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v2/team-members/jobs/:job_id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v2",
+                                "team-members",
+                                "jobs",
+                                ":job_id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "job_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"job\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"is_tip_eligible\": \"<boolean>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"version\": \"<integer>\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"AUTHENTICATION_ERROR\",\n      \"code\": \"UNSUPPORTED_MEDIA_TYPE\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    },\n    {\n      \"category\": \"AUTHENTICATION_ERROR\",\n      \"code\": \"PLAID_ERROR\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                          "createdAt": "2026-07-28T03:04:41.000Z",
+                          "updatedAt": "2026-07-28T03:04:41.000Z",
+                          "uid": "35240-5f738fe3-2fe4-4b62-90c1-0425443995f8"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-f81af3b2-38fd-48d3-8a3b-60d2b5ea8985"
+                    },
+                    {
+                      "name": "Square Update Job",
+                      "id": "b967fcd3-d51a-4d6f-a13f-ca00acc4399b",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "auth": {
+                          "type": "oauth2",
+                          "oauth2": [
+                            {
+                              "key": "scope",
+                              "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                              "type": "string"
+                            },
+                            {
+                              "key": "accessTokenUrl",
+                              "value": "https://connect.squareup.com/oauth2/token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "authUrl",
+                              "value": "https://connect.squareup.com/oauth2/authorize",
+                              "type": "string"
+                            },
+                            {
+                              "key": "grant_type",
+                              "value": "authorization_code",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"job\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"is_tip_eligible\": \"<boolean>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"version\": \"<integer>\"\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/jobs/:job_id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            "jobs",
+                            ":job_id"
+                          ],
+                          "variable": [
+                            {
+                              "id": "1b3eade0-282b-4256-9594-f2c0c4699a81",
+                              "key": "job_id",
+                              "value": "<string>",
+                              "description": "(Required) The ID of the job to update."
+                            }
+                          ]
+                        },
+                        "description": "Updates the title or tip eligibility of a job. Changes to the title propagate to all\n`JobAssignment`, `Shift`, and `TeamMemberWage` objects that reference the job ID. Changes to\ntip eligibility propagate to all `TeamMemberWage` objects that reference the job ID."
+                      },
+                      "response": [
+                        {
+                          "id": "693919b7-2999-4026-b6b8-2bd58eaa914e",
+                          "name": "Success",
+                          "originalRequest": {
+                            "method": "PUT",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"job\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"is_tip_eligible\": \"<boolean>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"version\": \"<integer>\"\n  }\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v2/team-members/jobs/:job_id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v2",
+                                "team-members",
+                                "jobs",
+                                ":job_id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "job_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"job\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"is_tip_eligible\": \"<boolean>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"version\": \"<integer>\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"PAYMENT_METHOD_ERROR\",\n      \"code\": \"INTERNAL_SERVER_ERROR\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    },\n    {\n      \"category\": \"PAYMENT_METHOD_ERROR\",\n      \"code\": \"SANDBOX_NOT_SUPPORTED\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                          "createdAt": "2026-07-28T03:04:41.000Z",
+                          "updatedAt": "2026-07-28T03:04:41.000Z",
+                          "uid": "35240-693919b7-2999-4026-b6b8-2bd58eaa914e"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-b967fcd3-d51a-4d6f-a13f-ca00acc4399b"
+                    }
+                  ],
+                  "id": "2681685d-51f9-4504-94f5-b89b9c6d0372",
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-2681685d-51f9-4504-94f5-b89b9c6d0372"
+                },
+                {
+                  "name": "Square List Jobs",
+                  "id": "476b9a41-8343-48e8-b9bc-70fe1ce870d0",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "oauth2",
+                      "oauth2": [
+                        {
+                          "key": "scope",
+                          "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                          "type": "string"
+                        },
+                        {
+                          "key": "accessTokenUrl",
+                          "value": "https://connect.squareup.com/oauth2/token",
+                          "type": "string"
+                        },
+                        {
+                          "key": "authUrl",
+                          "value": "https://connect.squareup.com/oauth2/authorize",
+                          "type": "string"
+                        },
+                        {
+                          "key": "grant_type",
+                          "value": "authorization_code",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/team-members/jobs?cursor=<string>",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "team-members",
+                        "jobs"
+                      ],
+                      "query": [
+                        {
+                          "description": "The pagination cursor returned by the previous call to this endpoint. Provide this\ncursor to retrieve the next page of results for your original request. For more information,\nsee [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).",
+                          "key": "cursor",
+                          "value": "<string>"
+                        }
+                      ]
+                    },
+                    "description": "Lists jobs in a seller account. Results are sorted by title in ascending order."
+                  },
+                  "response": [
+                    {
+                      "id": "b69017fe-bd60-4072-81c9-8cc3d43154aa",
+                      "name": "Success",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/jobs?cursor=<string>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            "jobs"
+                          ],
+                          "query": [
+                            {
+                              "description": "The pagination cursor returned by the previous call to this endpoint. Provide this\ncursor to retrieve the next page of results for your original request. For more information,\nsee [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).",
+                              "key": "cursor",
+                              "value": "<string>"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"jobs\": [\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"is_tip_eligible\": \"<boolean>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\",\n      \"version\": \"<integer>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"is_tip_eligible\": \"<boolean>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\",\n      \"version\": \"<integer>\"\n    }\n  ],\n  \"cursor\": \"<string>\",\n  \"errors\": [\n    {\n      \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n      \"code\": \"IDEMPOTENCY_KEY_REUSED\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    },\n    {\n      \"category\": \"API_ERROR\",\n      \"code\": \"IDEMPOTENCY_KEY_REUSED\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-b69017fe-bd60-4072-81c9-8cc3d43154aa"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-476b9a41-8343-48e8-b9bc-70fe1ce870d0"
+                },
+                {
+                  "name": "Square Create Job",
+                  "id": "49bef29a-83ac-4024-a7eb-956f67afecef",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "oauth2",
+                      "oauth2": [
+                        {
+                          "key": "scope",
+                          "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                          "type": "string"
+                        },
+                        {
+                          "key": "accessTokenUrl",
+                          "value": "https://connect.squareup.com/oauth2/token",
+                          "type": "string"
+                        },
+                        {
+                          "key": "authUrl",
+                          "value": "https://connect.squareup.com/oauth2/authorize",
+                          "type": "string"
+                        },
+                        {
+                          "key": "grant_type",
+                          "value": "authorization_code",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"job\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"is_tip_eligible\": \"<boolean>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"version\": \"<integer>\"\n  },\n  \"idempotency_key\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/team-members/jobs",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "team-members",
+                        "jobs"
+                      ]
+                    },
+                    "description": "Creates a job in a seller account. A job defines a title and tip eligibility. Note that\ncompensation is defined in a [job assignment](entity:JobAssignment) in a team member's wage setting."
+                  },
+                  "response": [
+                    {
+                      "id": "e845856f-9dc2-4935-b79d-93c33044b719",
+                      "name": "Success",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"job\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"is_tip_eligible\": \"<boolean>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"version\": \"<integer>\"\n  },\n  \"idempotency_key\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/jobs",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            "jobs"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"job\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"is_tip_eligible\": \"<boolean>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"version\": \"<integer>\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"EXTERNAL_VENDOR_ERROR\",\n      \"code\": \"EXPECTED_MAP\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    },\n    {\n      \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n      \"code\": \"MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-e845856f-9dc2-4935-b79d-93c33044b719"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-49bef29a-83ac-4024-a7eb-956f67afecef"
+                }
+              ],
+              "id": "5fbed358-3c7d-4093-91e5-45987f866b10",
+              "createdAt": "2026-07-28T03:04:41.000Z",
+              "updatedAt": "2026-07-28T03:04:41.000Z",
+              "uid": "35240-5fbed358-3c7d-4093-91e5-45987f866b10"
+            },
+            {
+              "name": "search",
+              "item": [
+                {
+                  "name": "Square Search Team Members",
+                  "id": "fe91fc90-5b00-4af8-a858-67a3239c21a7",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "oauth2",
+                      "oauth2": [
+                        {
+                          "key": "scope",
+                          "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                          "type": "string"
+                        },
+                        {
+                          "key": "accessTokenUrl",
+                          "value": "https://connect.squareup.com/oauth2/token",
+                          "type": "string"
+                        },
+                        {
+                          "key": "authUrl",
+                          "value": "https://connect.squareup.com/oauth2/authorize",
+                          "type": "string"
+                        },
+                        {
+                          "key": "grant_type",
+                          "value": "authorization_code",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"query\": {\n    \"filter\": {\n      \"location_ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status\": \"ACTIVE\",\n      \"is_owner\": \"<boolean>\"\n    }\n  },\n  \"limit\": \"<integer>\",\n  \"cursor\": \"<string>\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/team-members/search",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "team-members",
+                        "search"
+                      ]
+                    },
+                    "description": "Returns a paginated list of `TeamMember` objects for a business. \nThe list can be filtered by location IDs, `ACTIVE` or `INACTIVE` status, or whether\nthe team member is the Square account owner."
+                  },
+                  "response": [
+                    {
+                      "id": "95a75688-1b66-468b-ae43-024d7b5eac84",
+                      "name": "Success",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"query\": {\n    \"filter\": {\n      \"location_ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"status\": \"ACTIVE\",\n      \"is_owner\": \"<boolean>\"\n    }\n  },\n  \"limit\": \"<integer>\",\n  \"cursor\": \"<string>\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/search",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            "search"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"team_members\": [\n    {\n      \"id\": \"<string>\",\n      \"reference_id\": \"<string>\",\n      \"is_owner\": \"<boolean>\",\n      \"status\": \"INACTIVE\",\n      \"given_name\": \"<string>\",\n      \"family_name\": \"<string>\",\n      \"email_address\": \"<string>\",\n      \"phone_number\": \"<string>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\",\n      \"assigned_locations\": {\n        \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n        \"location_ids\": [\n          \"<string>\"\n        ]\n      },\n      \"wage_setting\": {\n        \"team_member_id\": \"<string>\",\n        \"job_assignments\": [\n          {\n            \"pay_type\": \"NONE\",\n            \"job_title\": \"<string>\",\n            \"hourly_rate\": {\n              \"amount\": \"<long>\",\n              \"currency\": \"TMT\"\n            },\n            \"annual_rate\": {\n              \"amount\": \"<long>\",\n              \"currency\": \"BTC\"\n            },\n            \"weekly_hours\": \"<integer>\",\n            \"job_id\": \"<string>\"\n          }\n        ],\n        \"is_overtime_exempt\": \"<boolean>\",\n        \"version\": \"<integer>\",\n        \"created_at\": \"<string>\",\n        \"updated_at\": \"<string>\"\n      }\n    }\n  ],\n  \"cursor\": \"<string>\",\n  \"errors\": [\n    {\n      \"category\": \"API_ERROR\",\n      \"code\": \"UNSUPPORTED_INSTRUMENT_TYPE\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-95a75688-1b66-468b-ae43-024d7b5eac84"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-fe91fc90-5b00-4af8-a858-67a3239c21a7"
+                }
+              ],
+              "id": "e7fd7337-2907-4024-93dd-0edb27cef8ab",
+              "createdAt": "2026-07-28T03:04:41.000Z",
+              "updatedAt": "2026-07-28T03:04:41.000Z",
+              "uid": "35240-e7fd7337-2907-4024-93dd-0edb27cef8ab"
+            },
+            {
+              "name": "{team_member_id}",
+              "item": [
+                {
+                  "name": "wage-setting",
+                  "item": [
+                    {
+                      "name": "Square Retrieve Wage Setting",
+                      "id": "bb102241-3a39-47cf-a52e-857dea79c3cc",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "auth": {
+                          "type": "oauth2",
+                          "oauth2": [
+                            {
+                              "key": "scope",
+                              "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                              "type": "string"
+                            },
+                            {
+                              "key": "accessTokenUrl",
+                              "value": "https://connect.squareup.com/oauth2/token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "authUrl",
+                              "value": "https://connect.squareup.com/oauth2/authorize",
+                              "type": "string"
+                            },
+                            {
+                              "key": "grant_type",
+                              "value": "authorization_code",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/:team_member_id/wage-setting",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            ":team_member_id",
+                            "wage-setting"
+                          ],
+                          "variable": [
+                            {
+                              "id": "9ce5a146-23ff-4076-b2fe-4dfb6c009780",
+                              "key": "team_member_id",
+                              "value": "<string>",
+                              "description": "(Required) The ID of the team member for which to retrieve the wage setting."
+                            }
+                          ]
+                        },
+                        "description": "Retrieves a `WageSetting` object for a team member specified\nby `TeamMember.id`. For more information, see\n[Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#retrievewagesetting).\n\nSquare recommends using [RetrieveTeamMember](api-endpoint:Team-RetrieveTeamMember) or [SearchTeamMembers](api-endpoint:Team-SearchTeamMembers)\nto get this information directly from the `TeamMember.wage_setting` field."
+                      },
+                      "response": [
+                        {
+                          "id": "0cdd3393-59a2-4aef-ad3a-c09bc7e28eac",
+                          "name": "Success",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v2/team-members/:team_member_id/wage-setting",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v2",
+                                "team-members",
+                                ":team_member_id",
+                                "wage-setting"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "team_member_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"wage_setting\": {\n    \"team_member_id\": \"<string>\",\n    \"job_assignments\": [\n      {\n        \"pay_type\": \"NONE\",\n        \"job_title\": \"<string>\",\n        \"hourly_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"BHD\"\n        },\n        \"annual_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"MKD\"\n        },\n        \"weekly_hours\": \"<integer>\",\n        \"job_id\": \"<string>\"\n      }\n    ],\n    \"is_overtime_exempt\": \"<boolean>\",\n    \"version\": \"<integer>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n      \"code\": \"INVALID_EXPIRATION_YEAR\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                          "createdAt": "2026-07-28T03:04:41.000Z",
+                          "updatedAt": "2026-07-28T03:04:41.000Z",
+                          "uid": "35240-0cdd3393-59a2-4aef-ad3a-c09bc7e28eac"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-bb102241-3a39-47cf-a52e-857dea79c3cc"
+                    },
+                    {
+                      "name": "Square Update Wage Setting",
+                      "id": "b03767eb-7603-429c-93f9-bba8d276ac41",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "auth": {
+                          "type": "oauth2",
+                          "oauth2": [
+                            {
+                              "key": "scope",
+                              "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                              "type": "string"
+                            },
+                            {
+                              "key": "accessTokenUrl",
+                              "value": "https://connect.squareup.com/oauth2/token",
+                              "type": "string"
+                            },
+                            {
+                              "key": "authUrl",
+                              "value": "https://connect.squareup.com/oauth2/authorize",
+                              "type": "string"
+                            },
+                            {
+                              "key": "grant_type",
+                              "value": "authorization_code",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"wage_setting\": {\n    \"team_member_id\": \"<string>\",\n    \"job_assignments\": [\n      {\n        \"pay_type\": \"NONE\",\n        \"job_title\": \"<string>\",\n        \"hourly_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"GBP\"\n        },\n        \"annual_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"EGP\"\n        },\n        \"weekly_hours\": \"<integer>\",\n        \"job_id\": \"<string>\"\n      },\n      {\n        \"pay_type\": \"HOURLY\",\n        \"job_title\": \"<string>\",\n        \"hourly_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"SLE\"\n        },\n        \"annual_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"TMT\"\n        },\n        \"weekly_hours\": \"<integer>\",\n        \"job_id\": \"<string>\"\n      }\n    ],\n    \"is_overtime_exempt\": \"<boolean>\",\n    \"version\": \"<integer>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\"\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/:team_member_id/wage-setting",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            ":team_member_id",
+                            "wage-setting"
+                          ],
+                          "variable": [
+                            {
+                              "id": "a53550e4-5408-4353-baac-22a00b5d8b91",
+                              "key": "team_member_id",
+                              "value": "<string>",
+                              "description": "(Required) The ID of the team member for which to update the `WageSetting` object."
+                            }
+                          ]
+                        },
+                        "description": "Creates or updates a `WageSetting` object. The object is created if a\n`WageSetting` with the specified `team_member_id` doesn't exist. Otherwise,\nit fully replaces the `WageSetting` object for the team member.\nThe `WageSetting` is returned on a successful update. For more information, see\n[Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#create-or-update-a-wage-setting).\n\nSquare recommends using [CreateTeamMember](api-endpoint:Team-CreateTeamMember) or [UpdateTeamMember](api-endpoint:Team-UpdateTeamMember)\nto manage the `TeamMember.wage_setting` field directly."
+                      },
+                      "response": [
+                        {
+                          "id": "4521feed-a488-4535-812e-40718d07e81e",
+                          "name": "Success",
+                          "originalRequest": {
+                            "method": "PUT",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: oauth2",
+                                "key": "Authorization",
+                                "value": "<token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"wage_setting\": {\n    \"team_member_id\": \"<string>\",\n    \"job_assignments\": [\n      {\n        \"pay_type\": \"NONE\",\n        \"job_title\": \"<string>\",\n        \"hourly_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"GBP\"\n        },\n        \"annual_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"EGP\"\n        },\n        \"weekly_hours\": \"<integer>\",\n        \"job_id\": \"<string>\"\n      },\n      {\n        \"pay_type\": \"HOURLY\",\n        \"job_title\": \"<string>\",\n        \"hourly_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"SLE\"\n        },\n        \"annual_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"TMT\"\n        },\n        \"weekly_hours\": \"<integer>\",\n        \"job_id\": \"<string>\"\n      }\n    ],\n    \"is_overtime_exempt\": \"<boolean>\",\n    \"version\": \"<integer>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\"\n  }\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/v2/team-members/:team_member_id/wage-setting",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v2",
+                                "team-members",
+                                ":team_member_id",
+                                "wage-setting"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "team_member_id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"wage_setting\": {\n    \"team_member_id\": \"<string>\",\n    \"job_assignments\": [\n      {\n        \"pay_type\": \"SALARY\",\n        \"job_title\": \"<string>\",\n        \"hourly_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"BOB\"\n        },\n        \"annual_rate\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"LTL\"\n        },\n        \"weekly_hours\": \"<integer>\",\n        \"job_id\": \"<string>\"\n      }\n    ],\n    \"is_overtime_exempt\": \"<boolean>\",\n    \"version\": \"<integer>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\"\n  },\n  \"errors\": [\n    {\n      \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n      \"code\": \"CHECKOUT_EXPIRED\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                          "createdAt": "2026-07-28T03:04:41.000Z",
+                          "updatedAt": "2026-07-28T03:04:41.000Z",
+                          "uid": "35240-4521feed-a488-4535-812e-40718d07e81e"
+                        }
+                      ],
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-b03767eb-7603-429c-93f9-bba8d276ac41"
+                    }
+                  ],
+                  "id": "e54cb50c-0a08-47f2-9376-c511b0b9924d",
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-e54cb50c-0a08-47f2-9376-c511b0b9924d"
+                },
+                {
+                  "name": "Square Retrieve Team Member",
+                  "id": "1d5ead4f-fb32-4221-a5d9-cb0867fe2c8a",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "oauth2",
+                      "oauth2": [
+                        {
+                          "key": "scope",
+                          "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                          "type": "string"
+                        },
+                        {
+                          "key": "accessTokenUrl",
+                          "value": "https://connect.squareup.com/oauth2/token",
+                          "type": "string"
+                        },
+                        {
+                          "key": "authUrl",
+                          "value": "https://connect.squareup.com/oauth2/authorize",
+                          "type": "string"
+                        },
+                        {
+                          "key": "grant_type",
+                          "value": "authorization_code",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/team-members/:team_member_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "team-members",
+                        ":team_member_id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "e787bd1c-ffe7-4116-94d6-30ccc92aad88",
+                          "key": "team_member_id",
+                          "value": "<string>",
+                          "description": "(Required) The ID of the team member to retrieve."
+                        }
+                      ]
+                    },
+                    "description": "Retrieves a `TeamMember` object for the given `TeamMember.id`.\nLearn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#retrieve-a-team-member)."
+                  },
+                  "response": [
+                    {
+                      "id": "450e87f2-acd3-41ef-bd4f-fc97e3f4cb57",
+                      "name": "Success",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/:team_member_id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            ":team_member_id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "team_member_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"team_member\": {\n    \"id\": \"<string>\",\n    \"reference_id\": \"<string>\",\n    \"is_owner\": \"<boolean>\",\n    \"status\": \"ACTIVE\",\n    \"given_name\": \"<string>\",\n    \"family_name\": \"<string>\",\n    \"email_address\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"assigned_locations\": {\n      \"assignment_type\": \"ALL_CURRENT_AND_FUTURE_LOCATIONS\",\n      \"location_ids\": [\n        \"<string>\"\n      ]\n    },\n    \"wage_setting\": {\n      \"team_member_id\": \"<string>\",\n      \"job_assignments\": [\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"LVL\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"BOV\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        }\n      ],\n      \"is_overtime_exempt\": \"<boolean>\",\n      \"version\": \"<integer>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\"\n    }\n  },\n  \"errors\": [\n    {\n      \"category\": \"PAYMENT_METHOD_ERROR\",\n      \"code\": \"INVALID_EXPIRATION_DATE\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-450e87f2-acd3-41ef-bd4f-fc97e3f4cb57"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-1d5ead4f-fb32-4221-a5d9-cb0867fe2c8a"
+                },
+                {
+                  "name": "Square Update Team Member",
+                  "id": "0d7e8156-fe29-4ae1-8be0-1b06cc3d2312",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "oauth2",
+                      "oauth2": [
+                        {
+                          "key": "scope",
+                          "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                          "type": "string"
+                        },
+                        {
+                          "key": "accessTokenUrl",
+                          "value": "https://connect.squareup.com/oauth2/token",
+                          "type": "string"
+                        },
+                        {
+                          "key": "authUrl",
+                          "value": "https://connect.squareup.com/oauth2/authorize",
+                          "type": "string"
+                        },
+                        {
+                          "key": "grant_type",
+                          "value": "authorization_code",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"team_member\": {\n    \"id\": \"<string>\",\n    \"reference_id\": \"<string>\",\n    \"is_owner\": \"<boolean>\",\n    \"status\": \"ACTIVE\",\n    \"given_name\": \"<string>\",\n    \"family_name\": \"<string>\",\n    \"email_address\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"assigned_locations\": {\n      \"assignment_type\": \"ALL_CURRENT_AND_FUTURE_LOCATIONS\",\n      \"location_ids\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    \"wage_setting\": {\n      \"team_member_id\": \"<string>\",\n      \"job_assignments\": [\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"AWG\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"PLN\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        },\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"PHP\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"ANG\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        }\n      ],\n      \"is_overtime_exempt\": \"<boolean>\",\n      \"version\": \"<integer>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\"\n    }\n  }\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/team-members/:team_member_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "team-members",
+                        ":team_member_id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "3bceb822-124f-40ae-86c5-7a8c808da592",
+                          "key": "team_member_id",
+                          "value": "<string>",
+                          "description": "(Required) The ID of the team member to update."
+                        }
+                      ]
+                    },
+                    "description": "Updates a single `TeamMember` object. The `TeamMember` object is returned on successful updates.\nLearn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#update-a-team-member)."
+                  },
+                  "response": [
+                    {
+                      "id": "fc50581b-db5d-42d6-9a62-c0c09ef880cf",
+                      "name": "Success",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: oauth2",
+                            "key": "Authorization",
+                            "value": "<token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"team_member\": {\n    \"id\": \"<string>\",\n    \"reference_id\": \"<string>\",\n    \"is_owner\": \"<boolean>\",\n    \"status\": \"ACTIVE\",\n    \"given_name\": \"<string>\",\n    \"family_name\": \"<string>\",\n    \"email_address\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"assigned_locations\": {\n      \"assignment_type\": \"ALL_CURRENT_AND_FUTURE_LOCATIONS\",\n      \"location_ids\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    \"wage_setting\": {\n      \"team_member_id\": \"<string>\",\n      \"job_assignments\": [\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"AWG\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"PLN\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        },\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"PHP\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"ANG\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        }\n      ],\n      \"is_overtime_exempt\": \"<boolean>\",\n      \"version\": \"<integer>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\"\n    }\n  }\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v2/team-members/:team_member_id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v2",
+                            "team-members",
+                            ":team_member_id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "team_member_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"team_member\": {\n    \"id\": \"<string>\",\n    \"reference_id\": \"<string>\",\n    \"is_owner\": \"<boolean>\",\n    \"status\": \"INACTIVE\",\n    \"given_name\": \"<string>\",\n    \"family_name\": \"<string>\",\n    \"email_address\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"assigned_locations\": {\n      \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n      \"location_ids\": [\n        \"<string>\"\n      ]\n    },\n    \"wage_setting\": {\n      \"team_member_id\": \"<string>\",\n      \"job_assignments\": [\n        {\n          \"pay_type\": \"HOURLY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"UYI\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"SLL\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        }\n      ],\n      \"is_overtime_exempt\": \"<boolean>\",\n      \"version\": \"<integer>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\"\n    }\n  },\n  \"errors\": [\n    {\n      \"category\": \"INVALID_REQUEST_ERROR\",\n      \"code\": \"TRANSACTION_LIMIT\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T03:04:41.000Z",
+                      "updatedAt": "2026-07-28T03:04:41.000Z",
+                      "uid": "35240-fc50581b-db5d-42d6-9a62-c0c09ef880cf"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-0d7e8156-fe29-4ae1-8be0-1b06cc3d2312"
+                }
+              ],
+              "id": "26f9b84c-c3a7-48ed-a04f-f39af8ed53ca",
+              "createdAt": "2026-07-28T03:04:41.000Z",
+              "updatedAt": "2026-07-28T03:04:41.000Z",
+              "uid": "35240-26f9b84c-c3a7-48ed-a04f-f39af8ed53ca"
+            },
+            {
+              "name": "Square Create Team Member",
+              "id": "dd3dcf94-53a1-40da-9ac1-a49291a3fd7a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "oauth2",
+                  "oauth2": [
+                    {
+                      "key": "scope",
+                      "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE",
+                      "type": "string"
+                    },
+                    {
+                      "key": "accessTokenUrl",
+                      "value": "https://connect.squareup.com/oauth2/token",
+                      "type": "string"
+                    },
+                    {
+                      "key": "authUrl",
+                      "value": "https://connect.squareup.com/oauth2/authorize",
+                      "type": "string"
+                    },
+                    {
+                      "key": "grant_type",
+                      "value": "authorization_code",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotency_key\": \"<string>\",\n  \"team_member\": {\n    \"id\": \"<string>\",\n    \"reference_id\": \"<string>\",\n    \"is_owner\": \"<boolean>\",\n    \"status\": \"ACTIVE\",\n    \"given_name\": \"<string>\",\n    \"family_name\": \"<string>\",\n    \"email_address\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"assigned_locations\": {\n      \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n      \"location_ids\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    \"wage_setting\": {\n      \"team_member_id\": \"<string>\",\n      \"job_assignments\": [\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"MDL\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"TJS\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        },\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"MKD\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"ISK\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        }\n      ],\n      \"is_overtime_exempt\": \"<boolean>\",\n      \"version\": \"<integer>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/v2/team-members",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "v2",
+                    "team-members"
+                  ]
+                },
+                "description": "Creates a single `TeamMember` object. The `TeamMember` object is returned on successful creates.\nYou must provide the following values in your request to this endpoint:\n- `given_name`\n- `family_name`\n\nLearn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#createteammember)."
+              },
+              "response": [
+                {
+                  "id": "1fa67290-39df-47eb-8625-9f084009f490",
+                  "name": "Success",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: oauth2",
+                        "key": "Authorization",
+                        "value": "<token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"idempotency_key\": \"<string>\",\n  \"team_member\": {\n    \"id\": \"<string>\",\n    \"reference_id\": \"<string>\",\n    \"is_owner\": \"<boolean>\",\n    \"status\": \"ACTIVE\",\n    \"given_name\": \"<string>\",\n    \"family_name\": \"<string>\",\n    \"email_address\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"assigned_locations\": {\n      \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n      \"location_ids\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    \"wage_setting\": {\n      \"team_member_id\": \"<string>\",\n      \"job_assignments\": [\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"MDL\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"TJS\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        },\n        {\n          \"pay_type\": \"SALARY\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"MKD\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"ISK\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        }\n      ],\n      \"is_overtime_exempt\": \"<boolean>\",\n      \"version\": \"<integer>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\"\n    }\n  }\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v2/team-members",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v2",
+                        "team-members"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"team_member\": {\n    \"id\": \"<string>\",\n    \"reference_id\": \"<string>\",\n    \"is_owner\": \"<boolean>\",\n    \"status\": \"INACTIVE\",\n    \"given_name\": \"<string>\",\n    \"family_name\": \"<string>\",\n    \"email_address\": \"<string>\",\n    \"phone_number\": \"<string>\",\n    \"created_at\": \"<string>\",\n    \"updated_at\": \"<string>\",\n    \"assigned_locations\": {\n      \"assignment_type\": \"EXPLICIT_LOCATIONS\",\n      \"location_ids\": [\n        \"<string>\"\n      ]\n    },\n    \"wage_setting\": {\n      \"team_member_id\": \"<string>\",\n      \"job_assignments\": [\n        {\n          \"pay_type\": \"NONE\",\n          \"job_title\": \"<string>\",\n          \"hourly_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"XBD\"\n          },\n          \"annual_rate\": {\n            \"amount\": \"<long>\",\n            \"currency\": \"ERN\"\n          },\n          \"weekly_hours\": \"<integer>\",\n          \"job_id\": \"<string>\"\n        }\n      ],\n      \"is_overtime_exempt\": \"<boolean>\",\n      \"version\": \"<integer>\",\n      \"created_at\": \"<string>\",\n      \"updated_at\": \"<string>\"\n    }\n  },\n  \"errors\": [\n    {\n      \"category\": \"API_ERROR\",\n      \"code\": \"V1_APPLICATION\",\n      \"detail\": \"<string>\",\n      \"field\": \"<string>\"\n    }\n  ]\n}",
+                  "createdAt": "2026-07-28T03:04:41.000Z",
+                  "updatedAt": "2026-07-28T03:04:41.000Z",
+                  "uid": "35240-1fa67290-39df-47eb-8625-9f084009f490"
+                }
+              ],
+              "createdAt": "2026-07-28T03:04:41.000Z",
+              "updatedAt": "2026-07-28T03:04:41.000Z",
+              "uid": "35240-dd3dcf94-53a1-40da-9ac1-a49291a3fd7a"
+            }
+          ],
+          "id": "9f4b2a5a-f4e8-426d-bfbb-f1823557ed60",
+          "createdAt": "2026-07-28T03:04:41.000Z",
+          "updatedAt": "2026-07-28T03:04:41.000Z",
+          "uid": "35240-9f4b2a5a-f4e8-426d-bfbb-f1823557ed60"
+        }
+      ],
+      "id": "cfa8ccf9-4dfa-4836-bd90-6524adf9b17c",
+      "createdAt": "2026-07-28T03:04:41.000Z",
+      "updatedAt": "2026-07-28T03:04:41.000Z",
+      "uid": "35240-cfa8ccf9-4dfa-4836-bd90-6524adf9b17c"
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://connect.squareup.com"
+    }
+  ]
+}
