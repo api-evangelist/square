@@ -1,0 +1,351 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Square ApplePay Invoices API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Invoices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Square List Invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/invoices",
+            "params": [
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the location for which to list invoices."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "A pagination cursor returned by a previous call to this endpoint. \nProvide this cursor to retrieve the next set of results for your original query.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of invoices to return (200 is the maximum `limit`). \nIf not provided, the server uses a default limit of 100 invoices."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns a list of invoices for a given location. The response \nis paginated. If truncated, the response includes a `cursor` that you    \nuse in a subsequent request to retrieve the next set of invoices."
+        },
+        {
+          "info": {
+            "name": "Square Create Invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/invoices",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a draft [invoice](entity:Invoice) \nfor an order created using the Orders API.\n\nA draft invoice remains in your account and no action is taken. \nYou must publish the invoice before Square can process it (send it to the customer's email address or charge the customer’s card on file)."
+        },
+        {
+          "info": {
+            "name": "Square Search Invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/invoices/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Searches for invoices from a location specified in \nthe filter. You can optionally specify customers in the filter for whom to \nretrieve invoices. In the current implementation, you can only specify one location and \noptionally one customer.\n\nThe response is paginated. If truncated, the response includes a `cursor` \nthat you use in a subsequent request to retrieve the next set of invoices."
+        },
+        {
+          "info": {
+            "name": "Square Get Invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/invoices/:invoice_id",
+            "params": [
+              {
+                "name": "invoice_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice to retrieve."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves an invoice by invoice ID."
+        },
+        {
+          "info": {
+            "name": "Square Update Invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.squareup.com/v2/invoices/:invoice_id",
+            "params": [
+              {
+                "name": "invoice_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updates an invoice. This endpoint supports sparse updates, so you only need\nto specify the fields you want to change along with the required `version` field.\nSome restrictions apply to updating invoices. For example, you cannot change the\n`order_id` or `location_id` field."
+        },
+        {
+          "info": {
+            "name": "Square Delete Invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.squareup.com/v2/invoices/:invoice_id",
+            "params": [
+              {
+                "name": "invoice_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice to delete."
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "The version of the [invoice](entity:Invoice) to delete.\nIf you do not know the version, you can call [GetInvoice](api-endpoint:Invoices-GetInvoice) or \n[ListInvoices](api-endpoint:Invoices-ListInvoices)."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Deletes the specified invoice. When an invoice is deleted, the \nassociated order status changes to CANCELED. You can only delete a draft \ninvoice (you cannot delete a published invoice, including one that is scheduled for processing)."
+        },
+        {
+          "info": {
+            "name": "Square Create Invoice Attachment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/invoices/:invoice_id/attachments",
+            "params": [
+              {
+                "name": "invoice_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [invoice](entity:Invoice) to attach the file to."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "request",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "image_file",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Uploads a file and attaches it to an invoice. This endpoint accepts HTTP multipart/form-data file uploads\nwith a JSON `request` part and a `file` part. The `file` part must be a `readable stream` that contains a file\nin a supported format: GIF, JPEG, PNG, TIFF, BMP, or PDF.\n\nInvoices can have up to 10 attachments with a total file size of 25 MB. Attachments can be added only to invoices\nin the `DRAFT`, `SCHEDULED`, `UNPAID`, or `PARTIALLY_PAID` state."
+        },
+        {
+          "info": {
+            "name": "Square Delete Invoice Attachment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.squareup.com/v2/invoices/:invoice_id/attachments/:attachment_id",
+            "params": [
+              {
+                "name": "invoice_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [invoice](entity:Invoice) to delete the attachment from."
+              },
+              {
+                "name": "attachment_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [attachment](entity:InvoiceAttachment) to delete."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Removes an attachment from an invoice and permanently deletes the file. Attachments can be removed only\nfrom invoices in the `DRAFT`, `SCHEDULED`, `UNPAID`, or `PARTIALLY_PAID` state."
+        },
+        {
+          "info": {
+            "name": "Square Cancel Invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/invoices/:invoice_id/cancel",
+            "params": [
+              {
+                "name": "invoice_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [invoice](entity:Invoice) to cancel."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Cancels an invoice. The seller cannot collect payments for \nthe canceled invoice.\n\nYou cannot cancel an invoice in the `DRAFT` state or in a terminal state: `PAID`, `REFUNDED`, `CANCELED`, or `FAILED`."
+        },
+        {
+          "info": {
+            "name": "Square Publish Invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/invoices/:invoice_id/publish",
+            "params": [
+              {
+                "name": "invoice_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice to publish."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Publishes the specified draft invoice. \n\nAfter an invoice is published, Square \nfollows up based on the invoice configuration. For example, Square \nsends the invoice to the customer's email address, charges the customer's card on file, or does \nnothing. Square also makes the invoice available on a Square-hosted invoice page. \n\nThe invoice `status` also changes from `DRAFT` to a status \nbased on the invoice configuration. For example, the status changes to `UNPAID` if \nSquare emails the invoice o"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

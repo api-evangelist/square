@@ -1,0 +1,348 @@
+{
+  "item": [
+    {
+      "id": "d9b85222-d69b-4bf9-955f-ac119f85b0ce",
+      "name": "OAuth",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "169412c7-a345-4bc7-8e87-a5ba8fd84601",
+          "name": "Square Revoke Token",
+          "request": {
+            "name": "Square Revoke Token",
+            "description": {
+              "content": "Revokes an access token generated with the OAuth flow.\n\nIf an account has more than one OAuth access token for your application, this\nendpoint revokes all of them, regardless of which token you specify. \n\n__Important:__ The `Authorization` header for this endpoint must have the\nfollowing format:\n\n```\nAuthorization: Client APPLICATION_SECRET\n```\n\nReplace `APPLICATION_SECRET` with the application secret on the **OAuth**\npage for your application in the Developer Dashboard.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth2",
+                "revoke"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"<string>\",\n  \"access_token\": \"<string>\",\n  \"merchant_id\": \"<string>\",\n  \"revoke_only_access_token\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "173efb65-3296-4af6-a653-6a66c9154a8e",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth2",
+                    "revoke"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"access_token\": \"ACCESS_TOKEN\",\n  \"client_id\": \"CLIENT_ID\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f24efd27-1314-475c-b398-f076a8791dec",
+          "name": "Square Obtain Token",
+          "request": {
+            "name": "Square Obtain Token",
+            "description": {
+              "content": "Returns an OAuth access token and a refresh token unless the \n`short_lived` parameter is set to `true`, in which case the endpoint \nreturns only an access token.\n\nThe `grant_type` parameter specifies the type of OAuth request. If \n`grant_type` is `authorization_code`, you must include the authorization \ncode you received when a seller granted you authorization. If `grant_type` \nis `refresh_token`, you must provide a valid refresh token. If you're using \nan old version of the Square APIs (prior to March 13, 2019), `grant_type` \ncan be `migration_token` and you must provide a valid migration token.\n\nYou can use the `scopes` parameter to limit the set of permissions granted \nto the access token and refresh token. You can use the `short_lived` parameter \nto create an access token that expires in 24 hours.\n\n__Note:__ OAuth tokens should be encrypted and stored on a secure server. \nApplication clients should never interact directly with OAuth tokens.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth2",
+                "token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"<string>\",\n  \"grant_type\": \"<string>\",\n  \"client_secret\": \"<string>\",\n  \"code\": \"<string>\",\n  \"redirect_uri\": \"<string>\",\n  \"refresh_token\": \"<string>\",\n  \"migration_token\": \"<string>\",\n  \"scopes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"short_lived\": \"<boolean>\",\n  \"code_verifier\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c9d40169-43bd-4f25-bb70-c8b922c24a0a",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth2",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"client_id\": \"APPLICATION_ID\",\n  \"client_secret\": \"APPLICATION_SECRET\",\n  \"code\": \"CODE_FROM_AUTHORIZE\",\n  \"grant_type\": \"authorization_code\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"ACCESS_TOKEN\",\n  \"expires_at\": \"2006-01-02T15:04:05Z\",\n  \"merchant_id\": \"MERCHANT_ID\",\n  \"refresh_token\": \"REFRESH_TOKEN\",\n  \"token_type\": \"bearer\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8c1a9c69-ac0b-442e-a40d-bdbfdbcf05cb",
+          "name": "Square Retrieve Token Status",
+          "request": {
+            "name": "Square Retrieve Token Status",
+            "description": {
+              "content": "Returns information about an [OAuth access token](https://developer.squareup.com/docs/build-basics/access-tokens#get-an-oauth-access-token) or an application’s [personal access token](https://developer.squareup.com/docs/build-basics/access-tokens#get-a-personal-access-token).\n\nAdd the access token to the Authorization header of the request.\n\n__Important:__ The `Authorization` header you provide to this endpoint must have the following format:\n\n```\nAuthorization: Bearer ACCESS_TOKEN\n```\n\nwhere `ACCESS_TOKEN` is a\n[valid production authorization credential](https://developer.squareup.com/docs/build-basics/access-tokens).\n\nIf the access token is expired or not a valid access token, the endpoint returns an `UNAUTHORIZED` error.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth2",
+                "token",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b483160f-4f06-44e9-982e-87a01d903a74",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth2",
+                    "token",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"client_id\": \"CLIENT_ID\",\n  \"expires_at\": \"2022-10-14T14:44:00Z\",\n  \"merchant_id\": \"MERCHANT_ID\",\n  \"scopes\": [\n    \"PAYMENTS_READ\",\n    \"PAYMENTS_WRITE\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://connect.squareup.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "a1e5aca4-c1a3-4a85-8c89-7abac6a607d8",
+    "name": "Square ApplePay OAuth API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. \n\nContact Support:\n Name: Square Developer Platform\n Email: developers@squareup.com",
+      "type": "text/plain"
+    }
+  }
+}

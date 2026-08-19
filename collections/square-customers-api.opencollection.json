@@ -1,0 +1,456 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Square ApplePay Customers API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Square List Customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/customers",
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this cursor to retrieve the next set of results for your original query.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of results to return in a single page. This limit is advisory. The response might contain more or fewer results.\nIf the specified limit is less than 1 or greater than 100, Square returns a `400 VALUE_TOO_LOW` or `400 VALUE_TOO_HIGH` error. The default value is 100.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+              },
+              {
+                "name": "sort_field",
+                "value": "",
+                "type": "query",
+                "description": "Indicates how customers should be sorted.\n\nThe default value is `DEFAULT`."
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether customers should be sorted in ascending (`ASC`) or\ndescending (`DESC`) order.\n\nThe default value is `ASC`."
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether to return the total count of customers in the `count` field of the response.\n\nThe default value is `false`."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Lists customer profiles associated with a Square account.\n\nUnder normal operating conditions, newly created or updated customer profiles become available\nfor the listing operation in well under 30 seconds. Occasionally, propagation of the new or updated\nprofiles can take closer to one minute or longer, especially during network incidents and outages."
+        },
+        {
+          "info": {
+            "name": "Square Create Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/customers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a new customer for a business.\n\nYou must provide at least one of the following values in your request to this\nendpoint:\n\n- `given_name`\n- `family_name`\n- `company_name`\n- `email_address`\n- `phone_number`"
+        },
+        {
+          "info": {
+            "name": "Square Bulk Create Customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/customers/bulk-create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates multiple [customer profiles](entity:Customer) for a business.\n\nThis endpoint takes a map of individual create requests and returns a map of responses.\n\nYou must provide at least one of the following values in each create request:\n\n- `given_name`\n- `family_name`\n- `company_name`\n- `email_address`\n- `phone_number`"
+        },
+        {
+          "info": {
+            "name": "Square Bulk Delete Customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/customers/bulk-delete",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Deletes multiple customer profiles.\n\nThe endpoint takes a list of customer IDs and returns a map of responses."
+        },
+        {
+          "info": {
+            "name": "Square Bulk Retrieve Customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/customers/bulk-retrieve",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves multiple customer profiles.\n\nThis endpoint takes a list of customer IDs and returns a map of responses."
+        },
+        {
+          "info": {
+            "name": "Square Bulk Update Customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/customers/bulk-update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updates multiple customer profiles.\n\nThis endpoint takes a map of individual update requests and returns a map of responses."
+        },
+        {
+          "info": {
+            "name": "Square Search Customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/customers/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Searches the customer profiles associated with a Square account using one or more supported query filters.\n\nCalling `SearchCustomers` without any explicit query filter returns all\ncustomer profiles ordered alphabetically based on `given_name` and\n`family_name`.\n\nUnder normal operating conditions, newly created or updated customer profiles become available\nfor the search operation in well under 30 seconds. Occasionally, propagation of the new or updated\nprofiles can take closer to one minute or l"
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/customers/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer to retrieve."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns details for a single customer."
+        },
+        {
+          "info": {
+            "name": "Square Update Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.squareup.com/v2/customers/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updates a customer profile. This endpoint supports sparse updates, so only new or changed fields are required in the request.\nTo add or update a field, specify the new value. To remove a field, specify `null`.\n\nTo update a customer profile that was created by merging existing profiles, you must use the ID of the newly created profile."
+        },
+        {
+          "info": {
+            "name": "Square Delete Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.squareup.com/v2/customers/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer to delete."
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "The current version of the customer profile.\n\nAs a best practice, you should include this parameter to enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency) control.  For more information, see [Delete a customer profile](https://developer.squareup.com/docs/customers-api/use-the-api/keep-records#delete-customer-profile)."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Deletes a customer profile from a business.\n\nTo delete a customer profile that was created by merging existing profiles, you must use the ID of the newly created profile."
+        },
+        {
+          "info": {
+            "name": "Square Create Customer Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/customers/:customer_id/cards",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The Square ID of the customer profile the card is linked to."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Adds a card on file to an existing customer.\n\nAs with charges, calls to `CreateCustomerCard` are idempotent. Multiple\ncalls with the same card nonce return the same card record that was created\nwith the provided nonce during the _first_ call."
+        },
+        {
+          "info": {
+            "name": "Square Delete Customer Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.squareup.com/v2/customers/:customer_id/cards/:card_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer that the card on file belongs to."
+              },
+              {
+                "name": "card_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the card on file to delete."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Removes a card on file from a customer."
+        },
+        {
+          "info": {
+            "name": "Square Add Group to Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.squareup.com/v2/customers/:customer_id/groups/:group_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer to add to a group."
+              },
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer group to add the customer to."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Adds a group membership to a customer.\n\nThe customer is identified by the `customer_id` value\nand the customer group is identified by the `group_id` value."
+        },
+        {
+          "info": {
+            "name": "Square Remove Group from Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.squareup.com/v2/customers/:customer_id/groups/:group_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer to remove from the group."
+              },
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer group to remove the customer from."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Removes a group membership from a customer.\n\nThe customer is identified by the `customer_id` value\nand the customer group is identified by the `group_id` value."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

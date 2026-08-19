@@ -1,0 +1,310 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Square ApplePay Checkout API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Checkout",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Square Create Checkout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/locations/:location_id/checkouts",
+            "params": [
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the business location to associate the checkout with."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Links a `checkoutId` to a `checkout_page_url` that customers are\ndirected to in order to provide their payment information using a\npayment processing workflow hosted on connect.squareup.com. \n\n\nNOTE: The Checkout API has been updated with new features. \nFor more information, see [Checkout API highlights](https://developer.squareup.com/docs/checkout-api#checkout-api-highlights)."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Location Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/online-checkout/location-settings/:location_id",
+            "params": [
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the location for which to retrieve settings."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves the location-level settings for a Square-hosted checkout page."
+        },
+        {
+          "info": {
+            "name": "Square Update Location Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.squareup.com/v2/online-checkout/location-settings/:location_id",
+            "params": [
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the location for which to retrieve settings."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updates the location-level settings for a Square-hosted checkout page."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Merchant Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/online-checkout/merchant-settings",
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves the merchant-level settings for a Square-hosted checkout page."
+        },
+        {
+          "info": {
+            "name": "Square Update Merchant Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.squareup.com/v2/online-checkout/merchant-settings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updates the merchant-level settings for a Square-hosted checkout page."
+        },
+        {
+          "info": {
+            "name": "Square List Payment Links",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/online-checkout/payment-links",
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this cursor to retrieve the next set of results for the original query.\nIf a cursor is not provided, the endpoint returns the first page of the results.\nFor more  information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "A limit on the number of results to return per page. The limit is advisory and\nthe implementation might return more or less results. If the supplied limit is negative, zero, or\ngreater than the maximum limit of 1000, it is ignored.\n\nDefault value: `100`"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Lists all payment links."
+        },
+        {
+          "info": {
+            "name": "Square Create Payment Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/online-checkout/payment-links",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a Square-hosted checkout page. Applications can share the resulting payment link with their buyer to pay for goods and services."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Payment Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/online-checkout/payment-links/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of link to retrieve."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves a payment link."
+        },
+        {
+          "info": {
+            "name": "Square Update Payment Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.squareup.com/v2/online-checkout/payment-links/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the payment link to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updates a payment link. You can update the `payment_link` fields such as\n`description`, `checkout_options`, and  `pre_populated_data`.\nYou cannot update other fields such as the `order_id`, `version`, `URL`, or `timestamp` field."
+        },
+        {
+          "info": {
+            "name": "Square Delete Payment Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.squareup.com/v2/online-checkout/payment-links/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the payment link to delete."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Deletes a payment link."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

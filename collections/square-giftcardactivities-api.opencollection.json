@@ -1,0 +1,114 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Square ApplePay GiftCardActivities API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "GiftCardActivities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Square List Gift Card Activities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/gift-cards/activities",
+            "params": [
+              {
+                "name": "gift_card_id",
+                "value": "",
+                "type": "query",
+                "description": "If a gift card ID is provided, the endpoint returns activities related \nto the specified gift card. Otherwise, the endpoint returns all gift card activities for \nthe seller."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "If a [type](entity:GiftCardActivityType) is provided, the endpoint returns gift card activities of the specified type. \nOtherwise, the endpoint returns all types of gift card activities."
+              },
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "query",
+                "description": "If a location ID is provided, the endpoint returns gift card activities for the specified location. \nOtherwise, the endpoint returns gift card activities for all locations."
+              },
+              {
+                "name": "begin_time",
+                "value": "",
+                "type": "query",
+                "description": "The timestamp for the beginning of the reporting period, in RFC 3339 format.\nThis start time is inclusive. The default value is the current time minus one year."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "The timestamp for the end of the reporting period, in RFC 3339 format.\nThis end time is inclusive. The default value is the current time."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "If a limit is provided, the endpoint returns the specified number \nof results (or fewer) per page. The maximum value is 100. The default value is 50.\nFor more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination)."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this cursor to retrieve the next set of results for the original query.\nIf a cursor is not provided, the endpoint returns the first page of the results.\nFor more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination)."
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "The order in which the endpoint returns the activities, based on `created_at`.\n- `ASC` - Oldest to newest.\n- `DESC` - Newest to oldest (default)."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Lists gift card activities. By default, you get gift card activities for all\ngift cards in the seller's account. You can optionally specify query parameters to\nfilter the list. For example, you can get a list of gift card activities for a gift card,\nfor all gift cards in a specific region, or for activities within a time window."
+        },
+        {
+          "info": {
+            "name": "Square Create Gift Card Activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/gift-cards/activities",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a gift card activity to manage the balance or state of a [gift card](entity:GiftCard).\nFor example, create an `ACTIVATE` activity to activate a gift card with an initial balance before first use."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,305 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Square ApplePay Payments API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Square List Payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/payments",
+            "params": [
+              {
+                "name": "begin_time",
+                "value": "",
+                "type": "query",
+                "description": "Indicates the start of the time range to retrieve payments for, in RFC 3339 format.  \nThe range is determined using the `created_at` field for each Payment.\nInclusive. Default: The current time minus one year."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "Indicates the end of the time range to retrieve payments for, in RFC 3339 format.  The \nrange is determined using the `created_at` field for each Payment.\n\nDefault: The current time."
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "The order in which results are listed by `ListPaymentsRequest.sort_field`:\n- `ASC` - Oldest to newest.\n- `DESC` - Newest to oldest (default)."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this cursor to retrieve the next set of results for the original query.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+              },
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to the location supplied. By default, results are returned\nfor the default (main) location associated with the seller."
+              },
+              {
+                "name": "total",
+                "value": "",
+                "type": "query",
+                "description": "The exact amount in the `total_money` for a payment."
+              },
+              {
+                "name": "last_4",
+                "value": "",
+                "type": "query",
+                "description": "The last four digits of a payment card."
+              },
+              {
+                "name": "card_brand",
+                "value": "",
+                "type": "query",
+                "description": "The brand of the payment card (for example, VISA)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of results to be returned in a single page.\nIt is possible to receive fewer results than the specified limit on a given page.\n\nThe default value of 100 is also the maximum allowed value. If the provided value is \ngreater than 100, it is ignored and the default value is used instead.\n\nDefault: `100`"
+              },
+              {
+                "name": "is_offline_payment",
+                "value": "",
+                "type": "query",
+                "description": "Whether the payment was taken offline or not."
+              },
+              {
+                "name": "offline_begin_time",
+                "value": "",
+                "type": "query",
+                "description": "Indicates the start of the time range for which to retrieve offline payments, in RFC 3339\nformat for timestamps. The range is determined using the\n`offline_payment_details.client_created_at` field for each Payment. If set, payments without a\nvalue set in `offline_payment_details.client_created_at` will not be returned.\n\nDefault: The current time."
+              },
+              {
+                "name": "offline_end_time",
+                "value": "",
+                "type": "query",
+                "description": "Indicates the end of the time range for which to retrieve offline payments, in RFC 3339\nformat for timestamps. The range is determined using the\n`offline_payment_details.client_created_at` field for each Payment. If set, payments without a\nvalue set in `offline_payment_details.client_created_at` will not be returned.\n\nDefault: The current time."
+              },
+              {
+                "name": "updated_at_begin_time",
+                "value": "",
+                "type": "query",
+                "description": "Indicates the start of the time range to retrieve payments for, in RFC 3339 format.  The\nrange is determined using the `updated_at` field for each Payment."
+              },
+              {
+                "name": "updated_at_end_time",
+                "value": "",
+                "type": "query",
+                "description": "Indicates the end of the time range to retrieve payments for, in RFC 3339 format.  The\nrange is determined using the `updated_at` field for each Payment."
+              },
+              {
+                "name": "sort_field",
+                "value": "",
+                "type": "query",
+                "description": "The field used to sort results by. The default is `CREATED_AT`."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves a list of payments taken by the account making the request.\n\nResults are eventually consistent, and new payments or changes to payments might take several\nseconds to appear.\n\nThe maximum results per page is 100."
+        },
+        {
+          "info": {
+            "name": "Square Create Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/payments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a payment using the provided source. You can use this endpoint \nto charge a card (credit/debit card or    \nSquare gift card) or record a payment that the seller received outside of Square \n(cash payment from a buyer or a payment that an external entity \nprocessed on behalf of the seller).\n\nThe endpoint creates a \n`Payment` object and returns it in the response."
+        },
+        {
+          "info": {
+            "name": "Square Cancel Payment by Idempotency Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/payments/cancel",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Cancels (voids) a payment identified by the idempotency key that is specified in the\nrequest.\n\nUse this method when the status of a `CreatePayment` request is unknown (for example, after you send a\n`CreatePayment` request, a network error occurs and you do not get a response). In this case, you can\ndirect Square to cancel the payment using this endpoint. In the request, you provide the same\nidempotency key that you provided in your `CreatePayment` request that you want to cancel. After\ncanceling"
+        },
+        {
+          "info": {
+            "name": "Square Get Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/payments/:payment_id",
+            "params": [
+              {
+                "name": "payment_id",
+                "value": "",
+                "type": "path",
+                "description": "A unique ID for the desired payment."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves details for a specific payment."
+        },
+        {
+          "info": {
+            "name": "Square Update Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://connect.squareup.com/v2/payments/:payment_id",
+            "params": [
+              {
+                "name": "payment_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the payment to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updates a payment with the APPROVED status.\nYou can update the `amount_money` and `tip_money` using this endpoint."
+        },
+        {
+          "info": {
+            "name": "Square Cancel Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/payments/:payment_id/cancel",
+            "params": [
+              {
+                "name": "payment_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the payment to cancel."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Cancels (voids) a payment. You can use this endpoint to cancel a payment with \nthe APPROVED `status`."
+        },
+        {
+          "info": {
+            "name": "Square Complete Payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/payments/:payment_id/complete",
+            "params": [
+              {
+                "name": "payment_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID identifying the payment to be completed."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Completes (captures) a payment.\nBy default, payments are set to complete immediately after they are created.\n\nYou can use this endpoint to complete a payment with the APPROVED `status`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

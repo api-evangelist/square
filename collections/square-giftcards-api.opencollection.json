@@ -1,0 +1,241 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Square ApplePay GiftCards API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "GiftCards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Square List Gift Cards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/gift-cards",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "If a [type](entity:GiftCardType) is provided, the endpoint returns gift cards of the specified type.\nOtherwise, the endpoint returns gift cards of all types."
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "If a [state](entity:GiftCardStatus) is provided, the endpoint returns the gift cards in the specified state.\nOtherwise, the endpoint returns the gift cards of all states."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "If a limit is provided, the endpoint returns only the specified number of results per page.\nThe maximum value is 200. The default value is 30.\nFor more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination)."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this cursor to retrieve the next set of results for the original query.\nIf a cursor is not provided, the endpoint returns the first page of the results. \nFor more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination)."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query",
+                "description": "If a customer ID is provided, the endpoint returns only the gift cards linked to the specified customer."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Lists all gift cards. You can specify optional filters to retrieve \na subset of the gift cards. Results are sorted by `created_at` in ascending order."
+        },
+        {
+          "info": {
+            "name": "Square Create Gift Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/gift-cards",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a digital gift card or registers a physical (plastic) gift card. The resulting gift card\nhas a `PENDING` state. To activate a gift card so that it can be redeemed for purchases, call\n[CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) and create an `ACTIVATE`\nactivity with the initial balance. Alternatively, you can use [RefundPayment](api-endpoint:Refunds-RefundPayment)\nto refund a payment to the new gift card."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Gift Card from GAN",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/gift-cards/from-gan",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves a gift card using the gift card account number (GAN)."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Gift Card from Nonce",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/gift-cards/from-nonce",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves a gift card using a secure payment token that represents the gift card."
+        },
+        {
+          "info": {
+            "name": "Square Link Customer to Gift Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/gift-cards/:gift_card_id/link-customer",
+            "params": [
+              {
+                "name": "gift_card_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the gift card to be linked."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Links a customer to a gift card, which is also referred to as adding a card on file."
+        },
+        {
+          "info": {
+            "name": "Square Unlink Customer from Gift Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/gift-cards/:gift_card_id/unlink-customer",
+            "params": [
+              {
+                "name": "gift_card_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the gift card to be unlinked."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Unlinks a customer from a gift card, which is also referred to as removing a card on file."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Gift Card",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/gift-cards/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the gift card to retrieve."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves a gift card using the gift card ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

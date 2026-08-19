@@ -1,0 +1,562 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Square ApplePay Loyalty API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Loyalty",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Square Create Loyalty Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/accounts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a loyalty account. To create a loyalty account, you must provide the `program_id` and a `mapping` with the `phone_number` of the buyer."
+        },
+        {
+          "info": {
+            "name": "Square Search Loyalty Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/accounts/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Searches for loyalty accounts in a loyalty program.\n\nYou can search for a loyalty account using the phone number or customer ID associated with the account. To return all loyalty accounts, specify an empty `query` object or omit it entirely.\n\nSearch results are sorted by `created_at` in ascending order."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Loyalty Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/loyalty/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [loyalty account](entity:LoyaltyAccount) to retrieve."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves a loyalty account."
+        },
+        {
+          "info": {
+            "name": "Square Accumulate Loyalty Points",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/accounts/:account_id/accumulate",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the target [loyalty account](entity:LoyaltyAccount)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Adds points earned from a purchase to a [loyalty account](entity:LoyaltyAccount).\n\n- If you are using the Orders API to manage orders, provide the `order_id`. Square reads the order\nto compute the points earned from both the base loyalty program and an associated\n[loyalty promotion](entity:LoyaltyPromotion). For purchases that qualify for multiple accrual\nrules, Square computes points based on the accrual rule that grants the most points.\nFor purchases that qualify for multiple promotions, Squar"
+        },
+        {
+          "info": {
+            "name": "Square Adjust Loyalty Points",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/accounts/:account_id/adjust",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the target [loyalty account](entity:LoyaltyAccount)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Adds points to or subtracts points from a buyer's account.\n\nUse this endpoint only when you need to manually adjust points. Otherwise, in your application flow, you call\n[AccumulateLoyaltyPoints](api-endpoint:Loyalty-AccumulateLoyaltyPoints)\nto add points when a buyer pays for the purchase."
+        },
+        {
+          "info": {
+            "name": "Square Search Loyalty Events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/events/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Searches for loyalty events.\n\nA Square loyalty program maintains a ledger of events that occur during the lifetime of a\nbuyer's loyalty account. Each change in the point balance\n(for example, points earned, points redeemed, and points expired) is\nrecorded in the ledger. Using this endpoint, you can search the ledger for events.\n\nSearch results are sorted by `created_at` in descending order."
+        },
+        {
+          "info": {
+            "name": "Square List Loyalty Programs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/loyalty/programs",
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns a list of loyalty programs in the seller's account.\nLoyalty programs define how buyers can earn points and redeem points for rewards. Square sellers can have only one loyalty program, which is created and managed from the Seller Dashboard. For more information, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview).\n\n\nReplaced with [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) when used with the keyword `main`."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Loyalty Program",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/loyalty/programs/:program_id",
+            "params": [
+              {
+                "name": "program_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the loyalty program or the keyword `main`. Either value can be used to retrieve the single loyalty program that belongs to the seller."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves the loyalty program in a seller's account, specified by the program ID or the keyword `main`.\n\nLoyalty programs define how buyers can earn points and redeem points for rewards. Square sellers can have only one loyalty program, which is created and managed from the Seller Dashboard. For more information, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview)."
+        },
+        {
+          "info": {
+            "name": "Square Calculate Loyalty Points",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/programs/:program_id/calculate",
+            "params": [
+              {
+                "name": "program_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [loyalty program](entity:LoyaltyProgram), which defines the rules for accruing points."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Calculates the number of points a buyer can earn from a purchase. Applications might call this endpoint\nto display the points to the buyer.\n\n- If you are using the Orders API to manage orders, provide the `order_id` and (optional) `loyalty_account_id`.\nSquare reads the order to compute the points earned from the base loyalty program and an associated\n[loyalty promotion](entity:LoyaltyPromotion).\n\n- If you are not using the Orders API to manage orders, provide `transaction_amount_money` with the\n"
+        },
+        {
+          "info": {
+            "name": "Square List Loyalty Promotions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/loyalty/programs/:program_id/promotions",
+            "params": [
+              {
+                "name": "program_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the base [loyalty program](entity:LoyaltyProgram). To get the program ID,\ncall [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) using the `main` keyword."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status to filter the results by. If a status is provided, only loyalty promotions\nwith the specified status are returned. Otherwise, all loyalty promotions associated with\nthe loyalty program are returned."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "The cursor returned in the paged response from the previous call to this endpoint.\nProvide this cursor to retrieve the next page of results for your original request.\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of results to return in a single paged response.\nThe minimum value is 1 and the maximum value is 30. The default value is 30.\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Lists the loyalty promotions associated with a [loyalty program](entity:LoyaltyProgram).\nResults are sorted by the `created_at` date in descending order (newest to oldest)."
+        },
+        {
+          "info": {
+            "name": "Square Create Loyalty Promotion",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/programs/:program_id/promotions",
+            "params": [
+              {
+                "name": "program_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [loyalty program](entity:LoyaltyProgram) to associate with the promotion.\nTo get the program ID, call [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram)\nusing the `main` keyword."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a loyalty promotion for a [loyalty program](entity:LoyaltyProgram). A loyalty promotion\nenables buyers to earn points in addition to those earned from the base loyalty program.\n\nThis endpoint sets the loyalty promotion to the `ACTIVE` or `SCHEDULED` status, depending on the\n`available_time` setting. A loyalty program can have a maximum of 10 loyalty promotions with an\n`ACTIVE` or `SCHEDULED` status."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Loyalty Promotion",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/loyalty/programs/:program_id/promotions/:promotion_id",
+            "params": [
+              {
+                "name": "promotion_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [loyalty promotion](entity:LoyaltyPromotion) to retrieve."
+              },
+              {
+                "name": "program_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the base [loyalty program](entity:LoyaltyProgram). To get the program ID,\ncall [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) using the `main` keyword."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves a loyalty promotion."
+        },
+        {
+          "info": {
+            "name": "Square Cancel Loyalty Promotion",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/programs/:program_id/promotions/:promotion_id/cancel",
+            "params": [
+              {
+                "name": "promotion_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [loyalty promotion](entity:LoyaltyPromotion) to cancel. You can cancel a\npromotion that has an `ACTIVE` or `SCHEDULED` status."
+              },
+              {
+                "name": "program_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the base [loyalty program](entity:LoyaltyProgram)."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Cancels a loyalty promotion. Use this endpoint to cancel an `ACTIVE` promotion earlier than the\nend date, cancel an `ACTIVE` promotion when an end date is not specified, or cancel a `SCHEDULED` promotion.\nBecause updating a promotion is not supported, you can also use this endpoint to cancel a promotion before\nyou create a new one.\n\nThis endpoint sets the loyalty promotion to the `CANCELED` state"
+        },
+        {
+          "info": {
+            "name": "Square Create Loyalty Reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/rewards",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a loyalty reward. In the process, the endpoint does following:\n\n- Uses the `reward_tier_id` in the request to determine the number of points\nto lock for this reward.\n- If the request includes `order_id`, it adds the reward and related discount to the order.\n\nAfter a reward is created, the points are locked and\nnot available for the buyer to redeem another reward."
+        },
+        {
+          "info": {
+            "name": "Square Search Loyalty Rewards",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/rewards/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Searches for loyalty rewards. This endpoint accepts a request with no query filters and returns results for all loyalty accounts.\nIf you include a `query` object, `loyalty_account_id` is required and `status` is  optional.\n\nIf you know a reward ID, use the\n[RetrieveLoyaltyReward](api-endpoint:Loyalty-RetrieveLoyaltyReward) endpoint.\n\nSearch results are sorted by `updated_at` in descending order."
+        },
+        {
+          "info": {
+            "name": "Square Retrieve Loyalty Reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://connect.squareup.com/v2/loyalty/rewards/:reward_id",
+            "params": [
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [loyalty reward](entity:LoyaltyReward) to retrieve."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Retrieves a loyalty reward."
+        },
+        {
+          "info": {
+            "name": "Square Delete Loyalty Reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://connect.squareup.com/v2/loyalty/rewards/:reward_id",
+            "params": [
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [loyalty reward](entity:LoyaltyReward) to delete."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Deletes a loyalty reward by doing the following:\n\n- Returns the loyalty points back to the loyalty account.\n- If an order ID was specified when the reward was created\n(see [CreateLoyaltyReward](api-endpoint:Loyalty-CreateLoyaltyReward)),\nit updates the order by removing the reward and related\ndiscounts.\n\nYou cannot delete a reward that has reached the terminal state (REDEEMED)."
+        },
+        {
+          "info": {
+            "name": "Square Redeem Loyalty Reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://connect.squareup.com/v2/loyalty/rewards/:reward_id/redeem",
+            "params": [
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the [loyalty reward](entity:LoyaltyReward) to redeem."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "authorization_code",
+              "authorizationUrl": "https://connect.squareup.com/oauth2/authorize",
+              "accessTokenUrl": "https://connect.squareup.com/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Redeems a loyalty reward.\n\nThe endpoint sets the reward to the `REDEEMED` terminal state.\n\nIf you are using your own order processing system (not using the\nOrders API), you call this endpoint after the buyer paid for the\npurchase.\n\nAfter the reward reaches the terminal state, it cannot be deleted.\nIn other words, points used for the reward cannot be returned\nto the account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

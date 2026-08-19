@@ -1,0 +1,1046 @@
+{
+  "item": [
+    {
+      "id": "1aa3cec9-7a53-44d8-95fb-4c91ef952ae2",
+      "name": "Payments",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "69f98d4c-f0ba-4858-97ad-3050e2e9b8ba",
+          "name": "Square List Payments",
+          "request": {
+            "name": "Square List Payments",
+            "description": {
+              "content": "Retrieves a list of payments taken by the account making the request.\n\nResults are eventually consistent, and new payments or changes to payments might take several\nseconds to appear.\n\nThe maximum results per page is 100.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "payments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "begin_time",
+                  "value": "<string>",
+                  "description": "Indicates the start of the time range to retrieve payments for, in RFC 3339 format.  \nThe range is determined using the `created_at` field for each Payment.\nInclusive. Default: The current time minus one year."
+                },
+                {
+                  "disabled": false,
+                  "key": "end_time",
+                  "value": "<string>",
+                  "description": "Indicates the end of the time range to retrieve payments for, in RFC 3339 format.  The \nrange is determined using the `created_at` field for each Payment.\n\nDefault: The current time."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "<string>",
+                  "description": "The order in which results are listed by `ListPaymentsRequest.sort_field`:\n- `ASC` - Oldest to newest.\n- `DESC` - Newest to oldest (default)."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this cursor to retrieve the next set of results for the original query.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "location_id",
+                  "value": "<string>",
+                  "description": "Limit results to the location supplied. By default, results are returned\nfor the default (main) location associated with the seller."
+                },
+                {
+                  "disabled": false,
+                  "key": "total",
+                  "value": "<long>",
+                  "description": "The exact amount in the `total_money` for a payment."
+                },
+                {
+                  "disabled": false,
+                  "key": "last_4",
+                  "value": "<string>",
+                  "description": "The last four digits of a payment card."
+                },
+                {
+                  "disabled": false,
+                  "key": "card_brand",
+                  "value": "<string>",
+                  "description": "The brand of the payment card (for example, VISA)."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "The maximum number of results to be returned in a single page.\nIt is possible to receive fewer results than the specified limit on a given page.\n\nThe default value of 100 is also the maximum allowed value. If the provided value is \ngreater than 100, it is ignored and the default value is used instead.\n\nDefault: `100`"
+                },
+                {
+                  "disabled": false,
+                  "key": "is_offline_payment",
+                  "value": "false",
+                  "description": "Whether the payment was taken offline or not."
+                },
+                {
+                  "disabled": false,
+                  "key": "offline_begin_time",
+                  "value": "<string>",
+                  "description": "Indicates the start of the time range for which to retrieve offline payments, in RFC 3339\nformat for timestamps. The range is determined using the\n`offline_payment_details.client_created_at` field for each Payment. If set, payments without a\nvalue set in `offline_payment_details.client_created_at` will not be returned.\n\nDefault: The current time."
+                },
+                {
+                  "disabled": false,
+                  "key": "offline_end_time",
+                  "value": "<string>",
+                  "description": "Indicates the end of the time range for which to retrieve offline payments, in RFC 3339\nformat for timestamps. The range is determined using the\n`offline_payment_details.client_created_at` field for each Payment. If set, payments without a\nvalue set in `offline_payment_details.client_created_at` will not be returned.\n\nDefault: The current time."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_begin_time",
+                  "value": "<string>",
+                  "description": "Indicates the start of the time range to retrieve payments for, in RFC 3339 format.  The\nrange is determined using the `updated_at` field for each Payment."
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_at_end_time",
+                  "value": "<string>",
+                  "description": "Indicates the end of the time range to retrieve payments for, in RFC 3339 format.  The\nrange is determined using the `updated_at` field for each Payment."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_field",
+                  "value": "<string>",
+                  "description": "The field used to sort results by. The default is `CREATED_AT`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9bf841fa-f8a0-4097-a881-e3cca783294c",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "payments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "begin_time",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "end_time",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "total",
+                      "value": "<long>"
+                    },
+                    {
+                      "key": "last_4",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "card_brand",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "is_offline_payment",
+                      "value": "false"
+                    },
+                    {
+                      "key": "offline_begin_time",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "offline_end_time",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "updated_at_begin_time",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "updated_at_end_time",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort_field",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"payments\": [\n    {\n      \"amount_money\": {\n        \"amount\": 555,\n        \"currency\": \"USD\"\n      },\n      \"application_details\": {\n        \"application_id\": \"sq0ids-Pw67AZAlLVB7hsRmwlJPuA\",\n        \"square_product\": \"VIRTUAL_TERMINAL\"\n      },\n      \"approved_money\": {\n        \"amount\": 555,\n        \"currency\": \"USD\"\n      },\n      \"card_details\": {\n        \"auth_result_code\": \"2Nkw7q\",\n        \"avs_status\": \"AVS_ACCEPTED\",\n        \"card\": {\n          \"bin\": \"411111\",\n          \"card_brand\": \"VISA\",\n          \"card_type\": \"DEBIT\",\n          \"exp_month\": 11,\n          \"exp_year\": 2022,\n          \"fingerprint\": \"sq-1-Hxim77tbdcbGejOejnoAklBVJed2YFLTmirfl8Q5XZzObTc8qY_U8RkwzoNL8dCEcQ\",\n          \"last_4\": \"1111\",\n          \"prepaid_type\": \"NOT_PREPAID\"\n        },\n        \"card_payment_timeline\": {\n          \"authorized_at\": \"2021-10-13T19:34:33.680Z\",\n          \"captured_at\": \"2021-10-13T19:34:34.340Z\"\n        },\n        \"cvv_status\": \"CVV_ACCEPTED\",\n        \"entry_method\": \"KEYED\",\n        \"statement_description\": \"SQ *EXAMPLE TEST GOSQ.C\",\n        \"status\": \"CAPTURED\"\n      },\n      \"created_at\": \"2021-10-13T19:34:33.524Z\",\n      \"delay_action\": \"CANCEL\",\n      \"delay_duration\": \"PT168H\",\n      \"delayed_until\": \"2021-10-20T19:34:33.524Z\",\n      \"employee_id\": \"TMoK_ogh6rH1o4dV\",\n      \"location_id\": \"L88917AVBK2S5\",\n      \"note\": \"Test Note\",\n      \"order_id\": \"d7eKah653Z579f3gVtjlxpSlmUcZY\",\n      \"processing_fee\": [\n        {\n          \"amount_money\": {\n            \"amount\": 34,\n            \"currency\": \"USD\"\n          },\n          \"effective_at\": \"2021-10-13T21:34:35.000Z\",\n          \"type\": \"INITIAL\"\n        }\n      ],\n      \"receipt_number\": \"bP9m\",\n      \"receipt_url\": \"https://squareup.com/receipt/preview/bP9mAsEMYPUGjjGNaNO5ZDVyLhSZY\",\n      \"source_type\": \"CARD\",\n      \"status\": \"COMPLETED\",\n      \"team_member_id\": \"TMoK_ogh6rH1o4dV\",\n      \"total_money\": {\n        \"amount\": 555,\n        \"currency\": \"USD\"\n      },\n      \"updated_at\": \"2021-10-13T19:34:37.261Z\",\n      \"version_token\": \"vguW2km0KpVCdAXZcNTZ438qg5LlVPTP4HO5OpiHNfa6o\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5119f2a1-e7d1-418c-9a8d-b6f58fbd465a",
+          "name": "Square Create Payment",
+          "request": {
+            "name": "Square Create Payment",
+            "description": {
+              "content": "Creates a payment using the provided source. You can use this endpoint \nto charge a card (credit/debit card or    \nSquare gift card) or record a payment that the seller received outside of Square \n(cash payment from a buyer or a payment that an external entity \nprocessed on behalf of the seller).\n\nThe endpoint creates a \n`Payment` object and returns it in the response.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "payments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source_id\": \"<string>\",\n  \"idempotency_key\": \"<string>\",\n  \"amount_money\": {\n    \"amount\": \"<long>\",\n    \"currency\": \"<string>\"\n  },\n  \"tip_money\": {\n    \"amount\": \"<long>\",\n    \"currency\": \"<string>\"\n  },\n  \"app_fee_money\": {\n    \"amount\": \"<long>\",\n    \"currency\": \"<string>\"\n  },\n  \"delay_duration\": \"<string>\",\n  \"delay_action\": \"<string>\",\n  \"autocomplete\": \"<boolean>\",\n  \"order_id\": \"<string>\",\n  \"customer_id\": \"<string>\",\n  \"location_id\": \"<string>\",\n  \"team_member_id\": \"<string>\",\n  \"reference_id\": \"<string>\",\n  \"verification_token\": \"<string>\",\n  \"accept_partial_authorization\": \"<boolean>\",\n  \"buyer_email_address\": \"<string>\",\n  \"buyer_phone_number\": \"<string>\",\n  \"billing_address\": {\n    \"address_line_1\": \"<string>\",\n    \"address_line_2\": \"<string>\",\n    \"address_line_3\": \"<string>\",\n    \"locality\": \"<string>\",\n    \"sublocality\": \"<string>\",\n    \"sublocality_2\": \"<string>\",\n    \"sublocality_3\": \"<string>\",\n    \"administrative_district_level_1\": \"<string>\",\n    \"administrative_district_level_2\": \"<string>\",\n    \"administrative_district_level_3\": \"<string>\",\n    \"postal_code\": \"<string>\",\n    \"country\": \"<string>\",\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\"\n  },\n  \"shipping_address\": {\n    \"address_line_1\": \"<string>\",\n    \"address_line_2\": \"<string>\",\n    \"address_line_3\": \"<string>\",\n    \"locality\": \"<string>\",\n    \"sublocality\": \"<string>\",\n    \"sublocality_2\": \"<string>\",\n    \"sublocality_3\": \"<string>\",\n    \"administrative_district_level_1\": \"<string>\",\n    \"administrative_district_level_2\": \"<string>\",\n    \"administrative_district_level_3\": \"<string>\",\n    \"postal_code\": \"<string>\",\n    \"country\": \"<string>\",\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\"\n  },\n  \"note\": \"<string>\",\n  \"statement_description_identifier\": \"<string>\",\n  \"cash_details\": {\n    \"buyer_supplied_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"change_back_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    }\n  },\n  \"external_details\": {\n    \"type\": \"<string>\",\n    \"source\": \"<string>\",\n    \"source_id\": \"<string>\",\n    \"source_fee_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    }\n  },\n  \"customer_details\": {\n    \"customer_initiated\": \"<boolean>\",\n    \"seller_keyed_in\": \"<boolean>\"\n  },\n  \"offline_payment_details\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e035b0cd-5cca-4107-ae22-d0fb3ed13e6d",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "payments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount_money\": {\n    \"amount\": 1000,\n    \"currency\": \"USD\"\n  },\n  \"app_fee_money\": {\n    \"amount\": 10,\n    \"currency\": \"USD\"\n  },\n  \"autocomplete\": true,\n  \"customer_id\": \"W92WH6P11H4Z77CTET0RNTGFW8\",\n  \"idempotency_key\": \"7b0f3ec5-086a-4871-8f13-3c81b3875218\",\n  \"location_id\": \"L88917AVBK2S5\",\n  \"note\": \"Brief description\",\n  \"reference_id\": \"123456\",\n  \"source_id\": \"ccof:GaJGNaZa8x4OgDJn4GB\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"category\": \"PAYMENT_METHOD_ERROR\",\n      \"code\": \"INVALID_TIME\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n      \"code\": \"CUSTOMER_NOT_FOUND\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    }\n  ],\n  \"payment\": {\n    \"id\": \"string\",\n    \"created_at\": \"string\",\n    \"updated_at\": \"string\",\n    \"amount_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"tip_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"total_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"app_fee_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"approved_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"processing_fee\": [\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      },\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      }\n    ],\n    \"refunded_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"status\": \"string\",\n    \"delay_duration\": \"string\",\n    \"delay_action\": \"string\",\n    \"delayed_until\": \"string\",\n    \"source_type\": \"string\",\n    \"card_details\": {\n      \"status\": \"string\",\n      \"card\": {\n        \"id\": \"string\",\n        \"card_brand\": \"DISCOVER_DINERS\",\n        \"last_4\": \"stri\",\n        \"exp_month\": 7922,\n        \"exp_year\": 1705,\n        \"cardholder_name\": \"string\",\n        \"billing_address\": {\n          \"address_line_1\": \"<string>\",\n          \"address_line_2\": \"<string>\",\n          \"address_line_3\": \"<string>\",\n          \"locality\": \"<string>\",\n          \"sublocality\": \"<string>\",\n          \"sublocality_2\": \"<string>\",\n          \"sublocality_3\": \"<string>\",\n          \"administrative_district_level_1\": \"<string>\",\n          \"administrative_district_level_2\": \"<string>\",\n          \"administrative_district_level_3\": \"<string>\",\n          \"postal_code\": \"<string>\",\n          \"country\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"first_name\": \"<string>\",\n          \"last_name\": \"<string>\"\n        },\n        \"fingerprint\": \"string\",\n        \"customer_id\": \"string\",\n        \"merchant_id\": \"string\",\n        \"reference_id\": \"string\",\n        \"enabled\": false,\n        \"card_type\": \"UNKNOWN_CARD_TYPE\",\n        \"prepaid_type\": \"NOT_PREPAID\",\n        \"bin\": \"string\",\n        \"version\": 4784,\n        \"card_co_brand\": \"AFTERPAY\"\n      },\n      \"entry_method\": \"string\",\n      \"cvv_status\": \"string\",\n      \"avs_status\": \"string\",\n      \"auth_result_code\": \"string\",\n      \"application_identifier\": \"string\",\n      \"application_name\": \"string\",\n      \"application_cryptogram\": \"string\",\n      \"verification_method\": \"string\",\n      \"verification_results\": \"string\",\n      \"statement_description\": \"string\",\n      \"device_details\": {\n        \"device_id\": \"string\",\n        \"device_installation_id\": \"string\",\n        \"device_name\": \"string\"\n      },\n      \"card_payment_timeline\": {\n        \"authorized_at\": \"string\",\n        \"captured_at\": \"string\",\n        \"voided_at\": \"string\"\n      },\n      \"refund_requires_card_presence\": false,\n      \"errors\": [\n        {\n          \"category\": \"PAYMENT_METHOD_ERROR\",\n          \"code\": \"INTERNAL_SERVER_ERROR\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"NOT_IMPLEMENTED\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"cash_details\": {\n      \"buyer_supplied_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      },\n      \"change_back_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"bank_account_details\": {\n      \"bank_name\": \"string\",\n      \"transfer_type\": \"string\",\n      \"account_ownership_type\": \"string\",\n      \"fingerprint\": \"string\",\n      \"country\": \"st\",\n      \"statement_description\": \"string\",\n      \"ach_details\": {\n        \"routing_number\": \"string\",\n        \"account_number_suffix\": \"st\",\n        \"account_type\": \"string\"\n      },\n      \"errors\": [\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"INVALID_POSTAL_CODE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"PAYMENT_METHOD_ERROR\",\n          \"code\": \"INVALID_CURSOR\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"external_details\": {\n      \"type\": \"<string>\",\n      \"source\": \"<string>\",\n      \"source_id\": \"<string>\",\n      \"source_fee_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"wallet_details\": {\n      \"status\": \"string\",\n      \"brand\": \"string\",\n      \"cash_app_details\": {\n        \"buyer_full_name\": \"string\",\n        \"buyer_country_code\": \"st\",\n        \"buyer_cashtag\": \"string\"\n      }\n    },\n    \"buy_now_pay_later_details\": {\n      \"brand\": \"string\",\n      \"afterpay_details\": {\n        \"email_address\": \"string\"\n      },\n      \"clearpay_details\": {\n        \"email_address\": \"string\"\n      }\n    },\n    \"square_account_details\": {\n      \"payment_source_token\": \"string\",\n      \"errors\": [\n        {\n          \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n          \"code\": \"CHECKOUT_EXPIRED\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"API_ERROR\",\n          \"code\": \"MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"location_id\": \"string\",\n    \"order_id\": \"string\",\n    \"reference_id\": \"string\",\n    \"customer_id\": \"string\",\n    \"employee_id\": \"string\",\n    \"team_member_id\": \"string\",\n    \"refund_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"risk_evaluation\": {\n      \"created_at\": \"string\",\n      \"risk_level\": \"NORMAL\"\n    },\n    \"terminal_checkout_id\": \"string\",\n    \"buyer_email_address\": \"string\",\n    \"billing_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"shipping_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"note\": \"string\",\n    \"statement_description_identifier\": \"string\",\n    \"capabilities\": [\n      \"string\",\n      \"string\"\n    ],\n    \"receipt_number\": \"stri\",\n    \"receipt_url\": \"string\",\n    \"device_details\": {\n      \"device_id\": \"string\",\n      \"device_installation_id\": \"string\",\n      \"device_name\": \"string\"\n    },\n    \"application_details\": {\n      \"square_product\": \"RETAIL\",\n      \"application_id\": \"string\"\n    },\n    \"is_offline_payment\": true,\n    \"offline_payment_details\": {\n      \"client_created_at\": \"string\"\n    },\n    \"version_token\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bf1df4b5-d73a-4db3-9649-5380e52633a6",
+          "name": "Square Cancel Payment by Idempotency Key",
+          "request": {
+            "name": "Square Cancel Payment by Idempotency Key",
+            "description": {
+              "content": "Cancels (voids) a payment identified by the idempotency key that is specified in the\nrequest.\n\nUse this method when the status of a `CreatePayment` request is unknown (for example, after you send a\n`CreatePayment` request, a network error occurs and you do not get a response). In this case, you can\ndirect Square to cancel the payment using this endpoint. In the request, you provide the same\nidempotency key that you provided in your `CreatePayment` request that you want to cancel. After\ncanceling the payment, you can submit your `CreatePayment` request again.\n\nNote that if no payment with the specified idempotency key is found, no action is taken and the endpoint\nreturns successfully.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "payments",
+                "cancel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotency_key\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b5fc1774-2da7-44ee-bcd0-20a34376452f",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "payments",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotency_key\": \"a7e36d40-d24b-11e8-b568-0800200c9a66\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1112e6dc-278e-4879-a986-cd14566fae28",
+          "name": "Square Get Payment",
+          "request": {
+            "name": "Square Get Payment",
+            "description": {
+              "content": "Retrieves details for a specific payment.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "payments",
+                ":payment_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "payment_id",
+                  "description": "(Required) A unique ID for the desired payment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "fc9ff8d9-22fe-475a-aebf-f7333b27e0d4",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "payments",
+                    ":payment_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "payment_id",
+                      "description": "(Required) A unique ID for the desired payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"category\": \"API_ERROR\",\n      \"code\": \"ALLOWABLE_PIN_TRIES_EXCEEDED\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"category\": \"API_ERROR\",\n      \"code\": \"V1_APPLICATION\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    }\n  ],\n  \"payment\": {\n    \"id\": \"string\",\n    \"created_at\": \"string\",\n    \"updated_at\": \"string\",\n    \"amount_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"tip_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"total_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"app_fee_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"approved_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"processing_fee\": [\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      },\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      }\n    ],\n    \"refunded_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"status\": \"string\",\n    \"delay_duration\": \"string\",\n    \"delay_action\": \"string\",\n    \"delayed_until\": \"string\",\n    \"source_type\": \"string\",\n    \"card_details\": {\n      \"status\": \"string\",\n      \"card\": {\n        \"id\": \"string\",\n        \"card_brand\": \"EFTPOS\",\n        \"last_4\": \"stri\",\n        \"exp_month\": 5906,\n        \"exp_year\": 667,\n        \"cardholder_name\": \"string\",\n        \"billing_address\": {\n          \"address_line_1\": \"<string>\",\n          \"address_line_2\": \"<string>\",\n          \"address_line_3\": \"<string>\",\n          \"locality\": \"<string>\",\n          \"sublocality\": \"<string>\",\n          \"sublocality_2\": \"<string>\",\n          \"sublocality_3\": \"<string>\",\n          \"administrative_district_level_1\": \"<string>\",\n          \"administrative_district_level_2\": \"<string>\",\n          \"administrative_district_level_3\": \"<string>\",\n          \"postal_code\": \"<string>\",\n          \"country\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"first_name\": \"<string>\",\n          \"last_name\": \"<string>\"\n        },\n        \"fingerprint\": \"string\",\n        \"customer_id\": \"string\",\n        \"merchant_id\": \"string\",\n        \"reference_id\": \"string\",\n        \"enabled\": true,\n        \"card_type\": \"UNKNOWN_CARD_TYPE\",\n        \"prepaid_type\": \"PREPAID\",\n        \"bin\": \"string\",\n        \"version\": 6635,\n        \"card_co_brand\": \"AFTERPAY\"\n      },\n      \"entry_method\": \"string\",\n      \"cvv_status\": \"string\",\n      \"avs_status\": \"string\",\n      \"auth_result_code\": \"string\",\n      \"application_identifier\": \"string\",\n      \"application_name\": \"string\",\n      \"application_cryptogram\": \"string\",\n      \"verification_method\": \"string\",\n      \"verification_results\": \"string\",\n      \"statement_description\": \"string\",\n      \"device_details\": {\n        \"device_id\": \"string\",\n        \"device_installation_id\": \"string\",\n        \"device_name\": \"string\"\n      },\n      \"card_payment_timeline\": {\n        \"authorized_at\": \"string\",\n        \"captured_at\": \"string\",\n        \"voided_at\": \"string\"\n      },\n      \"refund_requires_card_presence\": true,\n      \"errors\": [\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"EXPECTED_STRING\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"PAYMENT_METHOD_ERROR\",\n          \"code\": \"CARD_DECLINED_VERIFICATION_REQUIRED\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"cash_details\": {\n      \"buyer_supplied_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      },\n      \"change_back_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"bank_account_details\": {\n      \"bank_name\": \"string\",\n      \"transfer_type\": \"string\",\n      \"account_ownership_type\": \"string\",\n      \"fingerprint\": \"string\",\n      \"country\": \"st\",\n      \"statement_description\": \"string\",\n      \"ach_details\": {\n        \"routing_number\": \"string\",\n        \"account_number_suffix\": \"st\",\n        \"account_type\": \"string\"\n      },\n      \"errors\": [\n        {\n          \"category\": \"REFUND_ERROR\",\n          \"code\": \"API_VERSION_INCOMPATIBLE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"PAYMENT_METHOD_ERROR\",\n          \"code\": \"INVALID_VALUE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"external_details\": {\n      \"type\": \"<string>\",\n      \"source\": \"<string>\",\n      \"source_id\": \"<string>\",\n      \"source_fee_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"wallet_details\": {\n      \"status\": \"string\",\n      \"brand\": \"string\",\n      \"cash_app_details\": {\n        \"buyer_full_name\": \"string\",\n        \"buyer_country_code\": \"st\",\n        \"buyer_cashtag\": \"string\"\n      }\n    },\n    \"buy_now_pay_later_details\": {\n      \"brand\": \"string\",\n      \"afterpay_details\": {\n        \"email_address\": \"string\"\n      },\n      \"clearpay_details\": {\n        \"email_address\": \"string\"\n      }\n    },\n    \"square_account_details\": {\n      \"payment_source_token\": \"string\",\n      \"errors\": [\n        {\n          \"category\": \"API_ERROR\",\n          \"code\": \"TEMPORARY_ERROR\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n          \"code\": \"GIFT_CARD_AVAILABLE_AMOUNT\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"location_id\": \"string\",\n    \"order_id\": \"string\",\n    \"reference_id\": \"string\",\n    \"customer_id\": \"string\",\n    \"employee_id\": \"string\",\n    \"team_member_id\": \"string\",\n    \"refund_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"risk_evaluation\": {\n      \"created_at\": \"string\",\n      \"risk_level\": \"HIGH\"\n    },\n    \"terminal_checkout_id\": \"string\",\n    \"buyer_email_address\": \"string\",\n    \"billing_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"shipping_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"note\": \"string\",\n    \"statement_description_identifier\": \"string\",\n    \"capabilities\": [\n      \"string\",\n      \"string\"\n    ],\n    \"receipt_number\": \"stri\",\n    \"receipt_url\": \"string\",\n    \"device_details\": {\n      \"device_id\": \"string\",\n      \"device_installation_id\": \"string\",\n      \"device_name\": \"string\"\n    },\n    \"application_details\": {\n      \"square_product\": \"ONLINE_STORE\",\n      \"application_id\": \"string\"\n    },\n    \"is_offline_payment\": true,\n    \"offline_payment_details\": {\n      \"client_created_at\": \"string\"\n    },\n    \"version_token\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f5de66d8-c426-46a2-8d27-994fb18a180a",
+          "name": "Square Update Payment",
+          "request": {
+            "name": "Square Update Payment",
+            "description": {
+              "content": "Updates a payment with the APPROVED status.\nYou can update the `amount_money` and `tip_money` using this endpoint.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "payments",
+                ":payment_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "payment_id",
+                  "description": "(Required) The ID of the payment to update."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotency_key\": \"<string>\",\n  \"payment\": {\n    \"amount_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"tip_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"app_fee_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"approved_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"delay_action\": \"<string>\",\n    \"cash_details\": {\n      \"buyer_supplied_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      },\n      \"change_back_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"team_member_id\": \"<string>\",\n    \"version_token\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8b5a7abc-82e2-4fed-9014-eddc81581835",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "payments",
+                    ":payment_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "payment_id",
+                      "description": "(Required) The ID of the payment to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotency_key\": \"956f8b13-e4ec-45d6-85e8-d1d95ef0c5de\",\n  \"payment\": {\n    \"amount_money\": {\n      \"amount\": 1000,\n      \"currency\": \"USD\"\n    },\n    \"tip_money\": {\n      \"amount\": 100,\n      \"currency\": \"USD\"\n    },\n    \"version_token\": \"ODhwVQ35xwlzRuoZEwKXucfu7583sPTzK48c5zoGd0g6o\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"category\": \"EXTERNAL_VENDOR_ERROR\",\n      \"code\": \"ALLOWABLE_PIN_TRIES_EXCEEDED\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"category\": \"AUTHENTICATION_ERROR\",\n      \"code\": \"GENERIC_DECLINE\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    }\n  ],\n  \"payment\": {\n    \"id\": \"string\",\n    \"created_at\": \"string\",\n    \"updated_at\": \"string\",\n    \"amount_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"tip_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"total_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"app_fee_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"approved_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"processing_fee\": [\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      },\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      }\n    ],\n    \"refunded_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"status\": \"string\",\n    \"delay_duration\": \"string\",\n    \"delay_action\": \"<string>\",\n    \"delayed_until\": \"string\",\n    \"source_type\": \"string\",\n    \"card_details\": {\n      \"status\": \"string\",\n      \"card\": {\n        \"id\": \"string\",\n        \"card_brand\": \"FELICA\",\n        \"last_4\": \"stri\",\n        \"exp_month\": 946,\n        \"exp_year\": 1833,\n        \"cardholder_name\": \"string\",\n        \"billing_address\": {\n          \"address_line_1\": \"<string>\",\n          \"address_line_2\": \"<string>\",\n          \"address_line_3\": \"<string>\",\n          \"locality\": \"<string>\",\n          \"sublocality\": \"<string>\",\n          \"sublocality_2\": \"<string>\",\n          \"sublocality_3\": \"<string>\",\n          \"administrative_district_level_1\": \"<string>\",\n          \"administrative_district_level_2\": \"<string>\",\n          \"administrative_district_level_3\": \"<string>\",\n          \"postal_code\": \"<string>\",\n          \"country\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"first_name\": \"<string>\",\n          \"last_name\": \"<string>\"\n        },\n        \"fingerprint\": \"string\",\n        \"customer_id\": \"string\",\n        \"merchant_id\": \"string\",\n        \"reference_id\": \"string\",\n        \"enabled\": true,\n        \"card_type\": \"DEBIT\",\n        \"prepaid_type\": \"PREPAID\",\n        \"bin\": \"string\",\n        \"version\": 4817,\n        \"card_co_brand\": \"AFTERPAY\"\n      },\n      \"entry_method\": \"string\",\n      \"cvv_status\": \"string\",\n      \"avs_status\": \"string\",\n      \"auth_result_code\": \"string\",\n      \"application_identifier\": \"string\",\n      \"application_name\": \"string\",\n      \"application_cryptogram\": \"string\",\n      \"verification_method\": \"string\",\n      \"verification_results\": \"string\",\n      \"statement_description\": \"string\",\n      \"device_details\": {\n        \"device_id\": \"string\",\n        \"device_installation_id\": \"string\",\n        \"device_name\": \"string\"\n      },\n      \"card_payment_timeline\": {\n        \"authorized_at\": \"string\",\n        \"captured_at\": \"string\",\n        \"voided_at\": \"string\"\n      },\n      \"refund_requires_card_presence\": false,\n      \"errors\": [\n        {\n          \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n          \"code\": \"PAN_FAILURE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"AUTHENTICATION_ERROR\",\n          \"code\": \"INVALID_TIME_RANGE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"cash_details\": {\n      \"buyer_supplied_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      },\n      \"change_back_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"bank_account_details\": {\n      \"bank_name\": \"string\",\n      \"transfer_type\": \"string\",\n      \"account_ownership_type\": \"string\",\n      \"fingerprint\": \"string\",\n      \"country\": \"st\",\n      \"statement_description\": \"string\",\n      \"ach_details\": {\n        \"routing_number\": \"string\",\n        \"account_number_suffix\": \"stri\",\n        \"account_type\": \"string\"\n      },\n      \"errors\": [\n        {\n          \"category\": \"PAYMENT_METHOD_ERROR\",\n          \"code\": \"ACCESS_TOKEN_EXPIRED\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"VERIFY_CVV_FAILURE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"external_details\": {\n      \"type\": \"<string>\",\n      \"source\": \"<string>\",\n      \"source_id\": \"<string>\",\n      \"source_fee_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"wallet_details\": {\n      \"status\": \"string\",\n      \"brand\": \"string\",\n      \"cash_app_details\": {\n        \"buyer_full_name\": \"string\",\n        \"buyer_country_code\": \"st\",\n        \"buyer_cashtag\": \"string\"\n      }\n    },\n    \"buy_now_pay_later_details\": {\n      \"brand\": \"string\",\n      \"afterpay_details\": {\n        \"email_address\": \"string\"\n      },\n      \"clearpay_details\": {\n        \"email_address\": \"string\"\n      }\n    },\n    \"square_account_details\": {\n      \"payment_source_token\": \"string\",\n      \"errors\": [\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"PLAID_ERROR\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"ARRAY_LENGTH_TOO_LONG\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"location_id\": \"string\",\n    \"order_id\": \"string\",\n    \"reference_id\": \"string\",\n    \"customer_id\": \"string\",\n    \"employee_id\": \"string\",\n    \"team_member_id\": \"<string>\",\n    \"refund_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"risk_evaluation\": {\n      \"created_at\": \"string\",\n      \"risk_level\": \"HIGH\"\n    },\n    \"terminal_checkout_id\": \"string\",\n    \"buyer_email_address\": \"string\",\n    \"billing_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"shipping_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"note\": \"string\",\n    \"statement_description_identifier\": \"string\",\n    \"capabilities\": [\n      \"string\",\n      \"string\"\n    ],\n    \"receipt_number\": \"stri\",\n    \"receipt_url\": \"string\",\n    \"device_details\": {\n      \"device_id\": \"string\",\n      \"device_installation_id\": \"string\",\n      \"device_name\": \"string\"\n    },\n    \"application_details\": {\n      \"square_product\": \"ONLINE_STORE\",\n      \"application_id\": \"string\"\n    },\n    \"is_offline_payment\": false,\n    \"offline_payment_details\": {\n      \"client_created_at\": \"string\"\n    },\n    \"version_token\": \"<string>\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c0f34f4d-0463-4123-be9a-a47dbe6a9ad0",
+          "name": "Square Cancel Payment",
+          "request": {
+            "name": "Square Cancel Payment",
+            "description": {
+              "content": "Cancels (voids) a payment. You can use this endpoint to cancel a payment with \nthe APPROVED `status`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "payments",
+                ":payment_id",
+                "cancel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "payment_id",
+                  "description": "(Required) The ID of the payment to cancel."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ea667845-304c-4166-8367-81d984e98140",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "payments",
+                    ":payment_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "payment_id",
+                      "description": "(Required) The ID of the payment to cancel."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"category\": \"API_ERROR\",\n      \"code\": \"VALUE_TOO_LONG\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"category\": \"REFUND_ERROR\",\n      \"code\": \"NOT_ACCEPTABLE\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    }\n  ],\n  \"payment\": {\n    \"id\": \"string\",\n    \"created_at\": \"string\",\n    \"updated_at\": \"string\",\n    \"amount_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"tip_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"total_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"app_fee_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"approved_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"processing_fee\": [\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      },\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      }\n    ],\n    \"refunded_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"status\": \"string\",\n    \"delay_duration\": \"string\",\n    \"delay_action\": \"<string>\",\n    \"delayed_until\": \"string\",\n    \"source_type\": \"string\",\n    \"card_details\": {\n      \"status\": \"string\",\n      \"card\": {\n        \"id\": \"string\",\n        \"card_brand\": \"EFTPOS\",\n        \"last_4\": \"stri\",\n        \"exp_month\": 8059,\n        \"exp_year\": 1507,\n        \"cardholder_name\": \"string\",\n        \"billing_address\": {\n          \"address_line_1\": \"<string>\",\n          \"address_line_2\": \"<string>\",\n          \"address_line_3\": \"<string>\",\n          \"locality\": \"<string>\",\n          \"sublocality\": \"<string>\",\n          \"sublocality_2\": \"<string>\",\n          \"sublocality_3\": \"<string>\",\n          \"administrative_district_level_1\": \"<string>\",\n          \"administrative_district_level_2\": \"<string>\",\n          \"administrative_district_level_3\": \"<string>\",\n          \"postal_code\": \"<string>\",\n          \"country\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"first_name\": \"<string>\",\n          \"last_name\": \"<string>\"\n        },\n        \"fingerprint\": \"string\",\n        \"customer_id\": \"string\",\n        \"merchant_id\": \"string\",\n        \"reference_id\": \"string\",\n        \"enabled\": false,\n        \"card_type\": \"CREDIT\",\n        \"prepaid_type\": \"UNKNOWN_PREPAID_TYPE\",\n        \"bin\": \"string\",\n        \"version\": 7678,\n        \"card_co_brand\": \"AFTERPAY\"\n      },\n      \"entry_method\": \"string\",\n      \"cvv_status\": \"string\",\n      \"avs_status\": \"string\",\n      \"auth_result_code\": \"string\",\n      \"application_identifier\": \"string\",\n      \"application_name\": \"string\",\n      \"application_cryptogram\": \"string\",\n      \"verification_method\": \"string\",\n      \"verification_results\": \"string\",\n      \"statement_description\": \"string\",\n      \"device_details\": {\n        \"device_id\": \"string\",\n        \"device_installation_id\": \"string\",\n        \"device_name\": \"string\"\n      },\n      \"card_payment_timeline\": {\n        \"authorized_at\": \"string\",\n        \"captured_at\": \"string\",\n        \"voided_at\": \"string\"\n      },\n      \"refund_requires_card_presence\": false,\n      \"errors\": [\n        {\n          \"category\": \"API_ERROR\",\n          \"code\": \"CHIP_INSERTION_REQUIRED\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"VALUE_TOO_HIGH\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"cash_details\": {\n      \"buyer_supplied_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      },\n      \"change_back_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"bank_account_details\": {\n      \"bank_name\": \"string\",\n      \"transfer_type\": \"string\",\n      \"account_ownership_type\": \"string\",\n      \"fingerprint\": \"string\",\n      \"country\": \"st\",\n      \"statement_description\": \"string\",\n      \"ach_details\": {\n        \"routing_number\": \"string\",\n        \"account_number_suffix\": \"stri\",\n        \"account_type\": \"string\"\n      },\n      \"errors\": [\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"BUYER_REFUSED_PAYMENT\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"INVALID_REQUEST_ERROR\",\n          \"code\": \"UNSUPPORTED_MEDIA_TYPE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"external_details\": {\n      \"type\": \"<string>\",\n      \"source\": \"<string>\",\n      \"source_id\": \"<string>\",\n      \"source_fee_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"wallet_details\": {\n      \"status\": \"string\",\n      \"brand\": \"string\",\n      \"cash_app_details\": {\n        \"buyer_full_name\": \"string\",\n        \"buyer_country_code\": \"st\",\n        \"buyer_cashtag\": \"string\"\n      }\n    },\n    \"buy_now_pay_later_details\": {\n      \"brand\": \"string\",\n      \"afterpay_details\": {\n        \"email_address\": \"string\"\n      },\n      \"clearpay_details\": {\n        \"email_address\": \"string\"\n      }\n    },\n    \"square_account_details\": {\n      \"payment_source_token\": \"string\",\n      \"errors\": [\n        {\n          \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n          \"code\": \"LOCATION_MISMATCH\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"EXTERNAL_VENDOR_ERROR\",\n          \"code\": \"APPLICATION_DISABLED\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"location_id\": \"string\",\n    \"order_id\": \"string\",\n    \"reference_id\": \"string\",\n    \"customer_id\": \"string\",\n    \"employee_id\": \"string\",\n    \"team_member_id\": \"<string>\",\n    \"refund_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"risk_evaluation\": {\n      \"created_at\": \"string\",\n      \"risk_level\": \"PENDING\"\n    },\n    \"terminal_checkout_id\": \"string\",\n    \"buyer_email_address\": \"string\",\n    \"billing_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"shipping_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"note\": \"string\",\n    \"statement_description_identifier\": \"string\",\n    \"capabilities\": [\n      \"string\",\n      \"string\"\n    ],\n    \"receipt_number\": \"stri\",\n    \"receipt_url\": \"string\",\n    \"device_details\": {\n      \"device_id\": \"string\",\n      \"device_installation_id\": \"string\",\n      \"device_name\": \"string\"\n    },\n    \"application_details\": {\n      \"square_product\": \"APPOINTMENTS\",\n      \"application_id\": \"string\"\n    },\n    \"is_offline_payment\": true,\n    \"offline_payment_details\": {\n      \"client_created_at\": \"string\"\n    },\n    \"version_token\": \"<string>\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "36996ee9-8128-408b-bcc1-8bf2118910a3",
+          "name": "Square Complete Payment",
+          "request": {
+            "name": "Square Complete Payment",
+            "description": {
+              "content": "Completes (captures) a payment.\nBy default, payments are set to complete immediately after they are created.\n\nYou can use this endpoint to complete a payment with the APPROVED `status`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "payments",
+                ":payment_id",
+                "complete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "payment_id",
+                  "description": "(Required) The unique ID identifying the payment to be completed."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version_token\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f817c3e0-ab79-41d8-b46a-f20f3db93cb5",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "payments",
+                    ":payment_id",
+                    "complete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "payment_id",
+                      "description": "(Required) The unique ID identifying the payment to be completed."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n      \"code\": \"PLAID_ERROR_ITEM_LOGIN_REQUIRED\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n      \"code\": \"INVALID_POSTAL_CODE\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    }\n  ],\n  \"payment\": {\n    \"id\": \"string\",\n    \"created_at\": \"string\",\n    \"updated_at\": \"string\",\n    \"amount_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"tip_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"total_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"app_fee_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"approved_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"processing_fee\": [\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      },\n      {\n        \"effective_at\": \"string\",\n        \"type\": \"string\",\n        \"amount_money\": {\n          \"amount\": \"<long>\",\n          \"currency\": \"<string>\"\n        }\n      }\n    ],\n    \"refunded_money\": {\n      \"amount\": \"<long>\",\n      \"currency\": \"<string>\"\n    },\n    \"status\": \"string\",\n    \"delay_duration\": \"string\",\n    \"delay_action\": \"<string>\",\n    \"delayed_until\": \"string\",\n    \"source_type\": \"string\",\n    \"card_details\": {\n      \"status\": \"string\",\n      \"card\": {\n        \"id\": \"string\",\n        \"card_brand\": \"JCB\",\n        \"last_4\": \"stri\",\n        \"exp_month\": 8399,\n        \"exp_year\": 2769,\n        \"cardholder_name\": \"string\",\n        \"billing_address\": {\n          \"address_line_1\": \"<string>\",\n          \"address_line_2\": \"<string>\",\n          \"address_line_3\": \"<string>\",\n          \"locality\": \"<string>\",\n          \"sublocality\": \"<string>\",\n          \"sublocality_2\": \"<string>\",\n          \"sublocality_3\": \"<string>\",\n          \"administrative_district_level_1\": \"<string>\",\n          \"administrative_district_level_2\": \"<string>\",\n          \"administrative_district_level_3\": \"<string>\",\n          \"postal_code\": \"<string>\",\n          \"country\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"first_name\": \"<string>\",\n          \"last_name\": \"<string>\"\n        },\n        \"fingerprint\": \"string\",\n        \"customer_id\": \"string\",\n        \"merchant_id\": \"string\",\n        \"reference_id\": \"string\",\n        \"enabled\": false,\n        \"card_type\": \"UNKNOWN_CARD_TYPE\",\n        \"prepaid_type\": \"PREPAID\",\n        \"bin\": \"string\",\n        \"version\": 5282,\n        \"card_co_brand\": \"CLEARPAY\"\n      },\n      \"entry_method\": \"string\",\n      \"cvv_status\": \"string\",\n      \"avs_status\": \"string\",\n      \"auth_result_code\": \"string\",\n      \"application_identifier\": \"string\",\n      \"application_name\": \"string\",\n      \"application_cryptogram\": \"string\",\n      \"verification_method\": \"string\",\n      \"verification_results\": \"string\",\n      \"statement_description\": \"string\",\n      \"device_details\": {\n        \"device_id\": \"string\",\n        \"device_installation_id\": \"string\",\n        \"device_name\": \"string\"\n      },\n      \"card_payment_timeline\": {\n        \"authorized_at\": \"string\",\n        \"captured_at\": \"string\",\n        \"voided_at\": \"string\"\n      },\n      \"refund_requires_card_presence\": true,\n      \"errors\": [\n        {\n          \"category\": \"RATE_LIMIT_ERROR\",\n          \"code\": \"PAYMENT_AMOUNT_MISMATCH\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"EXTERNAL_VENDOR_ERROR\",\n          \"code\": \"EXPECTED_STRING\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"cash_details\": {\n      \"buyer_supplied_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      },\n      \"change_back_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"bank_account_details\": {\n      \"bank_name\": \"string\",\n      \"transfer_type\": \"string\",\n      \"account_ownership_type\": \"string\",\n      \"fingerprint\": \"string\",\n      \"country\": \"st\",\n      \"statement_description\": \"string\",\n      \"ach_details\": {\n        \"routing_number\": \"string\",\n        \"account_number_suffix\": \"str\",\n        \"account_type\": \"string\"\n      },\n      \"errors\": [\n        {\n          \"category\": \"PAYMENT_METHOD_ERROR\",\n          \"code\": \"INVALID_DATE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"EXTERNAL_VENDOR_ERROR\",\n          \"code\": \"UNSUPPORTED_SOURCE_TYPE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"external_details\": {\n      \"type\": \"<string>\",\n      \"source\": \"<string>\",\n      \"source_id\": \"<string>\",\n      \"source_fee_money\": {\n        \"amount\": \"<long>\",\n        \"currency\": \"<string>\"\n      }\n    },\n    \"wallet_details\": {\n      \"status\": \"string\",\n      \"brand\": \"string\",\n      \"cash_app_details\": {\n        \"buyer_full_name\": \"string\",\n        \"buyer_country_code\": \"st\",\n        \"buyer_cashtag\": \"string\"\n      }\n    },\n    \"buy_now_pay_later_details\": {\n      \"brand\": \"string\",\n      \"afterpay_details\": {\n        \"email_address\": \"string\"\n      },\n      \"clearpay_details\": {\n        \"email_address\": \"string\"\n      }\n    },\n    \"square_account_details\": {\n      \"payment_source_token\": \"string\",\n      \"errors\": [\n        {\n          \"category\": \"REFUND_ERROR\",\n          \"code\": \"DELAYED_TRANSACTION_FAILED\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        },\n        {\n          \"category\": \"EXTERNAL_VENDOR_ERROR\",\n          \"code\": \"INVALID_ARRAY_VALUE\",\n          \"detail\": \"string\",\n          \"field\": \"string\"\n        }\n      ]\n    },\n    \"location_id\": \"string\",\n    \"order_id\": \"string\",\n    \"reference_id\": \"string\",\n    \"customer_id\": \"string\",\n    \"employee_id\": \"string\",\n    \"team_member_id\": \"<string>\",\n    \"refund_ids\": [\n      \"string\",\n      \"string\"\n    ],\n    \"risk_evaluation\": {\n      \"created_at\": \"string\",\n      \"risk_level\": \"MODERATE\"\n    },\n    \"terminal_checkout_id\": \"string\",\n    \"buyer_email_address\": \"string\",\n    \"billing_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"shipping_address\": {\n      \"address_line_1\": \"<string>\",\n      \"address_line_2\": \"<string>\",\n      \"address_line_3\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"sublocality\": \"<string>\",\n      \"sublocality_2\": \"<string>\",\n      \"sublocality_3\": \"<string>\",\n      \"administrative_district_level_1\": \"<string>\",\n      \"administrative_district_level_2\": \"<string>\",\n      \"administrative_district_level_3\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"country\": \"<string>\",\n      \"first_name\": \"<string>\",\n      \"last_name\": \"<string>\"\n    },\n    \"note\": \"string\",\n    \"statement_description_identifier\": \"string\",\n    \"capabilities\": [\n      \"string\",\n      \"string\"\n    ],\n    \"receipt_number\": \"stri\",\n    \"receipt_url\": \"string\",\n    \"device_details\": {\n      \"device_id\": \"string\",\n      \"device_installation_id\": \"string\",\n      \"device_name\": \"string\"\n    },\n    \"application_details\": {\n      \"square_product\": \"ECOMMERCE_API\",\n      \"application_id\": \"string\"\n    },\n    \"is_offline_payment\": true,\n    \"offline_payment_details\": {\n      \"client_created_at\": \"string\"\n    },\n    \"version_token\": \"<string>\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://connect.squareup.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "359f4046-e53c-46c7-b511-b0255a9cd713",
+    "name": "Square ApplePay Payments API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. \n\nContact Support:\n Name: Square Developer Platform\n Email: developers@squareup.com",
+      "type": "text/plain"
+    }
+  }
+}

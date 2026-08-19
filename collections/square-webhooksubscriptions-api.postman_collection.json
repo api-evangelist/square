@@ -1,0 +1,1080 @@
+{
+  "item": [
+    {
+      "id": "be9467a0-6324-408b-a121-997ef6014d23",
+      "name": "WebhookSubscriptions",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b8a3bbc6-1e19-4952-814d-83594ef01ea5",
+          "name": "Square List Webhook Event Types",
+          "request": {
+            "name": "Square List Webhook Event Types",
+            "description": {
+              "content": "Lists all webhook event types that can be subscribed to.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhooks",
+                "event-types"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "api_version",
+                  "value": "<string>",
+                  "description": "The API version for which to list event types. Setting this field overrides the default version used by the application."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6a407345-45f1-4f1a-a98f-004d1fbadd2a",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhooks",
+                    "event-types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"event_types\": [\n    \"inventory.count.updated\"\n  ],\n  \"metadata\": [\n    {\n      \"api_version_introduced\": \"2018-07-12\",\n      \"event_type\": \"inventory.count.updated\",\n      \"release_status\": \"PUBLIC\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "18694bfa-03b4-4704-a7e2-526b959161cc",
+          "name": "Square List Webhook Subscriptions",
+          "request": {
+            "name": "Square List Webhook Subscriptions",
+            "description": {
+              "content": "Lists all webhook subscriptions owned by your application.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhooks",
+                "subscriptions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this to retrieve the next set of results for your original query.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "include_disabled",
+                  "value": "false",
+                  "description": "Includes disabled [Subscription](entity:WebhookSubscription)s.\nBy default, all enabled [Subscription](entity:WebhookSubscription)s are returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "<string>",
+                  "description": "Sorts the returned list by when the [Subscription](entity:WebhookSubscription) was created with the specified order.\nThis field defaults to ASC."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "The maximum number of results to be returned in a single page.\nIt is possible to receive fewer results than the specified limit on a given page.\nThe default value of 100 is also the maximum allowed value.\n\nDefault: 100"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8954f62f-fc25-4301-aed5-7ce11a0066ec",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhooks",
+                    "subscriptions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_disabled",
+                      "value": "false"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"subscriptions\": [\n    {\n      \"api_version\": \"2021-12-15\",\n      \"created_at\": \"2022-01-10 23:29:48 +0000 UTC\",\n      \"enabled\": true,\n      \"event_types\": [\n        \"payment.created\",\n        \"payment.updated\"\n      ],\n      \"name\": \"Example Webhook Subscription\",\n      \"notification_url\": \"https://example-webhook-url.com\",\n      \"updated_at\": \"2022-01-10 23:29:48 +0000 UTC\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "84310d3d-7571-481a-9ec1-f7e43b8a604b",
+          "name": "Square Create Webhook Subscription",
+          "request": {
+            "name": "Square Create Webhook Subscription",
+            "description": {
+              "content": "Creates a webhook subscription.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhooks",
+                "subscriptions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscription\": {\n    \"name\": \"<string>\",\n    \"enabled\": \"<boolean>\",\n    \"event_types\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"notification_url\": \"<string>\",\n    \"api_version\": \"<string>\"\n  },\n  \"idempotency_key\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "76b716f5-c61f-4d93-9910-900ce794cee4",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhooks",
+                    "subscriptions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotency_key\": \"63f84c6c-2200-4c99-846c-2670a1311fbf\",\n  \"subscription\": {\n    \"api_version\": \"2021-12-15\",\n    \"event_types\": [\n      \"payment.created\",\n      \"payment.updated\"\n    ],\n    \"name\": \"Example Webhook Subscription\",\n    \"notification_url\": \"https://example-webhook-url.com\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"subscription\": {\n    \"api_version\": \"2021-12-15\",\n    \"created_at\": \"2022-01-10 23:29:48 +0000 UTC\",\n    \"enabled\": true,\n    \"event_types\": [\n      \"payment.created\",\n      \"payment.updated\"\n    ],\n    \"name\": \"Example Webhook Subscription\",\n    \"notification_url\": \"https://example-webhook-url.com\",\n    \"signature_key\": \"1k9bIJKCeTmSQwyagtNRLg\",\n    \"updated_at\": \"2022-01-10 23:29:48 +0000 UTC\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "de8b37b5-50e7-4ad7-a051-f1645d27e7fa",
+          "name": "Square Delete Webhook Subscription",
+          "request": {
+            "name": "Square Delete Webhook Subscription",
+            "description": {
+              "content": "Deletes a webhook subscription.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhooks",
+                "subscriptions",
+                ":subscription_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "subscription_id",
+                  "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to delete."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "55125433-342f-4e77-adb6-e9cde2819d82",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhooks",
+                    "subscriptions",
+                    ":subscription_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "subscription_id",
+                      "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to delete."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a2e9f75a-dc56-44c7-bbe1-7a435551f928",
+          "name": "Square Retrieve Webhook Subscription",
+          "request": {
+            "name": "Square Retrieve Webhook Subscription",
+            "description": {
+              "content": "Retrieves a webhook subscription identified by its ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhooks",
+                "subscriptions",
+                ":subscription_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "subscription_id",
+                  "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to retrieve."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "aafe5eb4-5864-43e4-b36c-65c69dae708c",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhooks",
+                    "subscriptions",
+                    ":subscription_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "subscription_id",
+                      "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to retrieve."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"subscription\": {\n    \"api_version\": \"2021-12-15\",\n    \"created_at\": \"2022-01-10 23:29:48 +0000 UTC\",\n    \"enabled\": true,\n    \"event_types\": [\n      \"payment.created\",\n      \"payment.updated\"\n    ],\n    \"name\": \"Example Webhook Subscription\",\n    \"notification_url\": \"https://example-webhook-url.com\",\n    \"signature_key\": \"1k9bIJKCeTmSQwyagtNRLg\",\n    \"updated_at\": \"2022-01-10 23:29:48 +0000 UTC\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "729af2b0-8265-4055-9b95-9b9aa39bdc1b",
+          "name": "Square Update Webhook Subscription",
+          "request": {
+            "name": "Square Update Webhook Subscription",
+            "description": {
+              "content": "Updates a webhook subscription.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhooks",
+                "subscriptions",
+                ":subscription_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "subscription_id",
+                  "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to update."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subscription\": {\n    \"name\": \"<string>\",\n    \"enabled\": \"<boolean>\",\n    \"event_types\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"notification_url\": \"<string>\",\n    \"api_version\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b85c0c9b-b000-42af-a0d7-322107fd5474",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhooks",
+                    "subscriptions",
+                    ":subscription_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "subscription_id",
+                      "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"subscription\": {\n    \"enabled\": false,\n    \"name\": \"Updated Example Webhook Subscription\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"subscription\": {\n    \"api_version\": \"2021-12-15\",\n    \"created_at\": \"2022-01-10 23:29:48 +0000 UTC\",\n    \"enabled\": false,\n    \"event_types\": [\n      \"payment.created\",\n      \"payment.updated\"\n    ],\n    \"name\": \"Updated Example Webhook Subscription\",\n    \"notification_url\": \"https://example-webhook-url.com\",\n    \"updated_at\": \"2022-01-10 23:45:51 +0000 UTC\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "92234f99-fc34-42f0-b662-8eda6865a413",
+          "name": "Square Update Webhook Subscription Signature Key",
+          "request": {
+            "name": "Square Update Webhook Subscription Signature Key",
+            "description": {
+              "content": "Updates a webhook subscription by replacing the existing signature key with a new one.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhooks",
+                "subscriptions",
+                ":subscription_id",
+                "signature-key"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "subscription_id",
+                  "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to update."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotency_key\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6c825bf2-a5a0-4898-b6b8-a75a5b9f811d",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhooks",
+                    "subscriptions",
+                    ":subscription_id",
+                    "signature-key"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "subscription_id",
+                      "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotency_key\": \"ed80ae6b-0654-473b-bbab-a39aee89a60d\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"signature_key\": \"1k9bIJKCeTmSQwyagtNRLg\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "644d753c-b097-46b8-9338-d450b3d152f0",
+          "name": "Square Test Webhook Subscription",
+          "request": {
+            "name": "Square Test Webhook Subscription",
+            "description": {
+              "content": "Tests a webhook subscription by sending a test event to the notification URL.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhooks",
+                "subscriptions",
+                ":subscription_id",
+                "test"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "subscription_id",
+                  "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to test."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_type\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "68eb58ca-5c1c-4662-99c5-13db91a925eb",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhooks",
+                    "subscriptions",
+                    ":subscription_id",
+                    "test"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "subscription_id",
+                      "description": "(Required) [REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to test."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"event_type\": \"payment.created\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"subscription_test_result\": {\n    \"created_at\": \"2022-01-11 00:06:48.322945116 +0000 UTC m=+3863.054453746\",\n    \"payload\": \"{\\\"merchant_id\\\":\\\"1ZYMKZY1YFGBW\\\",\\\"type\\\":\\\"payment.created\\\",\\\"event_id\\\":\\\"23eed5a9-2b12-403e-b212-7e2889aea0f6\\\",\\\"created_at\\\":\\\"2022-01-11T00:06:48.322945116Z\\\",\\\"data\\\":{\\\"type\\\":\\\"payment\\\",\\\"id\\\":\\\"KkAkhdMsgzn59SM8A89WgKwekxLZY\\\",\\\"object\\\":{\\\"payment\\\":{\\\"amount_money\\\":{\\\"amount\\\":100,\\\"currency\\\":\\\"USD\\\"},\\\"approved_money\\\":{\\\"amount\\\":100,\\\"currency\\\":\\\"USD\\\"},\\\"capabilities\\\":[\\\"EDIT_TIP_AMOUNT\\\",\\\"EDIT_TIP_AMOUNT_UP\\\",\\\"EDIT_TIP_AMOUNT_DOWN\\\"],\\\"card_details\\\":{\\\"avs_status\\\":\\\"AVS_ACCEPTED\\\",\\\"card\\\":{\\\"bin\\\":\\\"540988\\\",\\\"card_brand\\\":\\\"MASTERCARD\\\",\\\"card_type\\\":\\\"CREDIT\\\",\\\"exp_month\\\":11,\\\"exp_year\\\":2022,\\\"fingerprint\\\":\\\"sq-1-Tvruf3vPQxlvI6n0IcKYfBukrcv6IqWr8UyBdViWXU2yzGn5VMJvrsHMKpINMhPmVg\\\",\\\"last_4\\\":\\\"9029\\\",\\\"prepaid_type\\\":\\\"NOT_PREPAID\\\"},\\\"card_payment_timeline\\\":{\\\"authorized_at\\\":\\\"2020-11-22T21:16:51.198Z\\\"},\\\"cvv_status\\\":\\\"CVV_ACCEPTED\\\",\\\"entry_method\\\":\\\"KEYED\\\",\\\"statement_description\\\":\\\"SQ *DEFAULT TEST ACCOUNT\\\",\\\"status\\\":\\\"AUTHORIZED\\\"},\\\"created_at\\\":\\\"2020-11-22T21:16:51.086Z\\\",\\\"delay_action\\\":\\\"CANCEL\\\",\\\"delay_duration\\\":\\\"PT168H\\\",\\\"delayed_until\\\":\\\"2020-11-29T21:16:51.086Z\\\",\\\"id\\\":\\\"hYy9pRFVxpDsO1FB05SunFWUe9JZY\\\",\\\"location_id\\\":\\\"S8GWD5R9QB376\\\",\\\"order_id\\\":\\\"03O3USaPaAaFnI6kkwB1JxGgBsUZY\\\",\\\"receipt_number\\\":\\\"hYy9\\\",\\\"risk_evaluation\\\":{\\\"created_at\\\":\\\"2020-11-22T21:16:51.198Z\\\",\\\"risk_level\\\":\\\"NORMAL\\\"},\\\"source_type\\\":\\\"CARD\\\",\\\"status\\\":\\\"APPROVED\\\",\\\"total_money\\\":{\\\"amount\\\":100,\\\"currency\\\":\\\"USD\\\"},\\\"updated_at\\\":\\\"2020-11-22T21:16:51.198Z\\\",\\\"version_token\\\":\\\"FfQhQJf9r3VSQIgyWBk1oqhIwiznLwVwJbVVA0bdyEv6o\\\"}}}}\",\n    \"status_code\": 404,\n    \"updated_at\": \"2022-01-11 00:06:48.322945116 +0000 UTC m=+3863.054453746\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://connect.squareup.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "4b922653-a489-4059-9ec5-8e509e9d7081",
+    "name": "Square ApplePay WebhookSubscriptions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. \n\nContact Support:\n Name: Square Developer Platform\n Email: developers@squareup.com",
+      "type": "text/plain"
+    }
+  }
+}

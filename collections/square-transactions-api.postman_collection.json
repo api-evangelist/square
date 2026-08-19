@@ -1,0 +1,606 @@
+{
+  "item": [
+    {
+      "id": "2ef4b05c-4746-4190-8b3f-c4f694bad67a",
+      "name": "Transactions",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "488906b3-617b-4fee-ac25-b4f0abea414b",
+          "name": "Square List Transactions",
+          "request": {
+            "name": "Square List Transactions",
+            "description": {
+              "content": "Lists transactions for a particular location.\n\nTransactions include payment information from sales and exchanges and refund\ninformation from returns and exchanges.\n\nMax results per [page](https://developer.squareup.com/docs/working-with-apis/pagination): 50",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "locations",
+                ":location_id",
+                "transactions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "begin_time",
+                  "value": "<string>",
+                  "description": "The beginning of the requested reporting period, in RFC 3339 format.\n\nSee [Date ranges](https://developer.squareup.com/docs/build-basics/working-with-dates) for details on date inclusivity/exclusivity.\n\nDefault value: The current time minus one year."
+                },
+                {
+                  "disabled": false,
+                  "key": "end_time",
+                  "value": "<string>",
+                  "description": "The end of the requested reporting period, in RFC 3339 format.\n\nSee [Date ranges](https://developer.squareup.com/docs/build-basics/working-with-dates) for details on date inclusivity/exclusivity.\n\nDefault value: The current time."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort_order",
+                  "value": "<string>",
+                  "description": "The order in which results are listed in the response (`ASC` for\noldest first, `DESC` for newest first).\n\nDefault value: `DESC`"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this to retrieve the next set of results for your original query.\n\nSee [Paginating results](https://developer.squareup.com/docs/working-with-apis/pagination) for more information."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "location_id",
+                  "description": "(Required) The ID of the location to list transactions for."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "175d58fa-fa27-4b90-870a-694134dad820",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "locations",
+                    ":location_id",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "begin_time",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "end_time",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "location_id",
+                      "description": "(Required) The ID of the location to list transactions for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"category\": \"INVALID_REQUEST_ERROR\",\n      \"code\": \"MISSING_PIN\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"category\": \"REFUND_ERROR\",\n      \"code\": \"EXPECTED_BASE64_ENCODED_BYTE_ARRAY\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    }\n  ],\n  \"transactions\": [\n    {\n      \"id\": \"string\",\n      \"location_id\": \"string\",\n      \"created_at\": \"string\",\n      \"tenders\": [\n        {\n          \"type\": \"BANK_ACCOUNT\",\n          \"id\": \"string\",\n          \"location_id\": \"string\",\n          \"transaction_id\": \"string\",\n          \"created_at\": \"string\",\n          \"note\": \"string\",\n          \"amount_money\": {\n            \"amount\": 4515,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"tip_money\": {\n            \"amount\": 7390,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"processing_fee_money\": {\n            \"amount\": 318,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"customer_id\": \"string\",\n          \"card_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"entry_method\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"cash_details\": {\n            \"buyer_tendered_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"change_back_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"bank_account_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"buy_now_pay_later_details\": {\n            \"buy_now_pay_later_brand\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"square_account_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"additional_recipients\": [\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"payment_id\": \"string\"\n        },\n        {\n          \"type\": \"BUY_NOW_PAY_LATER\",\n          \"id\": \"string\",\n          \"location_id\": \"string\",\n          \"transaction_id\": \"string\",\n          \"created_at\": \"string\",\n          \"note\": \"string\",\n          \"amount_money\": {\n            \"amount\": 8396,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"tip_money\": {\n            \"amount\": 2986,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"processing_fee_money\": {\n            \"amount\": 343,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"customer_id\": \"string\",\n          \"card_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"entry_method\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"cash_details\": {\n            \"buyer_tendered_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"change_back_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"bank_account_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"buy_now_pay_later_details\": {\n            \"buy_now_pay_later_brand\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"square_account_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"additional_recipients\": [\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"payment_id\": \"string\"\n        }\n      ],\n      \"refunds\": [\n        {\n          \"id\": \"string\",\n          \"location_id\": \"string\",\n          \"tender_id\": \"string\",\n          \"reason\": \"string\",\n          \"amount_money\": {\n            \"amount\": 5307,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"status\": \"FAILED\",\n          \"transaction_id\": \"string\",\n          \"created_at\": \"string\",\n          \"processing_fee_money\": {\n            \"amount\": 800,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"additional_recipients\": [\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"location_id\": \"string\",\n          \"tender_id\": \"string\",\n          \"reason\": \"string\",\n          \"amount_money\": {\n            \"amount\": 5102,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"status\": \"APPROVED\",\n          \"transaction_id\": \"string\",\n          \"created_at\": \"string\",\n          \"processing_fee_money\": {\n            \"amount\": 9632,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"additional_recipients\": [\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        }\n      ],\n      \"reference_id\": \"string\",\n      \"product\": \"EXTERNAL_API\",\n      \"client_id\": \"string\",\n      \"shipping_address\": {\n        \"address_line_1\": \"string\",\n        \"address_line_2\": \"string\",\n        \"address_line_3\": \"string\",\n        \"locality\": \"string\",\n        \"sublocality\": \"string\",\n        \"sublocality_2\": \"string\",\n        \"sublocality_3\": \"string\",\n        \"administrative_district_level_1\": \"string\",\n        \"administrative_district_level_2\": \"string\",\n        \"administrative_district_level_3\": \"string\",\n        \"postal_code\": \"string\",\n        \"country\": \"SL\",\n        \"first_name\": \"string\",\n        \"last_name\": \"string\"\n      },\n      \"order_id\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"location_id\": \"string\",\n      \"created_at\": \"string\",\n      \"tenders\": [\n        {\n          \"type\": \"WALLET\",\n          \"id\": \"string\",\n          \"location_id\": \"string\",\n          \"transaction_id\": \"string\",\n          \"created_at\": \"string\",\n          \"note\": \"string\",\n          \"amount_money\": {\n            \"amount\": 8346,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"tip_money\": {\n            \"amount\": 2989,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"processing_fee_money\": {\n            \"amount\": 4347,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"customer_id\": \"string\",\n          \"card_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"entry_method\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"cash_details\": {\n            \"buyer_tendered_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"change_back_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"bank_account_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"buy_now_pay_later_details\": {\n            \"buy_now_pay_later_brand\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"square_account_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"additional_recipients\": [\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"payment_id\": \"string\"\n        },\n        {\n          \"type\": \"NO_SALE\",\n          \"id\": \"string\",\n          \"location_id\": \"string\",\n          \"transaction_id\": \"string\",\n          \"created_at\": \"string\",\n          \"note\": \"string\",\n          \"amount_money\": {\n            \"amount\": 4341,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"tip_money\": {\n            \"amount\": 6688,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"processing_fee_money\": {\n            \"amount\": 7715,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"customer_id\": \"string\",\n          \"card_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"entry_method\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"cash_details\": {\n            \"buyer_tendered_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"change_back_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"bank_account_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"buy_now_pay_later_details\": {\n            \"buy_now_pay_later_brand\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"square_account_details\": {\n            \"status\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"additional_recipients\": [\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"payment_id\": \"string\"\n        }\n      ],\n      \"refunds\": [\n        {\n          \"id\": \"string\",\n          \"location_id\": \"string\",\n          \"tender_id\": \"string\",\n          \"reason\": \"string\",\n          \"amount_money\": {\n            \"amount\": 1365,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"status\": \"REJECTED\",\n          \"transaction_id\": \"string\",\n          \"created_at\": \"string\",\n          \"processing_fee_money\": {\n            \"amount\": 672,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"additional_recipients\": [\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"location_id\": \"string\",\n          \"tender_id\": \"string\",\n          \"reason\": \"string\",\n          \"amount_money\": {\n            \"amount\": 8887,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"status\": \"REJECTED\",\n          \"transaction_id\": \"string\",\n          \"created_at\": \"string\",\n          \"processing_fee_money\": {\n            \"amount\": 4929,\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"additional_recipients\": [\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"location_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"amount_money\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"description\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"receivable_id\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        }\n      ],\n      \"reference_id\": \"string\",\n      \"product\": \"ONLINE_STORE\",\n      \"client_id\": \"string\",\n      \"shipping_address\": {\n        \"address_line_1\": \"string\",\n        \"address_line_2\": \"string\",\n        \"address_line_3\": \"string\",\n        \"locality\": \"string\",\n        \"sublocality\": \"string\",\n        \"sublocality_2\": \"string\",\n        \"sublocality_3\": \"string\",\n        \"administrative_district_level_1\": \"string\",\n        \"administrative_district_level_2\": \"string\",\n        \"administrative_district_level_3\": \"string\",\n        \"postal_code\": \"string\",\n        \"country\": \"LR\",\n        \"first_name\": \"string\",\n        \"last_name\": \"string\"\n      },\n      \"order_id\": \"string\"\n    }\n  ],\n  \"cursor\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "06533e9b-30c2-4f75-93c6-32eaa846663f",
+          "name": "Square Retrieve Transaction",
+          "request": {
+            "name": "Square Retrieve Transaction",
+            "description": {
+              "content": "Retrieves details for a single transaction.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "locations",
+                ":location_id",
+                "transactions",
+                ":transaction_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "location_id",
+                  "description": "(Required) The ID of the transaction's associated location."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "transaction_id",
+                  "description": "(Required) The ID of the transaction to retrieve."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ee86d30b-c48a-4243-ac04-5e78a606dbf7",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "locations",
+                    ":location_id",
+                    "transactions",
+                    ":transaction_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "location_id",
+                      "description": "(Required) The ID of the transaction's associated location."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction to retrieve."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"category\": \"MERCHANT_SUBSCRIPTION_ERROR\",\n      \"code\": \"EXPECTED_JSON_BODY\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"category\": \"INVALID_REQUEST_ERROR\",\n      \"code\": \"PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE\",\n      \"detail\": \"string\",\n      \"field\": \"string\"\n    }\n  ],\n  \"transaction\": {\n    \"id\": \"string\",\n    \"location_id\": \"string\",\n    \"created_at\": \"string\",\n    \"tenders\": [\n      {\n        \"type\": \"CASH\",\n        \"id\": \"string\",\n        \"location_id\": \"string\",\n        \"transaction_id\": \"string\",\n        \"created_at\": \"string\",\n        \"note\": \"string\",\n        \"amount_money\": {\n          \"amount\": 9663,\n          \"currency\": \"SDG\"\n        },\n        \"tip_money\": {\n          \"amount\": 158,\n          \"currency\": \"AUD\"\n        },\n        \"processing_fee_money\": {\n          \"amount\": 7506,\n          \"currency\": \"RWF\"\n        },\n        \"customer_id\": \"string\",\n        \"card_details\": {\n          \"status\": \"FAILED\",\n          \"card\": {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card_brand\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"last_4\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"exp_month\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"exp_year\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"cardholder_name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"billing_address\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fingerprint\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"customer_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"merchant_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"reference_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"enabled\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"prepaid_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"bin\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card_co_brand\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"entry_method\": \"SWIPED\"\n        },\n        \"cash_details\": {\n          \"buyer_tendered_money\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"change_back_money\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"bank_account_details\": {\n          \"status\": \"COMPLETED\"\n        },\n        \"buy_now_pay_later_details\": {\n          \"buy_now_pay_later_brand\": \"OTHER_BRAND\",\n          \"status\": \"FAILED\"\n        },\n        \"square_account_details\": {\n          \"status\": \"AUTHORIZED\"\n        },\n        \"additional_recipients\": [\n          {\n            \"location_id\": \"string\",\n            \"amount_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": \"string\",\n            \"receivable_id\": \"string\"\n          },\n          {\n            \"location_id\": \"string\",\n            \"amount_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": \"string\",\n            \"receivable_id\": \"string\"\n          }\n        ],\n        \"payment_id\": \"string\"\n      },\n      {\n        \"type\": \"THIRD_PARTY_CARD\",\n        \"id\": \"string\",\n        \"location_id\": \"string\",\n        \"transaction_id\": \"string\",\n        \"created_at\": \"string\",\n        \"note\": \"string\",\n        \"amount_money\": {\n          \"amount\": 5174,\n          \"currency\": \"BMD\"\n        },\n        \"tip_money\": {\n          \"amount\": 7696,\n          \"currency\": \"BIF\"\n        },\n        \"processing_fee_money\": {\n          \"amount\": 3096,\n          \"currency\": \"CVE\"\n        },\n        \"customer_id\": \"string\",\n        \"card_details\": {\n          \"status\": \"VOIDED\",\n          \"card\": {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card_brand\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"last_4\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"exp_month\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"exp_year\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"cardholder_name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"billing_address\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"fingerprint\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"customer_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"merchant_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"reference_id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"enabled\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"prepaid_type\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"bin\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"card_co_brand\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"entry_method\": \"SWIPED\"\n        },\n        \"cash_details\": {\n          \"buyer_tendered_money\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"change_back_money\": {\n            \"amount\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"currency\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"bank_account_details\": {\n          \"status\": \"FAILED\"\n        },\n        \"buy_now_pay_later_details\": {\n          \"buy_now_pay_later_brand\": \"AFTERPAY\",\n          \"status\": \"CAPTURED\"\n        },\n        \"square_account_details\": {\n          \"status\": \"CAPTURED\"\n        },\n        \"additional_recipients\": [\n          {\n            \"location_id\": \"string\",\n            \"amount_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": \"string\",\n            \"receivable_id\": \"string\"\n          },\n          {\n            \"location_id\": \"string\",\n            \"amount_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": \"string\",\n            \"receivable_id\": \"string\"\n          }\n        ],\n        \"payment_id\": \"string\"\n      }\n    ],\n    \"refunds\": [\n      {\n        \"id\": \"string\",\n        \"location_id\": \"string\",\n        \"tender_id\": \"string\",\n        \"reason\": \"string\",\n        \"amount_money\": {\n          \"amount\": 6525,\n          \"currency\": \"VND\"\n        },\n        \"status\": \"PENDING\",\n        \"transaction_id\": \"string\",\n        \"created_at\": \"string\",\n        \"processing_fee_money\": {\n          \"amount\": 1780,\n          \"currency\": \"ILS\"\n        },\n        \"additional_recipients\": [\n          {\n            \"location_id\": \"string\",\n            \"amount_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": \"string\",\n            \"receivable_id\": \"string\"\n          },\n          {\n            \"location_id\": \"string\",\n            \"amount_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": \"string\",\n            \"receivable_id\": \"string\"\n          }\n        ]\n      },\n      {\n        \"id\": \"string\",\n        \"location_id\": \"string\",\n        \"tender_id\": \"string\",\n        \"reason\": \"string\",\n        \"amount_money\": {\n          \"amount\": 7583,\n          \"currency\": \"JOD\"\n        },\n        \"status\": \"FAILED\",\n        \"transaction_id\": \"string\",\n        \"created_at\": \"string\",\n        \"processing_fee_money\": {\n          \"amount\": 4208,\n          \"currency\": \"TJS\"\n        },\n        \"additional_recipients\": [\n          {\n            \"location_id\": \"string\",\n            \"amount_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": \"string\",\n            \"receivable_id\": \"string\"\n          },\n          {\n            \"location_id\": \"string\",\n            \"amount_money\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": \"string\",\n            \"receivable_id\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"reference_id\": \"string\",\n    \"product\": \"PAYROLL\",\n    \"client_id\": \"string\",\n    \"shipping_address\": {\n      \"address_line_1\": \"string\",\n      \"address_line_2\": \"string\",\n      \"address_line_3\": \"string\",\n      \"locality\": \"string\",\n      \"sublocality\": \"string\",\n      \"sublocality_2\": \"string\",\n      \"sublocality_3\": \"string\",\n      \"administrative_district_level_1\": \"string\",\n      \"administrative_district_level_2\": \"string\",\n      \"administrative_district_level_3\": \"string\",\n      \"postal_code\": \"string\",\n      \"country\": \"KI\",\n      \"first_name\": \"string\",\n      \"last_name\": \"string\"\n    },\n    \"order_id\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5c4a388b-ce7c-4d73-9b14-5cb4c63e536a",
+          "name": "Square Capture Transaction",
+          "request": {
+            "name": "Square Capture Transaction",
+            "description": {
+              "content": "Captures a transaction that was created with the [Charge](api-endpoint:Transactions-Charge)\nendpoint with a `delay_capture` value of `true`.\n\n\nSee [Delayed capture transactions](https://developer.squareup.com/docs/payments/transactions/overview#delayed-capture)\nfor more information.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "locations",
+                ":location_id",
+                "transactions",
+                ":transaction_id",
+                "capture"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "location_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "transaction_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1acd8f65-3335-482b-9599-051a10e9c72c",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "locations",
+                    ":location_id",
+                    "transactions",
+                    ":transaction_id",
+                    "capture"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "location_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "transaction_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1a25130c-5c6d-4a37-9f9b-0b204240882d",
+          "name": "Square Void Transaction",
+          "request": {
+            "name": "Square Void Transaction",
+            "description": {
+              "content": "Cancels a transaction that was created with the [Charge](api-endpoint:Transactions-Charge)\nendpoint with a `delay_capture` value of `true`.\n\n\nSee [Delayed capture transactions](https://developer.squareup.com/docs/payments/transactions/overview#delayed-capture)\nfor more information.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "locations",
+                ":location_id",
+                "transactions",
+                ":transaction_id",
+                "void"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "location_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "transaction_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "ADDON_CONFIGURATIONS_READ ADDON_CONFIGURATIONS_WRITE APPOINTMENTS_ALL_READ APPOINTMENTS_ALL_WRITE APPOINTMENTS_BUSINESS_SETTINGS_READ APPOINTMENTS_READ APPOINTMENTS_WRITE BANK_ACCOUNTS_READ CASH_DRAWER_READ CHANNELS_CREATE CHANNELS_READ CHANNELS_UPDATE CUSTOMERS_READ CUSTOMERS_WRITE DEVICES_READ DEVICE_CREDENTIAL_MANAGEMENT DISPUTES_READ DISPUTES_WRITE EMPLOYEES_READ EMPLOYEES_WRITE GIFTCARDS_READ GIFTCARDS_WRITE INVENTORY_READ INVENTORY_WRITE INVOICES_READ INVOICES_WRITE ITEMS_READ ITEMS_WRITE LOYALTY_READ LOYALTY_WRITE MERCHANT_PROFILE_READ MERCHANT_PROFILE_WRITE ONLINE_STORE_SITE_READ ONLINE_STORE_SNIPPETS_READ ONLINE_STORE_SNIPPETS_WRITE ORDERS_READ ORDERS_WRITE PAYMENTS_READ PAYMENTS_WRITE PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS PAYMENTS_WRITE_IN_PERSON PAYMENTS_WRITE_SHARED_ONFILE PAYOUTS_READ PERMISSION_SETS_READ PERMISSION_SETS_WRITE RESERVATIONS_READ RESERVATIONS_WRITE RESTAURANT_CHECKS_READ SETTLEMENTS_READ SUBSCRIPTIONS_READ SUBSCRIPTIONS_WRITE TIMECARDS_READ TIMECARDS_SETTINGS_READ TIMECARDS_SETTINGS_WRITE TIMECARDS_WRITE VENDOR_READ VENDOR_WRITE"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://connect.squareup.com/oauth2/token"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://connect.squareup.com/oauth2/authorize"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "71828f23-b340-4ce5-8318-c2993551998d",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "locations",
+                    ":location_id",
+                    "transactions",
+                    ":transaction_id",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "location_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "transaction_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://connect.squareup.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "75f325ad-a20d-4a23-9764-8728478f8225",
+    "name": "Square ApplePay Transactions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. \n\nContact Support:\n Name: Square Developer Platform\n Email: developers@squareup.com",
+      "type": "text/plain"
+    }
+  }
+}
