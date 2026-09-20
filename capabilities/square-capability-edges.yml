@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 15
+edge_count: 21
 edges:
 - tag: Loyalty
   spec_file: square-loyalty-api-openapi.yml
@@ -23,6 +23,18 @@ edges:
     schemas: LoyaltyReward, LoyaltyProgramAccrualRule'
   reason: Loyalty accounts, point accrual/adjustment, programs, promotions and rewards are directly loyalty
     programme management.
+- tag: CashDrawers
+  spec_file: square-cash-drawers-api-openapi.yml
+  capability_id: BC-2320.40
+  capability_id_l1: BC-2320
+  capability_name: POS Cash and Tender Handling
+  confidence: 0.9
+  evidence: 'GET /v2/cash-drawers/shifts  ListCashDrawerShifts; schemas: CashDrawerShift, CashDrawerShiftState,
+    CashDrawerEventType, CashDrawerDevice'
+  reason: Cash drawer shifts, shift states and cash events per device are exactly till cash and tender
+    handling / end-of-shift reconciliation at the point of sale.
+  recovered_from: vertical-retail-consumer-goods-edges.json
+  reanchored_from: square-cashdrawers-api-openapi.yml
 - tag: Inventory
   spec_file: square-inventory-api-openapi.yml
   capability_id: BC-530
@@ -95,6 +107,17 @@ edges:
   evidence: GET /v2/customers/segments ListCustomerSegments; schema CustomerSegment
   reason: The operations list and retrieve customer segments defined in the seller's customer directory
     — directly Customer Segmentation Management.
+- tag: CustomerCustomAttributes
+  spec_file: square-customercustomattributes-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.75
+  evidence: POST /v2/customers/custom-attribute-definitions CreateCustomerCustomAttributeDefinition; BulkUpsertCustomerCustomAttributes
+  reason: Operations define and maintain custom attributes attached to the customer record, extending
+    the customer master data — Customer Data Management. Not a technical plumbing tag since the object
+    of management is the customer profile itself.
+  recovered_from: vertical-retail-consumer-goods-edges.json
 - tag: Subscriptions
   spec_file: square-subscriptions-api-openapi.yml
   capability_id: BC-4240
@@ -117,6 +140,17 @@ edges:
   reason: The operations handle card payment disputes — accepting them or submitting evidence files/text
     to contest them. This is chargeback handling, explicitly named in BC-1340.70 Card Transaction Processing
     Management.
+- tag: Employees
+  spec_file: square-employees-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.72
+  evidence: 'GET /v2/employees ListEmployees; schemas: EmployeeStatus, Employee'
+  reason: Read-only access to the seller's employee records (list/retrieve employee, employee status)
+    is employee-record keeping, i.e. HR operations within Human Capital Management. Confidence tempered
+    because the surface is only two read operations with no lifecycle management.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: Vendors
   spec_file: square-vendors-api-openapi.yml
   capability_id: BC-510
@@ -126,6 +160,18 @@ edges:
   evidence: POST /v2/vendors/create  CreateVendor; SearchVendors; schemas Vendor, VendorContact, Address
   reason: CRUD and search over vendor (supplier) master records with contacts and addresses — supplier
     master/registration management. Thin on which sub-capability (onboarding vs relationship), so L1 only.
+- tag: Catalog
+  spec_file: square-catalog-api-openapi.yml
+  capability_id: BC-2370.10
+  capability_id_l1: BC-2370
+  capability_name: Item Master Data Management
+  confidence: 0.7
+  evidence: 'POST /v2/catalog/batch-upsert  BatchUpsertCatalogObjects; POST /v2/catalog/search-catalog-items;
+    schemas: CatalogItemVariation, CatalogItemOption, MeasurementUnitCustom, CatalogItemProductType'
+  reason: Authoritative maintenance of sellable item records, variations, options, images and measurement
+    units — the canonical product/item master used across channels. Some overlap with pricing and product
+    configuration keeps confidence moderate.
+  recovered_from: vertical-retail-consumer-goods-edges.json
 - tag: Checkout
   spec_file: square-checkout-api-openapi.yml
   capability_id: BC-1340.10
@@ -137,6 +183,30 @@ edges:
   reason: Operations create and manage hosted checkouts and payment links used to capture and authorise
     a customer payment, plus merchant/location checkout settings. That is payment instruction capture
     and initiation, mapping to BC-1340.10.
+- tag: CustomerGroups
+  spec_file: square-customer-groups-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.7
+  evidence: '''Square Create Customer Group'', schema ''CustomerGroup'''
+  reason: Customer groups are seller-defined groupings of customers used for targeted treatment, matching
+    Customer Segmentation Management; slight ambiguity versus plain customer data management keeps confidence
+    moderate.
+  recovered_from: sweep-20260829T005356Z-edges.json
+  reanchored_from: square-customergroups-api-openapi.yml
+- tag: Labor
+  spec_file: square-labor-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.7
+  evidence: POST /v2/labor/shifts CreateShift; GET /v2/labor/employee-wages ListEmployeeWages; schemas
+    BreakType, Shift, TeamMemberWage, UpdateWorkweekConfigResponse
+  reason: Shift/timecard tracking, break types, workweek configuration and employee wage rates are workforce
+    time-and-attendance and payroll-input administration, i.e. HR operations. Some overlap with Compensation
+    & Benefits (wages) keeps confidence moderate.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: Payments
   spec_file: square-payments-api-openapi.yml
   capability_id: BC-1340.70
