@@ -1,35 +1,16 @@
-specification: API Commons Rate Limits
-specificationVersion: '0.1'
-schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
-provider: Square
-providerId: square
-created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
-reconciled: true
-tags:
-  - Rate Limiting
-  - Payments
-description: Square API rate limits per access token.
+# Rate limits transcribed from the provider's own documentation — see provenance. Quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://developer.squareup.com/docs/build-basics/general-considerations/handling-errors
 sources:
-  - https://squareup.com/us/en/payments/our-fees
-  - https://developer.squareup.com/docs/build-basics/general-considerations/rate-limit
-headers:
-  retryAfter: Retry-After
-responseCodes:
-  throttled: 429
-limits:
-  - name: Default REST API
-    scope: access_token
-    metric: requests_per_second
-    limit: soft (raise via support)
-  - name: Webhook signature verification
-    scope: endpoint
-    metric: deliveries_per_second
-    limit: high
-  - name: Per-merchant idempotency keys
-    scope: merchant
-    metric: lifetime
-    limit: no expiration
+- https://developer.squareup.com/docs/build-basics/general-considerations/handling-errors
+provenance:
+  tool: planning/api-economics/harvest_ratelimits.py
+  run: 20260920T133210
+  grounding: every limit_text was found verbatim in the fetched page text
+published: false
+note: Page discusses error handling including rate limiting errors (429 RATE_LIMITED) but states no numeric
+  rate limits; it notes endpoints 'might enforce different rate limits'.
+limit_count: 0
+limits: []
+exceeded_status: 429
