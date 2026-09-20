@@ -1,0 +1,168 @@
+slug: square
+provider: Square
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 15
+edges:
+- tag: Loyalty
+  spec_file: square-loyalty-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.92
+  evidence: 'POST /v2/loyalty/accounts/{account_id}/accumulate  AccumulateLoyaltyPoints; GET /v2/loyalty/programs/{program_id}/promotions  ListLoyaltyPromotions;
+    schemas: LoyaltyReward, LoyaltyProgramAccrualRule'
+  reason: Loyalty accounts, point accrual/adjustment, programs, promotions and rewards are directly loyalty
+    programme management.
+- tag: Inventory
+  spec_file: square-inventory-api-openapi.yml
+  capability_id: BC-530
+  capability_id_l1: BC-530
+  capability_name: Inventory Management
+  confidence: 0.85
+  evidence: POST /v2/inventory/counts/batch-retrieve  BatchRetrieveInventoryCounts; GET /v2/inventory/physical-counts/{physical_count_id}  RetrieveInventoryPhysicalCount;
+    RetrieveInventoryTransfer
+  reason: Operations manage stock counts, adjustments, physical counts and transfers across locations
+    — plainly inventory management. Spans stock levels, accuracy and allocation, so L1 only.
+- tag: Transactions
+  spec_file: square-transactions-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.85
+  evidence: POST /v2/locations/{location_id}/transactions/{transaction_id}/capture  CaptureTransaction;
+    VoidTransaction; schemas TenderCardDetails, Money, RefundStatus
+  reason: Operations capture and void payment transactions composed of card/cash tenders — payment/card
+    transaction processing. Ambiguous between payment processing and card transaction processing sub-capabilities,
+    so only L1 asserted.
+- tag: WebhookSubscriptions
+  spec_file: square-webhooksubscriptions-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.85
+  evidence: POST /v2/webhooks/subscriptions  CreateWebhookSubscription; ListWebhookEventTypes; TestWebhookSubscription;
+    UpdateWebhookSubscriptionSignatureKey
+  reason: Lifecycle of outbound webhook subscriptions, event type catalogue and delivery testing — exactly
+    the webhook & event subscription management capability of a developer platform.
+- tag: Customers
+  spec_file: square-customers-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.8
+  evidence: POST /v2/customers CreateCustomer, POST /v2/customers/search SearchCustomers, PUT /v2/customers/{customer_id}
+    UpdateCustomer
+  reason: Full CRUD, bulk maintenance and search over customer profile records (with addresses, preferences,
+    creation source) — the customer master/directory, i.e. Customer Data Management.
+- tag: Invoices
+  spec_file: square-invoices-api-openapi.yml
+  capability_id: BC-200.30
+  capability_id_l1: BC-200
+  capability_name: Accounts Receivable Management
+  confidence: 0.8
+  evidence: 'POST /v2/invoices  CreateInvoice; POST /v2/invoices/{invoice_id}/publish  PublishInvoice;
+    schemas: InvoiceRecipient, InvoicePaymentReminder, InvoiceStatus'
+  reason: Creating, publishing, cancelling customer invoices with payment reminders and recipients is
+    customer invoicing / receivables collection.
+- tag: Team
+  spec_file: square-team-api-openapi.yml
+  capability_id: BC-300
+  capability_id_l1: BC-300
+  capability_name: Human Capital Management
+  confidence: 0.8
+  evidence: POST /v2/team-members  CreateTeamMember; GET /v2/team-members/jobs  ListJobs; PUT /v2/team-members/{team_member_id}/wage-setting  UpdateWageSetting;
+    schemas TeamMember, WageSetting, Job
+  reason: Worker records, job definitions and wage settings — employee records plus compensation data,
+    i.e. human capital management. Spans HR operations and comp, so L1 only.
+- tag: CustomerSegments
+  spec_file: square-customersegments-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.78
+  evidence: GET /v2/customers/segments ListCustomerSegments; schema CustomerSegment
+  reason: The operations list and retrieve customer segments defined in the seller's customer directory
+    — directly Customer Segmentation Management.
+- tag: Subscriptions
+  spec_file: square-subscriptions-api-openapi.yml
+  capability_id: BC-4240
+  capability_id_l1: BC-4240
+  capability_name: Subscription Lifecycle Management
+  confidence: 0.75
+  evidence: POST /v2/subscriptions  CreateSubscription; SwapPlan; ChangeBillingAnchorDate; PauseSubscription;
+    CancelSubscription
+  reason: 'Full recurring-subscription lifecycle: create, modify, swap plan, pause/resume, cancel, plus
+    subscription events. Maps to subscription lifecycle management; spans several sub-capabilities so
+    L1 only.'
+- tag: Disputes
+  spec_file: square-disputes-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.72
+  evidence: POST /v2/disputes/{dispute_id}/accept AcceptDispute, POST /v2/disputes/{dispute_id}/submit-evidence
+    SubmitEvidence; schemas DisputedPayment, DisputeReason, CardBrand
+  reason: The operations handle card payment disputes — accepting them or submitting evidence files/text
+    to contest them. This is chargeback handling, explicitly named in BC-1340.70 Card Transaction Processing
+    Management.
+- tag: Vendors
+  spec_file: square-vendors-api-openapi.yml
+  capability_id: BC-510
+  capability_id_l1: BC-510
+  capability_name: Supplier Management
+  confidence: 0.72
+  evidence: POST /v2/vendors/create  CreateVendor; SearchVendors; schemas Vendor, VendorContact, Address
+  reason: CRUD and search over vendor (supplier) master records with contacts and addresses — supplier
+    master/registration management. Thin on which sub-capability (onboarding vs relationship), so L1 only.
+- tag: Checkout
+  spec_file: square-checkout-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.7
+  evidence: POST /v2/online-checkout/payment-links CreatePaymentLink; POST /v2/locations/{location_id}/checkouts
+    CreateCheckout
+  reason: Operations create and manage hosted checkouts and payment links used to capture and authorise
+    a customer payment, plus merchant/location checkout settings. That is payment instruction capture
+    and initiation, mapping to BC-1340.10.
+- tag: Payments
+  spec_file: square-payments-api-openapi.yml
+  capability_id: BC-1340.70
+  capability_id_l1: BC-1340
+  capability_name: Card Transaction Processing Management
+  confidence: 0.7
+  evidence: POST /v2/payments  CreatePayment; POST /v2/payments/{payment_id}/complete  CompletePayment;
+    schemas CardBrand, ProcessingFee, RiskEvaluation
+  reason: Card payment authorisation, capture (complete), void (cancel) and risk evaluation — acquiring-side
+    card transaction processing. L1 payments is certain; the card-processing sub-capability is the best
+    but not only reading (payment initiation also plausible).
+- tag: Payouts
+  spec_file: square-payouts-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.7
+  evidence: GET /v2/payouts  ListPayouts; ListPayoutEntries; schemas Payout, PayoutFee, PaymentBalanceActivityReserveHoldDetail
+  reason: Disbursement of settled funds to the seller's bank account with fee and balance-activity detail
+    — payments/settlement domain. Sub-capability left open between settlement and processing.
+- tag: Terminal
+  spec_file: square-terminal-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.7
+  evidence: POST /v2/terminals/checkouts  CreateTerminalCheckout; POST /v2/terminals/refunds  CreateTerminalRefund;
+    schemas CheckoutOptionsPaymentType, TipSettings
+  reason: Drives card-present checkout and refund flows on a payment terminal device — payment capture
+    at the point of sale. L1 payments/cards clear; sub-capability ambiguous between initiation and card
+    processing.
