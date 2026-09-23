@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay CustomerSegments API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Apple Pay API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -109,150 +109,75 @@ servers:
 - url: https://connect.squareup.com
   variables: {}
 tags:
-- name: CustomerSegments
+- name: Apple Pay
 paths:
-  /v2/customers/segments:
-    get:
+  /v2/apple-pay/domains:
+    post:
       tags:
-      - CustomerSegments
-      summary: Square List Customer Segments
-      operationId: ListCustomerSegments
+      - Apple Pay
+      summary: Square Register Domain
+      operationId: RegisterDomain
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: Retrieves the list of customer segments of a business.
+      description: 'Activates a domain for use with Apple Pay on the Web and Square. A validation
+
+        is performed on this domain by Apple to ensure that it is properly set up as
+
+        an Apple Pay enabled domain.
+
+
+        This endpoint provides an easy way for platform developers to bulk activate
+
+        Apple Pay on the Web with Square for merchants using their platform.
+
+
+        Note: You will need to host a valid domain verification file on your domain to support Apple Pay. The
+
+        current version of this file is always available at https://app.squareup.com/digital-wallets/apple-pay/apple-developer-merchantid-domain-association,
+
+        and should be hosted at `.well_known/apple-developer-merchantid-domain-association` on your
+
+        domain. This file is subject to change; we strongly recommend checking for updates regularly and avoiding
+
+        long-lived caches that might not keep in sync with the correct file version.
+
+
+        To learn more about the Web Payments SDK and how to add Apple Pay, see Take an Apple Pay Payment.'
       x-release-status: PUBLIC
       security:
-      - oauth2:
-        - CUSTOMERS_READ
-      parameters:
-      - name: cursor
-        description: 'A pagination cursor returned by previous calls to `ListCustomerSegments`.
-
-          This cursor is used to retrieve the next set of query results.
-
-
-          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        schema:
-          type: string
-        in: query
-        required: false
-      - name: limit
-        description: 'The maximum number of results to return in a single page. This limit is advisory. The response might contain more or fewer results.
-
-          If the specified limit is less than 1 or greater than 50, Square returns a `400 VALUE_TOO_LOW` or `400 VALUE_TOO_HIGH` error. The default value is 50.
-
-
-          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        schema:
-          type: integer
-        in: query
-        required: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListCustomerSegmentsResponse'
-  /v2/customers/segments/{segment_id}:
-    get:
-      tags:
-      - CustomerSegments
-      summary: Square Retrieve Customer Segment
-      operationId: RetrieveCustomerSegment
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-      description: Retrieves a specific customer segment as identified by the `segment_id` value.
-      x-release-status: PUBLIC
-      security:
-      - oauth2:
-        - CUSTOMERS_READ
-      parameters:
-      - name: segment_id
-        description: The Square-issued ID of the customer segment.
-        schema:
-          type: string
-        in: path
+      - oauth2: []
+      parameters: []
+      requestBody:
         required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDomainRequest'
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RetrieveCustomerSegmentResponse'
+                $ref: '#/components/schemas/RegisterDomainResponse'
 components:
   schemas:
-    RetrieveCustomerSegmentResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body for requests to the `RetrieveCustomerSegment` endpoint.
-
-
-        Either `errors` or `segment` is present in a given response (never both).'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        segment:
-          $ref: '#/components/schemas/CustomerSegment'
-          description: The retrieved customer segment.
-      example:
-        segment:
-          created_at: '2020-01-09T19:33:24.469Z'
-          id: GMNXRZVEXNQDF.CHURN_RISK
-          name: Lapsed
-          updated_at: '2020-04-13T23:01:13Z'
-    ErrorCategory:
+    RegisterDomainResponseStatus:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - PENDING
+      - VERIFIED
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+      - name: PENDING
+        description: The domain is added, but not verified.
+      - name: VERIFIED
+        description: The domain is added and verified. It can be used to accept Apple Pay transactions.
+      description: The status of the domain registration.
       x-release-status: PUBLIC
     ErrorCode:
       type: string
@@ -1000,76 +925,29 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    CustomerSegment:
+    RegisterDomainRequest:
       type: object
-      description: "Represents a group of customer profiles that match one or more predefined filter criteria. \n\nSegments (also known as Smart Groups) are defined and created within the Customer Directory in the\nSquare Seller Dashboard or Point of Sale."
+      description: 'Defines the parameters that can be included in the body of
+
+        a request to the [RegisterDomain](api-endpoint:ApplePay-RegisterDomain) endpoint.'
       x-release-status: PUBLIC
       required:
-      - name
+      - domain_name
       properties:
-        id:
+        domain_name:
           type: string
-          description: A unique Square-generated ID for the segment.
+          description: A domain name as described in RFC-1034 that will be registered with ApplePay.
+          minLength: 1
           maxLength: 255
-          readOnly: true
-        name:
-          type: string
-          description: The name of the segment.
-          readOnly: true
-        created_at:
-          type: string
-          description: The timestamp when the segment was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp when the segment was last updated, in RFC 3339 format.
-          readOnly: true
-    ListCustomerSegmentsResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body for requests to the `ListCustomerSegments` endpoint.
-
-
-        Either `errors` or `segments` is present in a given response (never both).'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomerSegment'
-          description: The list of customer segments belonging to the associated Square account.
-        cursor:
-          type: string
-          description: 'A pagination cursor to be used in subsequent calls to `ListCustomerSegments`
-
-            to retrieve the next set of query results. The cursor is only present if the request succeeded and
-
-            additional results are available.
-
-
-            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
       example:
-        segments:
-        - created_at: '2020-01-09T19:33:24.469Z'
-          id: GMNXRZVEXNQDF.CHURN_RISK
-          name: Lapsed
-          updated_at: '2020-04-13T21:47:04Z'
-        - created_at: '2020-01-09T19:33:24.486Z'
-          id: GMNXRZVEXNQDF.LOYAL
-          name: Regulars
-          updated_at: '2020-04-13T21:47:04Z'
-        - created_at: '2020-01-09T19:33:21.813Z'
-          id: GMNXRZVEXNQDF.REACHABLE
-          name: Reachable
-          updated_at: '2020-04-13T21:47:04Z'
-        - created_at: '2020-01-09T19:33:25Z'
-          id: gv2:KF92J19VXN5FK30GX2E8HSGQ20
-          name: Instant Profile
-          updated_at: '2020-04-13T23:01:03Z'
+        domain_name: example.com
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.csharp
+        java: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.java
+        javascript: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.javascript
+        php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.php
+        python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.python
+        ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.ruby
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -1099,6 +977,85 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    RegisterDomainResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [RegisterDomain](api-endpoint:ApplePay-RegisterDomain) endpoint.
+
+
+        Either `errors` or `status` are present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        status:
+          $ref: '#/components/schemas/RegisterDomainResponseStatus'
+          description: 'The status of the domain registration.
+
+
+            See [RegisterDomainResponseStatus](entity:RegisterDomainResponseStatus) for possible values.
+
+            See [RegisterDomainResponseStatus](#type-registerdomainresponsestatus) for possible values'
+      example:
+        status: VERIFIED
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.csharp
+        java: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.java
+        javascript: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.javascript
+        php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.php
+        python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.python
+        ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.ruby
   securitySchemes:
     oauth2:
       type: oauth2

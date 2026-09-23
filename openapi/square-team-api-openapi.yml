@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay Team API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Team API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -129,7 +129,7 @@ paths:
         - `family_name`
 
 
-        Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#createteammember).'
+        Learn about Troubleshooting the Team API.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -174,7 +174,7 @@ paths:
         contains explicit error information for the failed create.
 
 
-        Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#bulk-create-team-members).'
+        Learn about Troubleshooting the Team API.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -217,7 +217,7 @@ paths:
 
         contains explicit error information for the failed update.
 
-        Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#bulk-update-team-members).'
+        Learn about Troubleshooting the Team API.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -285,7 +285,7 @@ paths:
         dispatcher: FALLBACK
       description: 'Creates a job in a seller account. A job defines a title and tip eligibility. Note that
 
-        compensation is defined in a [job assignment](entity:JobAssignment) in a team member''s wage setting.'
+        compensation is defined in a job assignment in a team member''s wage setting.'
       x-release-status: BETA
       security:
       - oauth2:
@@ -386,7 +386,11 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: "Returns a paginated list of `TeamMember` objects for a business. \nThe list can be filtered by location IDs, `ACTIVE` or `INACTIVE` status, or whether\nthe team member is the Square account owner."
+      description: 'Returns a paginated list of `TeamMember` objects for a business.
+
+        The list can be filtered by location IDs, `ACTIVE` or `INACTIVE` status, or whether
+
+        the team member is the Square account owner.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -420,7 +424,7 @@ paths:
         dispatcher: FALLBACK
       description: 'Retrieves a `TeamMember` object for the given `TeamMember.id`.
 
-        Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#retrieve-a-team-member).'
+        Learn about Troubleshooting the Team API.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -449,7 +453,7 @@ paths:
         dispatcher: FALLBACK
       description: 'Updates a single `TeamMember` object. The `TeamMember` object is returned on successful updates.
 
-        Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#update-a-team-member).'
+        Learn about Troubleshooting the Team API.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -495,10 +499,10 @@ paths:
 
         by `TeamMember.id`. For more information, see
 
-        [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#retrievewagesetting).
+        Troubleshooting the Team API.
 
 
-        Square recommends using [RetrieveTeamMember](api-endpoint:Team-RetrieveTeamMember) or [SearchTeamMembers](api-endpoint:Team-SearchTeamMembers)
+        Square recommends using RetrieveTeamMember or SearchTeamMembers
 
         to get this information directly from the `TeamMember.wage_setting` field.'
       x-release-status: PUBLIC
@@ -535,10 +539,10 @@ paths:
 
         The `WageSetting` is returned on a successful update. For more information, see
 
-        [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#create-or-update-a-wage-setting).
+        Troubleshooting the Team API.
 
 
-        Square recommends using [CreateTeamMember](api-endpoint:Team-CreateTeamMember) or [UpdateTeamMember](api-endpoint:Team-UpdateTeamMember)
+        Square recommends using CreateTeamMember or UpdateTeamMember
 
         to manage the `TeamMember.wage_setting` field directly.'
       x-release-status: PUBLIC
@@ -571,6 +575,611 @@ paths:
                 $ref: '#/components/schemas/UpdateWageSettingResponse'
 components:
   schemas:
+    BulkUpdateTeamMembersResponse:
+      type: object
+      description: Represents a response from a bulk update request containing the updated `TeamMember` objects or error messages.
+      x-release-status: PUBLIC
+      properties:
+        team_members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UpdateTeamMemberResponse'
+          description: The successfully updated `TeamMember` objects. Each key is the `team_member_id` that maps to the `UpdateTeamMemberRequest`.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        team_members:
+          AFMwA08kR-MIF-3Vs0OE:
+            team_member:
+              assigned_locations:
+                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+              created_at: '2020-03-24T18:14:00Z'
+              email_address: jane_smith@example.com
+              family_name: Smith
+              given_name: Jane
+              id: AFMwA08kR-MIF-3Vs0OE
+              is_owner: false
+              phone_number: '+14159223334'
+              reference_id: reference_id_2
+              status: ACTIVE
+              updated_at: '2020-03-24T18:18:00Z'
+          fpgteZNMaf0qOK-a4t6P:
+            team_member:
+              assigned_locations:
+                assignment_type: EXPLICIT_LOCATIONS
+                location_ids:
+                - GA2Y9HSJ8KRYT
+                - YSGH2WBKG94QZ
+              created_at: '2020-03-24T18:14:00Z'
+              email_address: joe_doe@example.com
+              family_name: Doe
+              given_name: Joe
+              id: fpgteZNMaf0qOK-a4t6P
+              is_owner: false
+              phone_number: '+14159283333'
+              reference_id: reference_id_1
+              status: ACTIVE
+              updated_at: '2020-03-24T18:18:00Z'
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
     CreateTeamMemberRequest:
       type: object
       description: Represents a create request for a `TeamMember` object.
@@ -619,14 +1228,14 @@ components:
                 currency: USD
               job_id: VDNpRv8da51NU8qZFC5zDWpF
               pay_type: HOURLY
-    CreateTeamMemberResponse:
+    UpdateTeamMemberResponse:
       type: object
-      description: Represents a response from a create request containing the created `TeamMember` object or error messages.
+      description: Represents a response from an update request containing the updated `TeamMember` object or error messages.
       x-release-status: PUBLIC
       properties:
         team_member:
           $ref: '#/components/schemas/TeamMember'
-          description: The successfully created `TeamMember` object.
+          description: The successfully updated `TeamMember` object.
         errors:
           type: array
           items:
@@ -648,7 +1257,145 @@ components:
           phone_number: '+14159283333'
           reference_id: reference_id_1
           status: ACTIVE
-          updated_at: '2021-06-11T22:55:45Z'
+          updated_at: '2021-06-15T17:38:05Z'
+          wage_setting:
+            created_at: '2021-06-11T22:55:45Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - annual_rate:
+                amount: 3000000
+                currency: USD
+              hourly_rate:
+                amount: 1443
+                currency: USD
+              job_id: FjS8x95cqHiMenw4f1NAUH4P
+              job_title: Manager
+              pay_type: SALARY
+              weekly_hours: 40
+            - hourly_rate:
+                amount: 1200
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: 1yJlHapkseYnNPETIU1B
+            updated_at: '2021-06-11T22:55:45Z'
+            version: 1
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    UpdateJobResponse:
+      type: object
+      description: 'Represents an [UpdateJob](api-endpoint:Team-UpdateJob) response. Either `job` or `errors`
+
+        is present in the response.'
+      x-release-status: BETA
+      properties:
+        job:
+          $ref: '#/components/schemas/Job'
+          description: The updated job.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        job:
+          created_at: '2021-06-11T22:55:45Z'
+          id: 1yJlHapkseYnNPETIU1B
+          is_tip_eligible: true
+          title: Cashier 1
+          updated_at: '2021-06-13T12:55:45Z'
+          version: 2
+    UpdateJobRequest:
+      type: object
+      description: Represents an [UpdateJob](api-endpoint:Team-UpdateJob) request.
+      x-release-status: BETA
+      required:
+      - job
+      properties:
+        job:
+          $ref: '#/components/schemas/Job'
+          description: 'The job with the updated fields, either `title`, `is_tip_eligible`, or both. Only changed fields need
+
+            to be included in the request. Optionally include `version` to enable optimistic concurrency control.'
+      example:
+        job:
+          is_tip_eligible: true
+          title: Cashier 1
+    TeamMemberAssignedLocations:
+      type: object
+      description: An object that represents a team member's assignment to locations.
+      x-release-status: PUBLIC
+      properties:
+        assignment_type:
+          $ref: '#/components/schemas/TeamMemberAssignedLocationsAssignmentType'
+          description: 'The current assignment type of the team member.
+
+            See [TeamMemberAssignedLocationsAssignmentType](#type-teammemberassignedlocationsassignmenttype) for possible values'
+        location_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The explicit locations that the team member is assigned to.
+    RetrieveTeamMemberResponse:
+      type: object
+      description: Represents a response from a retrieve request containing a `TeamMember` object or error messages.
+      x-release-status: PUBLIC
+      properties:
+        team_member:
+          $ref: '#/components/schemas/TeamMember'
+          description: The successfully retrieved `TeamMember` object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        team_member:
+          assigned_locations:
+            assignment_type: EXPLICIT_LOCATIONS
+            location_ids:
+            - GA2Y9HSJ8KRYT
+            - YSGH2WBKG94QZ
+          created_at: '2021-06-11T22:55:45Z'
+          email_address: joe_doe@example.com
+          family_name: Doe
+          given_name: Joe
+          id: 1yJlHapkseYnNPETIU1B
+          is_owner: false
+          phone_number: '+14159283333'
+          reference_id: reference_id_1
+          status: ACTIVE
+          updated_at: '2021-06-15T17:38:05Z'
           wage_setting:
             created_at: '2021-06-11T22:55:45Z'
             is_overtime_exempt: true
@@ -672,20 +1419,362 @@ components:
             team_member_id: 1yJlHapkseYnNPETIU1B
             updated_at: '2021-06-11T22:55:45Z'
             version: 1
-    TeamMemberStatus:
-      type: string
-      enum:
-      - ACTIVE
-      - INACTIVE
-      x-enum-elements:
-      - name: ACTIVE
-        description: The team member can sign in to Point of Sale and the Seller Dashboard.
-      - name: INACTIVE
-        description: 'The team member can no longer sign in to Point of Sale or the Seller Dashboard,
-
-          but the team member''s sales reports remain available.'
-      description: Enumerates the possible statuses the team member can have within a business.
+    SearchTeamMembersQuery:
+      type: object
+      description: Represents the parameters in a search for `TeamMember` objects.
       x-release-status: PUBLIC
+      properties:
+        filter:
+          $ref: '#/components/schemas/SearchTeamMembersFilter'
+          description: The options to filter by.
+    UpdateWageSettingResponse:
+      type: object
+      description: 'Represents a response from an update request containing the updated `WageSetting` object
+
+        or error messages.'
+      x-release-status: PUBLIC
+      properties:
+        wage_setting:
+          $ref: '#/components/schemas/WageSetting'
+          description: The successfully updated `WageSetting` object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        wage_setting:
+          created_at: '2019-07-10T17:26:48+00:00'
+          is_overtime_exempt: true
+          job_assignments:
+          - annual_rate:
+              amount: 3000000
+              currency: USD
+            hourly_rate:
+              amount: 1443
+              currency: USD
+            job_title: Manager
+            pay_type: SALARY
+            weekly_hours: 40
+          - hourly_rate:
+              amount: 2000
+              currency: USD
+            job_title: Cashier
+            pay_type: HOURLY
+          team_member_id: -3oZQKPKVk6gUXU_V5Qa
+          updated_at: '2020-06-11T23:12:04+00:00'
+          version: 1
+    TeamMember:
+      type: object
+      description: A record representing an individual team member for a business.
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: The unique ID for the team member.
+          readOnly: true
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: A second ID used to associate the team member with an entity in another system.
+        is_owner:
+          type: boolean
+          description: Whether the team member is the owner of the Square account.
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/TeamMemberStatus'
+          description: 'Describes the status of the team member.
+
+            See [TeamMemberStatus](#type-teammemberstatus) for possible values'
+        given_name:
+          type:
+          - string
+          - 'null'
+          description: The given name (that is, the first name) associated with the team member.
+        family_name:
+          type:
+          - string
+          - 'null'
+          description: The family name (that is, the last name) associated with the team member.
+        email_address:
+          type:
+          - string
+          - 'null'
+          description: 'The email address associated with the team member. After accepting the invitation
+
+            from Square, only the team member can change this value.'
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: 'The team member''s phone number, in E.164 format. For example:
+
+            +14155552671 - the country code is 1 for US
+
+            +551155256325 - the country code is 55 for BR'
+        created_at:
+          type: string
+          description: The timestamp when the team member was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the team member was last updated, in RFC 3339 format.
+          readOnly: true
+        assigned_locations:
+          $ref: '#/components/schemas/TeamMemberAssignedLocations'
+          description: Describes the team member's assigned locations.
+        wage_setting:
+          $ref: '#/components/schemas/WageSetting'
+          description: Information about the team member's overtime exemption status, job assignments, and compensation.
+          x-release-status: BETA
+    BulkUpdateTeamMembersRequest:
+      type: object
+      description: Represents a bulk update request for `TeamMember` objects.
+      x-release-status: PUBLIC
+      required:
+      - team_members
+      properties:
+        team_members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UpdateTeamMemberRequest'
+          description: 'The data used to update the `TeamMember` objects. Each key is the `team_member_id` that maps to the `UpdateTeamMemberRequest`.
+
+            The maximum number of update objects is 25.
+
+
+            For each team member, include the fields to add, change, or clear. Fields can be cleared using a null value.
+
+            To update `wage_setting.job_assignments`, you must provide the complete list of job assignments. If needed,
+
+            call [ListJobs](api-endpoint:Team-ListJobs) to get the required `job_id` values.'
+      example:
+        team_members:
+          AFMwA08kR-MIF-3Vs0OE:
+            team_member:
+              assigned_locations:
+                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+              email_address: jane_smith@gmail.com
+              family_name: Smith
+              given_name: Jane
+              is_owner: false
+              phone_number: '+14159223334'
+              reference_id: reference_id_2
+              status: ACTIVE
+          fpgteZNMaf0qOK-a4t6P:
+            team_member:
+              assigned_locations:
+                assignment_type: EXPLICIT_LOCATIONS
+                location_ids:
+                - YSGH2WBKG94QZ
+                - GA2Y9HSJ8KRYT
+              email_address: joe_doe@gmail.com
+              family_name: Doe
+              given_name: Joe
+              is_owner: false
+              phone_number: '+14159283333'
+              reference_id: reference_id_1
+              status: ACTIVE
+    SearchTeamMembersResponse:
+      type: object
+      description: Represents a response from a search request containing a filtered list of `TeamMember` objects.
+      x-release-status: PUBLIC
+      properties:
+        team_members:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMember'
+          description: The filtered list of `TeamMember` objects.
+        cursor:
+          type: string
+          description: 'The opaque cursor for fetching the next page. For more information, see
+
+            [pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        cursor: N:9UglUjOXQ13-hMFypCft
+        team_members:
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2019-07-10T17:26:48Z'
+          email_address: johnny_cash@squareup.com
+          family_name: Cash
+          given_name: Johnny
+          id: -3oZQKPKVk6gUXU_V5Qa
+          is_owner: false
+          reference_id: '12345678'
+          status: ACTIVE
+          updated_at: '2020-04-28T21:49:28Z'
+          wage_setting:
+            created_at: '2021-06-11T22:55:45Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - annual_rate:
+                amount: 3000000
+                currency: USD
+              hourly_rate:
+                amount: 1443
+                currency: USD
+              job_id: FjS8x95cqHiMenw4f1NAUH4P
+              job_title: Manager
+              pay_type: SALARY
+              weekly_hours: 40
+            - hourly_rate:
+                amount: 2000
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: -3oZQKPKVk6gUXU_V5Qa
+            updated_at: '2021-06-11T22:55:45Z'
+            version: 1
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T18:14:01Z'
+          family_name: Smith
+          given_name: Lombard
+          id: 1AVJj0DjkzbmbJw5r4KK
+          is_owner: false
+          phone_number: '+14155552671'
+          reference_id: abcded
+          status: ACTIVE
+          updated_at: '2020-06-09T17:38:05Z'
+          wage_setting:
+            created_at: '2020-03-24T18:14:01Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - hourly_rate:
+                amount: 2400
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: 1AVJj0DjkzbmbJw5r4KK
+            updated_at: '2020-06-09T17:38:05Z'
+            version: 2
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T01:09:25Z'
+          family_name: Sway
+          given_name: Monica
+          id: 2JCmiJol_KKFs9z2Evim
+          is_owner: false
+          status: ACTIVE
+          updated_at: '2020-03-24T01:11:25Z'
+          wage_setting:
+            created_at: '2020-03-24T01:09:25Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - hourly_rate:
+                amount: 2400
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: 2JCmiJol_KKFs9z2Evim
+            updated_at: '2020-03-24T01:09:25Z'
+            version: 1
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T01:09:23Z'
+          family_name: Ipsum
+          given_name: Elton
+          id: 4uXcJQSLtbk3F0UQHFNQ
+          is_owner: false
+          status: ACTIVE
+          updated_at: '2020-03-24T01:15:23Z'
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T01:09:23Z'
+          family_name: Lo
+          given_name: Steven
+          id: 5CoUpyrw1YwGWcRd-eDL
+          is_owner: false
+          status: ACTIVE
+          updated_at: '2020-03-24T01:19:23Z'
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T18:14:03Z'
+          family_name: Steward
+          given_name: Patrick
+          id: 5MRPTTp8MMBLVSmzrGha
+          is_owner: false
+          phone_number: '+14155552671'
+          status: ACTIVE
+          updated_at: '2020-03-24T18:18:03Z'
+          wage_setting:
+            created_at: '2020-03-24T18:14:03Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - hourly_rate:
+                amount: 2000
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: 5MRPTTp8MMBLVSmzrGha
+            updated_at: '2020-03-24T18:14:03Z'
+            version: 1
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T01:09:25Z'
+          family_name: Manny
+          given_name: Ivy
+          id: 7F5ZxsfRnkexhu1PTbfh
+          is_owner: false
+          status: ACTIVE
+          updated_at: '2020-03-24T01:09:25Z'
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T18:14:02Z'
+          email_address: john_smith@example.com
+          family_name: Smith
+          given_name: John
+          id: 808X9HR72yKvVaigQXf4
+          is_owner: false
+          phone_number: '+14155552671'
+          status: ACTIVE
+          updated_at: '2020-03-24T18:14:02Z'
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T18:14:00Z'
+          email_address: r_wen@example.com
+          family_name: Wen
+          given_name: Robert
+          id: 9MVDVoY4hazkWKGo_OuZ
+          is_owner: false
+          phone_number: '+14155552671'
+          status: ACTIVE
+          updated_at: '2020-03-24T18:14:00Z'
+        - assigned_locations:
+            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+          created_at: '2020-03-24T18:14:00Z'
+          email_address: asimpson@example.com
+          family_name: Simpson
+          given_name: Ashley
+          id: 9UglUjOXQ13-hMFypCft
+          is_owner: false
+          phone_number: '+14155552671'
+          status: ACTIVE
+          updated_at: '2020-03-24T18:18:00Z'
+          wage_setting:
+            created_at: '2020-03-24T18:14:00Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - hourly_rate:
+                amount: 2000
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: 9UglUjOXQ13-hMFypCft
+            updated_at: '2020-03-24T18:14:03Z'
+            version: 1
     UpdateTeamMemberRequest:
       type: object
       description: Represents an update request for a `TeamMember` object.
@@ -698,7 +1787,6 @@ components:
             `wage_setting.job_assignments`, you must provide the complete list of job assignments. If needed, call
 
             [ListJobs](api-endpoint:Team-ListJobs) to get the required `job_id` values.'
-          nullable: true
       example:
         team_member:
           assigned_locations:
@@ -726,47 +1814,44 @@ components:
           phone_number: '+14159283333'
           reference_id: reference_id_1
           status: ACTIVE
-    CreateJobRequest:
+    ListJobsResponse:
       type: object
-      description: Represents a [CreateJob](api-endpoint:Team-CreateJob) request.
+      description: 'Represents a [ListJobs](api-endpoint:Team-ListJobs) response. Either `jobs` or `errors`
+
+        is present in the response. If additional results are available, the `cursor` field is also present.'
       x-release-status: BETA
-      required:
-      - job
-      - idempotency_key
       properties:
-        job:
-          $ref: '#/components/schemas/Job'
-          description: The job to create. The `title` field is required and `is_tip_eligible` defaults to true.
-        idempotency_key:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+          description: The retrieved jobs. A single paged response contains up to 100 jobs.
+        cursor:
           type: string
-          description: 'A unique identifier for the `CreateJob` request. Keys can be any valid string,
+          description: 'An opaque cursor used to retrieve the next page of results. This field is present only
 
-            but must be unique for each request. For more information, see
+            if the request succeeded and additional results are available. For more information, see
 
-            [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          minLength: 1
-          maxLength: 45
+            [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
       example:
-        idempotency_key: idempotency-key-0
-        job:
+        jobs:
+        - created_at: '2021-06-11T22:55:45Z'
+          id: VDNpRv8da51NU8qZFC5zDWpF
           is_tip_eligible: true
           title: Cashier
-    TeamMemberAssignedLocationsAssignmentType:
-      type: string
-      enum:
-      - ALL_CURRENT_AND_FUTURE_LOCATIONS
-      - EXPLICIT_LOCATIONS
-      x-enum-elements:
-      - name: ALL_CURRENT_AND_FUTURE_LOCATIONS
-        description: 'The team member is assigned to all current and future locations. The `location_ids` field
-
-          is empty if the team member has this assignment type.'
-      - name: EXPLICIT_LOCATIONS
-        description: 'The team member is assigned to an explicit subset of locations. The `location_ids` field
-
-          is the list of locations that the team member is assigned to.'
-      description: Enumerates the possible assignment types that the team member can have.
-      x-release-status: PUBLIC
+          updated_at: '2021-06-11T22:55:45Z'
+          version: 2
+        - created_at: '2021-06-11T22:55:45Z'
+          id: FjS8x95cqHiMenw4f1NAUH4P
+          is_tip_eligible: false
+          title: Chef
+          updated_at: '2021-06-11T22:55:45Z'
+          version: 1
     RetrieveJobResponse:
       type: object
       description: 'Represents a [RetrieveJob](api-endpoint:Team-RetrieveJob) response. Either `job` or `errors`
@@ -790,53 +1875,160 @@ components:
           title: Cashier 1
           updated_at: '2021-06-11T22:55:45Z'
           version: 2
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+    BulkCreateTeamMembersResponse:
+      type: object
+      description: Represents a response from a bulk create request containing the created `TeamMember` objects or error messages.
       x-release-status: PUBLIC
+      properties:
+        team_members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CreateTeamMemberResponse'
+          description: The successfully created `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        team_members:
+          idempotency-key-1:
+            team_member:
+              assigned_locations:
+                assignment_type: EXPLICIT_LOCATIONS
+                location_ids:
+                - GA2Y9HSJ8KRYT
+                - YSGH2WBKG94QZ
+              email_address: joe_doe@gmail.com
+              family_name: Doe
+              given_name: Joe
+              id: ywhG1qfIOoqsHfVRubFV
+              is_owner: false
+              phone_number: '+14159283333'
+              reference_id: reference_id_1
+              status: ACTIVE
+          idempotency-key-2:
+            team_member:
+              assigned_locations:
+                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+              email_address: jane_smith@gmail.com
+              family_name: Smith
+              given_name: Jane
+              id: IF_Ncrg7fHhCqxVI9T6R
+              is_owner: false
+              phone_number: '+14159223334'
+              reference_id: reference_id_2
+              status: ACTIVE
+    RetrieveWageSettingResponse:
+      type: object
+      description: Represents a response from a retrieve request containing the specified `WageSetting` object or error messages.
+      x-release-status: PUBLIC
+      properties:
+        wage_setting:
+          $ref: '#/components/schemas/WageSetting'
+          description: The successfully retrieved `WageSetting` object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        wage_setting:
+          created_at: '2020-06-11T23:01:21+00:00'
+          is_overtime_exempt: false
+          job_assignments:
+          - annual_rate:
+              amount: 4500000
+              currency: USD
+            hourly_rate:
+              amount: 2164
+              currency: USD
+            job_title: Manager
+            pay_type: SALARY
+            weekly_hours: 40
+          team_member_id: 1yJlHapkseYnNPETIU1B
+          updated_at: '2020-06-11T23:01:21+00:00'
+          version: 1
+    BulkCreateTeamMembersRequest:
+      type: object
+      description: Represents a bulk create request for `TeamMember` objects.
+      x-release-status: PUBLIC
+      required:
+      - team_members
+      properties:
+        team_members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CreateTeamMemberRequest'
+          description: 'The data used to create the `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`.
+
+            The maximum number of create objects is 25.
+
+
+            If you include a team member''s `wage_setting`, you must provide `job_id` for each job assignment. To get job IDs,
+
+            call [ListJobs](api-endpoint:Team-ListJobs).'
+      example:
+        team_members:
+          idempotency-key-1:
+            team_member:
+              assigned_locations:
+                assignment_type: EXPLICIT_LOCATIONS
+                location_ids:
+                - YSGH2WBKG94QZ
+                - GA2Y9HSJ8KRYT
+              email_address: joe_doe@gmail.com
+              family_name: Doe
+              given_name: Joe
+              phone_number: '+14159283333'
+              reference_id: reference_id_1
+          idempotency-key-2:
+            team_member:
+              assigned_locations:
+                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+              email_address: jane_smith@gmail.com
+              family_name: Smith
+              given_name: Jane
+              phone_number: '+14159223334'
+              reference_id: reference_id_2
+    SearchTeamMembersFilter:
+      type: object
+      description: 'Represents a filter used in a search for `TeamMember` objects. `AND` logic is applied
+
+        between the individual fields, and `OR` logic is applied within list-based fields.
+
+        For example, setting this filter value:
+
+        ```
+
+        filter = (locations_ids = ["A", "B"], status = ACTIVE)
+
+        ```
+
+        returns only active team members assigned to either location "A" or "B".'
+      x-release-status: PUBLIC
+      properties:
+        location_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'When present, filters by team members assigned to the specified locations.
+
+            When empty, includes team members assigned to any location.'
+        status:
+          $ref: '#/components/schemas/TeamMemberStatus'
+          description: 'When present, filters by team members who match the given status.
+
+            When empty, includes team members of all statuses.
+
+            See [TeamMemberStatus](#type-teammemberstatus) for possible values'
+        is_owner:
+          type:
+          - boolean
+          - 'null'
+          description: When present and set to true, returns the team member who is the owner of the Square account.
     ErrorCode:
       type: string
       enum:
@@ -1583,660 +2775,120 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    Currency:
+    TeamMemberStatus:
       type: string
       enum:
-      - UNKNOWN_CURRENCY
-      - AED
-      - AFN
-      - ALL
-      - AMD
-      - ANG
-      - AOA
-      - ARS
-      - AUD
-      - AWG
-      - AZN
-      - BAM
-      - BBD
-      - BDT
-      - BGN
-      - BHD
-      - BIF
-      - BMD
-      - BND
-      - BOB
-      - BOV
-      - BRL
-      - BSD
-      - BTN
-      - BWP
-      - BYR
-      - BZD
-      - CAD
-      - CDF
-      - CHE
-      - CHF
-      - CHW
-      - CLF
-      - CLP
-      - CNY
-      - COP
-      - COU
-      - CRC
-      - CUC
-      - CUP
-      - CVE
-      - CZK
-      - DJF
-      - DKK
-      - DOP
-      - DZD
-      - EGP
-      - ERN
-      - ETB
-      - EUR
-      - FJD
-      - FKP
-      - GBP
-      - GEL
-      - GHS
-      - GIP
-      - GMD
-      - GNF
-      - GTQ
-      - GYD
-      - HKD
-      - HNL
-      - HRK
-      - HTG
-      - HUF
-      - IDR
-      - ILS
-      - INR
-      - IQD
-      - IRR
-      - ISK
-      - JMD
-      - JOD
-      - JPY
-      - KES
-      - KGS
-      - KHR
-      - KMF
-      - KPW
-      - KRW
-      - KWD
-      - KYD
-      - KZT
-      - LAK
-      - LBP
-      - LKR
-      - LRD
-      - LSL
-      - LTL
-      - LVL
-      - LYD
-      - MAD
-      - MDL
-      - MGA
-      - MKD
-      - MMK
-      - MNT
-      - MOP
-      - MRO
-      - MUR
-      - MVR
-      - MWK
-      - MXN
-      - MXV
-      - MYR
-      - MZN
-      - NAD
-      - NGN
-      - NIO
-      - NOK
-      - NPR
-      - NZD
-      - OMR
-      - PAB
-      - PEN
-      - PGK
-      - PHP
-      - PKR
-      - PLN
-      - PYG
-      - QAR
-      - RON
-      - RSD
-      - RUB
-      - RWF
-      - SAR
-      - SBD
-      - SCR
-      - SDG
-      - SEK
-      - SGD
-      - SHP
-      - SLL
-      - SLE
-      - SOS
-      - SRD
-      - SSP
-      - STD
-      - SVC
-      - SYP
-      - SZL
-      - THB
-      - TJS
-      - TMT
-      - TND
-      - TOP
-      - TRY
-      - TTD
-      - TWD
-      - TZS
-      - UAH
-      - UGX
-      - USD
-      - USN
-      - USS
-      - UYI
-      - UYU
-      - UZS
-      - VEF
-      - VND
-      - VUV
-      - WST
-      - XAF
-      - XAG
-      - XAU
-      - XBA
-      - XBB
-      - XBC
-      - XBD
-      - XCD
-      - XDR
-      - XOF
-      - XPD
-      - XPF
-      - XPT
-      - XTS
-      - XXX
-      - YER
-      - ZAR
-      - ZMK
-      - ZMW
-      - BTC
-      - XUS
+      - ACTIVE
+      - INACTIVE
       x-enum-elements:
-      - name: UNKNOWN_CURRENCY
-        description: Unknown currency
-      - name: AED
-        description: United Arab Emirates dirham
-      - name: AFN
-        description: Afghan afghani
-      - name: ALL
-        description: Albanian lek
-      - name: AMD
-        description: Armenian dram
-      - name: ANG
-        description: Netherlands Antillean guilder
-      - name: AOA
-        description: Angolan kwanza
-      - name: ARS
-        description: Argentine peso
-      - name: AUD
-        description: Australian dollar
-      - name: AWG
-        description: Aruban florin
-      - name: AZN
-        description: Azerbaijani manat
-      - name: BAM
-        description: Bosnia and Herzegovina convertible mark
-      - name: BBD
-        description: Barbados dollar
-      - name: BDT
-        description: Bangladeshi taka
-      - name: BGN
-        description: Bulgarian lev
-      - name: BHD
-        description: Bahraini dinar
-      - name: BIF
-        description: Burundian franc
-      - name: BMD
-        description: Bermudian dollar
-      - name: BND
-        description: Brunei dollar
-      - name: BOB
-        description: Boliviano
-      - name: BOV
-        description: Bolivian Mvdol
-      - name: BRL
-        description: Brazilian real
-      - name: BSD
-        description: Bahamian dollar
-      - name: BTN
-        description: Bhutanese ngultrum
-      - name: BWP
-        description: Botswana pula
-      - name: BYR
-        description: Belarusian ruble
-      - name: BZD
-        description: Belize dollar
-      - name: CAD
-        description: Canadian dollar
-      - name: CDF
-        description: Congolese franc
-      - name: CHE
-        description: WIR Euro
-      - name: CHF
-        description: Swiss franc
-      - name: CHW
-        description: WIR Franc
-      - name: CLF
-        description: Unidad de Fomento
-      - name: CLP
-        description: Chilean peso
-      - name: CNY
-        description: Chinese yuan
-      - name: COP
-        description: Colombian peso
-      - name: COU
-        description: Unidad de Valor Real
-      - name: CRC
-        description: Costa Rican colon
-      - name: CUC
-        description: Cuban convertible peso
-      - name: CUP
-        description: Cuban peso
-      - name: CVE
-        description: Cape Verdean escudo
-      - name: CZK
-        description: Czech koruna
-      - name: DJF
-        description: Djiboutian franc
-      - name: DKK
-        description: Danish krone
-      - name: DOP
-        description: Dominican peso
-      - name: DZD
-        description: Algerian dinar
-      - name: EGP
-        description: Egyptian pound
-      - name: ERN
-        description: Eritrean nakfa
-      - name: ETB
-        description: Ethiopian birr
-      - name: EUR
-        description: Euro
-      - name: FJD
-        description: Fiji dollar
-      - name: FKP
-        description: Falkland Islands pound
-      - name: GBP
-        description: Pound sterling
-      - name: GEL
-        description: Georgian lari
-      - name: GHS
-        description: Ghanaian cedi
-      - name: GIP
-        description: Gibraltar pound
-      - name: GMD
-        description: Gambian dalasi
-      - name: GNF
-        description: Guinean franc
-      - name: GTQ
-        description: Guatemalan quetzal
-      - name: GYD
-        description: Guyanese dollar
-      - name: HKD
-        description: Hong Kong dollar
-      - name: HNL
-        description: Honduran lempira
-      - name: HRK
-        description: Croatian kuna
-      - name: HTG
-        description: Haitian gourde
-      - name: HUF
-        description: Hungarian forint
-      - name: IDR
-        description: Indonesian rupiah
-      - name: ILS
-        description: Israeli new shekel
-      - name: INR
-        description: Indian rupee
-      - name: IQD
-        description: Iraqi dinar
-      - name: IRR
-        description: Iranian rial
-      - name: ISK
-        description: Icelandic króna
-      - name: JMD
-        description: Jamaican dollar
-      - name: JOD
-        description: Jordanian dinar
-      - name: JPY
-        description: Japanese yen
-      - name: KES
-        description: Kenyan shilling
-      - name: KGS
-        description: Kyrgyzstani som
-      - name: KHR
-        description: Cambodian riel
-      - name: KMF
-        description: Comoro franc
-      - name: KPW
-        description: North Korean won
-      - name: KRW
-        description: South Korean won
-      - name: KWD
-        description: Kuwaiti dinar
-      - name: KYD
-        description: Cayman Islands dollar
-      - name: KZT
-        description: Kazakhstani tenge
-      - name: LAK
-        description: Lao kip
-      - name: LBP
-        description: Lebanese pound
-      - name: LKR
-        description: Sri Lankan rupee
-      - name: LRD
-        description: Liberian dollar
-      - name: LSL
-        description: Lesotho loti
-      - name: LTL
-        description: Lithuanian litas
-      - name: LVL
-        description: Latvian lats
-      - name: LYD
-        description: Libyan dinar
-      - name: MAD
-        description: Moroccan dirham
-      - name: MDL
-        description: Moldovan leu
-      - name: MGA
-        description: Malagasy ariary
-      - name: MKD
-        description: Macedonian denar
-      - name: MMK
-        description: Myanmar kyat
-      - name: MNT
-        description: Mongolian tögrög
-      - name: MOP
-        description: Macanese pataca
-      - name: MRO
-        description: Mauritanian ouguiya
-      - name: MUR
-        description: Mauritian rupee
-      - name: MVR
-        description: Maldivian rufiyaa
-      - name: MWK
-        description: Malawian kwacha
-      - name: MXN
-        description: Mexican peso
-      - name: MXV
-        description: Mexican Unidad de Inversion
-      - name: MYR
-        description: Malaysian ringgit
-      - name: MZN
-        description: Mozambican metical
-      - name: NAD
-        description: Namibian dollar
-      - name: NGN
-        description: Nigerian naira
-      - name: NIO
-        description: Nicaraguan córdoba
-      - name: NOK
-        description: Norwegian krone
-      - name: NPR
-        description: Nepalese rupee
-      - name: NZD
-        description: New Zealand dollar
-      - name: OMR
-        description: Omani rial
-      - name: PAB
-        description: Panamanian balboa
-      - name: PEN
-        description: Peruvian sol
-      - name: PGK
-        description: Papua New Guinean kina
-      - name: PHP
-        description: Philippine peso
-      - name: PKR
-        description: Pakistani rupee
-      - name: PLN
-        description: Polish zBoty
-      - name: PYG
-        description: Paraguayan guaraní
-      - name: QAR
-        description: Qatari riyal
-      - name: RON
-        description: Romanian leu
-      - name: RSD
-        description: Serbian dinar
-      - name: RUB
-        description: Russian ruble
-      - name: RWF
-        description: Rwandan franc
-      - name: SAR
-        description: Saudi riyal
-      - name: SBD
-        description: Solomon Islands dollar
-      - name: SCR
-        description: Seychelles rupee
-      - name: SDG
-        description: Sudanese pound
-      - name: SEK
-        description: Swedish krona
-      - name: SGD
-        description: Singapore dollar
-      - name: SHP
-        description: Saint Helena pound
-      - name: SLL
-        description: Sierra Leonean first leone
-      - name: SLE
-        description: Sierra Leonean second leone
-      - name: SOS
-        description: Somali shilling
-      - name: SRD
-        description: Surinamese dollar
-      - name: SSP
-        description: South Sudanese pound
-      - name: STD
-        description: São Tomé and Príncipe dobra
-      - name: SVC
-        description: Salvadoran colón
-      - name: SYP
-        description: Syrian pound
-      - name: SZL
-        description: Swazi lilangeni
-      - name: THB
-        description: Thai baht
-      - name: TJS
-        description: Tajikstani somoni
-      - name: TMT
-        description: Turkmenistan manat
-      - name: TND
-        description: Tunisian dinar
-      - name: TOP
-        description: Tongan pa'anga
-      - name: TRY
-        description: Turkish lira
-      - name: TTD
-        description: Trinidad and Tobago dollar
-      - name: TWD
-        description: New Taiwan dollar
-      - name: TZS
-        description: Tanzanian shilling
-      - name: UAH
-        description: Ukrainian hryvnia
-      - name: UGX
-        description: Ugandan shilling
-      - name: USD
-        description: United States dollar
-      - name: USN
-        description: United States dollar (next day)
-      - name: USS
-        description: United States dollar (same day)
-      - name: UYI
-        description: Uruguay Peso en Unidedades Indexadas
-      - name: UYU
-        description: Uruguyan peso
-      - name: UZS
-        description: Uzbekistan som
-      - name: VEF
-        description: Venezuelan bolívar soberano
-      - name: VND
-        description: Vietnamese ’Óng
-      - name: VUV
-        description: Vanuatu vatu
-      - name: WST
-        description: Samoan tala
-      - name: XAF
-        description: CFA franc BEAC
-      - name: XAG
-        description: Silver
-      - name: XAU
-        description: Gold
-      - name: XBA
-        description: European Composite Unit
-      - name: XBB
-        description: European Monetary Unit
-      - name: XBC
-        description: European Unit of Account 9
-      - name: XBD
-        description: European Unit of Account 17
-      - name: XCD
-        description: East Caribbean dollar
-      - name: XDR
-        description: Special drawing rights (International Monetary Fund)
-      - name: XOF
-        description: CFA franc BCEAO
-      - name: XPD
-        description: Palladium
-      - name: XPF
-        description: CFP franc
-      - name: XPT
-        description: Platinum
-      - name: XTS
-        description: Code reserved for testing
-      - name: XXX
-        description: No currency
-      - name: YER
-        description: Yemeni rial
-      - name: ZAR
-        description: South African rand
-      - name: ZMK
-        description: Zambian kwacha
-      - name: ZMW
-        description: Zambian kwacha
-      - name: BTC
-        description: Bitcoin
-      - name: XUS
-        description: USD Coin
-      description: 'Indicates the associated currency for an amount of money. Values correspond
+      - name: ACTIVE
+        description: The team member can sign in to Point of Sale and the Seller Dashboard.
+      - name: INACTIVE
+        description: 'The team member can no longer sign in to Point of Sale or the Seller Dashboard,
 
-        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+          but the team member''s sales reports remain available.'
+      description: Enumerates the possible statuses the team member can have within a business.
       x-release-status: PUBLIC
-    UpdateTeamMemberResponse:
+    JobAssignment:
       type: object
-      description: Represents a response from an update request containing the updated `TeamMember` object or error messages.
+      description: 'Represents a job assigned to a [team member](entity:TeamMember), including the compensation the team
+
+        member earns for the job. Job assignments are listed in the team member''s [wage setting](entity:WageSetting).'
       x-release-status: PUBLIC
+      required:
+      - pay_type
       properties:
-        team_member:
-          $ref: '#/components/schemas/TeamMember'
-          description: The successfully updated `TeamMember` object.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        team_member:
-          assigned_locations:
-            assignment_type: EXPLICIT_LOCATIONS
-            location_ids:
-            - GA2Y9HSJ8KRYT
-            - YSGH2WBKG94QZ
-          created_at: '2021-06-11T22:55:45Z'
-          email_address: joe_doe@example.com
-          family_name: Doe
-          given_name: Joe
-          id: 1yJlHapkseYnNPETIU1B
-          is_owner: false
-          phone_number: '+14159283333'
-          reference_id: reference_id_1
-          status: ACTIVE
-          updated_at: '2021-06-15T17:38:05Z'
-          wage_setting:
-            created_at: '2021-06-11T22:55:45Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - annual_rate:
-                amount: 3000000
-                currency: USD
-              hourly_rate:
-                amount: 1443
-                currency: USD
-              job_id: FjS8x95cqHiMenw4f1NAUH4P
-              job_title: Manager
-              pay_type: SALARY
-              weekly_hours: 40
-            - hourly_rate:
-                amount: 1200
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 1yJlHapkseYnNPETIU1B
-            updated_at: '2021-06-11T22:55:45Z'
-            version: 1
-    BulkCreateTeamMembersResponse:
+        job_title:
+          type:
+          - string
+          - 'null'
+          description: The title of the job.
+        pay_type:
+          $ref: '#/components/schemas/JobAssignmentPayType'
+          description: 'The current pay type for the job assignment used to
+
+            calculate the pay amount in a pay period.
+
+            See [JobAssignmentPayType](#type-jobassignmentpaytype) for possible values'
+        hourly_rate:
+          $ref: '#/components/schemas/Money'
+          description: 'The hourly pay rate of the job. For `SALARY` pay types, Square calculates the hourly rate based on
+
+            `annual_rate` and `weekly_hours`.'
+        annual_rate:
+          $ref: '#/components/schemas/Money'
+          description: The total pay amount for a 12-month period on the job. Set if the job `PayType` is `SALARY`.
+        weekly_hours:
+          type:
+          - integer
+          - 'null'
+          description: The planned hours per week for the job. Set if the job `PayType` is `SALARY`.
+        job_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the [job](entity:Job).
+          x-release-status: BETA
+    TeamMemberAssignedLocationsAssignmentType:
+      type: string
+      enum:
+      - ALL_CURRENT_AND_FUTURE_LOCATIONS
+      - EXPLICIT_LOCATIONS
+      x-enum-elements:
+      - name: ALL_CURRENT_AND_FUTURE_LOCATIONS
+        description: 'The team member is assigned to all current and future locations. The `location_ids` field
+
+          is empty if the team member has this assignment type.'
+      - name: EXPLICIT_LOCATIONS
+        description: 'The team member is assigned to an explicit subset of locations. The `location_ids` field
+
+          is the list of locations that the team member is assigned to.'
+      description: Enumerates the possible assignment types that the team member can have.
+      x-release-status: PUBLIC
+    Job:
       type: object
-      description: Represents a response from a bulk create request containing the created `TeamMember` objects or error messages.
-      x-release-status: PUBLIC
+      description: 'Represents a job that can be assigned to [team members](entity:TeamMember). This object defines the
+
+        job''s title and tip eligibility. Compensation is defined in a [job assignment](entity:JobAssignment)
+
+        in a team member''s wage setting.'
+      x-release-status: BETA
       properties:
-        team_members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CreateTeamMemberResponse'
-          description: The successfully created `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        team_members:
-          idempotency-key-1:
-            team_member:
-              assigned_locations:
-                assignment_type: EXPLICIT_LOCATIONS
-                location_ids:
-                - GA2Y9HSJ8KRYT
-                - YSGH2WBKG94QZ
-              email_address: joe_doe@gmail.com
-              family_name: Doe
-              given_name: Joe
-              id: ywhG1qfIOoqsHfVRubFV
-              is_owner: false
-              phone_number: '+14159283333'
-              reference_id: reference_id_1
-              status: ACTIVE
-          idempotency-key-2:
-            team_member:
-              assigned_locations:
-                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-              email_address: jane_smith@gmail.com
-              family_name: Smith
-              given_name: Jane
-              id: IF_Ncrg7fHhCqxVI9T6R
-              is_owner: false
-              phone_number: '+14159223334'
-              reference_id: reference_id_2
-              status: ACTIVE
+        id:
+          type: string
+          description: '**Read only** The unique Square-assigned ID of the job. If you need a job ID for an API request,
+
+            call [ListJobs](api-endpoint:Team-ListJobs) or use the ID returned when you created the job.
+
+            You can also get job IDs from a team member''s wage setting.'
+        title:
+          type:
+          - string
+          - 'null'
+          description: The title of the job.
+          maxLength: 150
+        is_tip_eligible:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether team members can earn tips for the job.
+        created_at:
+          type: string
+          description: The timestamp when the job was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the job was last updated, in RFC 3339 format.
+          readOnly: true
+        version:
+          type: integer
+          description: '**Read only** The current version of the job. Include this field in `UpdateJob` requests to enable
+
+            [optimistic concurrency](https://developer.squareup.com/docs/working-with-apis/optimistic-concurrency)
+
+            control and avoid overwrites from concurrent requests. Requests fail if the provided version doesn''t
+
+            match the server version at the time of the request.'
     Money:
       type: object
       description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
@@ -2253,7 +2905,9 @@ components:
       x-release-status: PUBLIC
       properties:
         amount:
-          type: integer
+          type:
+          - integer
+          - 'null'
           description: 'The amount of money, in the smallest denomination of the currency
 
             indicated by `currency`. For example, when `currency` is `USD`, `amount` is
@@ -2262,7 +2916,6 @@ components:
 
             field description to determine the meaning of the sign in a particular case.'
           format: int64
-          nullable: true
         currency:
           $ref: '#/components/schemas/Currency'
           description: 'The type of currency, in __ISO 4217 format__. For example, the currency
@@ -2273,7 +2926,6 @@ components:
             See [Currency](entity:Currency) for possible values.
 
             See [Currency](#type-currency) for possible values'
-          nullable: true
     WageSetting:
       type: object
       description: 'Represents information about the overtime exemption status, job assignments, and compensation
@@ -2282,21 +2934,24 @@ components:
       x-release-status: PUBLIC
       properties:
         team_member_id:
-          type: string
+          type:
+          - string
+          - 'null'
           description: The ID of the team member associated with the wage setting.
-          nullable: true
         job_assignments:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             $ref: '#/components/schemas/JobAssignment'
           description: '**Required** The ordered list of jobs that the team member is assigned to.
 
             The first job assignment is considered the team member''s primary job.'
-          nullable: true
         is_overtime_exempt:
-          type: boolean
+          type:
+          - boolean
+          - 'null'
           description: Whether the team member is exempt from the overtime rules of the seller's country.
-          nullable: true
         version:
           type: integer
           description: '**Read only** Used for resolving concurrency issues. The request fails if the version
@@ -2314,339 +2969,6 @@ components:
           type: string
           description: The timestamp when the wage setting was last updated, in RFC 3339 format.
           readOnly: true
-    SearchTeamMembersQuery:
-      type: object
-      description: Represents the parameters in a search for `TeamMember` objects.
-      x-release-status: PUBLIC
-      properties:
-        filter:
-          $ref: '#/components/schemas/SearchTeamMembersFilter'
-          description: The options to filter by.
-          nullable: true
-    UpdateJobRequest:
-      type: object
-      description: Represents an [UpdateJob](api-endpoint:Team-UpdateJob) request.
-      x-release-status: BETA
-      required:
-      - job
-      properties:
-        job:
-          $ref: '#/components/schemas/Job'
-          description: 'The job with the updated fields, either `title`, `is_tip_eligible`, or both. Only changed fields need
-
-            to be included in the request. Optionally include `version` to enable optimistic concurrency control.'
-      example:
-        job:
-          is_tip_eligible: true
-          title: Cashier 1
-    UpdateWageSettingResponse:
-      type: object
-      description: 'Represents a response from an update request containing the updated `WageSetting` object
-
-        or error messages.'
-      x-release-status: PUBLIC
-      properties:
-        wage_setting:
-          $ref: '#/components/schemas/WageSetting'
-          description: The successfully updated `WageSetting` object.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        wage_setting:
-          created_at: '2019-07-10T17:26:48+00:00'
-          is_overtime_exempt: true
-          job_assignments:
-          - annual_rate:
-              amount: 3000000
-              currency: USD
-            hourly_rate:
-              amount: 1443
-              currency: USD
-            job_title: Manager
-            pay_type: SALARY
-            weekly_hours: 40
-          - hourly_rate:
-              amount: 2000
-              currency: USD
-            job_title: Cashier
-            pay_type: HOURLY
-          team_member_id: -3oZQKPKVk6gUXU_V5Qa
-          updated_at: '2020-06-11T23:12:04+00:00'
-          version: 1
-    SearchTeamMembersFilter:
-      type: object
-      description: 'Represents a filter used in a search for `TeamMember` objects. `AND` logic is applied
-
-        between the individual fields, and `OR` logic is applied within list-based fields.
-
-        For example, setting this filter value:
-
-        ```
-
-        filter = (locations_ids = ["A", "B"], status = ACTIVE)
-
-        ```
-
-        returns only active team members assigned to either location "A" or "B".'
-      x-release-status: PUBLIC
-      properties:
-        location_ids:
-          type: array
-          items:
-            type: string
-          description: 'When present, filters by team members assigned to the specified locations.
-
-            When empty, includes team members assigned to any location.'
-          nullable: true
-        status:
-          $ref: '#/components/schemas/TeamMemberStatus'
-          description: 'When present, filters by team members who match the given status.
-
-            When empty, includes team members of all statuses.
-
-            See [TeamMemberStatus](#type-teammemberstatus) for possible values'
-          nullable: true
-        is_owner:
-          type: boolean
-          description: When present and set to true, returns the team member who is the owner of the Square account.
-          nullable: true
-    BulkUpdateTeamMembersResponse:
-      type: object
-      description: Represents a response from a bulk update request containing the updated `TeamMember` objects or error messages.
-      x-release-status: PUBLIC
-      properties:
-        team_members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UpdateTeamMemberResponse'
-          description: The successfully updated `TeamMember` objects. Each key is the `team_member_id` that maps to the `UpdateTeamMemberRequest`.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        team_members:
-          AFMwA08kR-MIF-3Vs0OE:
-            team_member:
-              assigned_locations:
-                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-              created_at: '2020-03-24T18:14:00Z'
-              email_address: jane_smith@example.com
-              family_name: Smith
-              given_name: Jane
-              id: AFMwA08kR-MIF-3Vs0OE
-              is_owner: false
-              phone_number: '+14159223334'
-              reference_id: reference_id_2
-              status: ACTIVE
-              updated_at: '2020-03-24T18:18:00Z'
-          fpgteZNMaf0qOK-a4t6P:
-            team_member:
-              assigned_locations:
-                assignment_type: EXPLICIT_LOCATIONS
-                location_ids:
-                - GA2Y9HSJ8KRYT
-                - YSGH2WBKG94QZ
-              created_at: '2020-03-24T18:14:00Z'
-              email_address: joe_doe@example.com
-              family_name: Doe
-              given_name: Joe
-              id: fpgteZNMaf0qOK-a4t6P
-              is_owner: false
-              phone_number: '+14159283333'
-              reference_id: reference_id_1
-              status: ACTIVE
-              updated_at: '2020-03-24T18:18:00Z'
-    BulkCreateTeamMembersRequest:
-      type: object
-      description: Represents a bulk create request for `TeamMember` objects.
-      x-release-status: PUBLIC
-      required:
-      - team_members
-      properties:
-        team_members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CreateTeamMemberRequest'
-          description: 'The data used to create the `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`.
-
-            The maximum number of create objects is 25.
-
-
-            If you include a team member''s `wage_setting`, you must provide `job_id` for each job assignment. To get job IDs,
-
-            call [ListJobs](api-endpoint:Team-ListJobs).'
-      example:
-        team_members:
-          idempotency-key-1:
-            team_member:
-              assigned_locations:
-                assignment_type: EXPLICIT_LOCATIONS
-                location_ids:
-                - YSGH2WBKG94QZ
-                - GA2Y9HSJ8KRYT
-              email_address: joe_doe@gmail.com
-              family_name: Doe
-              given_name: Joe
-              phone_number: '+14159283333'
-              reference_id: reference_id_1
-          idempotency-key-2:
-            team_member:
-              assigned_locations:
-                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-              email_address: jane_smith@gmail.com
-              family_name: Smith
-              given_name: Jane
-              phone_number: '+14159223334'
-              reference_id: reference_id_2
-    TeamMember:
-      type: object
-      description: A record representing an individual team member for a business.
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: The unique ID for the team member.
-          readOnly: true
-        reference_id:
-          type: string
-          description: A second ID used to associate the team member with an entity in another system.
-          nullable: true
-        is_owner:
-          type: boolean
-          description: Whether the team member is the owner of the Square account.
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/TeamMemberStatus'
-          description: 'Describes the status of the team member.
-
-            See [TeamMemberStatus](#type-teammemberstatus) for possible values'
-          nullable: true
-        given_name:
-          type: string
-          description: The given name (that is, the first name) associated with the team member.
-          nullable: true
-        family_name:
-          type: string
-          description: The family name (that is, the last name) associated with the team member.
-          nullable: true
-        email_address:
-          type: string
-          description: 'The email address associated with the team member. After accepting the invitation
-
-            from Square, only the team member can change this value.'
-          nullable: true
-        phone_number:
-          type: string
-          description: 'The team member''s phone number, in E.164 format. For example:
-
-            +14155552671 - the country code is 1 for US
-
-            +551155256325 - the country code is 55 for BR'
-          nullable: true
-        created_at:
-          type: string
-          description: The timestamp when the team member was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp when the team member was last updated, in RFC 3339 format.
-          readOnly: true
-        assigned_locations:
-          $ref: '#/components/schemas/TeamMemberAssignedLocations'
-          description: Describes the team member's assigned locations.
-          nullable: true
-        wage_setting:
-          $ref: '#/components/schemas/WageSetting'
-          description: Information about the team member's overtime exemption status, job assignments, and compensation.
-          x-release-status: BETA
-          nullable: true
-    RetrieveTeamMemberResponse:
-      type: object
-      description: Represents a response from a retrieve request containing a `TeamMember` object or error messages.
-      x-release-status: PUBLIC
-      properties:
-        team_member:
-          $ref: '#/components/schemas/TeamMember'
-          description: The successfully retrieved `TeamMember` object.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        team_member:
-          assigned_locations:
-            assignment_type: EXPLICIT_LOCATIONS
-            location_ids:
-            - GA2Y9HSJ8KRYT
-            - YSGH2WBKG94QZ
-          created_at: '2021-06-11T22:55:45Z'
-          email_address: joe_doe@example.com
-          family_name: Doe
-          given_name: Joe
-          id: 1yJlHapkseYnNPETIU1B
-          is_owner: false
-          phone_number: '+14159283333'
-          reference_id: reference_id_1
-          status: ACTIVE
-          updated_at: '2021-06-15T17:38:05Z'
-          wage_setting:
-            created_at: '2021-06-11T22:55:45Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - annual_rate:
-                amount: 3000000
-                currency: USD
-              hourly_rate:
-                amount: 1443
-                currency: USD
-              job_id: FjS8x95cqHiMenw4f1NAUH4P
-              job_title: Manager
-              pay_type: SALARY
-              weekly_hours: 40
-            - hourly_rate:
-                amount: 2000
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 1yJlHapkseYnNPETIU1B
-            updated_at: '2021-06-11T22:55:45Z'
-            version: 1
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
     CreateJobResponse:
       type: object
       description: 'Represents a [CreateJob](api-endpoint:Team-CreateJob) response. Either `job` or `errors`
@@ -2670,203 +2992,6 @@ components:
           title: Cashier
           updated_at: '2021-06-11T22:55:45Z'
           version: 1
-    JobAssignmentPayType:
-      type: string
-      enum:
-      - NONE
-      - HOURLY
-      - SALARY
-      x-enum-elements:
-      - name: NONE
-        description: The job does not have a defined pay type.
-      - name: HOURLY
-        description: The job pays an hourly rate.
-      - name: SALARY
-        description: The job pays an annual salary.
-      description: Enumerates the possible pay types that a job can be assigned.
-      x-release-status: PUBLIC
-    JobAssignment:
-      type: object
-      description: 'Represents a job assigned to a [team member](entity:TeamMember), including the compensation the team
-
-        member earns for the job. Job assignments are listed in the team member''s [wage setting](entity:WageSetting).'
-      x-release-status: PUBLIC
-      required:
-      - pay_type
-      properties:
-        job_title:
-          type: string
-          description: The title of the job.
-          nullable: true
-        pay_type:
-          $ref: '#/components/schemas/JobAssignmentPayType'
-          description: 'The current pay type for the job assignment used to
-
-            calculate the pay amount in a pay period.
-
-            See [JobAssignmentPayType](#type-jobassignmentpaytype) for possible values'
-        hourly_rate:
-          $ref: '#/components/schemas/Money'
-          description: 'The hourly pay rate of the job. For `SALARY` pay types, Square calculates the hourly rate based on
-
-            `annual_rate` and `weekly_hours`.'
-          nullable: true
-        annual_rate:
-          $ref: '#/components/schemas/Money'
-          description: The total pay amount for a 12-month period on the job. Set if the job `PayType` is `SALARY`.
-          nullable: true
-        weekly_hours:
-          type: integer
-          description: The planned hours per week for the job. Set if the job `PayType` is `SALARY`.
-          nullable: true
-        job_id:
-          type: string
-          description: The ID of the [job](entity:Job).
-          x-release-status: BETA
-          nullable: true
-    BulkUpdateTeamMembersRequest:
-      type: object
-      description: Represents a bulk update request for `TeamMember` objects.
-      x-release-status: PUBLIC
-      required:
-      - team_members
-      properties:
-        team_members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UpdateTeamMemberRequest'
-          description: 'The data used to update the `TeamMember` objects. Each key is the `team_member_id` that maps to the `UpdateTeamMemberRequest`.
-
-            The maximum number of update objects is 25.
-
-
-            For each team member, include the fields to add, change, or clear. Fields can be cleared using a null value.
-
-            To update `wage_setting.job_assignments`, you must provide the complete list of job assignments. If needed,
-
-            call [ListJobs](api-endpoint:Team-ListJobs) to get the required `job_id` values.'
-      example:
-        team_members:
-          AFMwA08kR-MIF-3Vs0OE:
-            team_member:
-              assigned_locations:
-                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-              email_address: jane_smith@gmail.com
-              family_name: Smith
-              given_name: Jane
-              is_owner: false
-              phone_number: '+14159223334'
-              reference_id: reference_id_2
-              status: ACTIVE
-          fpgteZNMaf0qOK-a4t6P:
-            team_member:
-              assigned_locations:
-                assignment_type: EXPLICIT_LOCATIONS
-                location_ids:
-                - YSGH2WBKG94QZ
-                - GA2Y9HSJ8KRYT
-              email_address: joe_doe@gmail.com
-              family_name: Doe
-              given_name: Joe
-              is_owner: false
-              phone_number: '+14159283333'
-              reference_id: reference_id_1
-              status: ACTIVE
-    Job:
-      type: object
-      description: 'Represents a job that can be assigned to [team members](entity:TeamMember). This object defines the
-
-        job''s title and tip eligibility. Compensation is defined in a [job assignment](entity:JobAssignment)
-
-        in a team member''s wage setting.'
-      x-release-status: BETA
-      properties:
-        id:
-          type: string
-          description: '**Read only** The unique Square-assigned ID of the job. If you need a job ID for an API request,
-
-            call [ListJobs](api-endpoint:Team-ListJobs) or use the ID returned when you created the job.
-
-            You can also get job IDs from a team member''s wage setting.'
-        title:
-          type: string
-          description: The title of the job.
-          maxLength: 150
-          nullable: true
-        is_tip_eligible:
-          type: boolean
-          description: Indicates whether team members can earn tips for the job.
-          nullable: true
-        created_at:
-          type: string
-          description: The timestamp when the job was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp when the job was last updated, in RFC 3339 format.
-          readOnly: true
-        version:
-          type: integer
-          description: '**Read only** The current version of the job. Include this field in `UpdateJob` requests to enable
-
-            [optimistic concurrency](https://developer.squareup.com/docs/working-with-apis/optimistic-concurrency)
-
-            control and avoid overwrites from concurrent requests. Requests fail if the provided version doesn''t
-
-            match the server version at the time of the request.'
-    RetrieveWageSettingResponse:
-      type: object
-      description: Represents a response from a retrieve request containing the specified `WageSetting` object or error messages.
-      x-release-status: PUBLIC
-      properties:
-        wage_setting:
-          $ref: '#/components/schemas/WageSetting'
-          description: The successfully retrieved `WageSetting` object.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        wage_setting:
-          created_at: '2020-06-11T23:01:21+00:00'
-          is_overtime_exempt: false
-          job_assignments:
-          - annual_rate:
-              amount: 4500000
-              currency: USD
-            hourly_rate:
-              amount: 2164
-              currency: USD
-            job_title: Manager
-            pay_type: SALARY
-            weekly_hours: 40
-          team_member_id: 1yJlHapkseYnNPETIU1B
-          updated_at: '2020-06-11T23:01:21+00:00'
-          version: 1
-    UpdateJobResponse:
-      type: object
-      description: 'Represents an [UpdateJob](api-endpoint:Team-UpdateJob) response. Either `job` or `errors`
-
-        is present in the response.'
-      x-release-status: BETA
-      properties:
-        job:
-          $ref: '#/components/schemas/Job'
-          description: The updated job.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        job:
-          created_at: '2021-06-11T22:55:45Z'
-          id: 1yJlHapkseYnNPETIU1B
-          is_tip_eligible: true
-          title: Cashier 1
-          updated_at: '2021-06-13T12:55:45Z'
-          version: 2
     UpdateWageSettingRequest:
       type: object
       description: Represents an update request for the `WageSetting` object describing a `TeamMember`.
@@ -2900,44 +3025,6 @@ components:
               currency: USD
             job_title: Cashier
             pay_type: HOURLY
-    ListJobsResponse:
-      type: object
-      description: 'Represents a [ListJobs](api-endpoint:Team-ListJobs) response. Either `jobs` or `errors`
-
-        is present in the response. If additional results are available, the `cursor` field is also present.'
-      x-release-status: BETA
-      properties:
-        jobs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Job'
-          description: The retrieved jobs. A single paged response contains up to 100 jobs.
-        cursor:
-          type: string
-          description: 'An opaque cursor used to retrieve the next page of results. This field is present only
-
-            if the request succeeded and additional results are available. For more information, see
-
-            [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        jobs:
-        - created_at: '2021-06-11T22:55:45Z'
-          id: VDNpRv8da51NU8qZFC5zDWpF
-          is_tip_eligible: true
-          title: Cashier
-          updated_at: '2021-06-11T22:55:45Z'
-          version: 2
-        - created_at: '2021-06-11T22:55:45Z'
-          id: FjS8x95cqHiMenw4f1NAUH4P
-          is_tip_eligible: false
-          title: Chef
-          updated_at: '2021-06-11T22:55:45Z'
-          version: 1
     SearchTeamMembersRequest:
       type: object
       description: Represents a search request for a filtered list of `TeamMember` objects.
@@ -2963,40 +3050,76 @@ components:
             location_ids:
             - 0G5P3VGACMMQZ
             status: ACTIVE
-    SearchTeamMembersResponse:
+    CreateJobRequest:
       type: object
-      description: Represents a response from a search request containing a filtered list of `TeamMember` objects.
+      description: Represents a [CreateJob](api-endpoint:Team-CreateJob) request.
+      x-release-status: BETA
+      required:
+      - job
+      - idempotency_key
+      properties:
+        job:
+          $ref: '#/components/schemas/Job'
+          description: The job to create. The `title` field is required and `is_tip_eligible` defaults to true.
+        idempotency_key:
+          type: string
+          description: 'A unique identifier for the `CreateJob` request. Keys can be any valid string,
+
+            but must be unique for each request. For more information, see
+
+            [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          minLength: 1
+          maxLength: 45
+      example:
+        idempotency_key: idempotency-key-0
+        job:
+          is_tip_eligible: true
+          title: Cashier
+    JobAssignmentPayType:
+      type: string
+      enum:
+      - NONE
+      - HOURLY
+      - SALARY
+      x-enum-elements:
+      - name: NONE
+        description: The job does not have a defined pay type.
+      - name: HOURLY
+        description: The job pays an hourly rate.
+      - name: SALARY
+        description: The job pays an annual salary.
+      description: Enumerates the possible pay types that a job can be assigned.
+      x-release-status: PUBLIC
+    CreateTeamMemberResponse:
+      type: object
+      description: Represents a response from a create request containing the created `TeamMember` object or error messages.
       x-release-status: PUBLIC
       properties:
-        team_members:
-          type: array
-          items:
-            $ref: '#/components/schemas/TeamMember'
-          description: The filtered list of `TeamMember` objects.
-        cursor:
-          type: string
-          description: 'The opaque cursor for fetching the next page. For more information, see
-
-            [pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
+        team_member:
+          $ref: '#/components/schemas/TeamMember'
+          description: The successfully created `TeamMember` object.
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: The errors that occurred during the request.
       example:
-        cursor: N:9UglUjOXQ13-hMFypCft
-        team_members:
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2019-07-10T17:26:48Z'
-          email_address: johnny_cash@squareup.com
-          family_name: Cash
-          given_name: Johnny
-          id: -3oZQKPKVk6gUXU_V5Qa
+        team_member:
+          assigned_locations:
+            assignment_type: EXPLICIT_LOCATIONS
+            location_ids:
+            - GA2Y9HSJ8KRYT
+            - YSGH2WBKG94QZ
+          created_at: '2021-06-11T22:55:45Z'
+          email_address: joe_doe@example.com
+          family_name: Doe
+          given_name: Joe
+          id: 1yJlHapkseYnNPETIU1B
           is_owner: false
-          reference_id: '12345678'
+          phone_number: '+14159283333'
+          reference_id: reference_id_1
           status: ACTIVE
-          updated_at: '2020-04-28T21:49:28Z'
+          updated_at: '2021-06-11T22:55:45Z'
           wage_setting:
             created_at: '2021-06-11T22:55:45Z'
             is_overtime_exempt: true
@@ -3017,168 +3140,56 @@ components:
               job_id: VDNpRv8da51NU8qZFC5zDWpF
               job_title: Cashier
               pay_type: HOURLY
-            team_member_id: -3oZQKPKVk6gUXU_V5Qa
+            team_member_id: 1yJlHapkseYnNPETIU1B
             updated_at: '2021-06-11T22:55:45Z'
             version: 1
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T18:14:01Z'
-          family_name: Smith
-          given_name: Lombard
-          id: 1AVJj0DjkzbmbJw5r4KK
-          is_owner: false
-          phone_number: '+14155552671'
-          reference_id: abcded
-          status: ACTIVE
-          updated_at: '2020-06-09T17:38:05Z'
-          wage_setting:
-            created_at: '2020-03-24T18:14:01Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - hourly_rate:
-                amount: 2400
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 1AVJj0DjkzbmbJw5r4KK
-            updated_at: '2020-06-09T17:38:05Z'
-            version: 2
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T01:09:25Z'
-          family_name: Sway
-          given_name: Monica
-          id: 2JCmiJol_KKFs9z2Evim
-          is_owner: false
-          status: ACTIVE
-          updated_at: '2020-03-24T01:11:25Z'
-          wage_setting:
-            created_at: '2020-03-24T01:09:25Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - hourly_rate:
-                amount: 2400
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 2JCmiJol_KKFs9z2Evim
-            updated_at: '2020-03-24T01:09:25Z'
-            version: 1
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T01:09:23Z'
-          family_name: Ipsum
-          given_name: Elton
-          id: 4uXcJQSLtbk3F0UQHFNQ
-          is_owner: false
-          status: ACTIVE
-          updated_at: '2020-03-24T01:15:23Z'
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T01:09:23Z'
-          family_name: Lo
-          given_name: Steven
-          id: 5CoUpyrw1YwGWcRd-eDL
-          is_owner: false
-          status: ACTIVE
-          updated_at: '2020-03-24T01:19:23Z'
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T18:14:03Z'
-          family_name: Steward
-          given_name: Patrick
-          id: 5MRPTTp8MMBLVSmzrGha
-          is_owner: false
-          phone_number: '+14155552671'
-          status: ACTIVE
-          updated_at: '2020-03-24T18:18:03Z'
-          wage_setting:
-            created_at: '2020-03-24T18:14:03Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - hourly_rate:
-                amount: 2000
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 5MRPTTp8MMBLVSmzrGha
-            updated_at: '2020-03-24T18:14:03Z'
-            version: 1
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T01:09:25Z'
-          family_name: Manny
-          given_name: Ivy
-          id: 7F5ZxsfRnkexhu1PTbfh
-          is_owner: false
-          status: ACTIVE
-          updated_at: '2020-03-24T01:09:25Z'
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T18:14:02Z'
-          email_address: john_smith@example.com
-          family_name: Smith
-          given_name: John
-          id: 808X9HR72yKvVaigQXf4
-          is_owner: false
-          phone_number: '+14155552671'
-          status: ACTIVE
-          updated_at: '2020-03-24T18:14:02Z'
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T18:14:00Z'
-          email_address: r_wen@example.com
-          family_name: Wen
-          given_name: Robert
-          id: 9MVDVoY4hazkWKGo_OuZ
-          is_owner: false
-          phone_number: '+14155552671'
-          status: ACTIVE
-          updated_at: '2020-03-24T18:14:00Z'
-        - assigned_locations:
-            assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-          created_at: '2020-03-24T18:14:00Z'
-          email_address: asimpson@example.com
-          family_name: Simpson
-          given_name: Ashley
-          id: 9UglUjOXQ13-hMFypCft
-          is_owner: false
-          phone_number: '+14155552671'
-          status: ACTIVE
-          updated_at: '2020-03-24T18:18:00Z'
-          wage_setting:
-            created_at: '2020-03-24T18:14:00Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - hourly_rate:
-                amount: 2000
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 9UglUjOXQ13-hMFypCft
-            updated_at: '2020-03-24T18:14:03Z'
-            version: 1
-    TeamMemberAssignedLocations:
-      type: object
-      description: An object that represents a team member's assignment to locations.
-      x-release-status: PUBLIC
-      properties:
-        assignment_type:
-          $ref: '#/components/schemas/TeamMemberAssignedLocationsAssignmentType'
-          description: 'The current assignment type of the team member.
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
 
-            See [TeamMemberAssignedLocationsAssignmentType](#type-teammemberassignedlocationsassignmenttype) for possible values'
-          nullable: true
-        location_ids:
-          type: array
-          items:
-            type: string
-          description: The explicit locations that the team member is assigned to.
-          nullable: true
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2

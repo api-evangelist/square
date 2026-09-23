@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay Snippets API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Snippets API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -123,11 +123,10 @@ paths:
       description: 'Removes your snippet from a Square Online site.
 
 
-        You can call [ListSites](api-endpoint:Sites-ListSites) to get the IDs of the sites that belong to a seller.
+        You can call ListSites to get the IDs of the sites that belong to a seller.
 
 
-
-        __Note:__ Square Online APIs are publicly available as part of an early access program. For more information, see [Early access program for Square Online APIs](https://developer.squareup.com/docs/online-api#early-access-program-for-square-online-apis).'
+        __Note:__ Square Online APIs are publicly available as part of an early access program. For more information, see Early access program for Square Online APIs.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -157,11 +156,10 @@ paths:
       description: 'Retrieves your snippet from a Square Online site. A site can contain snippets from multiple snippet applications, but you can retrieve only the snippet that was added by your application.
 
 
-        You can call [ListSites](api-endpoint:Sites-ListSites) to get the IDs of the sites that belong to a seller.
+        You can call ListSites to get the IDs of the sites that belong to a seller.
 
 
-
-        __Note:__ Square Online APIs are publicly available as part of an early access program. For more information, see [Early access program for Square Online APIs](https://developer.squareup.com/docs/online-api#early-access-program-for-square-online-apis).'
+        __Note:__ Square Online APIs are publicly available as part of an early access program. For more information, see Early access program for Square Online APIs.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -188,7 +186,15 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: "Adds a snippet to a Square Online site or updates the existing snippet on the site. \nThe snippet code is appended to the end of the `head` element on every page of the site, except checkout pages. A snippet application can add one snippet to a given site. \n\nYou can call [ListSites](api-endpoint:Sites-ListSites) to get the IDs of the sites that belong to a seller.\n\n\n__Note:__ Square Online APIs are publicly available as part of an early access program. For more information, see [Early access program for Square Online APIs](https://developer.squareup.com/docs/online-api#early-access-program-for-square-online-apis)."
+      description: 'Adds a snippet to a Square Online site or updates the existing snippet on the site.
+
+        The snippet code is appended to the end of the `head` element on every page of the site, except checkout pages. A snippet application can add one snippet to a given site.
+
+
+        You can call ListSites to get the IDs of the sites that belong to a seller.
+
+
+        __Note:__ Square Online APIs are publicly available as part of an early access program. For more information, see Early access program for Square Online APIs.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -239,53 +245,37 @@ components:
           id: snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7
           site_id: site_278075276488921835
           updated_at: '2021-03-11T25:40:09.000000Z'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+    UpsertSnippetResponse:
+      type: object
+      description: Represents an `UpsertSnippet` response. The response can include either `snippet` or `errors`.
       x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        snippet:
+          $ref: '#/components/schemas/Snippet'
+          description: The new or updated snippet.
+      example:
+        snippet:
+          content: <script>var js = 1;</script>
+          created_at: '2021-03-11T25:40:09.000000Z'
+          id: snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7
+          site_id: site_278075276488921835
+          updated_at: '2021-03-11T25:40:09.000000Z'
+    DeleteSnippetResponse:
+      type: object
+      description: Represents a `DeleteSnippet` response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
     ErrorCode:
       type: string
       enum:
@@ -1061,6 +1051,19 @@ components:
           type: string
           description: The timestamp of when the snippet was last updated on the site, in RFC 3339 format.
           readOnly: true
+    UpsertSnippetRequest:
+      type: object
+      description: Represents an `UpsertSnippet` request.
+      x-release-status: PUBLIC
+      required:
+      - snippet
+      properties:
+        snippet:
+          $ref: '#/components/schemas/Snippet'
+          description: The snippet for the site.
+      example:
+        snippet:
+          content: <script>var js = 1;</script>
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -1090,50 +1093,53 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
-    DeleteSnippetResponse:
-      type: object
-      description: Represents a `DeleteSnippet` response.
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
       x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
-    UpsertSnippetRequest:
-      type: object
-      description: Represents an `UpsertSnippet` request.
-      x-release-status: PUBLIC
-      required:
-      - snippet
-      properties:
-        snippet:
-          $ref: '#/components/schemas/Snippet'
-          description: The snippet for the site.
-      example:
-        snippet:
-          content: <script>var js = 1;</script>
-    UpsertSnippetResponse:
-      type: object
-      description: Represents an `UpsertSnippet` response. The response can include either `snippet` or `errors`.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        snippet:
-          $ref: '#/components/schemas/Snippet'
-          description: The new or updated snippet.
-      example:
-        snippet:
-          content: <script>var js = 1;</script>
-          created_at: '2021-03-11T25:40:09.000000Z'
-          id: snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7
-          site_id: site_278075276488921835
-          updated_at: '2021-03-11T25:40:09.000000Z'
   securitySchemes:
     oauth2:
       type: oauth2

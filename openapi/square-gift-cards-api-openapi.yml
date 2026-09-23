@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square Customer Custom Attributes API
+  title: Square Gift Cards API
   description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
@@ -109,48 +109,59 @@ servers:
 - url: https://connect.squareup.com
   variables: {}
 tags:
-- name: CustomerCustomAttributes
+- name: Gift Cards
 paths:
-  /v2/customers/custom-attribute-definitions:
+  /v2/gift-cards:
     get:
       tags:
-      - CustomerCustomAttributes
-      summary: Square List Customer Custom Attribute Definitions
-      operationId: ListCustomerCustomAttributeDefinitions
+      - Gift Cards
+      summary: Square List Gift Cards
+      operationId: ListGiftCards
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Lists the customer-related custom attribute definitions that belong to a Square seller account.
+      description: 'Lists all gift cards. You can specify optional filters to retrieve
 
-
-        When all response pages are retrieved, the results include all custom attribute definitions
-
-        that are visible to the requesting application, including those that are created by other
-
-        applications and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that
-
-        seller-defined custom attributes (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.'
+        a subset of the gift cards. Results are sorted by `created_at` in ascending order.'
       x-release-status: PUBLIC
       security:
       - oauth2:
-        - CUSTOMERS_READ
+        - GIFTCARDS_READ
       parameters:
+      - name: type
+        description: 'If a [type](entity:GiftCardType) is provided, the endpoint returns gift cards of the specified type.
+
+          Otherwise, the endpoint returns gift cards of all types.'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: state
+        description: 'If a [state](entity:GiftCardStatus) is provided, the endpoint returns the gift cards in the specified state.
+
+          Otherwise, the endpoint returns the gift cards of all states.'
+        schema:
+          type: string
+        in: query
+        required: false
       - name: limit
-        description: 'The maximum number of results to return in a single paged response. This limit is advisory.
+        description: 'If a limit is provided, the endpoint returns only the specified number of results per page.
 
-          The response might contain more or fewer results. The minimum value is 1 and the maximum value is 100.
+          The maximum value is 200. The default value is 30.
 
-          The default value is 20. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+          For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
         schema:
           type: integer
         in: query
         required: false
       - name: cursor
-        description: 'The cursor returned in the paged response from the previous call to this endpoint.
-
-          Provide this cursor to retrieve the next page of results for your original request.
-
-          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        description: "A pagination cursor returned by a previous call to this endpoint.\nProvide this cursor to retrieve the next set of results for the original query.\nIf a cursor is not provided, the endpoint returns the first page of the results. \nFor more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination)."
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: customer_id
+        description: If a customer ID is provided, the endpoint returns only the gift cards linked to the specified customer.
         schema:
           type: string
         in: query
@@ -161,38 +172,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListCustomerCustomAttributeDefinitionsResponse'
+                $ref: '#/components/schemas/ListGiftCardsResponse'
     post:
       tags:
-      - CustomerCustomAttributes
-      summary: Square Create Customer Custom Attribute Definition
-      operationId: CreateCustomerCustomAttributeDefinition
+      - Gift Cards
+      summary: Square Create Gift Card
+      operationId: CreateGiftCard
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Creates a customer-related custom attribute definition for a Square seller account.
+      description: 'Creates a digital gift card or registers a physical (plastic) gift card. The resulting gift card
 
-        Use this endpoint to define a custom attribute that can be associated with customer profiles.
+        has a `PENDING` state. To activate a gift card so that it can be redeemed for purchases, call
 
+        CreateGiftCardActivity and create an `ACTIVATE`
 
-        A custom attribute definition specifies the `key`, `visibility`, `schema`, and other properties
+        activity with the initial balance. Alternatively, you can use RefundPayment
 
-        for a custom attribute. After the definition is created, you can call
-
-        UpsertCustomerCustomAttribute or
-
-        BulkUpsertCustomerCustomAttributes
-
-        to set the custom attribute for customer profiles in the seller''s Customer Directory.
-
-
-        Sellers can view all custom attributes in exported customer data, including those set to
-
-        `VISIBILITY_HIDDEN`.'
+        to refund a payment to the new gift card.'
       x-release-status: PUBLIC
       security:
       - oauth2:
-        - CUSTOMERS_WRITE
+        - GIFTCARDS_WRITE
       parameters: []
       requestBody:
         required: true
@@ -203,182 +204,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCustomerCustomAttributeDefinitionRequest'
+              $ref: '#/components/schemas/CreateGiftCardRequest'
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCustomerCustomAttributeDefinitionResponse'
-  /v2/customers/custom-attribute-definitions/{key}:
-    delete:
-      tags:
-      - CustomerCustomAttributes
-      summary: Square Delete Customer Custom Attribute Definition
-      operationId: DeleteCustomerCustomAttributeDefinition
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-      description: 'Deletes a customer-related custom attribute definition from a Square seller account.
-
-
-        Deleting a custom attribute definition also deletes the corresponding custom attribute from
-
-        all customer profiles in the seller''s Customer Directory.
-
-
-        Only the definition owner can delete a custom attribute definition.'
-      x-release-status: PUBLIC
-      security:
-      - oauth2:
-        - CUSTOMERS_WRITE
-      parameters:
-      - name: key
-        description: The key of the custom attribute definition to delete.
-        schema:
-          type: string
-        in: path
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteCustomerCustomAttributeDefinitionResponse'
-    get:
-      tags:
-      - CustomerCustomAttributes
-      summary: Square Retrieve Customer Custom Attribute Definition
-      operationId: RetrieveCustomerCustomAttributeDefinition
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-      description: 'Retrieves a customer-related custom attribute definition from a Square seller account.
-
-
-        To retrieve a custom attribute definition created by another application, the `visibility`
-
-        setting must be `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
-
-        (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.'
-      x-release-status: PUBLIC
-      security:
-      - oauth2:
-        - CUSTOMERS_READ
-      parameters:
-      - name: key
-        description: 'The key of the custom attribute definition to retrieve. If the requesting application
-
-          is not the definition owner, you must use the qualified key.'
-        schema:
-          type: string
-        in: path
-        required: true
-      - name: version
-        description: 'The current version of the custom attribute definition, which is used for strongly consistent
-
-          reads to guarantee that you receive the most up-to-date data. When included in the request,
-
-          Square returns the specified version or a higher version if one exists. If the specified version
-
-          is higher than the current version, Square returns a `BAD_REQUEST` error.'
-        schema:
-          type: integer
-        in: query
-        required: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RetrieveCustomerCustomAttributeDefinitionResponse'
-    put:
-      tags:
-      - CustomerCustomAttributes
-      summary: Square Update Customer Custom Attribute Definition
-      operationId: UpdateCustomerCustomAttributeDefinition
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-      description: 'Updates a customer-related custom attribute definition for a Square seller account.
-
-
-        Use this endpoint to update the following fields: `name`, `description`, `visibility`, or the
-
-        `schema` for a `Selection` data type.
-
-
-        Only the definition owner can update a custom attribute definition. Note that sellers can view
-
-        all custom attributes in exported customer data, including those set to `VISIBILITY_HIDDEN`.'
-      x-release-status: PUBLIC
-      security:
-      - oauth2:
-        - CUSTOMERS_WRITE
-      parameters:
-      - name: key
-        description: The key of the custom attribute definition to update.
-        schema:
-          type: string
-        in: path
-        required: true
-      requestBody:
-        required: true
-        description: 'An object containing the fields to POST for the request.
-
-
-          See the corresponding object definition for field details.'
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateCustomerCustomAttributeDefinitionRequest'
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateCustomerCustomAttributeDefinitionResponse'
-  /v2/customers/custom-attributes/bulk-upsert:
+                $ref: '#/components/schemas/CreateGiftCardResponse'
+      x-endpoint-errors:
+      - error-code: TEMPORARY_ERROR
+  /v2/gift-cards/from-gan:
     post:
       tags:
-      - CustomerCustomAttributes
-      summary: Square Bulk Upsert Customer Custom Attributes
-      operationId: BulkUpsertCustomerCustomAttributes
+      - Gift Cards
+      summary: Square Retrieve Gift Card from GAN
+      operationId: RetrieveGiftCardFromGAN
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Creates or updates custom attributes for customer profiles as a bulk operation.
-
-
-        Use this endpoint to set the value of one or more custom attributes for one or more customer profiles.
-
-        A custom attribute is based on a custom attribute definition in a Square seller account, which is
-
-        created using the CreateCustomerCustomAttributeDefinition endpoint.
-
-
-        This `BulkUpsertCustomerCustomAttributes` endpoint accepts a map of 1 to 25 individual upsert
-
-        requests and returns a map of individual upsert responses. Each upsert request has a unique ID
-
-        and provides a customer ID and custom attribute. Each upsert response is returned with the ID
-
-        of the corresponding request.
-
-
-        To create or update a custom attribute owned by another application, the `visibility` setting
-
-        must be `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
-
-        (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.'
+      description: Retrieves a gift card using the gift card account number (GAN).
       x-release-status: PUBLIC
       security:
       - oauth2:
-        - CUSTOMERS_WRITE
+        - GIFTCARDS_READ
       parameters: []
       requestBody:
         required: true
@@ -389,242 +238,66 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BulkUpsertCustomerCustomAttributesRequest'
+              $ref: '#/components/schemas/RetrieveGiftCardFromGANRequest'
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BulkUpsertCustomerCustomAttributesResponse'
-  /v2/customers/{customer_id}/custom-attributes:
-    get:
-      tags:
-      - CustomerCustomAttributes
-      summary: Square List Customer Custom Attributes
-      operationId: ListCustomerCustomAttributes
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-      description: 'Lists the custom attributes associated with a customer profile.
-
-
-        You can use the `with_definitions` query parameter to also retrieve custom attribute definitions
-
-        in the same call.
-
-
-        When all response pages are retrieved, the results include all custom attributes that are
-
-        visible to the requesting application, including those that are owned by other applications
-
-        and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.'
-      x-release-status: PUBLIC
-      security:
-      - oauth2:
-        - CUSTOMERS_READ
-      parameters:
-      - name: customer_id
-        description: The ID of the target [customer profile](entity:Customer).
-        schema:
-          type: string
-        in: path
-        required: true
-      - name: limit
-        description: 'The maximum number of results to return in a single paged response. This limit is advisory.
-
-          The response might contain more or fewer results. The minimum value is 1 and the maximum value is 100.
-
-          The default value is 20. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        schema:
-          type: integer
-        in: query
-        required: false
-      - name: cursor
-        description: 'The cursor returned in the paged response from the previous call to this endpoint.
-
-          Provide this cursor to retrieve the next page of results for your original request. For more
-
-          information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        schema:
-          type: string
-        in: query
-        required: false
-      - name: with_definitions
-        description: 'Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of each
-
-          custom attribute. Set this parameter to `true` to get the name and description of each custom
-
-          attribute, information about the data type, or other definition details. The default value is `false`.'
-        schema:
-          type: boolean
-          default: false
-        in: query
-        required: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListCustomerCustomAttributesResponse'
-  /v2/customers/{customer_id}/custom-attributes/{key}:
-    delete:
-      tags:
-      - CustomerCustomAttributes
-      summary: Square Delete Customer Custom Attribute
-      operationId: DeleteCustomerCustomAttribute
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-      description: 'Deletes a custom attribute associated with a customer profile.
-
-
-        To delete a custom attribute owned by another application, the `visibility` setting must be
-
-        `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
-
-        (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.'
-      x-release-status: PUBLIC
-      security:
-      - oauth2:
-        - CUSTOMERS_WRITE
-      parameters:
-      - name: customer_id
-        description: The ID of the target [customer profile](entity:Customer).
-        schema:
-          type: string
-        in: path
-        required: true
-      - name: key
-        description: 'The key of the custom attribute to delete. This key must match the `key` of a custom
-
-          attribute definition in the Square seller account. If the requesting application is not the
-
-          definition owner, you must use the qualified key.'
-        schema:
-          type: string
-        in: path
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteCustomerCustomAttributeResponse'
-    get:
-      tags:
-      - CustomerCustomAttributes
-      summary: Square Retrieve Customer Custom Attribute
-      operationId: RetrieveCustomerCustomAttribute
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-      description: 'Retrieves a custom attribute associated with a customer profile.
-
-
-        You can use the `with_definition` query parameter to also retrieve the custom attribute definition
-
-        in the same call.
-
-
-        To retrieve a custom attribute owned by another application, the `visibility` setting must be
-
-        `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
-
-        (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.'
-      x-release-status: PUBLIC
-      security:
-      - oauth2:
-        - CUSTOMERS_READ
-      parameters:
-      - name: customer_id
-        description: The ID of the target [customer profile](entity:Customer).
-        schema:
-          type: string
-        in: path
-        required: true
-      - name: key
-        description: 'The key of the custom attribute to retrieve. This key must match the `key` of a custom
-
-          attribute definition in the Square seller account. If the requesting application is not the
-
-          definition owner, you must use the qualified key.'
-        schema:
-          type: string
-        in: path
-        required: true
-      - name: with_definition
-        description: 'Indicates whether to return the [custom attribute definition](entity:CustomAttributeDefinition) in the `definition` field of
-
-          the custom attribute. Set this parameter to `true` to get the name and description of the custom
-
-          attribute, information about the data type, or other definition details. The default value is `false`.'
-        schema:
-          type: boolean
-          default: false
-        in: query
-        required: false
-      - name: version
-        description: 'The current version of the custom attribute, which is used for strongly consistent reads to
-
-          guarantee that you receive the most up-to-date data. When included in the request, Square
-
-          returns the specified version or a higher version if one exists. If the specified version is
-
-          higher than the current version, Square returns a `BAD_REQUEST` error.'
-        schema:
-          type: integer
-        in: query
-        required: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RetrieveCustomerCustomAttributeResponse'
+                $ref: '#/components/schemas/RetrieveGiftCardFromGANResponse'
+  /v2/gift-cards/from-nonce:
     post:
       tags:
-      - CustomerCustomAttributes
-      summary: Square Upsert Customer Custom Attribute
-      operationId: UpsertCustomerCustomAttribute
+      - Gift Cards
+      summary: Square Retrieve Gift Card from Nonce
+      operationId: RetrieveGiftCardFromNonce
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Creates or updates a custom attribute for a customer profile.
-
-
-        Use this endpoint to set the value of a custom attribute for a specified customer profile.
-
-        A custom attribute is based on a custom attribute definition in a Square seller account, which
-
-        is created using the CreateCustomerCustomAttributeDefinition endpoint.
-
-
-        To create or update a custom attribute owned by another application, the `visibility` setting
-
-        must be `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
-
-        (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.'
+      description: Retrieves a gift card using a secure payment token that represents the gift card.
       x-release-status: PUBLIC
       security:
       - oauth2:
-        - CUSTOMERS_WRITE
-      parameters:
-      - name: customer_id
-        description: The ID of the target [customer profile](entity:Customer).
-        schema:
-          type: string
-        in: path
+        - GIFTCARDS_READ
+      parameters: []
+      requestBody:
         required: true
-      - name: key
-        description: 'The key of the custom attribute to create or update. This key must match the `key` of a
+        description: 'An object containing the fields to POST for the request.
 
-          custom attribute definition in the Square seller account. If the requesting application is not
 
-          the definition owner, you must use the qualified key.'
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveGiftCardFromNonceRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveGiftCardFromNonceResponse'
+      x-endpoint-errors:
+      - error-code: CARD_TOKEN_EXPIRED
+      - error-code: CARD_TOKEN_USED
+  /v2/gift-cards/{gift_card_id}/link-customer:
+    post:
+      tags:
+      - Gift Cards
+      summary: Square Link Customer to Gift Card
+      operationId: LinkCustomerToGiftCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Links a customer to a gift card, which is also referred to as adding a card on file.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_WRITE
+      parameters:
+      - name: gift_card_id
+        description: The ID of the gift card to be linked.
         schema:
           type: string
         in: path
@@ -638,19 +311,656 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpsertCustomerCustomAttributeRequest'
+              $ref: '#/components/schemas/LinkCustomerToGiftCardRequest'
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpsertCustomerCustomAttributeResponse'
+                $ref: '#/components/schemas/LinkCustomerToGiftCardResponse'
+  /v2/gift-cards/{gift_card_id}/unlink-customer:
+    post:
+      tags:
+      - Gift Cards
+      summary: Square Unlink Customer from Gift Card
+      operationId: UnlinkCustomerFromGiftCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Unlinks a customer from a gift card, which is also referred to as removing a card on file.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_WRITE
+      parameters:
+      - name: gift_card_id
+        description: The ID of the gift card to be unlinked.
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnlinkCustomerFromGiftCardRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnlinkCustomerFromGiftCardResponse'
+  /v2/gift-cards/{id}:
+    get:
+      tags:
+      - Gift Cards
+      summary: Square Retrieve Gift Card
+      operationId: RetrieveGiftCard
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a gift card using the gift card ID.
+      x-release-status: PUBLIC
+      security:
+      - oauth2:
+        - GIFTCARDS_READ
+      parameters:
+      - name: id
+        description: The ID of the gift card to retrieve.
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveGiftCardResponse'
 components:
   schemas:
-    DeleteCustomerCustomAttributeDefinitionResponse:
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    GiftCardGANSource:
+      type: string
+      enum:
+      - SQUARE
+      - OTHER
+      x-enum-elements:
+      - name: SQUARE
+        description: The GAN is generated by Square.
+      - name: OTHER
+        description: "The GAN is provided by a non-Square system. For more information, see \n[Custom GANs](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api#custom-gans) or \n[Third-party gift cards](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api#third-party-gift-cards)."
+      description: "Indicates the source that generated the gift card \naccount number (GAN)."
+      x-release-status: PUBLIC
+    RetrieveGiftCardResponse:
       type: object
-      description: Represents a response from a delete request containing error messages if there are any.
+      description: 'A response that contains a `GiftCard`. The response might contain a set of `Error` objects
+
+        if the request resulted in errors.'
       x-release-status: PUBLIC
       properties:
         errors:
@@ -658,166 +968,33 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
-      example: {}
-    UpdateCustomerCustomAttributeDefinitionRequest:
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The gift card retrieved.
+      example:
+        gift_card:
+          balance_money:
+            amount: 1000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320001001635'
+          gan_source: SQUARE
+          id: gftc:00113070ba5745f0b2377c1b9570cb03
+          state: ACTIVE
+          type: DIGITAL
+    RetrieveGiftCardFromNonceRequest:
       type: object
-      description: Represents an [UpdateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-UpdateCustomerCustomAttributeDefinition) request.
+      description: A request to retrieve a gift card by using a payment token.
       x-release-status: PUBLIC
-      x-params-example: ?key=favoritemovie
       required:
-      - custom_attribute_definition
+      - nonce
       properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: "The custom attribute definition that contains the fields to update. This endpoint\nsupports sparse updates, so only new or changed fields need to be included in the request.\nOnly the following fields can be updated:\n\n- `name`\n- `description`\n- `visibility`\n- `schema` for a `Selection` data type. Only changes to the named options or the maximum number of allowed\nselections are supported.\n\nFor more information, see\n[Updatable definition fields](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attribute-definitions#updatable-definition-fields).\n\nTo enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency) \ncontrol, include the optional `version` field and specify the current version of the custom attribute definition."
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-      example:
-        custom_attribute_definition:
-          description: Update the description as desired.
-          visibility: VISIBILITY_READ_ONLY
-    BulkUpsertCustomerCustomAttributesResponse:
-      type: object
-      description: 'Represents a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes) response,
-
-        which contains a map of responses that each corresponds to an individual upsert request.'
-      x-release-status: PUBLIC
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BulkUpsertCustomerCustomAttributesResponseCustomerCustomAttributeUpsertResponse'
-          description: 'A map of responses that correspond to individual upsert requests. Each response has the
-
-            same ID as the corresponding request and contains either a `customer_id` and `custom_attribute` or an `errors` field.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        values:
-          id1:
-            custom_attribute:
-              created_at: '2021-12-08T23:14:47Z'
-              key: favoritemovie
-              updated_at: '2021-12-09T00:16:23Z'
-              value: Dune
-              version: 1
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-          id2:
-            custom_attribute:
-              created_at: '2021-12-09T00:16:20Z'
-              key: ownsmovie
-              updated_at: '2021-12-09T00:16:23Z'
-              value: false
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-          id3:
-            custom_attribute:
-              created_at: '2021-12-09T00:16:20Z'
-              key: favoritemovie
-              updated_at: '2021-12-09T00:16:23Z'
-              value: Star Wars
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-          id4:
-            custom_attribute:
-              created_at: '2021-12-08T23:14:47Z'
-              key: square:a0f1505a-2aa1-490d-91a8-8d31ff181808
-              updated_at: '2021-12-09T00:16:23Z'
-              value: '10.5'
-              version: 1
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-          id5:
-            custom_attribute:
-              created_at: '2021-12-09T00:16:20Z'
-              key: sq0ids-0evKIskIGaY45fCyNL66aw:backupemail
-              updated_at: '2021-12-09T00:16:23Z'
-              value: fake-email@squareup.com
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: 70548QG1HN43B05G0KCZ4MMC1G
-    BulkUpsertCustomerCustomAttributesResponseCustomerCustomAttributeUpsertResponse:
-      type: object
-      description: Represents a response for an individual upsert request in a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes) operation.
-      x-release-status: PUBLIC
-      properties:
-        customer_id:
+        nonce:
           type: string
-          description: The ID of the customer profile associated with the custom attribute.
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: The new or updated custom attribute.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred while processing the individual request.
+          description: "The payment token of the gift card to retrieve. Payment tokens are generated by the \nWeb Payments SDK or In-App Payments SDK."
+          minLength: 1
       example:
-        custom_attribute:
-          created_at: '2021-12-08T23:14:47Z'
-          key: favoritemovie
-          updated_at: '2021-12-09T00:16:23Z'
-          value: Dune
-          version: 1
-          visibility: VISIBILITY_READ_WRITE_VALUES
-        customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-    ListCustomerCustomAttributesResponse:
-      type: object
-      description: 'Represents a [ListCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-ListCustomerCustomAttributes) response.
-
-        Either `custom_attributes`, an empty object, or `errors` is present in the response. If additional
-
-        results are available, the `cursor` field is also present along with `custom_attributes`.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomAttribute'
-          description: 'The retrieved custom attributes. If `with_definitions` was set to `true` in the request,
-
-            the custom attribute definition is returned in the `definition` field of each custom attribute.
-
-
-            If no custom attributes are found, Square returns an empty object (`{}`).'
-        cursor:
-          type: string
-          description: 'The cursor to use in your next call to this endpoint to retrieve the next page of results
-
-            for your original request. This field is present only if the request succeeded and additional
-
-            results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attributes:
-        - created_at: '2022-04-26T15:50:27Z'
-          key: favoritemovie
-          updated_at: '2022-04-26T15:50:27Z'
-          value: Dune
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
-        - created_at: '2022-04-26T15:51:53Z'
-          key: ownsmovie
-          updated_at: '2022-04-26T15:51:53Z'
-          value: false
-          version: 1
-          visibility: VISIBILITY_HIDDEN
+        nonce: cnon:7783322135245171
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -847,141 +1024,205 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
-    UpdateCustomerCustomAttributeDefinitionResponse:
+    LinkCustomerToGiftCardRequest:
       type: object
-      description: 'Represents an [UpdateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-UpdateCustomerCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
+      description: A request to link a customer to a gift card.
       x-release-status: PUBLIC
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The updated custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-04-26T15:27:30Z'
-          description: Update the description as desired.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-04-26T15:39:38Z'
-          version: 2
-          visibility: VISIBILITY_READ_ONLY
-    RetrieveCustomerCustomAttributeResponse:
-      type: object
-      description: 'Represents a [RetrieveCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-RetrieveCustomerCustomAttribute) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: 'The retrieved custom attribute. If `with_definition` was set to `true` in the request,
-
-            the custom attribute definition is returned in the `definition` field.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute:
-          created_at: '2022-04-26T15:50:27Z'
-          key: favoritemovie
-          updated_at: '2022-04-26T15:50:27Z'
-          value: Dune
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
-    UpsertCustomerCustomAttributeRequest:
-      type: object
-      description: Represents an [UpsertCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-UpsertCustomerCustomAttribute) request.
-      x-release-status: PUBLIC
-      x-params-example: ?customer_id=Z57QXKM2FGXEQDV42W8RBZY7BR&key=favoritemovie
+      x-params-example: ?gift_card_id=gftc:71ea002277a34f8a945e284b04822edb
       required:
-      - custom_attribute
+      - customer_id
       properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: "The custom attribute to create or update, with the following fields:\n\n- `value`. This value must conform to the `schema` specified by the definition. \nFor more information, see [Value data types](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attributes#value-data-types).\n\n- `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol for an update operation, include this optional field and specify the current version\nof the custom attribute."
-        idempotency_key:
+        customer_id:
+          type: string
+          description: The ID of the customer to link to the gift card.
+          minLength: 1
+          maxLength: 191
+      example:
+        customer_id: GKY0FZ3V717AH8Q2D821PNT2ZW
+    GiftCardStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - DEACTIVATED
+      - BLOCKED
+      - PENDING
+      x-enum-elements:
+      - name: ACTIVE
+        description: The gift card is active and can be used as a payment source.
+      - name: DEACTIVATED
+        description: Any activity that changes the gift card balance is permanently forbidden.
+      - name: BLOCKED
+        description: Any activity that changes the gift card balance is temporarily forbidden.
+      - name: PENDING
+        description: 'The gift card is pending activation.
+
+          This is the initial state when a gift card is created. Typically, you''ll call
+
+          [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) to create an
+
+          `ACTIVATE` activity that activates the gift card with an initial balance before first use.'
+      description: Indicates the gift card state.
+      x-release-status: PUBLIC
+    RetrieveGiftCardFromGANRequest:
+      type: object
+      description: A request to retrieve gift cards by their GANs.
+      x-release-status: PUBLIC
+      required:
+      - gan
+      properties:
+        gan:
+          type: string
+          description: 'The gift card account number (GAN) of the gift card to retrieve.
+
+            The maximum length of a GAN is 255 digits to account for third-party GANs that have been imported.
+
+            Square-issued gift cards have 16-digit GANs.'
+          minLength: 1
+          maxLength: 255
+      example:
+        gan: '7783320001001635'
+    GiftCardType:
+      type: string
+      enum:
+      - PHYSICAL
+      - DIGITAL
+      x-enum-elements:
+      - name: PHYSICAL
+        description: A plastic gift card.
+      - name: DIGITAL
+        description: A digital gift card.
+      description: Indicates the gift card type.
+      x-release-status: PUBLIC
+    UnlinkCustomerFromGiftCardResponse:
+      type: object
+      description: "A response that contains the unlinked `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: "The gift card with the ID of the unlinked customer removed from the `customer_ids` field. \nIf no other customers are linked, the `customer_ids` field is also removed."
+      example:
+        gift_card:
+          balance_money:
+            amount: 2500
+            currency: USD
+          created_at: '2021-03-25T05:13:01Z'
+          gan: '7783320005440920'
+          gan_source: SQUARE
+          id: gftc:71ea002277a34f8a945e284b04822edb
+          state: ACTIVE
+          type: DIGITAL
+    UnlinkCustomerFromGiftCardRequest:
+      type: object
+      description: A request to unlink a customer from a gift card.
+      x-release-status: PUBLIC
+      x-params-example: ?gift_card_id=gftc:71ea002277a34f8a945e284b04822edb
+      required:
+      - customer_id
+      properties:
+        customer_id:
+          type: string
+          description: The ID of the customer to unlink from the gift card.
+          minLength: 1
+          maxLength: 191
+      example:
+        customer_id: GKY0FZ3V717AH8Q2D821PNT2ZW
+    GiftCard:
+      type: object
+      description: Represents a Square gift card.
+      x-release-status: PUBLIC
+      required:
+      - type
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the gift card.
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/GiftCardType'
+          description: 'The gift card type.
+
+            See [Type](#type-type) for possible values'
+        gan_source:
+          $ref: '#/components/schemas/GiftCardGANSource'
+          description: 'The source that generated the gift card account number (GAN). The default value is `SQUARE`.
+
+            See [GANSource](#type-gansource) for possible values'
+        state:
+          $ref: '#/components/schemas/GiftCardStatus'
+          description: 'The current gift card state.
+
+            See [Status](#type-status) for possible values'
+          readOnly: true
+        balance_money:
+          $ref: '#/components/schemas/Money'
+          description: The current gift card balance. This balance is always greater than or equal to zero.
+          readOnly: true
+        gan:
           type:
           - string
           - 'null'
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-      example:
-        custom_attribute:
-          value: Dune
-    ListCustomerCustomAttributeDefinitionsResponse:
-      type: object
-      description: 'Represents a [ListCustomerCustomAttributeDefinitions](api-endpoint:CustomerCustomAttributes-ListCustomerCustomAttributeDefinitions) response.
-
-        Either `custom_attribute_definitions`, an empty object, or `errors` is present in the response.
-
-        If additional results are available, the `cursor` field is also present along with `custom_attribute_definitions`.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definitions:
+          description: "The gift card account number (GAN). Buyers can use the GAN to make purchases or check \nthe gift card balance."
+        created_at:
+          type: string
+          description: "The timestamp when the gift card was created, in RFC 3339 format. \nIn the case of a digital gift card, it is the time when you create a card \n(using the Square Point of Sale application, Seller Dashboard, or Gift Cards API).  \nIn the case of a plastic gift card, it is the time when Square associates the card with the \nseller at the time of activation."
+          readOnly: true
+        customer_ids:
           type: array
           items:
-            $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'The retrieved custom attribute definitions. If no custom attribute definitions are found,
-
-            Square returns an empty object (`{}`).'
+            type: string
+          description: The IDs of the [customer profiles](entity:Customer) to whom this gift card is linked.
+          readOnly: true
+    ListGiftCardsResponse:
+      type: object
+      description: "A response that contains a list of `GiftCard` objects. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/GiftCard'
+          description: The requested gift cards or an empty object if none are found.
         cursor:
           type: string
-          description: 'The cursor to provide in your next call to this endpoint to retrieve the next page of
+          description: 'When a response is truncated, it includes a cursor that you can use in a
 
-            results for your original request. This field is present only if the request succeeded and
+            subsequent request to retrieve the next set of gift cards. If a cursor is not present, this is
 
-            additional results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
+            the final response.
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
       example:
-        cursor: YEk4UPbUEsu8MUV0xouO5hCiFcD9T5ztB6UWEJq5vZnqBFmoBEi0j1j6HWYTFGMRre4p7T5wAQBj3Th1NX3XgBFcQVEVsIxUQ2NsbwjRitfoEZDml9uxxQXepowyRvCuSThHPbJSn7M7wInl3x8XypQF9ahVVQXegJ0CxEKc0SBH
-        custom_attribute_definitions:
-        - created_at: '2022-04-26T15:27:30Z'
-          description: Update the description as desired.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-04-26T15:39:38Z'
-          version: 3
-          visibility: VISIBILITY_READ_ONLY
-        - created_at: '2022-04-26T15:49:05Z'
-          description: Customer owns movie.
-          key: ownsmovie
-          name: Owns Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.Boolean
-          updated_at: '2022-04-26T15:49:05Z'
-          version: 1
-          visibility: VISIBILITY_HIDDEN
-    DeleteCustomerCustomAttributeResponse:
-      type: object
-      description: 'Represents a [DeleteCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-DeleteCustomerCustomAttribute) response.
-
-        Either an empty object `{}` (for a successful deletion) or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
+        cursor: JbFmyvUpaNKsfC1hoLSA4WlqkgkZXTWeKuStajR5BkP7OE0ETAbeWSi6U6u7sH
+        gift_cards:
+        - balance_money:
+            amount: 3900
+            currency: USD
+          created_at: '2021-06-09T22:26:54.000Z'
+          gan: '7783320008524605'
+          gan_source: SQUARE
+          id: gftc:00113070ba5745f0b2377c1b9570cb03
+          state: ACTIVE
+          type: DIGITAL
+        - balance_money:
+            amount: 2000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320002692465'
+          gan_source: SQUARE
+          id: gftc:00128a12725b41e58e0de1d20497a9dd
+          state: ACTIVE
+          type: DIGITAL
     ErrorCode:
       type: string
       enum:
@@ -1728,393 +1969,145 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    CustomAttributeDefinition:
+    RetrieveGiftCardFromNonceResponse:
       type: object
-      description: 'Represents a definition for custom attribute values. A custom attribute definition
-
-        specifies the key, visibility, schema, and other properties for a custom attribute.'
+      description: "A response that contains a `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
       x-release-status: PUBLIC
       properties:
-        key:
-          type:
-          - string
-          - 'null'
-          description: 'The identifier
-
-            of the custom attribute definition and its corresponding custom attributes. This value
-
-            can be a simple key, which is the key that is provided when the custom attribute definition
-
-            is created, or a qualified key, if the requesting
-
-            application is not the definition owner. The qualified key consists of the application ID
-
-            of the custom attribute definition owner
-
-            followed by the simple key that was provided when the definition was created. It has the
-
-            format application_id:simple key.
-
-
-            The value for a simple key can contain up to 60 alphanumeric characters, periods (.),
-
-            underscores (_), and hyphens (-).
-
-
-            This field can not be changed
-
-            after the custom attribute definition is created. This field is required when creating
-
-            a definition and must be unique per application, seller, and resource type.'
-          minLength: 1
-          pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
-        schema:
-          type:
-          - object
-          - 'null'
-          description: 'The JSON schema for the custom attribute definition, which determines the data type of the corresponding custom attributes. For more information,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview). This field is required when creating a definition.'
-        name:
-          type:
-          - string
-          - 'null'
-          description: 'The name of the custom attribute definition for API and seller-facing UI purposes. The name must
-
-            be unique within the seller and application pair. This field is required if the
-
-            `visibility` field is `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.'
-          maxLength: 255
-        description:
-          type:
-          - string
-          - 'null'
-          description: 'Seller-oriented description of the custom attribute definition, including any constraints
-
-            that the seller should observe. May be displayed as a tooltip in Square UIs. This field is
-
-            required if the `visibility` field is `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.'
-          maxLength: 255
-        visibility:
-          $ref: '#/components/schemas/CustomAttributeDefinitionVisibility'
-          description: 'Specifies how the custom attribute definition and its values should be shared with
-
-            the seller and other applications. If no value is specified, the value defaults to `VISIBILITY_HIDDEN`.
-
-            See [Visibility](#type-visibility) for possible values'
-        version:
-          type: integer
-          description: 'Read only. The current version of the custom attribute definition.
-
-            The value is incremented each time the custom attribute definition is updated.
-
-            When updating a custom attribute definition, you can provide this field
-
-            and specify the current version of the custom attribute definition to enable
-
-            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency).
-
-
-            On writes, this field must be set to the latest version. Stale writes are rejected.
-
-
-            This field can also be used to enforce strong consistency for reads. For more information about strong consistency for reads,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-        updated_at:
-          type: string
-          description: 'The timestamp that indicates when the custom attribute definition was created or most recently updated,
-
-            in RFC 3339 format.'
-          readOnly: true
-        created_at:
-          type: string
-          description: The timestamp that indicates when the custom attribute definition was created, in RFC 3339 format.
-          readOnly: true
-    CustomAttribute:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The retrieved gift card.
+      example:
+        gift_card:
+          balance_money:
+            amount: 5000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320001001635'
+          gan_source: SQUARE
+          id: gftc:6944163553804e439d89adb47caf806a
+          state: ACTIVE
+          type: DIGITAL
+    CreateGiftCardRequest:
       type: object
-      description: 'A custom attribute value. Each custom attribute value has a corresponding
-
-        `CustomAttributeDefinition` object.'
-      x-release-status: PUBLIC
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-          description: 'The identifier
-
-            of the custom attribute definition and its corresponding custom attributes. This value
-
-            can be a simple key, which is the key that is provided when the custom attribute definition
-
-            is created, or a qualified key, if the requesting
-
-            application is not the definition owner. The qualified key consists of the application ID
-
-            of the custom attribute definition owner
-
-            followed by the simple key that was provided when the definition was created. It has the
-
-            format application_id:simple key.
-
-
-            The value for a simple key can contain up to 60 alphanumeric characters, periods (.),
-
-            underscores (_), and hyphens (-).'
-          minLength: 1
-          pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
-        value:
-          description: 'The value assigned to the custom attribute. It is validated against the custom
-
-            attribute definition''s schema on write operations. For more information about custom
-
-            attribute values,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-        version:
-          type: integer
-          description: 'Read only. The current version of the custom attribute. This field is incremented when the custom attribute is changed.
-
-            When updating an existing custom attribute value, you can provide this field
-
-            and specify the current version of the custom attribute to enable
-
-            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency).
-
-            This field can also be used to enforce strong consistency for reads. For more information about strong consistency for reads,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-        visibility:
-          $ref: '#/components/schemas/CustomAttributeDefinitionVisibility'
-          description: 'A copy of the `visibility` field value for the associated custom attribute definition.
-
-            See [CustomAttributeDefinitionVisibility](#type-customattributedefinitionvisibility) for possible values'
-          readOnly: true
-        definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'A copy of the associated custom attribute definition object. This field is only set when
-
-            the optional field is specified on the request.'
-          readOnly: true
-        updated_at:
-          type: string
-          description: 'The timestamp that indicates when the custom attribute was created or was most recently
-
-            updated, in RFC 3339 format.'
-          readOnly: true
-        created_at:
-          type: string
-          description: The timestamp that indicates when the custom attribute was created, in RFC 3339 format.
-          readOnly: true
-    BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequest:
-      type: object
-      description: 'Represents an individual upsert request in a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes)
-
-        request. An individual request contains a customer ID, the custom attribute to create or update,
-
-        and an optional idempotency key.'
+      description: Represents a [CreateGiftCard](api-endpoint:GiftCards-CreateGiftCard) request.
       x-release-status: PUBLIC
       required:
-      - customer_id
-      - custom_attribute
+      - idempotency_key
+      - location_id
+      - gift_card
       properties:
-        customer_id:
-          type: string
-          description: The ID of the target [customer profile](entity:Customer).
-          minLength: 1
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: "The custom attribute to create or update, with following fields:\n\n- `key`. This key must match the `key` of a custom attribute definition in the Square seller \naccount. If the requesting application is not the definition owner, you must provide the qualified key.\n\n- `value`. This value must conform to the `schema` specified by the definition. \nFor more information, see [Value data types](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attributes#value-data-types).\n\n- `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol for update operations, include this optional field in the request and set the\nvalue to the current version of the custom attribute."
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique identifier for this individual upsert request, used to ensure idempotency.
-
-            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-    UpsertCustomerCustomAttributeResponse:
-      type: object
-      description: 'Represents an [UpsertCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-UpsertCustomerCustomAttribute) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: The new or updated custom attribute.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute:
-          created_at: '2022-04-26T15:50:27Z'
-          key: favoritemovie
-          updated_at: '2022-04-26T15:50:27Z'
-          value: Dune
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
-    RetrieveCustomerCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents a [RetrieveCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-RetrieveCustomerCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The retrieved custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-04-26T15:27:30Z'
-          description: The favorite movie of the customer.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-04-26T15:27:30Z'
-          version: 1
-          visibility: VISIBILITY_READ_WRITE_VALUES
-    CreateCustomerCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents a [CreateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-CreateCustomerCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The new custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-04-26T15:27:30Z'
-          description: The favorite movie of the customer.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-04-26T15:27:30Z'
-          version: 1
-          visibility: VISIBILITY_HIDDEN
-    CustomAttributeDefinitionVisibility:
-      type: string
-      enum:
-      - VISIBILITY_HIDDEN
-      - VISIBILITY_READ_ONLY
-      - VISIBILITY_READ_WRITE_VALUES
-      x-enum-elements:
-      - name: VISIBILITY_HIDDEN
-        description: 'The custom attribute definition and values are hidden from the seller (except on export
-
-          of all seller data) and other developers.'
-      - name: VISIBILITY_READ_ONLY
-        description: 'The seller and other developers can read the custom attribute definition and values
-
-          on resources.'
-      - name: VISIBILITY_READ_WRITE_VALUES
-        description: 'The seller and other developers can read the custom attribute definition,
-
-          and can read and write values on resources. A custom attribute definition
-
-          can only be edited or deleted by the application that created it.'
-      description: 'The level of permission that a seller or other applications requires to
-
-        view this custom attribute definition.
-
-        The `Visibility` field controls who can read and write the custom attribute values
-
-        and custom attribute definition.'
-      x-release-status: PUBLIC
-    CreateCustomerCustomAttributeDefinitionRequest:
-      type: object
-      description: Represents a [CreateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-CreateCustomerCustomAttributeDefinition) request.
-      x-release-status: PUBLIC
-      required:
-      - custom_attribute_definition
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'The custom attribute definition to create. Note the following:
-
-            - With the exception of the `Selection` data type, the `schema` is specified as a simple URL to the JSON schema
-
-            definition hosted on the Square CDN. For more information, including supported values and constraints, see
-
-            [Specifying the schema](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attribute-definitions#specify-schema).
-
-            - If provided, `name` must be unique (case-sensitive) across all visible customer-related custom attribute definitions for the seller.
-
-            - All custom attributes are visible in exported customer data, including those set to `VISIBILITY_HIDDEN`.'
         idempotency_key:
           type: string
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
+          description: "A unique identifier for this request, used to ensure idempotency. For more information, \nsee [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency)."
+          minLength: 1
+          maxLength: 128
+        location_id:
+          type: string
+          description: "The ID of the [location](entity:Location) where the gift card should be registered for \nreporting purposes. Gift cards can be redeemed at any of the seller's locations."
+          minLength: 1
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: "The gift card to create. The `type` field is required for this request. The `gan_source` \nand `gan` fields are included as follows: \n\nTo direct Square to generate a 16-digit GAN, omit `gan_source` and `gan`.\n\nTo provide a custom GAN, include `gan_source` and `gan`.\n- For `gan_source`, specify `OTHER`. \n- For `gan`, provide a custom GAN containing 8 to 20 alphanumeric characters. The GAN must be \nunique for the seller and cannot start with the same bank identification number (BIN) as major \ncredit cards. Do not use GANs that are easy to guess (such as 12345678) because they greatly \nincrease the risk of fraud. It is the responsibility of the developer to ensure the security \nof their custom GANs. For more information, see \n[Custom GANs](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api#custom-gans). \n\nTo register an unused, physical gift card that the seller previously ordered from Square, \ninclude `gan` and provide the GAN that is printed on the gift card."
       example:
-        custom_attribute_definition:
-          description: The favorite movie of the customer.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          visibility: VISIBILITY_HIDDEN
-    BulkUpsertCustomerCustomAttributesRequest:
+        gift_card:
+          type: DIGITAL
+        idempotency_key: NC9Tm69EjbjtConu
+        location_id: 81FN9BNFZTKS4
+    CreateGiftCardResponse:
       type: object
-      description: Represents a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes) request.
+      description: 'A response that contains a `GiftCard`. The response might contain a set of `Error` objects if the request
+
+        resulted in errors.'
       x-release-status: PUBLIC
-      required:
-      - values
       properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequest'
-          description: 'A map containing 1 to 25 individual upsert requests. For each request, provide an
-
-            arbitrary ID that is unique for this `BulkUpsertCustomerCustomAttributes` request and the
-
-            information needed to create or update a custom attribute.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The new gift card.
       example:
-        values:
-          id1:
-            custom_attribute:
-              key: favoritemovie
-              value: Dune
-            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-          id2:
-            custom_attribute:
-              key: ownsmovie
-              value: false
-            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-          id3:
-            custom_attribute:
-              key: favoritemovie
-              value: Star Wars
-            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-          id4:
-            custom_attribute:
-              key: square:a0f1505a-2aa1-490d-91a8-8d31ff181808
-              value: '10.5'
-            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-          id5:
-            custom_attribute:
-              key: sq0ids-0evKIskIGaY45fCyNL66aw:backupemail
-              value: fake-email@squareup.com
-            customer_id: 70548QG1HN43B05G0KCZ4MMC1G
+        gift_card:
+          balance_money:
+            amount: 0
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320006753271'
+          gan_source: SQUARE
+          id: gftc:6cbacbb64cf54e2ca9f573d619038059
+          state: PENDING
+          type: DIGITAL
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+    RetrieveGiftCardFromGANResponse:
+      type: object
+      description: 'A response that contains a `GiftCard`. This response might contain a set of `Error` objects
+
+        if the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: A gift card that was fetched, if present. It returns empty if an error occurred.
+      example:
+        gift_card:
+          balance_money:
+            amount: 5000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320001001635'
+          gan_source: SQUARE
+          id: gftc:6944163553804e439d89adb47caf806a
+          state: ACTIVE
+          type: DIGITAL
     ErrorCategory:
       type: string
       enum:
@@ -2162,6 +2155,32 @@ components:
 
         request to the Connect API.'
       x-release-status: PUBLIC
+    LinkCustomerToGiftCardResponse:
+      type: object
+      description: "A response that contains the linked `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The gift card with the ID of the linked customer listed in the `customer_ids` field.
+      example:
+        gift_card:
+          balance_money:
+            amount: 2500
+            currency: USD
+          created_at: '2021-03-25T05:13:01Z'
+          customer_ids:
+          - GKY0FZ3V717AH8Q2D821PNT2ZW
+          gan: '7783320005440920'
+          gan_source: SQUARE
+          id: gftc:71ea002277a34f8a945e284b04822edb
+          state: ACTIVE
+          type: DIGITAL
   securitySchemes:
     oauth2:
       type: oauth2

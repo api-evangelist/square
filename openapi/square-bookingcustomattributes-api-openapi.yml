@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay BookingCustomAttributes API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Booking Custom Attributes API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -650,6 +650,409 @@ paths:
                 $ref: '#/components/schemas/UpsertBookingCustomAttributeResponse'
 components:
   schemas:
+    BookingCustomAttributeDeleteResponse:
+      type: object
+      description: Represents a response for an individual upsert request in a [BulkDeleteBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkDeleteBookingCustomAttributes) operation.
+      x-release-status: PUBLIC
+      properties:
+        booking_id:
+          type: string
+          description: The ID of the [booking](entity:Booking) associated with the custom attribute.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred while processing the individual request.
+      example:
+        booking_id: N3NCVYY3WS27HF0HKANA3R9FP8
+        errors: []
+    UpsertBookingCustomAttributeRequest:
+      type: object
+      description: Represents an [UpsertBookingCustomAttribute](api-endpoint:BookingCustomAttributes-UpsertBookingCustomAttribute) request.
+      x-release-status: PUBLIC
+      required:
+      - custom_attribute
+      properties:
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: 'The custom attribute to create or update, with the following fields:
+
+
+            - `value`. This value must conform to the `schema` specified by the definition.
+
+            For more information, see [Value data types](https://developer.squareup.com/docs/booking-custom-attributes-api/custom-attributes#value-data-types).
+
+
+            - `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
+
+            control for an update operation, include this optional field and specify the current version
+
+            of the custom attribute.'
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
+
+            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
+    UpsertBookingCustomAttributeResponse:
+      type: object
+      description: 'Represents an [UpsertBookingCustomAttribute](api-endpoint:BookingCustomAttributes-UpsertBookingCustomAttribute) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: The new or updated custom attribute.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute:
+          created_at: '2022-11-16T15:50:27Z'
+          key: favoriteShampoo
+          updated_at: '2022-11-16T15:50:27Z'
+          value: Spring Fresh
+          version: 1
+          visibility: VISIBILITY_READ_ONLY
+        errors: []
+    RetrieveBookingCustomAttributeResponse:
+      type: object
+      description: 'Represents a [RetrieveBookingCustomAttribute](api-endpoint:BookingCustomAttributes-RetrieveBookingCustomAttribute) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: 'The retrieved custom attribute. If `with_definition` was set to `true` in the request,
+
+            the custom attribute definition is returned in the `definition` field.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute:
+          created_at: '2022-11-16T15:50:27Z'
+          key: favoriteShampoo
+          updated_at: '2022-11-16T15:50:27Z'
+          value: Dune
+          version: 1
+          visibility: VISIBILITY_READ_ONLY
+        errors: []
+    BulkDeleteBookingCustomAttributesResponse:
+      type: object
+      description: 'Represents a [BulkDeleteBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkDeleteBookingCustomAttributes) response,
+
+        which contains a map of responses that each corresponds to an individual delete request.'
+      x-release-status: PUBLIC
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BookingCustomAttributeDeleteResponse'
+          description: 'A map of responses that correspond to individual delete requests. Each response has the
+
+            same ID as the corresponding request and contains `booking_id` and  `errors` field.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        errors: []
+        values:
+          id1:
+            booking_id: N3NCVYY3WS27HF0HKANA3R9FP8
+            errors: []
+          id2:
+            booking_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
+            errors: []
+          id3:
+            booking_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
+            errors: []
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    BulkUpsertBookingCustomAttributesRequest:
+      type: object
+      description: Represents a [BulkUpsertBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkUpsertBookingCustomAttributes) request.
+      x-release-status: PUBLIC
+      required:
+      - values
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BookingCustomAttributeUpsertRequest'
+          description: 'A map containing 1 to 25 individual upsert requests. For each request, provide an
+
+            arbitrary ID that is unique for this `BulkUpsertBookingCustomAttributes` request and the
+
+            information needed to create or update a custom attribute.'
+    UpdateBookingCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents an [UpdateBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-UpdateBookingCustomAttributeDefinition) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: The updated custom attribute definition.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute_definition:
+          created_at: '2022-11-16T15:27:30Z'
+          description: Update the description as desired.
+          key: favoriteShampoo
+          name: Favorite shampoo
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          updated_at: '2022-11-16T15:39:38Z'
+          version: 2
+          visibility: VISIBILITY_READ_ONLY
+        errors: []
+    UpdateBookingCustomAttributeDefinitionRequest:
+      type: object
+      description: Represents an [UpdateBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-UpdateBookingCustomAttributeDefinition) request.
+      x-release-status: PUBLIC
+      required:
+      - custom_attribute_definition
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: 'The custom attribute definition that contains the fields to update. Only the following fields can be updated:
+
+            - `name`
+
+            - `description`
+
+            - `visibility`
+
+            - `schema` for a `Selection` data type. Only changes to the named options or the maximum number of allowed
+
+            selections are supported.
+
+
+            For more information, see
+
+            [Updatable definition fields](https://developer.squareup.com/docs/booking-custom-attributes-api/custom-attribute-definitions#updatable-definition-fields).
+
+
+            To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
+
+            control, include the optional `version` field and specify the current version of the custom attribute definition.'
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
+
+            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
+    BulkUpsertBookingCustomAttributesResponse:
+      type: object
+      description: 'Represents a [BulkUpsertBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkUpsertBookingCustomAttributes) response,
+
+        which contains a map of responses that each corresponds to an individual upsert request.'
+      x-release-status: PUBLIC
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BookingCustomAttributeUpsertResponse'
+          description: 'A map of responses that correspond to individual upsert requests. Each response has the
+
+            same ID as the corresponding request and contains either a `booking_id` and `custom_attribute` or an `errors` field.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        errors: []
+        values:
+          id1:
+            booking_id: N3NCVYY3WS27HF0HKANA3R9FP8
+            custom_attribute:
+              created_at: '2022-11-16T23:14:47Z'
+              key: favoriteShampoo
+              updated_at: '2022-11-16T00:16:23Z'
+              value: Spring Fresh
+              version: 1
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            errors: []
+          id2:
+            booking_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
+            custom_attribute:
+              created_at: '2022-11-16T00:16:20Z'
+              key: hasShoes
+              updated_at: '2022-11-16T00:16:23Z'
+              value: false
+              version: 2
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            errors: []
+          id3:
+            booking_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
+            custom_attribute:
+              created_at: '2022-11-16T00:16:20Z'
+              key: favoriteShampoo
+              updated_at: '2022-11-16T00:16:23Z'
+              value: Hydro-Cool
+              version: 2
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            errors: []
+          id4:
+            booking_id: N3NCVYY3WS27HF0HKANA3R9FP8
+            custom_attribute:
+              created_at: '2022-11-16T23:14:47Z'
+              key: partySize
+              updated_at: '2022-11-16T00:16:23Z'
+              value: 4
+              version: 1
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            errors: []
+          id5:
+            booking_id: 70548QG1HN43B05G0KCZ4MMC1G
+            custom_attribute:
+              created_at: '2022-11-16T00:16:20Z'
+              key: celebrating
+              updated_at: '2022-11-16T00:16:23Z'
+              value: birthday
+              version: 2
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            errors: []
+    RetrieveBookingCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents a [RetrieveBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-RetrieveBookingCustomAttributeDefinition) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: The retrieved custom attribute definition.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute_definition:
+          created_at: '2022-11-16T15:27:30Z'
+          description: The favorite shampoo of the customer.
+          key: favoriteShampoo
+          name: Favorite shampoo
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          updated_at: '2022-11-16T15:27:30Z'
+          version: 1
+          visibility: VISIBILITY_READ_WRITE_VALUES
+        errors: []
+    DeleteBookingCustomAttributeResponse:
+      type: object
+      description: 'Represents a [DeleteBookingCustomAttribute](api-endpoint:BookingCustomAttributes-DeleteBookingCustomAttribute) response.
+
+        Either an empty object `{}` (for a successful deletion) or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        errors: []
+    DeleteBookingCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents a [DeleteBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-DeleteBookingCustomAttributeDefinition) response
+
+        containing error messages when errors occurred during the request. The successful response does not contain any payload.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        errors: []
+    BulkDeleteBookingCustomAttributesRequest:
+      type: object
+      description: Represents a [BulkDeleteBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkDeleteBookingCustomAttributes) request.
+      x-release-status: PUBLIC
+      required:
+      - values
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BookingCustomAttributeDeleteRequest'
+          description: 'A map containing 1 to 25 individual Delete requests. For each request, provide an
+
+            arbitrary ID that is unique for this `BulkDeleteBookingCustomAttributes` request and the
+
+            information needed to delete a custom attribute.'
+    BookingCustomAttributeDeleteRequest:
+      type: object
+      description: 'Represents an individual delete request in a [BulkDeleteBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkDeleteBookingCustomAttributes)
+
+        request. An individual request contains a booking ID, the custom attribute to delete, and an optional idempotency key.'
+      x-release-status: PUBLIC
+      required:
+      - booking_id
+      - key
+      properties:
+        booking_id:
+          type: string
+          description: The ID of the target [booking](entity:Booking).
+          minLength: 1
+          maxLength: 36
+        key:
+          type: string
+          description: 'The key of the custom attribute to delete. This key must match the `key` of a
+
+            custom attribute definition in the Square seller account. If the requesting application is not
+
+            the definition owner, you must use the qualified key.'
+          minLength: 1
     CreateBookingCustomAttributeDefinitionResponse:
       type: object
       description: 'Represents a [CreateBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-CreateBookingCustomAttributeDefinition) response.
@@ -677,67 +1080,6 @@ components:
           version: 1
           visibility: VISIBILITY_HIDDEN
         errors: []
-    DeleteBookingCustomAttributeResponse:
-      type: object
-      description: 'Represents a [DeleteBookingCustomAttribute](api-endpoint:BookingCustomAttributes-DeleteBookingCustomAttribute) response.
-
-        Either an empty object `{}` (for a successful deletion) or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        errors: []
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
     ErrorCode:
       type: string
       enum:
@@ -1484,6 +1826,109 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    CustomAttributeDefinition:
+      type: object
+      description: 'Represents a definition for custom attribute values. A custom attribute definition
+
+        specifies the key, visibility, schema, and other properties for a custom attribute.'
+      x-release-status: PUBLIC
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: 'The identifier
+
+            of the custom attribute definition and its corresponding custom attributes. This value
+
+            can be a simple key, which is the key that is provided when the custom attribute definition
+
+            is created, or a qualified key, if the requesting
+
+            application is not the definition owner. The qualified key consists of the application ID
+
+            of the custom attribute definition owner
+
+            followed by the simple key that was provided when the definition was created. It has the
+
+            format application_id:simple key.
+
+
+            The value for a simple key can contain up to 60 alphanumeric characters, periods (.),
+
+            underscores (_), and hyphens (-).
+
+
+            This field can not be changed
+
+            after the custom attribute definition is created. This field is required when creating
+
+            a definition and must be unique per application, seller, and resource type.'
+          minLength: 1
+          pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
+        schema:
+          type:
+          - object
+          - 'null'
+          description: 'The JSON schema for the custom attribute definition, which determines the data type of the corresponding custom attributes. For more information,
+
+            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview). This field is required when creating a definition.'
+        name:
+          type:
+          - string
+          - 'null'
+          description: 'The name of the custom attribute definition for API and seller-facing UI purposes. The name must
+
+            be unique within the seller and application pair. This field is required if the
+
+            `visibility` field is `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.'
+          maxLength: 255
+        description:
+          type:
+          - string
+          - 'null'
+          description: 'Seller-oriented description of the custom attribute definition, including any constraints
+
+            that the seller should observe. May be displayed as a tooltip in Square UIs. This field is
+
+            required if the `visibility` field is `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.'
+          maxLength: 255
+        visibility:
+          $ref: '#/components/schemas/CustomAttributeDefinitionVisibility'
+          description: 'Specifies how the custom attribute definition and its values should be shared with
+
+            the seller and other applications. If no value is specified, the value defaults to `VISIBILITY_HIDDEN`.
+
+            See [Visibility](#type-visibility) for possible values'
+        version:
+          type: integer
+          description: 'Read only. The current version of the custom attribute definition.
+
+            The value is incremented each time the custom attribute definition is updated.
+
+            When updating a custom attribute definition, you can provide this field
+
+            and specify the current version of the custom attribute definition to enable
+
+            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency).
+
+
+            On writes, this field must be set to the latest version. Stale writes are rejected.
+
+
+            This field can also be used to enforce strong consistency for reads. For more information about strong consistency for reads,
+
+            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
+        updated_at:
+          type: string
+          description: 'The timestamp that indicates when the custom attribute definition was created or most recently updated,
+
+            in RFC 3339 format.'
+          readOnly: true
+        created_at:
+          type: string
+          description: The timestamp that indicates when the custom attribute definition was created, in RFC 3339 format.
+          readOnly: true
     CustomAttribute:
       type: object
       description: 'A custom attribute value. Each custom attribute value has a corresponding
@@ -1492,7 +1937,9 @@ components:
       x-release-status: PUBLIC
       properties:
         key:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'The identifier
 
             of the custom attribute definition and its corresponding custom attributes. This value
@@ -1515,7 +1962,6 @@ components:
             underscores (_), and hyphens (-).'
           minLength: 1
           pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
-          nullable: true
         value:
           description: 'The value assigned to the custom attribute. It is validated against the custom
 
@@ -1524,7 +1970,6 @@ components:
             attribute values,
 
             see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-          nullable: true
         version:
           type: integer
           description: 'Read only. The current version of the custom attribute. This field is incremented when the custom attribute is changed.
@@ -1560,168 +2005,51 @@ components:
           type: string
           description: The timestamp that indicates when the custom attribute was created, in RFC 3339 format.
           readOnly: true
-    ListBookingCustomAttributesResponse:
+    BookingCustomAttributeUpsertRequest:
       type: object
-      description: 'Represents a [ListBookingCustomAttributes](api-endpoint:BookingCustomAttributes-ListBookingCustomAttributes) response.
+      description: 'Represents an individual upsert request in a [BulkUpsertBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkUpsertBookingCustomAttributes)
 
-        Either `custom_attributes`, an empty object, or `errors` is present in the response. If additional
+        request. An individual request contains a booking ID, the custom attribute to create or update,
 
-        results are available, the `cursor` field is also present along with `custom_attributes`.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomAttribute'
-          description: 'The retrieved custom attributes. If `with_definitions` was set to `true` in the request,
-
-            the custom attribute definition is returned in the `definition` field of each custom attribute.
-
-
-            If no custom attributes are found, Square returns an empty object (`{}`).'
-        cursor:
-          type: string
-          description: 'The cursor to use in your next call to this endpoint to retrieve the next page of results
-
-            for your original request. This field is present only if the request succeeded and additional
-
-            results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attributes:
-        - created_at: '2022-11-16T15:50:27Z'
-          key: favoriteShampoo
-          updated_at: '2022-11-16T15:50:27Z'
-          value: Hydro-Cool
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
-        - created_at: '2022-11-16T15:51:53Z'
-          key: hasShoes
-          updated_at: '2022-11-16T15:51:53Z'
-          value: false
-          version: 1
-          visibility: VISIBILITY_HIDDEN
-        errors: []
-    BulkDeleteBookingCustomAttributesRequest:
-      type: object
-      description: Represents a [BulkDeleteBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkDeleteBookingCustomAttributes) request.
+        and an optional idempotency key.'
       x-release-status: PUBLIC
       required:
-      - values
+      - booking_id
+      - custom_attribute
       properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BookingCustomAttributeDeleteRequest'
-          description: 'A map containing 1 to 25 individual Delete requests. For each request, provide an
-
-            arbitrary ID that is unique for this `BulkDeleteBookingCustomAttributes` request and the
-
-            information needed to delete a custom attribute.'
-    CustomAttributeDefinition:
-      type: object
-      description: 'Represents a definition for custom attribute values. A custom attribute definition
-
-        specifies the key, visibility, schema, and other properties for a custom attribute.'
-      x-release-status: PUBLIC
-      properties:
-        key:
+        booking_id:
           type: string
-          description: 'The identifier
-
-            of the custom attribute definition and its corresponding custom attributes. This value
-
-            can be a simple key, which is the key that is provided when the custom attribute definition
-
-            is created, or a qualified key, if the requesting
-
-            application is not the definition owner. The qualified key consists of the application ID
-
-            of the custom attribute definition owner
-
-            followed by the simple key that was provided when the definition was created. It has the
-
-            format application_id:simple key.
-
-
-            The value for a simple key can contain up to 60 alphanumeric characters, periods (.),
-
-            underscores (_), and hyphens (-).
-
-
-            This field can not be changed
-
-            after the custom attribute definition is created. This field is required when creating
-
-            a definition and must be unique per application, seller, and resource type.'
+          description: The ID of the target [booking](entity:Booking).
           minLength: 1
-          pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
-          nullable: true
-        schema:
-          type: object
-          description: 'The JSON schema for the custom attribute definition, which determines the data type of the corresponding custom attributes. For more information,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview). This field is required when creating a definition.'
-          nullable: true
-        name:
-          type: string
-          description: 'The name of the custom attribute definition for API and seller-facing UI purposes. The name must
-
-            be unique within the seller and application pair. This field is required if the
-
-            `visibility` field is `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.'
-          maxLength: 255
-          nullable: true
-        description:
-          type: string
-          description: 'Seller-oriented description of the custom attribute definition, including any constraints
-
-            that the seller should observe. May be displayed as a tooltip in Square UIs. This field is
-
-            required if the `visibility` field is `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.'
-          maxLength: 255
-          nullable: true
-        visibility:
-          $ref: '#/components/schemas/CustomAttributeDefinitionVisibility'
-          description: 'Specifies how the custom attribute definition and its values should be shared with
-
-            the seller and other applications. If no value is specified, the value defaults to `VISIBILITY_HIDDEN`.
-
-            See [Visibility](#type-visibility) for possible values'
-          nullable: true
-        version:
-          type: integer
-          description: 'Read only. The current version of the custom attribute definition.
-
-            The value is incremented each time the custom attribute definition is updated.
-
-            When updating a custom attribute definition, you can provide this field
-
-            and specify the current version of the custom attribute definition to enable
-
-            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency).
+          maxLength: 36
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: 'The custom attribute to create or update, with following fields:
 
 
-            On writes, this field must be set to the latest version. Stale writes are rejected.
+            - `key`. This key must match the `key` of a custom attribute definition in the Square seller
+
+            account. If the requesting application is not the definition owner, you must provide the qualified key.
 
 
-            This field can also be used to enforce strong consistency for reads. For more information about strong consistency for reads,
+            - `value`. This value must conform to the `schema` specified by the definition.
 
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-        updated_at:
-          type: string
-          description: 'The timestamp that indicates when the custom attribute definition was created or most recently updated,
+            For more information, see [Value data types](https://developer.squareup.com/docs/booking-custom-attributes-api/custom-attributes#value-data-types).
 
-            in RFC 3339 format.'
-          readOnly: true
-        created_at:
-          type: string
-          description: The timestamp that indicates when the custom attribute definition was created, in RFC 3339 format.
-          readOnly: true
+
+            - `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
+
+            control for update operations, include this optional field in the request and set the
+
+            value to the current version of the custom attribute.'
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this individual upsert request, used to ensure idempotency.
+
+            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
     ListBookingCustomAttributeDefinitionsResponse:
       type: object
       description: 'Represents a [ListBookingCustomAttributeDefinitions](api-endpoint:BookingCustomAttributes-ListBookingCustomAttributeDefinitions) response.
@@ -1772,216 +2100,6 @@ components:
           version: 1
           visibility: VISIBILITY_HIDDEN
         errors: []
-    UpsertBookingCustomAttributeRequest:
-      type: object
-      description: Represents an [UpsertBookingCustomAttribute](api-endpoint:BookingCustomAttributes-UpsertBookingCustomAttribute) request.
-      x-release-status: PUBLIC
-      required:
-      - custom_attribute
-      properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: 'The custom attribute to create or update, with the following fields:
-
-
-            - `value`. This value must conform to the `schema` specified by the definition.
-
-            For more information, see [Value data types](https://developer.squareup.com/docs/booking-custom-attributes-api/custom-attributes#value-data-types).
-
-
-            - `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
-
-            control for an update operation, include this optional field and specify the current version
-
-            of the custom attribute.'
-        idempotency_key:
-          type: string
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-          nullable: true
-    UpdateBookingCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents an [UpdateBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-UpdateBookingCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The updated custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-11-16T15:27:30Z'
-          description: Update the description as desired.
-          key: favoriteShampoo
-          name: Favorite shampoo
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-11-16T15:39:38Z'
-          version: 2
-          visibility: VISIBILITY_READ_ONLY
-        errors: []
-    BulkUpsertBookingCustomAttributesRequest:
-      type: object
-      description: Represents a [BulkUpsertBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkUpsertBookingCustomAttributes) request.
-      x-release-status: PUBLIC
-      required:
-      - values
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BookingCustomAttributeUpsertRequest'
-          description: 'A map containing 1 to 25 individual upsert requests. For each request, provide an
-
-            arbitrary ID that is unique for this `BulkUpsertBookingCustomAttributes` request and the
-
-            information needed to create or update a custom attribute.'
-    BulkUpsertBookingCustomAttributesResponse:
-      type: object
-      description: 'Represents a [BulkUpsertBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkUpsertBookingCustomAttributes) response,
-
-        which contains a map of responses that each corresponds to an individual upsert request.'
-      x-release-status: PUBLIC
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BookingCustomAttributeUpsertResponse'
-          description: 'A map of responses that correspond to individual upsert requests. Each response has the
-
-            same ID as the corresponding request and contains either a `booking_id` and `custom_attribute` or an `errors` field.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        errors: []
-        values:
-          id1:
-            booking_id: N3NCVYY3WS27HF0HKANA3R9FP8
-            custom_attribute:
-              created_at: '2022-11-16T23:14:47Z'
-              key: favoriteShampoo
-              updated_at: '2022-11-16T00:16:23Z'
-              value: Spring Fresh
-              version: 1
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            errors: []
-          id2:
-            booking_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-            custom_attribute:
-              created_at: '2022-11-16T00:16:20Z'
-              key: hasShoes
-              updated_at: '2022-11-16T00:16:23Z'
-              value: false
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            errors: []
-          id3:
-            booking_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-            custom_attribute:
-              created_at: '2022-11-16T00:16:20Z'
-              key: favoriteShampoo
-              updated_at: '2022-11-16T00:16:23Z'
-              value: Hydro-Cool
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            errors: []
-          id4:
-            booking_id: N3NCVYY3WS27HF0HKANA3R9FP8
-            custom_attribute:
-              created_at: '2022-11-16T23:14:47Z'
-              key: partySize
-              updated_at: '2022-11-16T00:16:23Z'
-              value: 4
-              version: 1
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            errors: []
-          id5:
-            booking_id: 70548QG1HN43B05G0KCZ4MMC1G
-            custom_attribute:
-              created_at: '2022-11-16T00:16:20Z'
-              key: celebrating
-              updated_at: '2022-11-16T00:16:23Z'
-              value: birthday
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            errors: []
-    UpdateBookingCustomAttributeDefinitionRequest:
-      type: object
-      description: Represents an [UpdateBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-UpdateBookingCustomAttributeDefinition) request.
-      x-release-status: PUBLIC
-      required:
-      - custom_attribute_definition
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'The custom attribute definition that contains the fields to update. Only the following fields can be updated:
-
-            - `name`
-
-            - `description`
-
-            - `visibility`
-
-            - `schema` for a `Selection` data type. Only changes to the named options or the maximum number of allowed
-
-            selections are supported.
-
-
-            For more information, see
-
-            [Updatable definition fields](https://developer.squareup.com/docs/booking-custom-attributes-api/custom-attribute-definitions#updatable-definition-fields).
-
-
-            To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
-
-            control, include the optional `version` field and specify the current version of the custom attribute definition.'
-        idempotency_key:
-          type: string
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-          nullable: true
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
     CustomAttributeDefinitionVisibility:
       type: string
       enum:
@@ -2050,130 +2168,99 @@ components:
 
             see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
           maxLength: 45
-    RetrieveBookingCustomAttributeResponse:
+    ListBookingCustomAttributesResponse:
       type: object
-      description: 'Represents a [RetrieveBookingCustomAttribute](api-endpoint:BookingCustomAttributes-RetrieveBookingCustomAttribute) response.
+      description: 'Represents a [ListBookingCustomAttributes](api-endpoint:BookingCustomAttributes-ListBookingCustomAttributes) response.
 
-        Either `custom_attribute_definition` or `errors` is present in the response.'
+        Either `custom_attributes`, an empty object, or `errors` is present in the response. If additional
+
+        results are available, the `cursor` field is also present along with `custom_attributes`.'
       x-release-status: PUBLIC
       properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: 'The retrieved custom attribute. If `with_definition` was set to `true` in the request,
-
-            the custom attribute definition is returned in the `definition` field.'
-        errors:
+        custom_attributes:
           type: array
           items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute:
-          created_at: '2022-11-16T15:50:27Z'
-          key: favoriteShampoo
-          updated_at: '2022-11-16T15:50:27Z'
-          value: Dune
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
-        errors: []
-    BulkDeleteBookingCustomAttributesResponse:
-      type: object
-      description: 'Represents a [BulkDeleteBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkDeleteBookingCustomAttributes) response,
+            $ref: '#/components/schemas/CustomAttribute'
+          description: 'The retrieved custom attributes. If `with_definitions` was set to `true` in the request,
 
-        which contains a map of responses that each corresponds to an individual delete request.'
-      x-release-status: PUBLIC
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BookingCustomAttributeDeleteResponse'
-          description: 'A map of responses that correspond to individual delete requests. Each response has the
+            the custom attribute definition is returned in the `definition` field of each custom attribute.
 
-            same ID as the corresponding request and contains `booking_id` and  `errors` field.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        errors: []
-        values:
-          id1:
-            booking_id: N3NCVYY3WS27HF0HKANA3R9FP8
-            errors: []
-          id2:
-            booking_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-            errors: []
-          id3:
-            booking_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-            errors: []
-    UpsertBookingCustomAttributeResponse:
-      type: object
-      description: 'Represents an [UpsertBookingCustomAttribute](api-endpoint:BookingCustomAttributes-UpsertBookingCustomAttribute) response.
 
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: The new or updated custom attribute.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute:
-          created_at: '2022-11-16T15:50:27Z'
-          key: favoriteShampoo
-          updated_at: '2022-11-16T15:50:27Z'
-          value: Spring Fresh
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
-        errors: []
-    BookingCustomAttributeDeleteResponse:
-      type: object
-      description: Represents a response for an individual upsert request in a [BulkDeleteBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkDeleteBookingCustomAttributes) operation.
-      x-release-status: PUBLIC
-      properties:
-        booking_id:
+            If no custom attributes are found, Square returns an empty object (`{}`).'
+        cursor:
           type: string
-          description: The ID of the [booking](entity:Booking) associated with the custom attribute.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred while processing the individual request.
-      example:
-        booking_id: N3NCVYY3WS27HF0HKANA3R9FP8
-        errors: []
-    RetrieveBookingCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents a [RetrieveBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-RetrieveBookingCustomAttributeDefinition) response.
+          description: 'The cursor to use in your next call to this endpoint to retrieve the next page of results
 
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The retrieved custom attribute definition.
+            for your original request. This field is present only if the request succeeded and additional
+
+            results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
       example:
-        custom_attribute_definition:
-          created_at: '2022-11-16T15:27:30Z'
-          description: The favorite shampoo of the customer.
+        custom_attributes:
+        - created_at: '2022-11-16T15:50:27Z'
           key: favoriteShampoo
-          name: Favorite shampoo
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-11-16T15:27:30Z'
+          updated_at: '2022-11-16T15:50:27Z'
+          value: Hydro-Cool
           version: 1
-          visibility: VISIBILITY_READ_WRITE_VALUES
+          visibility: VISIBILITY_READ_ONLY
+        - created_at: '2022-11-16T15:51:53Z'
+          key: hasShoes
+          updated_at: '2022-11-16T15:51:53Z'
+          value: false
+          version: 1
+          visibility: VISIBILITY_HIDDEN
         errors: []
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
     BookingCustomAttributeUpsertResponse:
       type: object
       description: Represents a response for an individual upsert request in a [BulkUpsertBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkUpsertBookingCustomAttributes) operation.
@@ -2199,87 +2286,6 @@ components:
           version: 1
           visibility: VISIBILITY_READ_WRITE_VALUES
         errors: []
-    DeleteBookingCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents a [DeleteBookingCustomAttributeDefinition](api-endpoint:BookingCustomAttributes-DeleteBookingCustomAttributeDefinition) response
-
-        containing error messages when errors occurred during the request. The successful response does not contain any payload.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        errors: []
-    BookingCustomAttributeDeleteRequest:
-      type: object
-      description: 'Represents an individual delete request in a [BulkDeleteBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkDeleteBookingCustomAttributes)
-
-        request. An individual request contains a booking ID, the custom attribute to delete, and an optional idempotency key.'
-      x-release-status: PUBLIC
-      required:
-      - booking_id
-      - key
-      properties:
-        booking_id:
-          type: string
-          description: The ID of the target [booking](entity:Booking).
-          minLength: 1
-          maxLength: 36
-        key:
-          type: string
-          description: 'The key of the custom attribute to delete. This key must match the `key` of a
-
-            custom attribute definition in the Square seller account. If the requesting application is not
-
-            the definition owner, you must use the qualified key.'
-          minLength: 1
-    BookingCustomAttributeUpsertRequest:
-      type: object
-      description: 'Represents an individual upsert request in a [BulkUpsertBookingCustomAttributes](api-endpoint:BookingCustomAttributes-BulkUpsertBookingCustomAttributes)
-
-        request. An individual request contains a booking ID, the custom attribute to create or update,
-
-        and an optional idempotency key.'
-      x-release-status: PUBLIC
-      required:
-      - booking_id
-      - custom_attribute
-      properties:
-        booking_id:
-          type: string
-          description: The ID of the target [booking](entity:Booking).
-          minLength: 1
-          maxLength: 36
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: 'The custom attribute to create or update, with following fields:
-
-
-            - `key`. This key must match the `key` of a custom attribute definition in the Square seller
-
-            account. If the requesting application is not the definition owner, you must provide the qualified key.
-
-
-            - `value`. This value must conform to the `schema` specified by the definition.
-
-            For more information, see [Value data types](https://developer.squareup.com/docs/booking-custom-attributes-api/custom-attributes#value-data-types).
-
-
-            - `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
-
-            control for update operations, include this optional field in the request and set the
-
-            value to the current version of the custom attribute.'
-        idempotency_key:
-          type: string
-          description: 'A unique identifier for this individual upsert request, used to ensure idempotency.
-
-            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-          nullable: true
   securitySchemes:
     oauth2:
       type: oauth2

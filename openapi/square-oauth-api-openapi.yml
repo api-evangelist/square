@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay OAuth API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square O Auth API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -120,7 +120,29 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: "Revokes an access token generated with the OAuth flow.\n\nIf an account has more than one OAuth access token for your application, this\nendpoint revokes all of them, regardless of which token you specify. \n\n__Important:__ The `Authorization` header for this endpoint must have the\nfollowing format:\n\n```\nAuthorization: Client APPLICATION_SECRET\n```\n\nReplace `APPLICATION_SECRET` with the application secret on the **OAuth**\npage for your application in the Developer Dashboard."
+      description: 'Revokes an access token generated with the OAuth flow.
+
+
+        If an account has more than one OAuth access token for your application, this
+
+        endpoint revokes all of them, regardless of which token you specify.
+
+
+        __Important:__ The `Authorization` header for this endpoint must have the
+
+        following format:
+
+
+        ```
+
+        Authorization: Client APPLICATION_SECRET
+
+        ```
+
+
+        Replace `APPLICATION_SECRET` with the application secret on the **OAuth**
+
+        page for your application in the Developer Dashboard.'
       x-release-status: PUBLIC
       security:
       - oauth2: null
@@ -151,7 +173,36 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: "Returns an OAuth access token and a refresh token unless the \n`short_lived` parameter is set to `true`, in which case the endpoint \nreturns only an access token.\n\nThe `grant_type` parameter specifies the type of OAuth request. If \n`grant_type` is `authorization_code`, you must include the authorization \ncode you received when a seller granted you authorization. If `grant_type` \nis `refresh_token`, you must provide a valid refresh token. If you're using \nan old version of the Square APIs (prior to March 13, 2019), `grant_type` \ncan be `migration_token` and you must provide a valid migration token.\n\nYou can use the `scopes` parameter to limit the set of permissions granted \nto the access token and refresh token. You can use the `short_lived` parameter \nto create an access token that expires in 24 hours.\n\n__Note:__ OAuth tokens should be encrypted and stored on a secure server. \nApplication clients should never interact directly with OAuth tokens."
+      description: 'Returns an OAuth access token and a refresh token unless the
+
+        `short_lived` parameter is set to `true`, in which case the endpoint
+
+        returns only an access token.
+
+
+        The `grant_type` parameter specifies the type of OAuth request. If
+
+        `grant_type` is `authorization_code`, you must include the authorization
+
+        code you received when a seller granted you authorization. If `grant_type`
+
+        is `refresh_token`, you must provide a valid refresh token. If you''re using
+
+        an old version of the Square APIs (prior to March 13, 2019), `grant_type`
+
+        can be `migration_token` and you must provide a valid migration token.
+
+
+        You can use the `scopes` parameter to limit the set of permissions granted
+
+        to the access token and refresh token. You can use the `short_lived` parameter
+
+        to create an access token that expires in 24 hours.
+
+
+        __Note:__ OAuth tokens should be encrypted and stored on a secure server.
+
+        Application clients should never interact directly with OAuth tokens.'
       x-release-status: PUBLIC
       security: []
       parameters: []
@@ -181,7 +232,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Returns information about an [OAuth access token](https://developer.squareup.com/docs/build-basics/access-tokens#get-an-oauth-access-token) or an application’s [personal access token](https://developer.squareup.com/docs/build-basics/access-tokens#get-a-personal-access-token).
+      description: 'Returns information about an OAuth access token or an application’s personal access token.
 
 
         Add the access token to the Authorization header of the request.
@@ -199,7 +250,7 @@ paths:
 
         where `ACCESS_TOKEN` is a
 
-        [valid production authorization credential](https://developer.squareup.com/docs/build-basics/access-tokens).
+        valid production authorization credential.
 
 
         If the access token is expired or not a valid access token, the endpoint returns an `UNAUTHORIZED` error.'
@@ -216,149 +267,202 @@ paths:
                 $ref: '#/components/schemas/RetrieveTokenStatusResponse'
 components:
   schemas:
-    RevokeTokenResponse:
+    ObtainTokenRequest:
       type: object
       x-release-status: PUBLIC
+      required:
+      - client_id
+      - grant_type
       properties:
-        success:
-          type: boolean
-          description: If the request is successful, this is `true`.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        success: true
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/RevokeToken/RevokeTokenResponse.csharp
-        java: /sdk_samples/RevokeToken/RevokeTokenResponse.java
-        javascript: /sdk_samples/RevokeToken/RevokeTokenResponse.javascript
-        php: /sdk_samples/RevokeToken/RevokeTokenResponse.php
-        python: /sdk_samples/RevokeToken/RevokeTokenResponse.python
-        ruby: /sdk_samples/RevokeToken/RevokeTokenResponse.ruby
-    ObtainTokenResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        access_token:
+        client_id:
           type: string
-          description: "A valid OAuth access token. \nProvide the access token in a header with every request to Connect API\nendpoints. For more information, see [OAuth API: Walkthrough](https://developer.squareup.com/docs/oauth-api/walkthrough)."
+          description: 'The Square-issued ID of your application, which is available on the **OAuth** page in the
+
+            [Developer Dashboard](https://developer.squareup.com/apps).'
+          maxLength: 191
+        client_secret:
+          type:
+          - string
+          - 'null'
+          description: "The Square-issued application secret for your application, which is available on the **OAuth** page\nin the [Developer Dashboard](https://developer.squareup.com/apps). This parameter is only required when \nyou're not using the [OAuth PKCE (Proof Key for Code Exchange) flow](https://developer.squareup.com/docs/oauth-api/overview#pkce-flow).\nThe PKCE flow requires a `code_verifier` instead of a `client_secret` when `grant_type` is set to `authorization_code`. \nIf `grant_type` is set to `refresh_token` and the `refresh_token` is obtained uaing PKCE, the PKCE flow only requires `client_id`, \n`grant_type`, and `refresh_token`."
           minLength: 2
           maxLength: 1024
-        token_type:
+        code:
+          type:
+          - string
+          - 'null'
+          description: 'The authorization code to exchange.
+
+            This code is required if `grant_type` is set to `authorization_code` to indicate that
+
+            the application wants to exchange an authorization code for an OAuth access token.'
+          maxLength: 191
+        redirect_uri:
+          type:
+          - string
+          - 'null'
+          description: The redirect URL assigned on the **OAuth** page for your application in the [Developer Dashboard](https://developer.squareup.com/apps).
+          maxLength: 2048
+        grant_type:
           type: string
-          description: This value is always _bearer_.
+          description: 'Specifies the method to request an OAuth access token.
+
+            Valid values are `authorization_code`, `refresh_token`, and `migration_token`.'
+          minLength: 10
+          maxLength: 20
+        refresh_token:
+          type:
+          - string
+          - 'null'
+          description: 'A valid refresh token for generating a new OAuth access token.
+
+
+            A valid refresh token is required if `grant_type` is set to `refresh_token`
+
+            to indicate that the application wants a replacement for an expired OAuth access token.'
           minLength: 2
-          maxLength: 10
+          maxLength: 1024
+        migration_token:
+          type:
+          - string
+          - 'null'
+          description: 'A legacy OAuth access token obtained using a Connect API version prior
+
+            to 2019-03-13. This parameter is required if `grant_type` is set to
+
+            `migration_token` to indicate that the application wants to get a replacement
+
+            OAuth access token. The response also returns a refresh token.
+
+            For more information, see [Migrate to Using Refresh Tokens](https://developer.squareup.com/docs/oauth-api/migrate-to-refresh-tokens).'
+          minLength: 2
+          maxLength: 1024
+        scopes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'A JSON list of strings representing the permissions that the application is requesting.
+
+            For example, "`["MERCHANT_PROFILE_READ","PAYMENTS_READ","BANK_ACCOUNTS_READ"]`".
+
+
+            The access token returned in the response is granted the permissions
+
+            that comprise the intersection between the requested list of permissions and those
+
+            that belong to the provided refresh token.'
+        short_lived:
+          type:
+          - boolean
+          - 'null'
+          description: 'A Boolean indicating a request for a short-lived access token.
+
+
+            The short-lived access token returned in the response expires in 24 hours.'
+        code_verifier:
+          type:
+          - string
+          - 'null'
+          description: 'Must be provided when using the PKCE OAuth flow if `grant_type` is set to `authorization_code`. The `code_verifier` is used to verify against the
+
+            `code_challenge` associated with the `authorization_code`.'
+      example:
+        client_id: APPLICATION_ID
+        client_secret: APPLICATION_SECRET
+        code: CODE_FROM_AUTHORIZE
+        grant_type: authorization_code
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/ObtainToken/ObtainTokenRequest.csharp
+        java: /sdk_samples/ObtainToken/ObtainTokenRequest.java
+        javascript: /sdk_samples/ObtainToken/ObtainTokenRequest.javascript
+        php: /sdk_samples/ObtainToken/ObtainTokenRequest.php
+        python: /sdk_samples/ObtainToken/ObtainTokenRequest.python
+        ruby: /sdk_samples/ObtainToken/ObtainTokenRequest.ruby
+    RevokeTokenRequest:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        client_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-issued ID for your application, which is available on the **OAuth** page in the
+
+            [Developer Dashboard](https://developer.squareup.com/apps).'
+          maxLength: 191
+        access_token:
+          type:
+          - string
+          - 'null'
+          description: 'The access token of the merchant whose token you want to revoke.
+
+            Do not provide a value for `merchant_id` if you provide this parameter.'
+          minLength: 2
+          maxLength: 1024
+        merchant_id:
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the merchant whose token you want to revoke.
+
+            Do not provide a value for `access_token` if you provide this parameter.'
+        revoke_only_access_token:
+          type:
+          - boolean
+          - 'null'
+          description: 'If `true`, terminate the given single access token, but do not
+
+            terminate the entire authorization.
+
+            Default: `false`'
+      example:
+        access_token: ACCESS_TOKEN
+        client_id: CLIENT_ID
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/RevokeToken/RevokeTokenRequest.csharp
+        java: /sdk_samples/RevokeToken/RevokeTokenRequest.java
+        javascript: /sdk_samples/RevokeToken/RevokeTokenRequest.javascript
+        php: /sdk_samples/RevokeToken/RevokeTokenRequest.php
+        python: /sdk_samples/RevokeToken/RevokeTokenRequest.python
+        ruby: /sdk_samples/RevokeToken/RevokeTokenRequest.ruby
+    RetrieveTokenStatusResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `RetrieveTokenStatus` endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        scopes:
+          type: array
+          items:
+            type: string
+          description: The list of scopes associated with an access token.
         expires_at:
           type: string
-          description: The date when the `access_token` expires, in [ISO 8601](http://www.iso.org/iso/home/standards/iso8601.htm) format.
-          minLength: 20
-          maxLength: 48
+          description: The date and time when the `access_token` expires, in RFC 3339 format. Empty if the token never expires.
+        client_id:
+          type: string
+          description: The Square-issued application ID associated with the access token. This is the same application ID used to obtain the token.
+          maxLength: 191
         merchant_id:
           type: string
           description: The ID of the authorizing merchant's business.
           minLength: 8
           maxLength: 191
-        subscription_id:
-          type: string
-          description: '__LEGACY FIELD__. The ID of a subscription plan the merchant signed up
-
-            for. The ID is only present if the merchant signed up for a subscription plan during authorization.'
-        plan_id:
-          type: string
-          description: '__LEGACY FIELD__. The ID of the subscription plan the merchant signed
-
-            up for. The ID is only present if the merchant signed up for a subscription plan during
-
-            authorization.'
-        id_token:
-          type: string
-          description: 'The OpenID token belonging to this person. This token is only present if the
-
-            OPENID scope is included in the authorization request.'
-          x-release-status: DEPRECATED
-        refresh_token:
-          type: string
-          description: "A refresh token. \nFor more information, see [Refresh, Revoke, and Limit the Scope of OAuth Tokens](https://developer.squareup.com/docs/oauth-api/refresh-revoke-limit-scope)."
-          minLength: 2
-          maxLength: 1024
-        short_lived:
-          type: boolean
-          description: 'A Boolean indicating that the access token is a short-lived access token.
-
-            The short-lived access token returned in the response expires in 24 hours.'
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        refresh_token_expires_at:
-          type: string
-          description: The date when the `refresh_token` expires, in [ISO 8601](http://www.iso.org/iso/home/standards/iso8601.htm) format.
-          minLength: 20
-          maxLength: 48
+          description: ' Any errors that occurred during the request.'
       example:
-        access_token: ACCESS_TOKEN
-        expires_at: '2006-01-02T15:04:05Z'
+        client_id: CLIENT_ID
+        expires_at: '2022-10-14T14:44:00Z'
         merchant_id: MERCHANT_ID
-        refresh_token: REFRESH_TOKEN
-        token_type: bearer
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/ObtainToken/ObtainTokenResponse.csharp
-        java: /sdk_samples/ObtainToken/ObtainTokenResponse.java
-        javascript: /sdk_samples/ObtainToken/ObtainTokenResponse.javascript
-        php: /sdk_samples/ObtainToken/ObtainTokenResponse.php
-        python: /sdk_samples/ObtainToken/ObtainTokenResponse.python
-        ruby: /sdk_samples/ObtainToken/ObtainTokenResponse.ruby
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
+        scopes:
+        - PAYMENTS_READ
+        - PAYMENTS_WRITE
     ErrorCode:
       type: string
       enum:
@@ -1105,190 +1209,81 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    ObtainTokenRequest:
+    ObtainTokenResponse:
       type: object
       x-release-status: PUBLIC
-      required:
-      - client_id
-      - grant_type
       properties:
-        client_id:
+        access_token:
           type: string
-          description: 'The Square-issued ID of your application, which is available on the **OAuth** page in the
-
-            [Developer Dashboard](https://developer.squareup.com/apps).'
-          maxLength: 191
-        client_secret:
-          type: string
-          description: "The Square-issued application secret for your application, which is available on the **OAuth** page\nin the [Developer Dashboard](https://developer.squareup.com/apps). This parameter is only required when \nyou're not using the [OAuth PKCE (Proof Key for Code Exchange) flow](https://developer.squareup.com/docs/oauth-api/overview#pkce-flow).\nThe PKCE flow requires a `code_verifier` instead of a `client_secret` when `grant_type` is set to `authorization_code`. \nIf `grant_type` is set to `refresh_token` and the `refresh_token` is obtained uaing PKCE, the PKCE flow only requires `client_id`, \n`grant_type`, and `refresh_token`."
+          description: "A valid OAuth access token. \nProvide the access token in a header with every request to Connect API\nendpoints. For more information, see [OAuth API: Walkthrough](https://developer.squareup.com/docs/oauth-api/walkthrough)."
           minLength: 2
           maxLength: 1024
-          nullable: true
-        code:
+        token_type:
           type: string
-          description: 'The authorization code to exchange.
-
-            This code is required if `grant_type` is set to `authorization_code` to indicate that
-
-            the application wants to exchange an authorization code for an OAuth access token.'
-          maxLength: 191
-          nullable: true
-        redirect_uri:
-          type: string
-          description: The redirect URL assigned on the **OAuth** page for your application in the [Developer Dashboard](https://developer.squareup.com/apps).
-          maxLength: 2048
-          nullable: true
-        grant_type:
-          type: string
-          description: 'Specifies the method to request an OAuth access token.
-
-            Valid values are `authorization_code`, `refresh_token`, and `migration_token`.'
-          minLength: 10
-          maxLength: 20
-        refresh_token:
-          type: string
-          description: 'A valid refresh token for generating a new OAuth access token.
-
-
-            A valid refresh token is required if `grant_type` is set to `refresh_token`
-
-            to indicate that the application wants a replacement for an expired OAuth access token.'
+          description: This value is always _bearer_.
           minLength: 2
-          maxLength: 1024
-          nullable: true
-        migration_token:
-          type: string
-          description: 'A legacy OAuth access token obtained using a Connect API version prior
-
-            to 2019-03-13. This parameter is required if `grant_type` is set to
-
-            `migration_token` to indicate that the application wants to get a replacement
-
-            OAuth access token. The response also returns a refresh token.
-
-            For more information, see [Migrate to Using Refresh Tokens](https://developer.squareup.com/docs/oauth-api/migrate-to-refresh-tokens).'
-          minLength: 2
-          maxLength: 1024
-          nullable: true
-        scopes:
-          type: array
-          items:
-            type: string
-          description: 'A JSON list of strings representing the permissions that the application is requesting.
-
-            For example, "`["MERCHANT_PROFILE_READ","PAYMENTS_READ","BANK_ACCOUNTS_READ"]`".
-
-
-            The access token returned in the response is granted the permissions
-
-            that comprise the intersection between the requested list of permissions and those
-
-            that belong to the provided refresh token.'
-          nullable: true
-        short_lived:
-          type: boolean
-          description: 'A Boolean indicating a request for a short-lived access token.
-
-
-            The short-lived access token returned in the response expires in 24 hours.'
-          nullable: true
-        code_verifier:
-          type: string
-          description: 'Must be provided when using the PKCE OAuth flow if `grant_type` is set to `authorization_code`. The `code_verifier` is used to verify against the
-
-            `code_challenge` associated with the `authorization_code`.'
-          nullable: true
-      example:
-        client_id: APPLICATION_ID
-        client_secret: APPLICATION_SECRET
-        code: CODE_FROM_AUTHORIZE
-        grant_type: authorization_code
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/ObtainToken/ObtainTokenRequest.csharp
-        java: /sdk_samples/ObtainToken/ObtainTokenRequest.java
-        javascript: /sdk_samples/ObtainToken/ObtainTokenRequest.javascript
-        php: /sdk_samples/ObtainToken/ObtainTokenRequest.php
-        python: /sdk_samples/ObtainToken/ObtainTokenRequest.python
-        ruby: /sdk_samples/ObtainToken/ObtainTokenRequest.ruby
-    RetrieveTokenStatusResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the `RetrieveTokenStatus` endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        scopes:
-          type: array
-          items:
-            type: string
-          description: The list of scopes associated with an access token.
+          maxLength: 10
         expires_at:
           type: string
-          description: The date and time when the `access_token` expires, in RFC 3339 format. Empty if the token never expires.
-        client_id:
-          type: string
-          description: The Square-issued application ID associated with the access token. This is the same application ID used to obtain the token.
-          maxLength: 191
+          description: The date when the `access_token` expires, in [ISO 8601](http://www.iso.org/iso/home/standards/iso8601.htm) format.
+          minLength: 20
+          maxLength: 48
         merchant_id:
           type: string
           description: The ID of the authorizing merchant's business.
           minLength: 8
           maxLength: 191
+        subscription_id:
+          type: string
+          description: '__LEGACY FIELD__. The ID of a subscription plan the merchant signed up
+
+            for. The ID is only present if the merchant signed up for a subscription plan during authorization.'
+        plan_id:
+          type: string
+          description: '__LEGACY FIELD__. The ID of the subscription plan the merchant signed
+
+            up for. The ID is only present if the merchant signed up for a subscription plan during
+
+            authorization.'
+        id_token:
+          type: string
+          description: 'The OpenID token belonging to this person. This token is only present if the
+
+            OPENID scope is included in the authorization request.'
+          x-release-status: DEPRECATED
+        refresh_token:
+          type: string
+          description: "A refresh token. \nFor more information, see [Refresh, Revoke, and Limit the Scope of OAuth Tokens](https://developer.squareup.com/docs/oauth-api/refresh-revoke-limit-scope)."
+          minLength: 2
+          maxLength: 1024
+        short_lived:
+          type: boolean
+          description: 'A Boolean indicating that the access token is a short-lived access token.
+
+            The short-lived access token returned in the response expires in 24 hours.'
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
-          description: ' Any errors that occurred during the request.'
-      example:
-        client_id: CLIENT_ID
-        expires_at: '2022-10-14T14:44:00Z'
-        merchant_id: MERCHANT_ID
-        scopes:
-        - PAYMENTS_READ
-        - PAYMENTS_WRITE
-    RevokeTokenRequest:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        client_id:
+          description: Any errors that occurred during the request.
+        refresh_token_expires_at:
           type: string
-          description: 'The Square-issued ID for your application, which is available on the **OAuth** page in the
-
-            [Developer Dashboard](https://developer.squareup.com/apps).'
-          maxLength: 191
-          nullable: true
-        access_token:
-          type: string
-          description: 'The access token of the merchant whose token you want to revoke.
-
-            Do not provide a value for `merchant_id` if you provide this parameter.'
-          minLength: 2
-          maxLength: 1024
-          nullable: true
-        merchant_id:
-          type: string
-          description: 'The ID of the merchant whose token you want to revoke.
-
-            Do not provide a value for `access_token` if you provide this parameter.'
-          nullable: true
-        revoke_only_access_token:
-          type: boolean
-          description: 'If `true`, terminate the given single access token, but do not
-
-            terminate the entire authorization.
-
-            Default: `false`'
-          nullable: true
+          description: The date when the `refresh_token` expires, in [ISO 8601](http://www.iso.org/iso/home/standards/iso8601.htm) format.
+          minLength: 20
+          maxLength: 48
       example:
         access_token: ACCESS_TOKEN
-        client_id: CLIENT_ID
+        expires_at: '2006-01-02T15:04:05Z'
+        merchant_id: MERCHANT_ID
+        refresh_token: REFRESH_TOKEN
+        token_type: bearer
       x-sq-sdk-sample-code:
-        csharp: /sdk_samples/RevokeToken/RevokeTokenRequest.csharp
-        java: /sdk_samples/RevokeToken/RevokeTokenRequest.java
-        javascript: /sdk_samples/RevokeToken/RevokeTokenRequest.javascript
-        php: /sdk_samples/RevokeToken/RevokeTokenRequest.php
-        python: /sdk_samples/RevokeToken/RevokeTokenRequest.python
-        ruby: /sdk_samples/RevokeToken/RevokeTokenRequest.ruby
+        csharp: /sdk_samples/ObtainToken/ObtainTokenResponse.csharp
+        java: /sdk_samples/ObtainToken/ObtainTokenResponse.java
+        javascript: /sdk_samples/ObtainToken/ObtainTokenResponse.javascript
+        php: /sdk_samples/ObtainToken/ObtainTokenResponse.php
+        python: /sdk_samples/ObtainToken/ObtainTokenResponse.python
+        ruby: /sdk_samples/ObtainToken/ObtainTokenResponse.ruby
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -1318,6 +1313,74 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    RevokeTokenResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        success:
+          type: boolean
+          description: If the request is successful, this is `true`.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        success: true
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/RevokeToken/RevokeTokenResponse.csharp
+        java: /sdk_samples/RevokeToken/RevokeTokenResponse.java
+        javascript: /sdk_samples/RevokeToken/RevokeTokenResponse.javascript
+        php: /sdk_samples/RevokeToken/RevokeTokenResponse.php
+        python: /sdk_samples/RevokeToken/RevokeTokenResponse.python
+        ruby: /sdk_samples/RevokeToken/RevokeTokenResponse.ruby
   securitySchemes:
     oauth2:
       type: oauth2

@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay Cards API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Cards API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -279,99 +279,6 @@ paths:
       - error-code: NOT_FOUND
 components:
   schemas:
-    CardType:
-      type: string
-      enum:
-      - UNKNOWN_CARD_TYPE
-      - CREDIT
-      - DEBIT
-      x-enum-elements:
-      - name: UNKNOWN_CARD_TYPE
-        description: ''
-      - name: CREDIT
-        description: ''
-      - name: DEBIT
-        description: ''
-      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
-      x-release-status: PUBLIC
-    Address:
-      type: object
-      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
-      x-release-status: PUBLIC
-      properties:
-        address_line_1:
-          type: string
-          description: 'The first line of the address.
-
-
-            Fields that start with `address_line` provide the address''s most specific
-
-            details, like street number, street name, and building name. They do *not*
-
-            provide less specific details like city, state/province, or country (these
-
-            details are provided in other fields).'
-          nullable: true
-        address_line_2:
-          type: string
-          description: The second line of the address, if any.
-          nullable: true
-        address_line_3:
-          type: string
-          description: The third line of the address, if any.
-          nullable: true
-        locality:
-          type: string
-          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-          nullable: true
-        sublocality:
-          type: string
-          description: A civil region within the address's `locality`, if any.
-          nullable: true
-        sublocality_2:
-          type: string
-          description: A civil region within the address's `sublocality`, if any.
-          nullable: true
-        sublocality_3:
-          type: string
-          description: A civil region within the address's `sublocality_2`, if any.
-          nullable: true
-        administrative_district_level_1:
-          type: string
-          description: 'A civil entity within the address''s country. In the US, this
-
-            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
-          nullable: true
-        administrative_district_level_2:
-          type: string
-          description: 'A civil entity within the address''s `administrative_district_level_1`.
-
-            In the US, this is the county.'
-          nullable: true
-        administrative_district_level_3:
-          type: string
-          description: 'A civil entity within the address''s `administrative_district_level_2`,
-
-            if any.'
-          nullable: true
-        postal_code:
-          type: string
-          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-          nullable: true
-        country:
-          $ref: '#/components/schemas/Country'
-          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
-
-            See [Country](#type-country) for possible values'
-          nullable: true
-        first_name:
-          type: string
-          description: Optional first name when it's representing recipient.
-          nullable: true
-        last_name:
-          type: string
-          description: Optional last name when it's representing recipient.
-          nullable: true
     Country:
       type: string
       enum:
@@ -1130,6 +1037,128 @@ components:
 
         Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
       x-release-status: PUBLIC
+    CardType:
+      type: string
+      enum:
+      - UNKNOWN_CARD_TYPE
+      - CREDIT
+      - DEBIT
+      x-enum-elements:
+      - name: UNKNOWN_CARD_TYPE
+        description: ''
+      - name: CREDIT
+        description: ''
+      - name: DEBIT
+        description: ''
+      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
+      x-release-status: PUBLIC
+    CardBrand:
+      type: string
+      enum:
+      - OTHER_BRAND
+      - VISA
+      - MASTERCARD
+      - AMERICAN_EXPRESS
+      - DISCOVER
+      - DISCOVER_DINERS
+      - JCB
+      - CHINA_UNIONPAY
+      - SQUARE_GIFT_CARD
+      - SQUARE_CAPITAL_CARD
+      - INTERAC
+      - EFTPOS
+      - FELICA
+      - EBT
+      x-enum-elements:
+      - name: OTHER_BRAND
+        description: ''
+      - name: VISA
+        description: ''
+      - name: MASTERCARD
+        description: ''
+      - name: AMERICAN_EXPRESS
+        description: ''
+      - name: DISCOVER
+        description: ''
+      - name: DISCOVER_DINERS
+        description: ''
+      - name: JCB
+        description: ''
+      - name: CHINA_UNIONPAY
+        description: ''
+      - name: SQUARE_GIFT_CARD
+        description: ''
+      - name: SQUARE_CAPITAL_CARD
+        description: ''
+      - name: INTERAC
+        description: ''
+      - name: EFTPOS
+        description: ''
+      - name: FELICA
+        description: ''
+      - name: EBT
+        description: ''
+      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
+      x-release-status: PUBLIC
+    RetrieveCardResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [RetrieveCard](api-endpoint:Cards-RetrieveCard) endpoint.
+
+
+        Note: if there are errors processing the request, the card field will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        card:
+          $ref: '#/components/schemas/Card'
+          description: The retrieved card.
+      example:
+        card:
+          billing_address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          bin: '411111'
+          card_brand: VISA
+          card_type: CREDIT
+          cardholder_name: Amelia Earhart
+          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
+          enabled: true
+          exp_month: 11
+          exp_year: 2022
+          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
+          id: ccof:uIbfJXhXETSP197M3GB
+          last_4: '1111'
+          merchant_id: 6SSW7HV8K2ST5
+          prepaid_type: NOT_PREPAID
+          reference_id: user-id-1
+          version: 1
+    CardCoBrand:
+      type: string
+      enum:
+      - UNKNOWN
+      - AFTERPAY
+      - CLEARPAY
+      x-enum-elements:
+      - name: UNKNOWN
+        description: ''
+      - name: AFTERPAY
+        description: ''
+      - name: CLEARPAY
+        description: ''
+      description: Indicates the brand for a co-branded card.
+      x-release-status: PUBLIC
     CardPrepaidType:
       type: string
       enum:
@@ -1145,6 +1174,255 @@ components:
         description: ''
       description: Indicates a card's prepaid type, such as `NOT_PREPAID` or `PREPAID`.
       x-release-status: PUBLIC
+    Card:
+      type: object
+      description: 'Represents the payment details of a card to be used for payments. These
+
+        details are determined by the payment token generated by Web Payments SDK.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: Unique ID for this card. Generated by Square.
+          maxLength: 64
+          readOnly: true
+        card_brand:
+          $ref: '#/components/schemas/CardBrand'
+          description: 'The card''s brand.
+
+            See [CardBrand](#type-cardbrand) for possible values'
+          readOnly: true
+        last_4:
+          type: string
+          description: The last 4 digits of the card number.
+          maxLength: 4
+          readOnly: true
+        exp_month:
+          type:
+          - integer
+          - 'null'
+          description: The expiration month of the associated card as an integer between 1 and 12.
+          format: int64
+        exp_year:
+          type:
+          - integer
+          - 'null'
+          description: The four-digit year of the card's expiration date.
+          format: int64
+        cardholder_name:
+          type:
+          - string
+          - 'null'
+          description: The name of the cardholder.
+          maxLength: 96
+        billing_address:
+          $ref: '#/components/schemas/Address'
+          description: The billing address for this card.
+        fingerprint:
+          type: string
+          description: 'Intended as a Square-assigned identifier, based
+
+            on the card number, to identify the card across multiple locations within a
+
+            single application.'
+          maxLength: 255
+          readOnly: true
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: '**Required** The ID of a customer created using the Customers API to be associated with the card.'
+        merchant_id:
+          type: string
+          description: The ID of the merchant associated with the card.
+          readOnly: true
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: 'An optional user-defined reference ID that associates this card with
+
+            another entity in an external system. For example, a customer ID from an
+
+            external customer management system.'
+          maxLength: 128
+        enabled:
+          type: boolean
+          description: Indicates whether or not a card can be used for payments.
+          readOnly: true
+        card_type:
+          $ref: '#/components/schemas/CardType'
+          description: 'The type of the card.
+
+            The Card object includes this field only in response to Payments API calls.
+
+            See [CardType](#type-cardtype) for possible values'
+          readOnly: true
+        prepaid_type:
+          $ref: '#/components/schemas/CardPrepaidType'
+          description: 'Indicates whether the Card is prepaid or not.
+
+            The Card object includes this field only in response to Payments API calls.
+
+            See [CardPrepaidType](#type-cardprepaidtype) for possible values'
+          readOnly: true
+        bin:
+          type: string
+          description: 'The first six digits of the card number, known as the Bank Identification Number (BIN). Only the Payments API
+
+            returns this field.'
+          maxLength: 6
+          readOnly: true
+        version:
+          type: integer
+          description: 'Current version number of the card. Increments with each card update. Requests to update an
+
+            existing Card object will be rejected unless the version in the request matches the current
+
+            version for the Card.'
+          format: int64
+        card_co_brand:
+          $ref: '#/components/schemas/CardCoBrand'
+          description: 'The card''s co-brand if available. For example, an Afterpay virtual card would have a
+
+            co-brand of AFTERPAY.
+
+            See [CardCoBrand](#type-cardcobrand) for possible values'
+          readOnly: true
+    CreateCardResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [CreateCard](api-endpoint:Cards-CreateCard) endpoint.
+
+
+        Note: if there are errors processing the request, the card field will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors resulting from the request.
+        card:
+          $ref: '#/components/schemas/Card'
+          description: The card created by the request.
+      example:
+        card:
+          billing_address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          bin: '411111'
+          card_brand: VISA
+          card_type: CREDIT
+          cardholder_name: Amelia Earhart
+          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
+          enabled: true
+          exp_month: 11
+          exp_year: 2022
+          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
+          id: ccof:uIbfJXhXETSP197M3GB
+          last_4: '1111'
+          merchant_id: 6SSW7HV8K2ST5
+          prepaid_type: NOT_PREPAID
+          reference_id: user-id-1
+          version: 1
+    Address:
+      type: object
+      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
+      x-release-status: PUBLIC
+      properties:
+        address_line_1:
+          type:
+          - string
+          - 'null'
+          description: 'The first line of the address.
+
+
+            Fields that start with `address_line` provide the address''s most specific
+
+            details, like street number, street name, and building name. They do *not*
+
+            provide less specific details like city, state/province, or country (these
+
+            details are provided in other fields).'
+        address_line_2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the address, if any.
+        address_line_3:
+          type:
+          - string
+          - 'null'
+          description: The third line of the address, if any.
+        locality:
+          type:
+          - string
+          - 'null'
+          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        sublocality:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `locality`, if any.
+        sublocality_2:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality`, if any.
+        sublocality_3:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality_2`, if any.
+        administrative_district_level_1:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s country. In the US, this
+
+            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
+        administrative_district_level_2:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_1`.
+
+            In the US, this is the county.'
+        administrative_district_level_3:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_2`,
+
+            if any.'
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        country:
+          $ref: '#/components/schemas/Country'
+          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
+
+            See [Country](#type-country) for possible values'
+        first_name:
+          type:
+          - string
+          - 'null'
+          description: Optional first name when it's representing recipient.
+        last_name:
+          type:
+          - string
+          - 'null'
+          description: Optional last name when it's representing recipient.
     DisableCardResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -1189,6 +1467,61 @@ components:
           prepaid_type: NOT_PREPAID
           reference_id: user-id-1
           version: 2
+    CreateCardRequest:
+      type: object
+      description: 'Creates a card from the source (payment token or payment id). Accessible via
+
+        HTTP requests at POST https://connect.squareup.com/v2/cards'
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      - source_id
+      - card
+      properties:
+        idempotency_key:
+          type: string
+          description: 'A unique string that identifies this CreateCard request. Keys can be
+
+            any valid string and must be unique for every request.
+
+
+            Max: 45 characters
+
+
+            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
+          minLength: 1
+        source_id:
+          type: string
+          description: The ID of the source which represents the card information to be stored. This can be a card nonce or a payment id.
+          minLength: 1
+          maxLength: 16384
+        verification_token:
+          type: string
+          description: 'An identifying token generated by [Payments.verifyBuyer()](https://developer.squareup.com/reference/sdks/web/payments/objects/Payments#Payments.verifyBuyer).
+
+            Verification tokens encapsulate customer device information and 3-D Secure
+
+            challenge results to indicate that Square has verified the buyer identity.
+
+
+            See the [SCA Overview](https://developer.squareup.com/docs/sca-overview).'
+        card:
+          $ref: '#/components/schemas/Card'
+          description: Payment details associated with the card to be stored.
+      example:
+        card:
+          billing_address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          cardholder_name: Amelia Earhart
+          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
+          reference_id: user-id-1
+        idempotency_key: 4935a656-a929-4792-b97c-8848be85c27c
+        source_id: cnon:uIbfJXhXETSP197M3GB
     ListCardsResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -1243,68 +1576,6 @@ components:
           prepaid_type: NOT_PREPAID
           reference_id: user-id-1
           version: 1
-    CardCoBrand:
-      type: string
-      enum:
-      - UNKNOWN
-      - AFTERPAY
-      - CLEARPAY
-      x-enum-elements:
-      - name: UNKNOWN
-        description: ''
-      - name: AFTERPAY
-        description: ''
-      - name: CLEARPAY
-        description: ''
-      description: Indicates the brand for a co-branded card.
-      x-release-status: PUBLIC
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
     ErrorCode:
       type: string
       enum:
@@ -2051,153 +2322,6 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    RetrieveCardResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [RetrieveCard](api-endpoint:Cards-RetrieveCard) endpoint.
-
-
-        Note: if there are errors processing the request, the card field will not be
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        card:
-          $ref: '#/components/schemas/Card'
-          description: The retrieved card.
-      example:
-        card:
-          billing_address:
-            address_line_1: 500 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          bin: '411111'
-          card_brand: VISA
-          card_type: CREDIT
-          cardholder_name: Amelia Earhart
-          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
-          enabled: true
-          exp_month: 11
-          exp_year: 2022
-          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
-          id: ccof:uIbfJXhXETSP197M3GB
-          last_4: '1111'
-          merchant_id: 6SSW7HV8K2ST5
-          prepaid_type: NOT_PREPAID
-          reference_id: user-id-1
-          version: 1
-    CardBrand:
-      type: string
-      enum:
-      - OTHER_BRAND
-      - VISA
-      - MASTERCARD
-      - AMERICAN_EXPRESS
-      - DISCOVER
-      - DISCOVER_DINERS
-      - JCB
-      - CHINA_UNIONPAY
-      - SQUARE_GIFT_CARD
-      - SQUARE_CAPITAL_CARD
-      - INTERAC
-      - EFTPOS
-      - FELICA
-      - EBT
-      x-enum-elements:
-      - name: OTHER_BRAND
-        description: ''
-      - name: VISA
-        description: ''
-      - name: MASTERCARD
-        description: ''
-      - name: AMERICAN_EXPRESS
-        description: ''
-      - name: DISCOVER
-        description: ''
-      - name: DISCOVER_DINERS
-        description: ''
-      - name: JCB
-        description: ''
-      - name: CHINA_UNIONPAY
-        description: ''
-      - name: SQUARE_GIFT_CARD
-        description: ''
-      - name: SQUARE_CAPITAL_CARD
-        description: ''
-      - name: INTERAC
-        description: ''
-      - name: EFTPOS
-        description: ''
-      - name: FELICA
-        description: ''
-      - name: EBT
-        description: ''
-      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
-      x-release-status: PUBLIC
-    CreateCardRequest:
-      type: object
-      description: 'Creates a card from the source (payment token or payment id). Accessible via
-
-        HTTP requests at POST https://connect.squareup.com/v2/cards'
-      x-release-status: PUBLIC
-      required:
-      - idempotency_key
-      - source_id
-      - card
-      properties:
-        idempotency_key:
-          type: string
-          description: 'A unique string that identifies this CreateCard request. Keys can be
-
-            any valid string and must be unique for every request.
-
-
-            Max: 45 characters
-
-
-            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
-          minLength: 1
-        source_id:
-          type: string
-          description: The ID of the source which represents the card information to be stored. This can be a card nonce or a payment id.
-          minLength: 1
-          maxLength: 16384
-        verification_token:
-          type: string
-          description: 'An identifying token generated by [Payments.verifyBuyer()](https://developer.squareup.com/reference/sdks/web/payments/objects/Payments#Payments.verifyBuyer).
-
-            Verification tokens encapsulate customer device information and 3-D Secure
-
-            challenge results to indicate that Square has verified the buyer identity.
-
-
-            See the [SCA Overview](https://developer.squareup.com/docs/sca-overview).'
-        card:
-          $ref: '#/components/schemas/Card'
-          description: Payment details associated with the card to be stored.
-      example:
-        card:
-          billing_address:
-            address_line_1: 500 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          cardholder_name: Amelia Earhart
-          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
-          reference_id: user-id-1
-        idempotency_key: 4935a656-a929-4792-b97c-8848be85c27c
-        source_id: cnon:uIbfJXhXETSP197M3GB
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -2227,6 +2351,53 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
     SortOrder:
       type: string
       enum:
@@ -2239,161 +2410,6 @@ components:
         description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
       description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
       x-release-status: PUBLIC
-    Card:
-      type: object
-      description: 'Represents the payment details of a card to be used for payments. These
-
-        details are determined by the payment token generated by Web Payments SDK.'
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: Unique ID for this card. Generated by Square.
-          maxLength: 64
-          readOnly: true
-        card_brand:
-          $ref: '#/components/schemas/CardBrand'
-          description: 'The card''s brand.
-
-            See [CardBrand](#type-cardbrand) for possible values'
-          readOnly: true
-        last_4:
-          type: string
-          description: The last 4 digits of the card number.
-          maxLength: 4
-          readOnly: true
-        exp_month:
-          type: integer
-          description: The expiration month of the associated card as an integer between 1 and 12.
-          format: int64
-          nullable: true
-        exp_year:
-          type: integer
-          description: The four-digit year of the card's expiration date.
-          format: int64
-          nullable: true
-        cardholder_name:
-          type: string
-          description: The name of the cardholder.
-          maxLength: 96
-          nullable: true
-        billing_address:
-          $ref: '#/components/schemas/Address'
-          description: The billing address for this card.
-          nullable: true
-        fingerprint:
-          type: string
-          description: 'Intended as a Square-assigned identifier, based
-
-            on the card number, to identify the card across multiple locations within a
-
-            single application.'
-          maxLength: 255
-          readOnly: true
-        customer_id:
-          type: string
-          description: '**Required** The ID of a customer created using the Customers API to be associated with the card.'
-          nullable: true
-        merchant_id:
-          type: string
-          description: The ID of the merchant associated with the card.
-          readOnly: true
-        reference_id:
-          type: string
-          description: 'An optional user-defined reference ID that associates this card with
-
-            another entity in an external system. For example, a customer ID from an
-
-            external customer management system.'
-          maxLength: 128
-          nullable: true
-        enabled:
-          type: boolean
-          description: Indicates whether or not a card can be used for payments.
-          readOnly: true
-        card_type:
-          $ref: '#/components/schemas/CardType'
-          description: 'The type of the card.
-
-            The Card object includes this field only in response to Payments API calls.
-
-            See [CardType](#type-cardtype) for possible values'
-          readOnly: true
-        prepaid_type:
-          $ref: '#/components/schemas/CardPrepaidType'
-          description: 'Indicates whether the Card is prepaid or not.
-
-            The Card object includes this field only in response to Payments API calls.
-
-            See [CardPrepaidType](#type-cardprepaidtype) for possible values'
-          readOnly: true
-        bin:
-          type: string
-          description: 'The first six digits of the card number, known as the Bank Identification Number (BIN). Only the Payments API
-
-            returns this field.'
-          maxLength: 6
-          readOnly: true
-        version:
-          type: integer
-          description: 'Current version number of the card. Increments with each card update. Requests to update an
-
-            existing Card object will be rejected unless the version in the request matches the current
-
-            version for the Card.'
-          format: int64
-        card_co_brand:
-          $ref: '#/components/schemas/CardCoBrand'
-          description: 'The card''s co-brand if available. For example, an Afterpay virtual card would have a
-
-            co-brand of AFTERPAY.
-
-            See [CardCoBrand](#type-cardcobrand) for possible values'
-          readOnly: true
-    CreateCardResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [CreateCard](api-endpoint:Cards-CreateCard) endpoint.
-
-
-        Note: if there are errors processing the request, the card field will not be
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors resulting from the request.
-        card:
-          $ref: '#/components/schemas/Card'
-          description: The card created by the request.
-      example:
-        card:
-          billing_address:
-            address_line_1: 500 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          bin: '411111'
-          card_brand: VISA
-          card_type: CREDIT
-          cardholder_name: Amelia Earhart
-          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
-          enabled: true
-          exp_month: 11
-          exp_year: 2022
-          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
-          id: ccof:uIbfJXhXETSP197M3GB
-          last_4: '1111'
-          merchant_id: 6SSW7HV8K2ST5
-          prepaid_type: NOT_PREPAID
-          reference_id: user-id-1
-          version: 1
   securitySchemes:
     oauth2:
       type: oauth2

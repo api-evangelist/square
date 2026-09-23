@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay Employees API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Employees API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -210,69 +210,81 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
-    ListEmployeesResponse:
+    Employee:
       type: object
+      description: 'An employee object that is used by the external API.
+
+
+        DEPRECATED at version 2020-08-26. Replaced by [TeamMember](entity:TeamMember).'
       x-release-status: DEPRECATED
       properties:
-        employees:
-          type: array
-          items:
-            $ref: '#/components/schemas/Employee'
-        cursor:
+        id:
           type: string
-          description: The token to be used to retrieve the next page of results.
-        errors:
-          type: array
+          description: UUID for this object.
+        first_name:
+          type:
+          - string
+          - 'null'
+          description: The employee's first name.
+        last_name:
+          type:
+          - string
+          - 'null'
+          description: The employee's last name.
+        email:
+          type:
+          - string
+          - 'null'
+          description: The employee's email address
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: The employee's phone number in E.164 format, i.e. "+12125554250"
+        location_ids:
+          type:
+          - array
+          - 'null'
           items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-    ErrorCategory:
+            type: string
+          description: A list of location IDs where this employee has access to.
+        status:
+          $ref: '#/components/schemas/EmployeeStatus'
+          description: 'Specifies the status of the employees being fetched.
+
+            See [EmployeeStatus](#type-employeestatus) for possible values'
+        is_owner:
+          type:
+          - boolean
+          - 'null'
+          description: 'Whether this employee is the owner of the merchant. Each merchant
+
+            has one owner employee, and that employee has full authority over
+
+            the account.'
+        created_at:
+          type: string
+          description: A read-only timestamp in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: A read-only timestamp in RFC 3339 format.
+          readOnly: true
+    EmployeeStatus:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - ACTIVE
+      - INACTIVE
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
+      - name: ACTIVE
+        description: Specifies that the employee is in the Active state.
+      - name: INACTIVE
+        description: Specifies that the employee is in the Inactive state.
+      description: 'The status of the Employee being retrieved.
 
 
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
+        DEPRECATED at version 2020-08-26. Replaced by [TeamMemberStatus](entity:TeamMemberStatus).'
+      x-release-status: DEPRECATED
     ErrorCode:
       type: string
       enum:
@@ -1019,76 +1031,22 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    Employee:
+    ListEmployeesResponse:
       type: object
-      description: 'An employee object that is used by the external API.
-
-
-        DEPRECATED at version 2020-08-26. Replaced by [TeamMember](entity:TeamMember).'
       x-release-status: DEPRECATED
       properties:
-        id:
-          type: string
-          description: UUID for this object.
-        first_name:
-          type: string
-          description: The employee's first name.
-          nullable: true
-        last_name:
-          type: string
-          description: The employee's last name.
-          nullable: true
-        email:
-          type: string
-          description: The employee's email address
-          nullable: true
-        phone_number:
-          type: string
-          description: The employee's phone number in E.164 format, i.e. "+12125554250"
-          nullable: true
-        location_ids:
+        employees:
           type: array
           items:
-            type: string
-          description: A list of location IDs where this employee has access to.
-          nullable: true
-        status:
-          $ref: '#/components/schemas/EmployeeStatus'
-          description: 'Specifies the status of the employees being fetched.
-
-            See [EmployeeStatus](#type-employeestatus) for possible values'
-          nullable: true
-        is_owner:
-          type: boolean
-          description: 'Whether this employee is the owner of the merchant. Each merchant
-
-            has one owner employee, and that employee has full authority over
-
-            the account.'
-          nullable: true
-        created_at:
+            $ref: '#/components/schemas/Employee'
+        cursor:
           type: string
-          description: A read-only timestamp in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: A read-only timestamp in RFC 3339 format.
-          readOnly: true
-    EmployeeStatus:
-      type: string
-      enum:
-      - ACTIVE
-      - INACTIVE
-      x-enum-elements:
-      - name: ACTIVE
-        description: Specifies that the employee is in the Active state.
-      - name: INACTIVE
-        description: Specifies that the employee is in the Inactive state.
-      description: 'The status of the Employee being retrieved.
-
-
-        DEPRECATED at version 2020-08-26. Replaced by [TeamMemberStatus](entity:TeamMemberStatus).'
-      x-release-status: DEPRECATED
+          description: The token to be used to retrieve the next page of results.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -1118,6 +1076,53 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2

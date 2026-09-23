@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay Inventory API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Inventory API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -120,7 +120,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Deprecated version of [RetrieveInventoryAdjustment](api-endpoint:Inventory-RetrieveInventoryAdjustment) after the endpoint URL
+      description: 'Deprecated version of RetrieveInventoryAdjustment after the endpoint URL
 
         is updated to conform to the standard convention.'
       x-release-status: DEPRECATED
@@ -155,7 +155,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Returns the [InventoryAdjustment](entity:InventoryAdjustment) object
+      description: 'Returns the InventoryAdjustment object
 
         with the provided `adjustment_id`.'
       x-release-status: PUBLIC
@@ -185,7 +185,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Deprecated version of [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory) after the endpoint URL
+      description: 'Deprecated version of BatchChangeInventory after the endpoint URL
 
         is updated to conform to the standard convention.'
       x-release-status: DEPRECATED
@@ -224,7 +224,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Deprecated version of [BatchRetrieveInventoryChanges](api-endpoint:Inventory-BatchRetrieveInventoryChanges) after the endpoint URL
+      description: 'Deprecated version of BatchRetrieveInventoryChanges after the endpoint URL
 
         is updated to conform to the standard convention.'
       x-release-status: DEPRECATED
@@ -263,7 +263,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Deprecated version of [BatchRetrieveInventoryCounts](api-endpoint:Inventory-BatchRetrieveInventoryCounts) after the endpoint URL
+      description: 'Deprecated version of BatchRetrieveInventoryCounts after the endpoint URL
 
         is updated to conform to the standard convention.'
       x-release-status: DEPRECATED
@@ -387,9 +387,9 @@ paths:
         dispatcher: FALLBACK
       description: 'Returns current counts for the provided
 
-        [CatalogObject](entity:CatalogObject)s at the requested
+        CatalogObjects at the requested
 
-        [Location](entity:Location)s.
+        Locations.
 
 
         Results are paginated and sorted in descending order according to their
@@ -435,7 +435,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Deprecated version of [RetrieveInventoryPhysicalCount](api-endpoint:Inventory-RetrieveInventoryPhysicalCount) after the endpoint URL
+      description: 'Deprecated version of RetrieveInventoryPhysicalCount after the endpoint URL
 
         is updated to conform to the standard convention.'
       x-release-status: DEPRECATED
@@ -472,7 +472,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Returns the [InventoryPhysicalCount](entity:InventoryPhysicalCount)
+      description: 'Returns the InventoryPhysicalCount
 
         object with the provided `physical_count_id`.'
       x-release-status: PUBLIC
@@ -504,7 +504,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Returns the [InventoryTransfer](entity:InventoryTransfer) object
+      description: 'Returns the InventoryTransfer object
 
         with the provided `transfer_id`.'
       x-release-status: BETA
@@ -536,9 +536,9 @@ paths:
         dispatcher: FALLBACK
       description: 'Retrieves the current calculated stock count for a given
 
-        [CatalogObject](entity:CatalogObject) at a given set of
+        CatalogObject at a given set of
 
-        [Location](entity:Location)s. Responses are paginated and unsorted.
+        Locations. Responses are paginated and unsorted.
 
         For more sophisticated queries, use a batch endpoint.'
       x-release-status: PUBLIC
@@ -589,12 +589,12 @@ paths:
         dispatcher: FALLBACK
       description: 'Returns a set of physical counts and inventory adjustments for the
 
-        provided [CatalogObject](entity:CatalogObject) at the requested
+        provided CatalogObject at the requested
 
-        [Location](entity:Location)s.
+        Locations.
 
 
-        You can achieve the same result by calling [BatchRetrieveInventoryChanges](api-endpoint:Inventory-BatchRetrieveInventoryChanges)
+        You can achieve the same result by calling BatchRetrieveInventoryChanges
 
         and having the `catalog_object_ids` list contain a single element of the `CatalogObject` ID.
 
@@ -653,6 +653,700 @@ paths:
                 $ref: '#/components/schemas/RetrieveInventoryChangesResponse'
 components:
   schemas:
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    Product:
+      type: string
+      enum:
+      - SQUARE_POS
+      - EXTERNAL_API
+      - BILLING
+      - APPOINTMENTS
+      - INVOICES
+      - ONLINE_STORE
+      - PAYROLL
+      - DASHBOARD
+      - ITEM_LIBRARY_IMPORT
+      - OTHER
+      x-enum-elements:
+      - name: SQUARE_POS
+        description: Square Point of Sale application.
+      - name: EXTERNAL_API
+        description: Square Connect APIs (for example, Orders API or Checkout API).
+      - name: BILLING
+        description: A Square subscription (various products).
+      - name: APPOINTMENTS
+        description: Square Appointments.
+      - name: INVOICES
+        description: Square Invoices.
+      - name: ONLINE_STORE
+        description: Square Online Store.
+      - name: PAYROLL
+        description: Square Payroll.
+      - name: DASHBOARD
+        description: Square Dashboard.
+      - name: ITEM_LIBRARY_IMPORT
+        description: Item Library Import.
+      - name: OTHER
+        description: A Square product that does not match any other value.
+      description: Indicates the Square product used to generate a change.
+      x-release-status: PUBLIC
+    BatchChangeInventoryResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryCount'
+          description: The current counts for all objects referenced in the request.
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryChange'
+          description: Changes created for the request.
+          x-release-status: BETA
+      example:
+        counts:
+        - calculated_at: '2016-11-16T22:28:01.223Z'
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          location_id: C6W5YS5QM06F5
+          quantity: '53'
+          state: IN_STOCK
+        errors: []
+    BatchRetrieveInventoryCountsRequest:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        catalog_object_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'The filter to return results by `CatalogObject` ID.
+
+            The filter is applicable only when set.  The default is null.'
+        location_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'The filter to return results by `Location` ID.
+
+            This filter is applicable only when set. The default is null.'
+        updated_after:
+          type:
+          - string
+          - 'null'
+          description: 'The filter to return results with their `calculated_at` value
+
+            after the given time as specified in an RFC 3339 timestamp.
+
+            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: 'A pagination cursor returned by a previous call to this endpoint.
+
+            Provide this to retrieve the next set of results for the original query.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+        states:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InventoryState'
+          description: 'The filter to return results by `InventoryState`. The filter is only applicable when set.
+
+            Ignored are untracked states of `NONE`, `SOLD`, and `UNLINKED_RETURN`.
+
+            The default is null.'
+        limit:
+          type:
+          - integer
+          - 'null'
+          description: The number of [records](entity:InventoryCount) to return.
+          minimum: 1
+          maximum: 1000
+      example:
+        catalog_object_ids:
+        - W62UWFY35CWMYGVWK6TWJDNI
+        location_ids:
+        - 59TNP9SA8VGDA
+        updated_after: '2016-11-16T00:00:00.000Z'
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.csharp
+        java: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.java
+        javascript: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.javascript
+        php: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.php
+        python: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.python
+        ruby: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.ruby
     MeasurementUnitVolume:
       type: string
       enum:
@@ -692,6 +1386,660 @@ components:
         description: The volume is measured in metric liters.
       description: The unit of volume used to measure a quantity.
       x-release-status: PUBLIC
+    CatalogMeasurementUnit:
+      type: object
+      description: 'Represents the unit used to measure a `CatalogItemVariation` and
+
+        specifies the precision for decimal quantities.'
+      x-release-status: PUBLIC
+      properties:
+        measurement_unit:
+          $ref: '#/components/schemas/MeasurementUnit'
+          description: Indicates the unit used to measure the quantity of a catalog item variation.
+        precision:
+          type:
+          - integer
+          - 'null'
+          description: 'An integer between 0 and 5 that represents the maximum number of
+
+            positions allowed after the decimal in quantities measured with this unit.
+
+            For example:
+
+
+            - if the precision is 0, the quantity can be 1, 2, 3, etc.
+
+            - if the precision is 1, the quantity can be 0.1, 0.2, etc.
+
+            - if the precision is 2, the quantity can be 0.01, 0.12, etc.
+
+
+            Default: 3'
+    MeasurementUnitGeneric:
+      type: string
+      enum:
+      - UNIT
+      x-enum-elements:
+      - name: UNIT
+        description: The generic unit.
+      x-release-status: PUBLIC
+    SourceApplication:
+      type: object
+      description: Represents information about the application used to generate a change.
+      x-release-status: PUBLIC
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+          description: '__Read only__ The [product](entity:Product) type of the application.
+
+            See [Product](#type-product) for possible values'
+        application_id:
+          type:
+          - string
+          - 'null'
+          description: '__Read only__ The Square-assigned ID of the application. This field is used only if the
+
+            [product](entity:Product) type is `EXTERNAL_API`.'
+        name:
+          type:
+          - string
+          - 'null'
+          description: '__Read only__ The display name of the application
+
+            (for example, `"Custom Application"` or `"Square POS 4.74 for Android"`).'
+    RetrieveInventoryAdjustmentResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        adjustment:
+          $ref: '#/components/schemas/InventoryAdjustment'
+          description: The requested [InventoryAdjustment](entity:InventoryAdjustment).
+      example:
+        adjustment:
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          created_at: '2016-11-17T13:02:15.142Z'
+          from_state: IN_STOCK
+          id: UDMOEO78BG6GYWA2XDRYX3KB
+          location_id: C6W5YS5QM06F5
+          occurred_at: '2016-11-16T25:44:22.837Z'
+          quantity: '7'
+          reference_id: 4a366069-4096-47a2-99a5-0084ac879509
+          source:
+            application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
+            name: Square Point of Sale 4.37
+            product: SQUARE_POS
+          team_member_id: LRK57NSQ5X7PUD05
+          to_state: SOLD
+          total_price_money:
+            amount: 4550
+            currency: USD
+        errors: []
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    MeasurementUnitUnitType:
+      type: string
+      enum:
+      - TYPE_CUSTOM
+      - TYPE_AREA
+      - TYPE_LENGTH
+      - TYPE_VOLUME
+      - TYPE_WEIGHT
+      - TYPE_GENERIC
+      x-enum-elements:
+      - name: TYPE_CUSTOM
+        description: The unit details are contained in the custom_unit field.
+      - name: TYPE_AREA
+        description: The unit details are contained in the area_unit field.
+      - name: TYPE_LENGTH
+        description: The unit details are contained in the length_unit field.
+      - name: TYPE_VOLUME
+        description: The unit details are contained in the volume_unit field.
+      - name: TYPE_WEIGHT
+        description: The unit details are contained in the weight_unit field.
+      - name: TYPE_GENERIC
+        description: The unit details are contained in the generic_unit field.
+      description: Describes the type of this unit and indicates which field contains the unit information. This is an ‘open’ enum.
+      x-release-status: PUBLIC
+    MeasurementUnitTime:
+      type: string
+      enum:
+      - GENERIC_MILLISECOND
+      - GENERIC_SECOND
+      - GENERIC_MINUTE
+      - GENERIC_HOUR
+      - GENERIC_DAY
+      x-enum-elements:
+      - name: GENERIC_MILLISECOND
+        description: The time is measured in milliseconds.
+      - name: GENERIC_SECOND
+        description: The time is measured in seconds.
+      - name: GENERIC_MINUTE
+        description: The time is measured in minutes.
+      - name: GENERIC_HOUR
+        description: The time is measured in hours.
+      - name: GENERIC_DAY
+        description: The time is measured in days.
+      description: Unit of time used to measure a quantity (a duration).
+      x-release-status: PUBLIC
+    BatchRetrieveInventoryChangesRequest:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        catalog_object_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'The filter to return results by `CatalogObject` ID.
+
+            The filter is only applicable when set. The default value is null.'
+        location_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'The filter to return results by `Location` ID.
+
+            The filter is only applicable when set. The default value is null.'
+        types:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InventoryChangeType'
+          description: 'The filter to return results by `InventoryChangeType` values other than `TRANSFER`.
+
+            The default value is `[PHYSICAL_COUNT, ADJUSTMENT]`.'
+        states:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InventoryState'
+          description: 'The filter to return `ADJUSTMENT` query results by
+
+            `InventoryState`. This filter is only applied when set.
+
+            The default value is null.'
+        updated_after:
+          type:
+          - string
+          - 'null'
+          description: 'The filter to return results with their `calculated_at` value
+
+            after the given time as specified in an RFC 3339 timestamp.
+
+            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
+        updated_before:
+          type:
+          - string
+          - 'null'
+          description: 'The filter to return results with their `created_at` or `calculated_at` value
+
+            strictly before the given time as specified in an RFC 3339 timestamp.
+
+            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: 'A pagination cursor returned by a previous call to this endpoint.
+
+            Provide this to retrieve the next set of results for the original query.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+        limit:
+          type:
+          - integer
+          - 'null'
+          description: The number of [records](entity:InventoryChange) to return.
+          minimum: 1
+          maximum: 1000
+      example:
+        catalog_object_ids:
+        - W62UWFY35CWMYGVWK6TWJDNI
+        location_ids:
+        - C6W5YS5QM06F5
+        states:
+        - IN_STOCK
+        types:
+        - PHYSICAL_COUNT
+        updated_after: '2016-11-01T00:00:00.000Z'
+        updated_before: '2016-12-01T00:00:00.000Z'
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.csharp
+        java: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.java
+        javascript: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.javascript
+        php: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.php
+        python: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.python
+        ruby: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.ruby
+    InventoryChange:
+      type: object
+      description: 'Represents a single physical count, inventory, adjustment, or transfer
+
+        that is part of the history of inventory changes for a particular
+
+        [CatalogObject](entity:CatalogObject) instance.'
+      x-release-status: PUBLIC
+      properties:
+        type:
+          $ref: '#/components/schemas/InventoryChangeType'
+          description: 'Indicates how the inventory change is applied. See
+
+            [InventoryChangeType](entity:InventoryChangeType) for all possible values.
+
+            See [InventoryChangeType](#type-inventorychangetype) for possible values'
+        physical_count:
+          $ref: '#/components/schemas/InventoryPhysicalCount'
+          description: 'Contains details about the physical count when `type` is
+
+            `PHYSICAL_COUNT`, and is unset for all other change types.'
+        adjustment:
+          $ref: '#/components/schemas/InventoryAdjustment'
+          description: 'Contains details about the inventory adjustment when `type` is
+
+            `ADJUSTMENT`, and is unset for all other change types.'
+        transfer:
+          $ref: '#/components/schemas/InventoryTransfer'
+          description: 'Contains details about the inventory transfer when `type` is
+
+            `TRANSFER`, and is unset for all other change types.
+
+
+            _Note:_ An [InventoryTransfer](entity:InventoryTransfer) object can only be set in the input to the
+
+            [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory) endpoint when the seller has an active Retail Plus subscription.'
+        measurement_unit:
+          $ref: '#/components/schemas/CatalogMeasurementUnit'
+          description: The [CatalogMeasurementUnit](entity:CatalogMeasurementUnit) object representing the catalog measurement unit associated with the inventory change.
+          readOnly: true
+        measurement_unit_id:
+          type: string
+          description: The ID of the [CatalogMeasurementUnit](entity:CatalogMeasurementUnit) object representing the catalog measurement unit associated with the inventory change.
+          readOnly: true
+    BatchChangeInventoryRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      properties:
+        idempotency_key:
+          type: string
+          description: 'A client-supplied, universally unique identifier (UUID) for the
+
+            request.
+
+
+            See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the
+
+            [API Development 101](https://developer.squareup.com/docs/buildbasics) section for more
+
+            information.'
+          minLength: 1
+          maxLength: 128
+        changes:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InventoryChange'
+          description: 'The set of physical counts and inventory adjustments to be made.
+
+            Changes are applied based on the client-supplied timestamp and may be sent
+
+            out of order.'
+        ignore_unchanged_counts:
+          type:
+          - boolean
+          - 'null'
+          description: 'Indicates whether the current physical count should be ignored if
+
+            the quantity is unchanged since the last physical count. Default: `true`.'
+      example:
+        changes:
+        - physical_count:
+            catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+            location_id: C6W5YS5QM06F5
+            occurred_at: '2016-11-16T22:25:24.878Z'
+            quantity: '53'
+            reference_id: 1536bfbf-efed-48bf-b17d-a197141b2a92
+            state: IN_STOCK
+            team_member_id: LRK57NSQ5X7PUD05
+          type: PHYSICAL_COUNT
+        idempotency_key: 8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe
+        ignore_unchanged_counts: true
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.csharp
+        java: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.java
+        javascript: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.javascript
+        php: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.php
+        python: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.python
+        ruby: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.ruby
+    RetrieveInventoryChangesResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryChange'
+          description: The set of inventory changes for the requested object and locations.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If unset,
+
+            this is the final response.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+      example:
+        changes:
+        - adjustment:
+            catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+            catalog_object_type: ITEM_VARIATION
+            created_at: '2016-11-16T22:25:24.878Z'
+            from_state: IN_STOCK
+            id: OJKJIUANKLMLQANZADNPLKAD
+            location_id: C6W5YS5QM06F5
+            occurred_at: '2016-11-16T22:25:24.878Z'
+            quantity: '3'
+            reference_id: d8207693-168f-4b44-a2fd-a7ff533ddd26
+            source:
+              application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
+              name: Square Point of Sale 4.37
+              product: SQUARE_POS
+            team_member_id: AV7YRCGI2H1J5NQ8E1XIZCNA
+            to_state: SOLD
+            total_price_money:
+              amount: 5000
+              currency: USD
+            transaction_id: 5APV6JYK1SNCZD11AND2RX1Z
+          type: ADJUSTMENT
+        errors: []
+    InventoryChangeType:
+      type: string
+      enum:
+      - PHYSICAL_COUNT
+      - ADJUSTMENT
+      - TRANSFER
+      x-enum-elements:
+      - name: PHYSICAL_COUNT
+        description: The change occurred as part of a physical count update.
+      - name: ADJUSTMENT
+        description: 'The change occurred as part of the normal lifecycle of goods
+
+          (e.g., as an inventory adjustment).'
+      - name: TRANSFER
+        description: The change occurred as part of an inventory transfer.
+      description: Indicates how the inventory change was applied to a tracked product quantity.
+      x-release-status: PUBLIC
+    MeasurementUnitCustom:
+      type: object
+      description: The information needed to define a custom unit, provided by the seller.
+      x-release-status: PUBLIC
+      required:
+      - name
+      - abbreviation
+      properties:
+        name:
+          type: string
+          description: The name of the custom unit, for example "bushel".
+        abbreviation:
+          type: string
+          description: 'The abbreviation of the custom unit, such as "bsh" (bushel). This appears
+
+            in the cart for the Point of Sale app, and in reports.'
+    InventoryTransfer:
+      type: object
+      description: 'Represents the transfer of a quantity of product inventory at a
+
+        particular time from one location to another.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: 'A unique ID generated by Square for the
+
+            `InventoryTransfer`.'
+          maxLength: 100
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: 'An optional ID provided by the application to tie the
+
+            `InventoryTransfer` to an external system.'
+          maxLength: 255
+        state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'The [inventory state](entity:InventoryState) for the quantity of
+
+            items being transferred.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+        from_location_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items was tracked before the transfer.'
+          maxLength: 100
+        to_location_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items was tracked after the transfer.'
+          maxLength: 100
+        catalog_object_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the
+
+            [CatalogObject](entity:CatalogObject) being tracked.'
+          maxLength: 100
+        catalog_object_type:
+          type:
+          - string
+          - 'null'
+          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
+          maxLength: 14
+        quantity:
+          type:
+          - string
+          - 'null'
+          description: 'The number of items affected by the transfer as a decimal string.
+
+            Can support up to 5 digits after the decimal point.'
+          maxLength: 26
+        occurred_at:
+          type:
+          - string
+          - 'null'
+          description: 'A client-generated RFC 3339-formatted timestamp that indicates when
+
+            the transfer took place. For write actions, the `occurred_at` timestamp
+
+            cannot be older than 24 hours or in the future relative to the time of the
+
+            request.'
+          maxLength: 34
+        created_at:
+          type: string
+          description: 'An RFC 3339-formatted timestamp that indicates when Square
+
+            received the transfer request.'
+          maxLength: 34
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/SourceApplication'
+          description: 'Information about the application that initiated the
+
+            inventory transfer.'
+          readOnly: true
+        employee_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the [Employee](entity:Employee) responsible for the
+
+            inventory transfer.'
+          maxLength: 100
+        team_member_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the [Team Member](entity:TeamMember) responsible for the
+
+            inventory transfer.'
+          maxLength: 100
+    InventoryPhysicalCount:
+      type: object
+      description: 'Represents the quantity of an item variation that is physically present
+
+        at a specific location, verified by a seller or a seller''s employee. For example,
+
+        a physical count might come from an employee counting the item variations on
+
+        hand or from syncing with an external system.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: 'A unique Square-generated ID for the
+
+            [InventoryPhysicalCount](entity:InventoryPhysicalCount).'
+          maxLength: 100
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: 'An optional ID provided by the application to tie the
+
+            [InventoryPhysicalCount](entity:InventoryPhysicalCount) to an external
+
+            system.'
+          maxLength: 255
+        catalog_object_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the
+
+            [CatalogObject](entity:CatalogObject) being tracked.'
+          maxLength: 100
+        catalog_object_type:
+          type:
+          - string
+          - 'null'
+          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
+          maxLength: 14
+        state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'The current [inventory state](entity:InventoryState) for the related
+
+            quantity of items.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+        location_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items is being tracked.'
+          maxLength: 100
+        quantity:
+          type:
+          - string
+          - 'null'
+          description: 'The number of items affected by the physical count as a decimal string.
+
+            The number can support up to 5 digits after the decimal point.'
+          maxLength: 26
+        source:
+          $ref: '#/components/schemas/SourceApplication'
+          description: 'Information about the application with which the
+
+            physical count is submitted.'
+          readOnly: true
+        employee_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the [Employee](entity:Employee) responsible for the
+
+            physical count.'
+          maxLength: 100
+        team_member_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the [Team Member](entity:TeamMember) responsible for the
+
+            physical count.'
+          maxLength: 100
+        occurred_at:
+          type:
+          - string
+          - 'null'
+          description: 'A client-generated RFC 3339-formatted timestamp that indicates when
+
+            the physical count was examined. For physical count updates, the `occurred_at`
+
+            timestamp cannot be older than 24 hours or in the future relative to the
+
+            time of the request.'
+          maxLength: 34
+        created_at:
+          type: string
+          description: An RFC 3339-formatted timestamp that indicates when the physical count is received.
+          maxLength: 34
+          readOnly: true
     InventoryAdjustment:
       type: object
       description: 'Represents a change in state or quantity of product inventory at a
@@ -706,14 +2054,15 @@ components:
             `InventoryAdjustment`.'
           maxLength: 100
         reference_id:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'An optional ID provided by the application to tie the
 
             `InventoryAdjustment` to an external
 
             system.'
           maxLength: 255
-          nullable: true
         from_state:
           $ref: '#/components/schemas/InventoryState'
           description: 'The [inventory state](entity:InventoryState) of the related quantity
@@ -721,7 +2070,6 @@ components:
             of items before the adjustment.
 
             See [InventoryState](#type-inventorystate) for possible values'
-          nullable: true
         to_state:
           $ref: '#/components/schemas/InventoryState'
           description: 'The [inventory state](entity:InventoryState) of the related quantity
@@ -729,33 +2077,36 @@ components:
             of items after the adjustment.
 
             See [InventoryState](#type-inventorystate) for possible values'
-          nullable: true
         location_id:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'The Square-generated ID of the [Location](entity:Location) where the related
 
             quantity of items is being tracked.'
           maxLength: 100
-          nullable: true
         catalog_object_id:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'The Square-generated ID of the
 
             [CatalogObject](entity:CatalogObject) being tracked.'
           maxLength: 100
-          nullable: true
         catalog_object_type:
-          type: string
+          type:
+          - string
+          - 'null'
           description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
           maxLength: 14
-          nullable: true
         quantity:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'The number of items affected by the adjustment as a decimal string.
 
             Can support up to 5 digits after the decimal point.'
           maxLength: 26
-          nullable: true
         total_price_money:
           $ref: '#/components/schemas/Money'
           description: 'The total price paid for goods associated with the
@@ -765,7 +2116,9 @@ components:
             non-negative.'
           readOnly: true
         occurred_at:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'A client-generated RFC 3339-formatted timestamp that indicates when
 
             the inventory adjustment took place. For inventory adjustment updates, the `occurred_at`
@@ -774,7 +2127,6 @@ components:
 
             time of the request.'
           maxLength: 34
-          nullable: true
         created_at:
           type: string
           description: An RFC 3339-formatted timestamp that indicates when the inventory adjustment is received.
@@ -787,19 +2139,21 @@ components:
             inventory adjustment.'
           readOnly: true
         employee_id:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'The Square-generated ID of the [Employee](entity:Employee) responsible for the
 
             inventory adjustment.'
           maxLength: 100
-          nullable: true
         team_member_id:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'The Square-generated ID of the [Team Member](entity:TeamMember) responsible for the
 
             inventory adjustment.'
           maxLength: 100
-          nullable: true
         transaction_id:
           type: string
           description: 'The Square-generated ID of the [Transaction](entity:Transaction) that
@@ -841,52 +2195,101 @@ components:
           description: An adjustment group bundling the related adjustments of item variations through stock conversions in a single inventory event.
           readOnly: true
           x-release-status: BETA
-    ErrorCategory:
+    InventoryCount:
+      type: object
+      description: 'Represents Square-estimated quantity of items in a particular state at a
+
+        particular seller location based on the known history of physical counts and
+
+        inventory adjustments.'
+      x-release-status: PUBLIC
+      properties:
+        catalog_object_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the
+
+            [CatalogObject](entity:CatalogObject) being tracked.'
+          maxLength: 100
+        catalog_object_type:
+          type:
+          - string
+          - 'null'
+          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
+          maxLength: 14
+        state:
+          $ref: '#/components/schemas/InventoryState'
+          description: 'The current [inventory state](entity:InventoryState) for the related
+
+            quantity of items.
+
+            See [InventoryState](#type-inventorystate) for possible values'
+        location_id:
+          type:
+          - string
+          - 'null'
+          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+
+            quantity of items is being tracked.'
+          maxLength: 100
+        quantity:
+          type:
+          - string
+          - 'null'
+          description: 'The number of items affected by the estimated count as a decimal string.
+
+            Can support up to 5 digits after the decimal point.'
+          maxLength: 26
+        calculated_at:
+          type: string
+          description: 'An RFC 3339-formatted timestamp that indicates when the most recent physical count or adjustment affecting
+
+            the estimated count is received.'
+          maxLength: 34
+          readOnly: true
+        is_estimated:
+          type: boolean
+          description: 'Whether the inventory count is for composed variation (TRUE) or not (FALSE). If true, the inventory count will not be present in the response of
+
+            any of these endpoints: [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory),
+
+            [BatchRetrieveInventoryChanges](api-endpoint:Inventory-BatchRetrieveInventoryChanges),
+
+            [BatchRetrieveInventoryCounts](api-endpoint:Inventory-BatchRetrieveInventoryCounts), and
+
+            [RetrieveInventoryChanges](api-endpoint:Inventory-RetrieveInventoryChanges).'
+          readOnly: true
+          x-release-status: BETA
+    MeasurementUnitLength:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - IMPERIAL_INCH
+      - IMPERIAL_FOOT
+      - IMPERIAL_YARD
+      - IMPERIAL_MILE
+      - METRIC_MILLIMETER
+      - METRIC_CENTIMETER
+      - METRIC_METER
+      - METRIC_KILOMETER
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+      - name: IMPERIAL_INCH
+        description: The length is measured in inches.
+      - name: IMPERIAL_FOOT
+        description: The length is measured in feet.
+      - name: IMPERIAL_YARD
+        description: The length is measured in yards.
+      - name: IMPERIAL_MILE
+        description: The length is measured in miles.
+      - name: METRIC_MILLIMETER
+        description: The length is measured in millimeters.
+      - name: METRIC_CENTIMETER
+        description: The length is measured in centimeters.
+      - name: METRIC_METER
+        description: The length is measured in meters.
+      - name: METRIC_KILOMETER
+        description: The length is measured in kilometers.
+      description: The unit of length used to measure a quantity.
       x-release-status: PUBLIC
     ErrorCode:
       type: string
@@ -1634,562 +3037,62 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    Currency:
+    BatchRetrieveInventoryCountsResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryCount'
+          description: 'The current calculated inventory counts for the requested objects
+
+            and locations.'
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If unset,
+
+            this is the final response.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+      example:
+        counts:
+        - calculated_at: '2016-11-16T22:28:01.223Z'
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          location_id: 59TNP9SA8VGDA
+          quantity: '79'
+          state: IN_STOCK
+        errors: []
+    MeasurementUnitWeight:
       type: string
       enum:
-      - UNKNOWN_CURRENCY
-      - AED
-      - AFN
-      - ALL
-      - AMD
-      - ANG
-      - AOA
-      - ARS
-      - AUD
-      - AWG
-      - AZN
-      - BAM
-      - BBD
-      - BDT
-      - BGN
-      - BHD
-      - BIF
-      - BMD
-      - BND
-      - BOB
-      - BOV
-      - BRL
-      - BSD
-      - BTN
-      - BWP
-      - BYR
-      - BZD
-      - CAD
-      - CDF
-      - CHE
-      - CHF
-      - CHW
-      - CLF
-      - CLP
-      - CNY
-      - COP
-      - COU
-      - CRC
-      - CUC
-      - CUP
-      - CVE
-      - CZK
-      - DJF
-      - DKK
-      - DOP
-      - DZD
-      - EGP
-      - ERN
-      - ETB
-      - EUR
-      - FJD
-      - FKP
-      - GBP
-      - GEL
-      - GHS
-      - GIP
-      - GMD
-      - GNF
-      - GTQ
-      - GYD
-      - HKD
-      - HNL
-      - HRK
-      - HTG
-      - HUF
-      - IDR
-      - ILS
-      - INR
-      - IQD
-      - IRR
-      - ISK
-      - JMD
-      - JOD
-      - JPY
-      - KES
-      - KGS
-      - KHR
-      - KMF
-      - KPW
-      - KRW
-      - KWD
-      - KYD
-      - KZT
-      - LAK
-      - LBP
-      - LKR
-      - LRD
-      - LSL
-      - LTL
-      - LVL
-      - LYD
-      - MAD
-      - MDL
-      - MGA
-      - MKD
-      - MMK
-      - MNT
-      - MOP
-      - MRO
-      - MUR
-      - MVR
-      - MWK
-      - MXN
-      - MXV
-      - MYR
-      - MZN
-      - NAD
-      - NGN
-      - NIO
-      - NOK
-      - NPR
-      - NZD
-      - OMR
-      - PAB
-      - PEN
-      - PGK
-      - PHP
-      - PKR
-      - PLN
-      - PYG
-      - QAR
-      - RON
-      - RSD
-      - RUB
-      - RWF
-      - SAR
-      - SBD
-      - SCR
-      - SDG
-      - SEK
-      - SGD
-      - SHP
-      - SLL
-      - SLE
-      - SOS
-      - SRD
-      - SSP
-      - STD
-      - SVC
-      - SYP
-      - SZL
-      - THB
-      - TJS
-      - TMT
-      - TND
-      - TOP
-      - TRY
-      - TTD
-      - TWD
-      - TZS
-      - UAH
-      - UGX
-      - USD
-      - USN
-      - USS
-      - UYI
-      - UYU
-      - UZS
-      - VEF
-      - VND
-      - VUV
-      - WST
-      - XAF
-      - XAG
-      - XAU
-      - XBA
-      - XBB
-      - XBC
-      - XBD
-      - XCD
-      - XDR
-      - XOF
-      - XPD
-      - XPF
-      - XPT
-      - XTS
-      - XXX
-      - YER
-      - ZAR
-      - ZMK
-      - ZMW
-      - BTC
-      - XUS
+      - IMPERIAL_WEIGHT_OUNCE
+      - IMPERIAL_POUND
+      - IMPERIAL_STONE
+      - METRIC_MILLIGRAM
+      - METRIC_GRAM
+      - METRIC_KILOGRAM
       x-enum-elements:
-      - name: UNKNOWN_CURRENCY
-        description: Unknown currency
-      - name: AED
-        description: United Arab Emirates dirham
-      - name: AFN
-        description: Afghan afghani
-      - name: ALL
-        description: Albanian lek
-      - name: AMD
-        description: Armenian dram
-      - name: ANG
-        description: Netherlands Antillean guilder
-      - name: AOA
-        description: Angolan kwanza
-      - name: ARS
-        description: Argentine peso
-      - name: AUD
-        description: Australian dollar
-      - name: AWG
-        description: Aruban florin
-      - name: AZN
-        description: Azerbaijani manat
-      - name: BAM
-        description: Bosnia and Herzegovina convertible mark
-      - name: BBD
-        description: Barbados dollar
-      - name: BDT
-        description: Bangladeshi taka
-      - name: BGN
-        description: Bulgarian lev
-      - name: BHD
-        description: Bahraini dinar
-      - name: BIF
-        description: Burundian franc
-      - name: BMD
-        description: Bermudian dollar
-      - name: BND
-        description: Brunei dollar
-      - name: BOB
-        description: Boliviano
-      - name: BOV
-        description: Bolivian Mvdol
-      - name: BRL
-        description: Brazilian real
-      - name: BSD
-        description: Bahamian dollar
-      - name: BTN
-        description: Bhutanese ngultrum
-      - name: BWP
-        description: Botswana pula
-      - name: BYR
-        description: Belarusian ruble
-      - name: BZD
-        description: Belize dollar
-      - name: CAD
-        description: Canadian dollar
-      - name: CDF
-        description: Congolese franc
-      - name: CHE
-        description: WIR Euro
-      - name: CHF
-        description: Swiss franc
-      - name: CHW
-        description: WIR Franc
-      - name: CLF
-        description: Unidad de Fomento
-      - name: CLP
-        description: Chilean peso
-      - name: CNY
-        description: Chinese yuan
-      - name: COP
-        description: Colombian peso
-      - name: COU
-        description: Unidad de Valor Real
-      - name: CRC
-        description: Costa Rican colon
-      - name: CUC
-        description: Cuban convertible peso
-      - name: CUP
-        description: Cuban peso
-      - name: CVE
-        description: Cape Verdean escudo
-      - name: CZK
-        description: Czech koruna
-      - name: DJF
-        description: Djiboutian franc
-      - name: DKK
-        description: Danish krone
-      - name: DOP
-        description: Dominican peso
-      - name: DZD
-        description: Algerian dinar
-      - name: EGP
-        description: Egyptian pound
-      - name: ERN
-        description: Eritrean nakfa
-      - name: ETB
-        description: Ethiopian birr
-      - name: EUR
-        description: Euro
-      - name: FJD
-        description: Fiji dollar
-      - name: FKP
-        description: Falkland Islands pound
-      - name: GBP
-        description: Pound sterling
-      - name: GEL
-        description: Georgian lari
-      - name: GHS
-        description: Ghanaian cedi
-      - name: GIP
-        description: Gibraltar pound
-      - name: GMD
-        description: Gambian dalasi
-      - name: GNF
-        description: Guinean franc
-      - name: GTQ
-        description: Guatemalan quetzal
-      - name: GYD
-        description: Guyanese dollar
-      - name: HKD
-        description: Hong Kong dollar
-      - name: HNL
-        description: Honduran lempira
-      - name: HRK
-        description: Croatian kuna
-      - name: HTG
-        description: Haitian gourde
-      - name: HUF
-        description: Hungarian forint
-      - name: IDR
-        description: Indonesian rupiah
-      - name: ILS
-        description: Israeli new shekel
-      - name: INR
-        description: Indian rupee
-      - name: IQD
-        description: Iraqi dinar
-      - name: IRR
-        description: Iranian rial
-      - name: ISK
-        description: Icelandic króna
-      - name: JMD
-        description: Jamaican dollar
-      - name: JOD
-        description: Jordanian dinar
-      - name: JPY
-        description: Japanese yen
-      - name: KES
-        description: Kenyan shilling
-      - name: KGS
-        description: Kyrgyzstani som
-      - name: KHR
-        description: Cambodian riel
-      - name: KMF
-        description: Comoro franc
-      - name: KPW
-        description: North Korean won
-      - name: KRW
-        description: South Korean won
-      - name: KWD
-        description: Kuwaiti dinar
-      - name: KYD
-        description: Cayman Islands dollar
-      - name: KZT
-        description: Kazakhstani tenge
-      - name: LAK
-        description: Lao kip
-      - name: LBP
-        description: Lebanese pound
-      - name: LKR
-        description: Sri Lankan rupee
-      - name: LRD
-        description: Liberian dollar
-      - name: LSL
-        description: Lesotho loti
-      - name: LTL
-        description: Lithuanian litas
-      - name: LVL
-        description: Latvian lats
-      - name: LYD
-        description: Libyan dinar
-      - name: MAD
-        description: Moroccan dirham
-      - name: MDL
-        description: Moldovan leu
-      - name: MGA
-        description: Malagasy ariary
-      - name: MKD
-        description: Macedonian denar
-      - name: MMK
-        description: Myanmar kyat
-      - name: MNT
-        description: Mongolian tögrög
-      - name: MOP
-        description: Macanese pataca
-      - name: MRO
-        description: Mauritanian ouguiya
-      - name: MUR
-        description: Mauritian rupee
-      - name: MVR
-        description: Maldivian rufiyaa
-      - name: MWK
-        description: Malawian kwacha
-      - name: MXN
-        description: Mexican peso
-      - name: MXV
-        description: Mexican Unidad de Inversion
-      - name: MYR
-        description: Malaysian ringgit
-      - name: MZN
-        description: Mozambican metical
-      - name: NAD
-        description: Namibian dollar
-      - name: NGN
-        description: Nigerian naira
-      - name: NIO
-        description: Nicaraguan córdoba
-      - name: NOK
-        description: Norwegian krone
-      - name: NPR
-        description: Nepalese rupee
-      - name: NZD
-        description: New Zealand dollar
-      - name: OMR
-        description: Omani rial
-      - name: PAB
-        description: Panamanian balboa
-      - name: PEN
-        description: Peruvian sol
-      - name: PGK
-        description: Papua New Guinean kina
-      - name: PHP
-        description: Philippine peso
-      - name: PKR
-        description: Pakistani rupee
-      - name: PLN
-        description: Polish zBoty
-      - name: PYG
-        description: Paraguayan guaraní
-      - name: QAR
-        description: Qatari riyal
-      - name: RON
-        description: Romanian leu
-      - name: RSD
-        description: Serbian dinar
-      - name: RUB
-        description: Russian ruble
-      - name: RWF
-        description: Rwandan franc
-      - name: SAR
-        description: Saudi riyal
-      - name: SBD
-        description: Solomon Islands dollar
-      - name: SCR
-        description: Seychelles rupee
-      - name: SDG
-        description: Sudanese pound
-      - name: SEK
-        description: Swedish krona
-      - name: SGD
-        description: Singapore dollar
-      - name: SHP
-        description: Saint Helena pound
-      - name: SLL
-        description: Sierra Leonean first leone
-      - name: SLE
-        description: Sierra Leonean second leone
-      - name: SOS
-        description: Somali shilling
-      - name: SRD
-        description: Surinamese dollar
-      - name: SSP
-        description: South Sudanese pound
-      - name: STD
-        description: São Tomé and Príncipe dobra
-      - name: SVC
-        description: Salvadoran colón
-      - name: SYP
-        description: Syrian pound
-      - name: SZL
-        description: Swazi lilangeni
-      - name: THB
-        description: Thai baht
-      - name: TJS
-        description: Tajikstani somoni
-      - name: TMT
-        description: Turkmenistan manat
-      - name: TND
-        description: Tunisian dinar
-      - name: TOP
-        description: Tongan pa'anga
-      - name: TRY
-        description: Turkish lira
-      - name: TTD
-        description: Trinidad and Tobago dollar
-      - name: TWD
-        description: New Taiwan dollar
-      - name: TZS
-        description: Tanzanian shilling
-      - name: UAH
-        description: Ukrainian hryvnia
-      - name: UGX
-        description: Ugandan shilling
-      - name: USD
-        description: United States dollar
-      - name: USN
-        description: United States dollar (next day)
-      - name: USS
-        description: United States dollar (same day)
-      - name: UYI
-        description: Uruguay Peso en Unidedades Indexadas
-      - name: UYU
-        description: Uruguyan peso
-      - name: UZS
-        description: Uzbekistan som
-      - name: VEF
-        description: Venezuelan bolívar soberano
-      - name: VND
-        description: Vietnamese ’Óng
-      - name: VUV
-        description: Vanuatu vatu
-      - name: WST
-        description: Samoan tala
-      - name: XAF
-        description: CFA franc BEAC
-      - name: XAG
-        description: Silver
-      - name: XAU
-        description: Gold
-      - name: XBA
-        description: European Composite Unit
-      - name: XBB
-        description: European Monetary Unit
-      - name: XBC
-        description: European Unit of Account 9
-      - name: XBD
-        description: European Unit of Account 17
-      - name: XCD
-        description: East Caribbean dollar
-      - name: XDR
-        description: Special drawing rights (International Monetary Fund)
-      - name: XOF
-        description: CFA franc BCEAO
-      - name: XPD
-        description: Palladium
-      - name: XPF
-        description: CFP franc
-      - name: XPT
-        description: Platinum
-      - name: XTS
-        description: Code reserved for testing
-      - name: XXX
-        description: No currency
-      - name: YER
-        description: Yemeni rial
-      - name: ZAR
-        description: South African rand
-      - name: ZMK
-        description: Zambian kwacha
-      - name: ZMW
-        description: Zambian kwacha
-      - name: BTC
-        description: Bitcoin
-      - name: XUS
-        description: USD Coin
-      description: 'Indicates the associated currency for an amount of money. Values correspond
-
-        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      - name: IMPERIAL_WEIGHT_OUNCE
+        description: The weight is measured in ounces.
+      - name: IMPERIAL_POUND
+        description: The weight is measured in pounds.
+      - name: IMPERIAL_STONE
+        description: The weight is measured in stones.
+      - name: METRIC_MILLIGRAM
+        description: The weight is measured in milligrams.
+      - name: METRIC_GRAM
+        description: The weight is measured in grams.
+      - name: METRIC_KILOGRAM
+        description: The weight is measured in kilograms.
+      description: Unit of weight used to measure a quantity.
       x-release-status: PUBLIC
     BatchRetrieveInventoryChangesResponse:
       type: object
@@ -2233,44 +3136,7 @@ components:
             team_member_id: LRK57NSQ5X7PUD05
           type: PHYSICAL_COUNT
         errors: []
-    Money:
-      type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
-
-        Fields that do not explicitly define whether they are signed or unsigned are
-
-        considered unsigned and can only hold positive amounts. For signed fields, the
-
-        sign of the value indicates the purpose of the money transfer. See
-
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
-
-        for more information.'
-      x-release-status: PUBLIC
-      properties:
-        amount:
-          type: integer
-          description: 'The amount of money, in the smallest denomination of the currency
-
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
-
-            in cents. Monetary amounts can be positive or negative. See the specific
-
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-          nullable: true
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
-
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
-          nullable: true
-    RetrieveInventoryAdjustmentResponse:
+    RetrieveInventoryCountResponse:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -2279,29 +3145,29 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
-        adjustment:
-          $ref: '#/components/schemas/InventoryAdjustment'
-          description: The requested [InventoryAdjustment](entity:InventoryAdjustment).
+        counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryCount'
+          description: 'The current calculated inventory counts for the requested object and
+
+            locations.'
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If unset,
+
+            this is the final response.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
       example:
-        adjustment:
+        counts:
+        - calculated_at: '2016-11-16T22:28:01.223Z'
           catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
           catalog_object_type: ITEM_VARIATION
-          created_at: '2016-11-17T13:02:15.142Z'
-          from_state: IN_STOCK
-          id: UDMOEO78BG6GYWA2XDRYX3KB
           location_id: C6W5YS5QM06F5
-          occurred_at: '2016-11-16T25:44:22.837Z'
-          quantity: '7'
-          reference_id: 4a366069-4096-47a2-99a5-0084ac879509
-          source:
-            application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
-            name: Square Point of Sale 4.37
-            product: SQUARE_POS
-          team_member_id: LRK57NSQ5X7PUD05
-          to_state: SOLD
-          total_price_money:
-            amount: 4550
-            currency: USD
+          quantity: '22'
+          state: IN_STOCK
         errors: []
     InventoryState:
       type: string
@@ -2393,601 +3259,92 @@ components:
         description: The related quantity of items are in transit between locations. **READ-ONLY:** the Inventory API cannot currently be used to move quantities to or from this inventory state.
       description: Indicates the state of a tracked item quantity in the lifecycle of goods.
       x-release-status: PUBLIC
-    InventoryPhysicalCount:
+    MeasurementUnit:
       type: object
-      description: 'Represents the quantity of an item variation that is physically present
+      description: 'Represents a unit of measurement to use with a quantity, such as ounces
 
-        at a specific location, verified by a seller or a seller''s employee. For example,
+        or inches. Exactly one of the following fields are required: `custom_unit`,
 
-        a physical count might come from an employee counting the item variations on
-
-        hand or from syncing with an external system.'
+        `area_unit`, `length_unit`, `volume_unit`, and `weight_unit`.'
       x-release-status: PUBLIC
       properties:
-        id:
-          type: string
-          description: 'A unique Square-generated ID for the
+        custom_unit:
+          $ref: '#/components/schemas/MeasurementUnitCustom'
+          description: 'A custom unit of measurement defined by the seller using the Point of Sale
 
-            [InventoryPhysicalCount](entity:InventoryPhysicalCount).'
-          maxLength: 100
-        reference_id:
-          type: string
-          description: 'An optional ID provided by the application to tie the
+            app or ad-hoc as an order line item.'
+        area_unit:
+          $ref: '#/components/schemas/MeasurementUnitArea'
+          description: 'Represents a standard area unit.
 
-            [InventoryPhysicalCount](entity:InventoryPhysicalCount) to an external
+            See [MeasurementUnitArea](#type-measurementunitarea) for possible values'
+        length_unit:
+          $ref: '#/components/schemas/MeasurementUnitLength'
+          description: 'Represents a standard length unit.
 
-            system.'
-          maxLength: 255
-          nullable: true
-        catalog_object_id:
-          type: string
-          description: 'The Square-generated ID of the
+            See [MeasurementUnitLength](#type-measurementunitlength) for possible values'
+        volume_unit:
+          $ref: '#/components/schemas/MeasurementUnitVolume'
+          description: 'Represents a standard volume unit.
 
-            [CatalogObject](entity:CatalogObject) being tracked.'
-          maxLength: 100
-          nullable: true
-        catalog_object_type:
-          type: string
-          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
-          maxLength: 14
-          nullable: true
-        state:
-          $ref: '#/components/schemas/InventoryState'
-          description: 'The current [inventory state](entity:InventoryState) for the related
+            See [MeasurementUnitVolume](#type-measurementunitvolume) for possible values'
+        weight_unit:
+          $ref: '#/components/schemas/MeasurementUnitWeight'
+          description: 'Represents a standard unit of weight or mass.
 
-            quantity of items.
+            See [MeasurementUnitWeight](#type-measurementunitweight) for possible values'
+        generic_unit:
+          $ref: '#/components/schemas/MeasurementUnitGeneric'
+          description: 'Reserved for API integrations that lack the ability to specify a real measurement unit
 
-            See [InventoryState](#type-inventorystate) for possible values'
-          nullable: true
-        location_id:
-          type: string
-          description: 'The Square-generated ID of the [Location](entity:Location) where the related
+            See [MeasurementUnitGeneric](#type-measurementunitgeneric) for possible values'
+        time_unit:
+          $ref: '#/components/schemas/MeasurementUnitTime'
+          description: 'Represents a standard unit of time.
 
-            quantity of items is being tracked.'
-          maxLength: 100
-          nullable: true
-        quantity:
-          type: string
-          description: 'The number of items affected by the physical count as a decimal string.
+            See [MeasurementUnitTime](#type-measurementunittime) for possible values'
+        type:
+          $ref: '#/components/schemas/MeasurementUnitUnitType'
+          description: 'Represents the type of the measurement unit.
 
-            The number can support up to 5 digits after the decimal point.'
-          maxLength: 26
-          nullable: true
-        source:
-          $ref: '#/components/schemas/SourceApplication'
-          description: 'Information about the application with which the
-
-            physical count is submitted.'
-          readOnly: true
-        employee_id:
-          type: string
-          description: 'The Square-generated ID of the [Employee](entity:Employee) responsible for the
-
-            physical count.'
-          maxLength: 100
-          nullable: true
-        team_member_id:
-          type: string
-          description: 'The Square-generated ID of the [Team Member](entity:TeamMember) responsible for the
-
-            physical count.'
-          maxLength: 100
-          nullable: true
-        occurred_at:
-          type: string
-          description: 'A client-generated RFC 3339-formatted timestamp that indicates when
-
-            the physical count was examined. For physical count updates, the `occurred_at`
-
-            timestamp cannot be older than 24 hours or in the future relative to the
-
-            time of the request.'
-          maxLength: 34
-          nullable: true
-        created_at:
-          type: string
-          description: An RFC 3339-formatted timestamp that indicates when the physical count is received.
-          maxLength: 34
-          readOnly: true
-    MeasurementUnitLength:
-      type: string
-      enum:
-      - IMPERIAL_INCH
-      - IMPERIAL_FOOT
-      - IMPERIAL_YARD
-      - IMPERIAL_MILE
-      - METRIC_MILLIMETER
-      - METRIC_CENTIMETER
-      - METRIC_METER
-      - METRIC_KILOMETER
-      x-enum-elements:
-      - name: IMPERIAL_INCH
-        description: The length is measured in inches.
-      - name: IMPERIAL_FOOT
-        description: The length is measured in feet.
-      - name: IMPERIAL_YARD
-        description: The length is measured in yards.
-      - name: IMPERIAL_MILE
-        description: The length is measured in miles.
-      - name: METRIC_MILLIMETER
-        description: The length is measured in millimeters.
-      - name: METRIC_CENTIMETER
-        description: The length is measured in centimeters.
-      - name: METRIC_METER
-        description: The length is measured in meters.
-      - name: METRIC_KILOMETER
-        description: The length is measured in kilometers.
-      description: The unit of length used to measure a quantity.
-      x-release-status: PUBLIC
-    BatchRetrieveInventoryChangesRequest:
+            See [MeasurementUnitUnitType](#type-measurementunitunittype) for possible values'
+    Money:
       type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
       x-release-status: PUBLIC
       properties:
-        catalog_object_ids:
-          type: array
-          items:
-            type: string
-          description: 'The filter to return results by `CatalogObject` ID.
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
 
-            The filter is only applicable when set. The default value is null.'
-          nullable: true
-        location_ids:
-          type: array
-          items:
-            type: string
-          description: 'The filter to return results by `Location` ID.
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
 
-            The filter is only applicable when set. The default value is null.'
-          nullable: true
-        types:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryChangeType'
-          description: 'The filter to return results by `InventoryChangeType` values other than `TRANSFER`.
+            in cents. Monetary amounts can be positive or negative. See the specific
 
-            The default value is `[PHYSICAL_COUNT, ADJUSTMENT]`.'
-          nullable: true
-        states:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryState'
-          description: 'The filter to return `ADJUSTMENT` query results by
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
 
-            `InventoryState`. This filter is only applied when set.
-
-            The default value is null.'
-          nullable: true
-        updated_after:
-          type: string
-          description: 'The filter to return results with their `calculated_at` value
-
-            after the given time as specified in an RFC 3339 timestamp.
-
-            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
-          nullable: true
-        updated_before:
-          type: string
-          description: 'The filter to return results with their `created_at` or `calculated_at` value
-
-            strictly before the given time as specified in an RFC 3339 timestamp.
-
-            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
-          nullable: true
-        cursor:
-          type: string
-          description: 'A pagination cursor returned by a previous call to this endpoint.
-
-            Provide this to retrieve the next set of results for the original query.
+            code for US dollars is `USD`.
 
 
-            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
-          nullable: true
-        limit:
-          type: integer
-          description: The number of [records](entity:InventoryChange) to return.
-          minimum: 1
-          maximum: 1000
-          nullable: true
-      example:
-        catalog_object_ids:
-        - W62UWFY35CWMYGVWK6TWJDNI
-        location_ids:
-        - C6W5YS5QM06F5
-        states:
-        - IN_STOCK
-        types:
-        - PHYSICAL_COUNT
-        updated_after: '2016-11-01T00:00:00.000Z'
-        updated_before: '2016-12-01T00:00:00.000Z'
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.csharp
-        java: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.java
-        javascript: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.javascript
-        php: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.php
-        python: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.python
-        ruby: /sdk_samples/Inventory/BatchRetrieveInventoryChanges/BatchRetrieveInventoryChangesRequest.ruby
-    SourceApplication:
-      type: object
-      description: Represents information about the application used to generate a change.
-      x-release-status: PUBLIC
-      properties:
-        product:
-          $ref: '#/components/schemas/Product'
-          description: '__Read only__ The [product](entity:Product) type of the application.
+            See [Currency](entity:Currency) for possible values.
 
-            See [Product](#type-product) for possible values'
-          nullable: true
-        application_id:
-          type: string
-          description: '__Read only__ The Square-assigned ID of the application. This field is used only if the
-
-            [product](entity:Product) type is `EXTERNAL_API`.'
-          nullable: true
-        name:
-          type: string
-          description: '__Read only__ The display name of the application
-
-            (for example, `"Custom Application"` or `"Square POS 4.74 for Android"`).'
-          nullable: true
-    RetrieveInventoryChangesResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        changes:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryChange'
-          description: The set of inventory changes for the requested object and locations.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If unset,
-
-            this is the final response.
-
-
-            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
-      example:
-        changes:
-        - adjustment:
-            catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
-            catalog_object_type: ITEM_VARIATION
-            created_at: '2016-11-16T22:25:24.878Z'
-            from_state: IN_STOCK
-            id: OJKJIUANKLMLQANZADNPLKAD
-            location_id: C6W5YS5QM06F5
-            occurred_at: '2016-11-16T22:25:24.878Z'
-            quantity: '3'
-            reference_id: d8207693-168f-4b44-a2fd-a7ff533ddd26
-            source:
-              application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
-              name: Square Point of Sale 4.37
-              product: SQUARE_POS
-            team_member_id: AV7YRCGI2H1J5NQ8E1XIZCNA
-            to_state: SOLD
-            total_price_money:
-              amount: 5000
-              currency: USD
-            transaction_id: 5APV6JYK1SNCZD11AND2RX1Z
-          type: ADJUSTMENT
-        errors: []
-    MeasurementUnitGeneric:
-      type: string
-      enum:
-      - UNIT
-      x-enum-elements:
-      - name: UNIT
-        description: The generic unit.
-      x-release-status: PUBLIC
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    CatalogMeasurementUnit:
-      type: object
-      description: 'Represents the unit used to measure a `CatalogItemVariation` and
-
-        specifies the precision for decimal quantities.'
-      x-release-status: PUBLIC
-      properties:
-        measurement_unit:
-          $ref: '#/components/schemas/MeasurementUnit'
-          description: Indicates the unit used to measure the quantity of a catalog item variation.
-          nullable: true
-        precision:
-          type: integer
-          description: 'An integer between 0 and 5 that represents the maximum number of
-
-            positions allowed after the decimal in quantities measured with this unit.
-
-            For example:
-
-
-            - if the precision is 0, the quantity can be 1, 2, 3, etc.
-
-            - if the precision is 1, the quantity can be 0.1, 0.2, etc.
-
-            - if the precision is 2, the quantity can be 0.01, 0.12, etc.
-
-
-            Default: 3'
-          nullable: true
-    Product:
-      type: string
-      enum:
-      - SQUARE_POS
-      - EXTERNAL_API
-      - BILLING
-      - APPOINTMENTS
-      - INVOICES
-      - ONLINE_STORE
-      - PAYROLL
-      - DASHBOARD
-      - ITEM_LIBRARY_IMPORT
-      - OTHER
-      x-enum-elements:
-      - name: SQUARE_POS
-        description: Square Point of Sale application.
-      - name: EXTERNAL_API
-        description: Square Connect APIs (for example, Orders API or Checkout API).
-      - name: BILLING
-        description: A Square subscription (various products).
-      - name: APPOINTMENTS
-        description: Square Appointments.
-      - name: INVOICES
-        description: Square Invoices.
-      - name: ONLINE_STORE
-        description: Square Online Store.
-      - name: PAYROLL
-        description: Square Payroll.
-      - name: DASHBOARD
-        description: Square Dashboard.
-      - name: ITEM_LIBRARY_IMPORT
-        description: Item Library Import.
-      - name: OTHER
-        description: A Square product that does not match any other value.
-      description: Indicates the Square product used to generate a change.
-      x-release-status: PUBLIC
-    MeasurementUnitCustom:
-      type: object
-      description: The information needed to define a custom unit, provided by the seller.
-      x-release-status: PUBLIC
-      required:
-      - name
-      - abbreviation
-      properties:
-        name:
-          type: string
-          description: The name of the custom unit, for example "bushel".
-        abbreviation:
-          type: string
-          description: 'The abbreviation of the custom unit, such as "bsh" (bushel). This appears
-
-            in the cart for the Point of Sale app, and in reports.'
-    InventoryCount:
-      type: object
-      description: 'Represents Square-estimated quantity of items in a particular state at a
-
-        particular seller location based on the known history of physical counts and
-
-        inventory adjustments.'
-      x-release-status: PUBLIC
-      properties:
-        catalog_object_id:
-          type: string
-          description: 'The Square-generated ID of the
-
-            [CatalogObject](entity:CatalogObject) being tracked.'
-          maxLength: 100
-          nullable: true
-        catalog_object_type:
-          type: string
-          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
-          maxLength: 14
-          nullable: true
-        state:
-          $ref: '#/components/schemas/InventoryState'
-          description: 'The current [inventory state](entity:InventoryState) for the related
-
-            quantity of items.
-
-            See [InventoryState](#type-inventorystate) for possible values'
-          nullable: true
-        location_id:
-          type: string
-          description: 'The Square-generated ID of the [Location](entity:Location) where the related
-
-            quantity of items is being tracked.'
-          maxLength: 100
-          nullable: true
-        quantity:
-          type: string
-          description: 'The number of items affected by the estimated count as a decimal string.
-
-            Can support up to 5 digits after the decimal point.'
-          maxLength: 26
-          nullable: true
-        calculated_at:
-          type: string
-          description: 'An RFC 3339-formatted timestamp that indicates when the most recent physical count or adjustment affecting
-
-            the estimated count is received.'
-          maxLength: 34
-          readOnly: true
-        is_estimated:
-          type: boolean
-          description: 'Whether the inventory count is for composed variation (TRUE) or not (FALSE). If true, the inventory count will not be present in the response of
-
-            any of these endpoints: [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory),
-
-            [BatchRetrieveInventoryChanges](api-endpoint:Inventory-BatchRetrieveInventoryChanges),
-
-            [BatchRetrieveInventoryCounts](api-endpoint:Inventory-BatchRetrieveInventoryCounts), and
-
-            [RetrieveInventoryChanges](api-endpoint:Inventory-RetrieveInventoryChanges).'
-          readOnly: true
-          x-release-status: BETA
-    BatchRetrieveInventoryCountsResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        counts:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryCount'
-          description: 'The current calculated inventory counts for the requested objects
-
-            and locations.'
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If unset,
-
-            this is the final response.
-
-
-            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
-      example:
-        counts:
-        - calculated_at: '2016-11-16T22:28:01.223Z'
-          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
-          catalog_object_type: ITEM_VARIATION
-          location_id: 59TNP9SA8VGDA
-          quantity: '79'
-          state: IN_STOCK
-        errors: []
-    BatchRetrieveInventoryCountsRequest:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        catalog_object_ids:
-          type: array
-          items:
-            type: string
-          description: 'The filter to return results by `CatalogObject` ID.
-
-            The filter is applicable only when set.  The default is null.'
-          nullable: true
-        location_ids:
-          type: array
-          items:
-            type: string
-          description: 'The filter to return results by `Location` ID.
-
-            This filter is applicable only when set. The default is null.'
-          nullable: true
-        updated_after:
-          type: string
-          description: 'The filter to return results with their `calculated_at` value
-
-            after the given time as specified in an RFC 3339 timestamp.
-
-            The default value is the UNIX epoch of (`1970-01-01T00:00:00Z`).'
-          nullable: true
-        cursor:
-          type: string
-          description: 'A pagination cursor returned by a previous call to this endpoint.
-
-            Provide this to retrieve the next set of results for the original query.
-
-
-            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
-          nullable: true
-        states:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryState'
-          description: 'The filter to return results by `InventoryState`. The filter is only applicable when set.
-
-            Ignored are untracked states of `NONE`, `SOLD`, and `UNLINKED_RETURN`.
-
-            The default is null.'
-          nullable: true
-        limit:
-          type: integer
-          description: The number of [records](entity:InventoryCount) to return.
-          minimum: 1
-          maximum: 1000
-          nullable: true
-      example:
-        catalog_object_ids:
-        - W62UWFY35CWMYGVWK6TWJDNI
-        location_ids:
-        - 59TNP9SA8VGDA
-        updated_after: '2016-11-16T00:00:00.000Z'
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.csharp
-        java: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.java
-        javascript: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.javascript
-        php: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.php
-        python: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.python
-        ruby: /sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.ruby
-    RetrieveInventoryCountResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        counts:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryCount'
-          description: 'The current calculated inventory counts for the requested object and
-
-            locations.'
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If unset,
-
-            this is the final response.
-
-
-            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
-      example:
-        counts:
-        - calculated_at: '2016-11-16T22:28:01.223Z'
-          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
-          catalog_object_type: ITEM_VARIATION
-          location_id: C6W5YS5QM06F5
-          quantity: '22'
-          state: IN_STOCK
-        errors: []
+            See [Currency](#type-currency) for possible values'
     MeasurementUnitArea:
       type: string
       enum:
@@ -3018,292 +3375,6 @@ components:
         description: The area is measured in square kilometers.
       description: Unit of area used to measure a quantity.
       x-release-status: PUBLIC
-    RetrieveInventoryPhysicalCountResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        count:
-          $ref: '#/components/schemas/InventoryPhysicalCount'
-          description: The requested [InventoryPhysicalCount](entity:InventoryPhysicalCount).
-      example:
-        count:
-          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
-          catalog_object_type: ITEM_VARIATION
-          created_at: '2016-11-16T22:25:24.878Z'
-          id: ANZADNPLKADOJKJIUANKLMLQ
-          location_id: C6W5YS5QM06F5
-          occurred_at: '2016-11-16T22:25:24.878Z'
-          quantity: '15'
-          reference_id: f857ec37-f9a0-4458-8e23-5b5e0bea4e53
-          source:
-            application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
-            name: Square Point of Sale 4.37
-            product: SQUARE_POS
-          state: IN_STOCK
-          team_member_id: LRK57NSQ5X7PUD05
-        errors: []
-    InventoryChange:
-      type: object
-      description: 'Represents a single physical count, inventory, adjustment, or transfer
-
-        that is part of the history of inventory changes for a particular
-
-        [CatalogObject](entity:CatalogObject) instance.'
-      x-release-status: PUBLIC
-      properties:
-        type:
-          $ref: '#/components/schemas/InventoryChangeType'
-          description: 'Indicates how the inventory change is applied. See
-
-            [InventoryChangeType](entity:InventoryChangeType) for all possible values.
-
-            See [InventoryChangeType](#type-inventorychangetype) for possible values'
-          nullable: true
-        physical_count:
-          $ref: '#/components/schemas/InventoryPhysicalCount'
-          description: 'Contains details about the physical count when `type` is
-
-            `PHYSICAL_COUNT`, and is unset for all other change types.'
-          nullable: true
-        adjustment:
-          $ref: '#/components/schemas/InventoryAdjustment'
-          description: 'Contains details about the inventory adjustment when `type` is
-
-            `ADJUSTMENT`, and is unset for all other change types.'
-          nullable: true
-        transfer:
-          $ref: '#/components/schemas/InventoryTransfer'
-          description: 'Contains details about the inventory transfer when `type` is
-
-            `TRANSFER`, and is unset for all other change types.
-
-
-            _Note:_ An [InventoryTransfer](entity:InventoryTransfer) object can only be set in the input to the
-
-            [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory) endpoint when the seller has an active Retail Plus subscription.'
-          nullable: true
-        measurement_unit:
-          $ref: '#/components/schemas/CatalogMeasurementUnit'
-          description: The [CatalogMeasurementUnit](entity:CatalogMeasurementUnit) object representing the catalog measurement unit associated with the inventory change.
-          readOnly: true
-        measurement_unit_id:
-          type: string
-          description: The ID of the [CatalogMeasurementUnit](entity:CatalogMeasurementUnit) object representing the catalog measurement unit associated with the inventory change.
-          readOnly: true
-    MeasurementUnit:
-      type: object
-      description: 'Represents a unit of measurement to use with a quantity, such as ounces
-
-        or inches. Exactly one of the following fields are required: `custom_unit`,
-
-        `area_unit`, `length_unit`, `volume_unit`, and `weight_unit`.'
-      x-release-status: PUBLIC
-      properties:
-        custom_unit:
-          $ref: '#/components/schemas/MeasurementUnitCustom'
-          description: 'A custom unit of measurement defined by the seller using the Point of Sale
-
-            app or ad-hoc as an order line item.'
-          nullable: true
-        area_unit:
-          $ref: '#/components/schemas/MeasurementUnitArea'
-          description: 'Represents a standard area unit.
-
-            See [MeasurementUnitArea](#type-measurementunitarea) for possible values'
-          nullable: true
-        length_unit:
-          $ref: '#/components/schemas/MeasurementUnitLength'
-          description: 'Represents a standard length unit.
-
-            See [MeasurementUnitLength](#type-measurementunitlength) for possible values'
-          nullable: true
-        volume_unit:
-          $ref: '#/components/schemas/MeasurementUnitVolume'
-          description: 'Represents a standard volume unit.
-
-            See [MeasurementUnitVolume](#type-measurementunitvolume) for possible values'
-          nullable: true
-        weight_unit:
-          $ref: '#/components/schemas/MeasurementUnitWeight'
-          description: 'Represents a standard unit of weight or mass.
-
-            See [MeasurementUnitWeight](#type-measurementunitweight) for possible values'
-          nullable: true
-        generic_unit:
-          $ref: '#/components/schemas/MeasurementUnitGeneric'
-          description: 'Reserved for API integrations that lack the ability to specify a real measurement unit
-
-            See [MeasurementUnitGeneric](#type-measurementunitgeneric) for possible values'
-          nullable: true
-        time_unit:
-          $ref: '#/components/schemas/MeasurementUnitTime'
-          description: 'Represents a standard unit of time.
-
-            See [MeasurementUnitTime](#type-measurementunittime) for possible values'
-          nullable: true
-        type:
-          $ref: '#/components/schemas/MeasurementUnitUnitType'
-          description: 'Represents the type of the measurement unit.
-
-            See [MeasurementUnitUnitType](#type-measurementunitunittype) for possible values'
-          nullable: true
-    BatchChangeInventoryResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        counts:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryCount'
-          description: The current counts for all objects referenced in the request.
-        changes:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryChange'
-          description: Changes created for the request.
-          x-release-status: BETA
-      example:
-        counts:
-        - calculated_at: '2016-11-16T22:28:01.223Z'
-          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
-          catalog_object_type: ITEM_VARIATION
-          location_id: C6W5YS5QM06F5
-          quantity: '53'
-          state: IN_STOCK
-        errors: []
-    MeasurementUnitUnitType:
-      type: string
-      enum:
-      - TYPE_CUSTOM
-      - TYPE_AREA
-      - TYPE_LENGTH
-      - TYPE_VOLUME
-      - TYPE_WEIGHT
-      - TYPE_GENERIC
-      x-enum-elements:
-      - name: TYPE_CUSTOM
-        description: The unit details are contained in the custom_unit field.
-      - name: TYPE_AREA
-        description: The unit details are contained in the area_unit field.
-      - name: TYPE_LENGTH
-        description: The unit details are contained in the length_unit field.
-      - name: TYPE_VOLUME
-        description: The unit details are contained in the volume_unit field.
-      - name: TYPE_WEIGHT
-        description: The unit details are contained in the weight_unit field.
-      - name: TYPE_GENERIC
-        description: The unit details are contained in the generic_unit field.
-      description: Describes the type of this unit and indicates which field contains the unit information. This is an ‘open’ enum.
-      x-release-status: PUBLIC
-    InventoryTransfer:
-      type: object
-      description: 'Represents the transfer of a quantity of product inventory at a
-
-        particular time from one location to another.'
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: 'A unique ID generated by Square for the
-
-            `InventoryTransfer`.'
-          maxLength: 100
-        reference_id:
-          type: string
-          description: 'An optional ID provided by the application to tie the
-
-            `InventoryTransfer` to an external system.'
-          maxLength: 255
-          nullable: true
-        state:
-          $ref: '#/components/schemas/InventoryState'
-          description: 'The [inventory state](entity:InventoryState) for the quantity of
-
-            items being transferred.
-
-            See [InventoryState](#type-inventorystate) for possible values'
-          nullable: true
-        from_location_id:
-          type: string
-          description: 'The Square-generated ID of the [Location](entity:Location) where the related
-
-            quantity of items was tracked before the transfer.'
-          maxLength: 100
-          nullable: true
-        to_location_id:
-          type: string
-          description: 'The Square-generated ID of the [Location](entity:Location) where the related
-
-            quantity of items was tracked after the transfer.'
-          maxLength: 100
-          nullable: true
-        catalog_object_id:
-          type: string
-          description: 'The Square-generated ID of the
-
-            [CatalogObject](entity:CatalogObject) being tracked.'
-          maxLength: 100
-          nullable: true
-        catalog_object_type:
-          type: string
-          description: "The [type](entity:CatalogObjectType) of the [CatalogObject](entity:CatalogObject) being tracked. \n\nThe Inventory API supports setting and reading the `\"catalog_object_type\": \"ITEM_VARIATION\"` field value. \nIn addition, it can also read the `\"catalog_object_type\": \"ITEM\"` field value that is set by the Square Restaurants app."
-          maxLength: 14
-          nullable: true
-        quantity:
-          type: string
-          description: 'The number of items affected by the transfer as a decimal string.
-
-            Can support up to 5 digits after the decimal point.'
-          maxLength: 26
-          nullable: true
-        occurred_at:
-          type: string
-          description: 'A client-generated RFC 3339-formatted timestamp that indicates when
-
-            the transfer took place. For write actions, the `occurred_at` timestamp
-
-            cannot be older than 24 hours or in the future relative to the time of the
-
-            request.'
-          maxLength: 34
-          nullable: true
-        created_at:
-          type: string
-          description: 'An RFC 3339-formatted timestamp that indicates when Square
-
-            received the transfer request.'
-          maxLength: 34
-          readOnly: true
-        source:
-          $ref: '#/components/schemas/SourceApplication'
-          description: 'Information about the application that initiated the
-
-            inventory transfer.'
-          readOnly: true
-        employee_id:
-          type: string
-          description: 'The Square-generated ID of the [Employee](entity:Employee) responsible for the
-
-            inventory transfer.'
-          maxLength: 100
-          nullable: true
-        team_member_id:
-          type: string
-          description: 'The Square-generated ID of the [Team Member](entity:TeamMember) responsible for the
-
-            inventory transfer.'
-          maxLength: 100
-          nullable: true
     RetrieveInventoryTransferResponse:
       type: object
       x-release-status: BETA
@@ -3334,6 +3405,82 @@ components:
           state: IN_STOCK
           team_member_id: LRK57NSQ5X7PUD05
           to_location_id: 59TNP9SA8VGDA
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    RetrieveInventoryPhysicalCountResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        count:
+          $ref: '#/components/schemas/InventoryPhysicalCount'
+          description: The requested [InventoryPhysicalCount](entity:InventoryPhysicalCount).
+      example:
+        count:
+          catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
+          catalog_object_type: ITEM_VARIATION
+          created_at: '2016-11-16T22:25:24.878Z'
+          id: ANZADNPLKADOJKJIUANKLMLQ
+          location_id: C6W5YS5QM06F5
+          occurred_at: '2016-11-16T22:25:24.878Z'
+          quantity: '15'
+          reference_id: f857ec37-f9a0-4458-8e23-5b5e0bea4e53
+          source:
+            application_id: 416ff29c-86c4-4feb-b58c-9705f21f3ea0
+            name: Square Point of Sale 4.37
+            product: SQUARE_POS
+          state: IN_STOCK
+          team_member_id: LRK57NSQ5X7PUD05
+        errors: []
     InventoryAdjustmentGroup:
       type: object
       x-release-status: BETA
@@ -3370,124 +3517,6 @@ components:
 
             See [InventoryState](#type-inventorystate) for possible values'
           readOnly: true
-    BatchChangeInventoryRequest:
-      type: object
-      x-release-status: PUBLIC
-      required:
-      - idempotency_key
-      properties:
-        idempotency_key:
-          type: string
-          description: 'A client-supplied, universally unique identifier (UUID) for the
-
-            request.
-
-
-            See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the
-
-            [API Development 101](https://developer.squareup.com/docs/buildbasics) section for more
-
-            information.'
-          minLength: 1
-          maxLength: 128
-        changes:
-          type: array
-          items:
-            $ref: '#/components/schemas/InventoryChange'
-          description: 'The set of physical counts and inventory adjustments to be made.
-
-            Changes are applied based on the client-supplied timestamp and may be sent
-
-            out of order.'
-          nullable: true
-        ignore_unchanged_counts:
-          type: boolean
-          description: 'Indicates whether the current physical count should be ignored if
-
-            the quantity is unchanged since the last physical count. Default: `true`.'
-          nullable: true
-      example:
-        changes:
-        - physical_count:
-            catalog_object_id: W62UWFY35CWMYGVWK6TWJDNI
-            location_id: C6W5YS5QM06F5
-            occurred_at: '2016-11-16T22:25:24.878Z'
-            quantity: '53'
-            reference_id: 1536bfbf-efed-48bf-b17d-a197141b2a92
-            state: IN_STOCK
-            team_member_id: LRK57NSQ5X7PUD05
-          type: PHYSICAL_COUNT
-        idempotency_key: 8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe
-        ignore_unchanged_counts: true
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.csharp
-        java: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.java
-        javascript: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.javascript
-        php: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.php
-        python: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.python
-        ruby: /sdk_samples/Inventory/BatchChangeInventory/BatchChangeInventoryRequest.ruby
-    MeasurementUnitWeight:
-      type: string
-      enum:
-      - IMPERIAL_WEIGHT_OUNCE
-      - IMPERIAL_POUND
-      - IMPERIAL_STONE
-      - METRIC_MILLIGRAM
-      - METRIC_GRAM
-      - METRIC_KILOGRAM
-      x-enum-elements:
-      - name: IMPERIAL_WEIGHT_OUNCE
-        description: The weight is measured in ounces.
-      - name: IMPERIAL_POUND
-        description: The weight is measured in pounds.
-      - name: IMPERIAL_STONE
-        description: The weight is measured in stones.
-      - name: METRIC_MILLIGRAM
-        description: The weight is measured in milligrams.
-      - name: METRIC_GRAM
-        description: The weight is measured in grams.
-      - name: METRIC_KILOGRAM
-        description: The weight is measured in kilograms.
-      description: Unit of weight used to measure a quantity.
-      x-release-status: PUBLIC
-    InventoryChangeType:
-      type: string
-      enum:
-      - PHYSICAL_COUNT
-      - ADJUSTMENT
-      - TRANSFER
-      x-enum-elements:
-      - name: PHYSICAL_COUNT
-        description: The change occurred as part of a physical count update.
-      - name: ADJUSTMENT
-        description: 'The change occurred as part of the normal lifecycle of goods
-
-          (e.g., as an inventory adjustment).'
-      - name: TRANSFER
-        description: The change occurred as part of an inventory transfer.
-      description: Indicates how the inventory change was applied to a tracked product quantity.
-      x-release-status: PUBLIC
-    MeasurementUnitTime:
-      type: string
-      enum:
-      - GENERIC_MILLISECOND
-      - GENERIC_SECOND
-      - GENERIC_MINUTE
-      - GENERIC_HOUR
-      - GENERIC_DAY
-      x-enum-elements:
-      - name: GENERIC_MILLISECOND
-        description: The time is measured in milliseconds.
-      - name: GENERIC_SECOND
-        description: The time is measured in seconds.
-      - name: GENERIC_MINUTE
-        description: The time is measured in minutes.
-      - name: GENERIC_HOUR
-        description: The time is measured in hours.
-      - name: GENERIC_DAY
-        description: The time is measured in days.
-      description: Unit of time used to measure a quantity (a duration).
-      x-release-status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2

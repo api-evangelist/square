@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Webhook Subscriptions API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -109,41 +109,106 @@ servers:
 - url: https://connect.squareup.com
   variables: {}
 tags:
-- name: ApplePay
+- name: Webhook Subscriptions
 paths:
-  /v2/apple-pay/domains:
-    post:
+  /v2/webhooks/event-types:
+    get:
       tags:
-      - ApplePay
-      summary: Square Register Domain
-      operationId: RegisterDomain
+      - Webhook Subscriptions
+      summary: Square List Webhook Event Types
+      operationId: ListWebhookEventTypes
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Activates a domain for use with Apple Pay on the Web and Square. A validation
+      description: Lists all webhook event types that can be subscribed to.
+      x-release-status: PUBLIC
+      security:
+      - oauth2: []
+      parameters:
+      - name: api_version
+        description: The API version for which to list event types. Setting this field overrides the default version used by the application.
+        schema:
+          type: string
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookEventTypesResponse'
+  /v2/webhooks/subscriptions:
+    get:
+      tags:
+      - Webhook Subscriptions
+      summary: Square List Webhook Subscriptions
+      operationId: ListWebhookSubscriptions
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Lists all webhook subscriptions owned by your application.
+      x-release-status: PUBLIC
+      security:
+      - oauth2: []
+      parameters:
+      - name: cursor
+        description: 'A pagination cursor returned by a previous call to this endpoint.
 
-        is performed on this domain by Apple to ensure that it is properly set up as
-
-        an Apple Pay enabled domain.
+          Provide this to retrieve the next set of results for your original query.
 
 
-        This endpoint provides an easy way for platform developers to bulk activate
+          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        schema:
+          type: string
+        in: query
+        required: false
+      - name: include_disabled
+        description: 'Includes disabled [Subscription](entity:WebhookSubscription)s.
 
-        Apple Pay on the Web with Square for merchants using their platform.
+          By default, all enabled [Subscription](entity:WebhookSubscription)s are returned.'
+        schema:
+          type: boolean
+          default: false
+        in: query
+        required: false
+      - name: sort_order
+        description: 'Sorts the returned list by when the [Subscription](entity:WebhookSubscription) was created with the specified order.
+
+          This field defaults to ASC.'
+        schema:
+          $ref: '#/components/schemas/SortOrder'
+        in: query
+        required: false
+      - name: limit
+        description: 'The maximum number of results to be returned in a single page.
+
+          It is possible to receive fewer results than the specified limit on a given page.
+
+          The default value of 100 is also the maximum allowed value.
 
 
-        Note: You will need to host a valid domain verification file on your domain to support Apple Pay.  The
-
-        current version of this file is always available at https://app.squareup.com/digital-wallets/apple-pay/apple-developer-merchantid-domain-association,
-
-        and should be hosted at `.well_known/apple-developer-merchantid-domain-association` on your
-
-        domain.  This file is subject to change; we strongly recommend checking for updates regularly and avoiding
-
-        long-lived caches that might not keep in sync with the correct file version.
-
-
-        To learn more about the Web Payments SDK and how to add Apple Pay, see [Take an Apple Pay Payment](https://developer.squareup.com/docs/web-payments/apple-pay).'
+          Default: 100'
+        schema:
+          type: integer
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookSubscriptionsResponse'
+    post:
+      tags:
+      - Webhook Subscriptions
+      summary: Square Create Webhook Subscription
+      operationId: CreateWebhookSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Creates a webhook subscription.
       x-release-status: PUBLIC
       security:
       - oauth2: []
@@ -157,28 +222,307 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterDomainRequest'
+              $ref: '#/components/schemas/CreateWebhookSubscriptionRequest'
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegisterDomainResponse'
+                $ref: '#/components/schemas/CreateWebhookSubscriptionResponse'
+  /v2/webhooks/subscriptions/{subscription_id}:
+    delete:
+      tags:
+      - Webhook Subscriptions
+      summary: Square Delete Webhook Subscription
+      operationId: DeleteWebhookSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Deletes a webhook subscription.
+      x-release-status: PUBLIC
+      security:
+      - oauth2: []
+      parameters:
+      - name: subscription_id
+        description: '[REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to delete.'
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteWebhookSubscriptionResponse'
+    get:
+      tags:
+      - Webhook Subscriptions
+      summary: Square Retrieve Webhook Subscription
+      operationId: RetrieveWebhookSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Retrieves a webhook subscription identified by its ID.
+      x-release-status: PUBLIC
+      security:
+      - oauth2: []
+      parameters:
+      - name: subscription_id
+        description: '[REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to retrieve.'
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveWebhookSubscriptionResponse'
+    put:
+      tags:
+      - Webhook Subscriptions
+      summary: Square Update Webhook Subscription
+      operationId: UpdateWebhookSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Updates a webhook subscription.
+      x-release-status: PUBLIC
+      security:
+      - oauth2: []
+      parameters:
+      - name: subscription_id
+        description: '[REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to update.'
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWebhookSubscriptionRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateWebhookSubscriptionResponse'
+  /v2/webhooks/subscriptions/{subscription_id}/signature-key:
+    post:
+      tags:
+      - Webhook Subscriptions
+      summary: Square Update Webhook Subscription Signature Key
+      operationId: UpdateWebhookSubscriptionSignatureKey
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Updates a webhook subscription by replacing the existing signature key with a new one.
+      x-release-status: PUBLIC
+      security:
+      - oauth2: []
+      parameters:
+      - name: subscription_id
+        description: '[REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to update.'
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWebhookSubscriptionSignatureKeyRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateWebhookSubscriptionSignatureKeyResponse'
+  /v2/webhooks/subscriptions/{subscription_id}/test:
+    post:
+      tags:
+      - Webhook Subscriptions
+      summary: Square Test Webhook Subscription
+      operationId: TestWebhookSubscription
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+      description: Tests a webhook subscription by sending a test event to the notification URL.
+      x-release-status: PUBLIC
+      security:
+      - oauth2: []
+      parameters:
+      - name: subscription_id
+        description: '[REQUIRED] The ID of the [Subscription](entity:WebhookSubscription) to test.'
+        schema:
+          type: string
+        in: path
+        required: true
+      requestBody:
+        required: true
+        description: 'An object containing the fields to POST for the request.
+
+
+          See the corresponding object definition for field details.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestWebhookSubscriptionRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestWebhookSubscriptionResponse'
 components:
   schemas:
-    RegisterDomainResponseStatus:
-      type: string
-      enum:
-      - PENDING
-      - VERIFIED
-      x-enum-elements:
-      - name: PENDING
-        description: The domain is added, but not verified.
-      - name: VERIFIED
-        description: The domain is added and verified. It can be used to accept Apple Pay transactions.
-      description: The status of the domain registration.
+    UpdateWebhookSubscriptionRequest:
+      type: object
+      description: Updates a [Subscription](entity:WebhookSubscription).
       x-release-status: PUBLIC
+      properties:
+        subscription:
+          $ref: '#/components/schemas/WebhookSubscription'
+          description: The [Subscription](entity:WebhookSubscription) to update.
+      example:
+        subscription:
+          enabled: false
+          name: Updated Example Webhook Subscription
+    DeleteWebhookSubscriptionResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [DeleteWebhookSubscription](api-endpoint:WebhookSubscriptions-DeleteWebhookSubscription) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+      example: {}
+    ListWebhookSubscriptionsResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [ListWebhookSubscriptions](api-endpoint:WebhookSubscriptions-ListWebhookSubscriptions) endpoint.
+
+
+        Note: if there are errors processing the request, the subscriptions field will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookSubscription'
+          description: The requested list of [Subscription](entity:WebhookSubscription)s.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If empty,
+
+            this is the final response.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+      example:
+        subscriptions:
+        - api_version: '2021-12-15'
+          created_at: 2022-01-10 23:29:48 +0000 UTC
+          enabled: true
+          event_types:
+          - payment.created
+          - payment.updated
+          id: wbhk_b35f6b3145074cf9ad513610786c19d5
+          name: Example Webhook Subscription
+          notification_url: https://example-webhook-url.com
+          updated_at: 2022-01-10 23:29:48 +0000 UTC
+    SubscriptionTestResult:
+      type: object
+      description: 'Represents the details of a webhook subscription, including notification URL,
+
+        event types, and signature key.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: A Square-generated unique ID for the subscription test result.
+          maxLength: 64
+          readOnly: true
+        status_code:
+          type:
+          - integer
+          - 'null'
+          description: The status code returned by the subscription notification URL.
+        payload:
+          type:
+          - string
+          - 'null'
+          description: An object containing the payload of the test event. For example, a `payment.created` event.
+        created_at:
+          type: string
+          description: "The timestamp of when the subscription was created, in RFC 3339 format. \nFor example, \"2016-09-04T23:59:33.123Z\"."
+          readOnly: true
+        updated_at:
+          type: string
+          description: 'The timestamp of when the subscription was updated, in RFC 3339 format. For example, "2016-09-04T23:59:33.123Z".
+
+            Because a subscription test result is unique, this field is the same as the `created_at` field.'
+          readOnly: true
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     ErrorCategory:
       type: string
       enum:
@@ -226,6 +570,158 @@ components:
 
         request to the Connect API.'
       x-release-status: PUBLIC
+    EventTypeMetadata:
+      type: object
+      description: Contains the metadata of a webhook event type.
+      x-release-status: PUBLIC
+      properties:
+        event_type:
+          type: string
+          description: The event type.
+          readOnly: true
+        api_version_introduced:
+          type: string
+          description: The API version at which the event type was introduced.
+          readOnly: true
+        release_status:
+          type: string
+          description: The release status of the event type.
+          readOnly: true
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
+    UpdateWebhookSubscriptionSignatureKeyResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [UpdateWebhookSubscriptionSignatureKey](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscriptionSignatureKey) endpoint.
+
+
+        Note: If there are errors processing the request, the [Subscription](entity:WebhookSubscription) is not
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        signature_key:
+          type: string
+          description: The new Square-generated signature key used to validate the origin of the webhook event.
+          readOnly: true
+      example:
+        signature_key: 1k9bIJKCeTmSQwyagtNRLg
+    CreateWebhookSubscriptionResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [CreateWebhookSubscription](api-endpoint:WebhookSubscriptions-CreateWebhookSubscription) endpoint.
+
+
+        Note: if there are errors processing the request, the [Subscription](entity:WebhookSubscription) will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/WebhookSubscription'
+          description: The new [Subscription](entity:WebhookSubscription).
+      example:
+        subscription:
+          api_version: '2021-12-15'
+          created_at: 2022-01-10 23:29:48 +0000 UTC
+          enabled: true
+          event_types:
+          - payment.created
+          - payment.updated
+          id: wbhk_b35f6b3145074cf9ad513610786c19d5
+          name: Example Webhook Subscription
+          notification_url: https://example-webhook-url.com
+          signature_key: 1k9bIJKCeTmSQwyagtNRLg
+          updated_at: 2022-01-10 23:29:48 +0000 UTC
+    UpdateWebhookSubscriptionSignatureKeyRequest:
+      type: object
+      description: Updates a [Subscription](entity:WebhookSubscription) by replacing the existing signature key with a new one.
+      x-release-status: PUBLIC
+      properties:
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: A unique string that identifies the [UpdateWebhookSubscriptionSignatureKey](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscriptionSignatureKey) request.
+          maxLength: 45
+      example:
+        idempotency_key: ed80ae6b-0654-473b-bbab-a39aee89a60d
+    WebhookSubscription:
+      type: object
+      description: 'Represents the details of a webhook subscription, including notification URL,
+
+        event types, and signature key.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: A Square-generated unique ID for the subscription.
+          maxLength: 64
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of this subscription.
+          maxLength: 64
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether the subscription is enabled (`true`) or not (`false`).
+        event_types:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The event types associated with this subscription.
+        notification_url:
+          type:
+          - string
+          - 'null'
+          description: The URL to which webhooks are sent.
+        api_version:
+          type:
+          - string
+          - 'null'
+          description: "The API version of the subscription.\nThis field is optional for `CreateWebhookSubscription`. \nThe value defaults to the API version used by the application."
+        signature_key:
+          type: string
+          description: The Square-generated signature key used to validate the origin of the webhook event.
+          readOnly: true
+        created_at:
+          type: string
+          description: The timestamp of when the subscription was created, in RFC 3339 format. For example, "2016-09-04T23:59:33.123Z".
+          readOnly: true
+        updated_at:
+          type: string
+          description: 'The timestamp of when the subscription was last updated, in RFC 3339 format.
+
+            For example, "2016-09-04T23:59:33.123Z".'
+          readOnly: true
     ErrorCode:
       type: string
       enum:
@@ -972,90 +1468,169 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    RegisterDomainResponse:
+    CreateWebhookSubscriptionRequest:
+      type: object
+      description: Creates a [Subscription](entity:WebhookSubscription).
+      x-release-status: PUBLIC
+      required:
+      - subscription
+      properties:
+        idempotency_key:
+          type: string
+          description: A unique string that identifies the [CreateWebhookSubscription](api-endpoint:WebhookSubscriptions-CreateWebhookSubscription) request.
+          maxLength: 45
+        subscription:
+          $ref: '#/components/schemas/WebhookSubscription'
+          description: The [Subscription](entity:WebhookSubscription) to create.
+      example:
+        idempotency_key: 63f84c6c-2200-4c99-846c-2670a1311fbf
+        subscription:
+          api_version: '2021-12-15'
+          event_types:
+          - payment.created
+          - payment.updated
+          name: Example Webhook Subscription
+          notification_url: https://example-webhook-url.com
+    TestWebhookSubscriptionRequest:
+      type: object
+      description: Tests a [Subscription](entity:WebhookSubscription) by sending a test event to its notification URL.
+      x-release-status: PUBLIC
+      properties:
+        event_type:
+          type:
+          - string
+          - 'null'
+          description: 'The event type that will be used to test the [Subscription](entity:WebhookSubscription). The event type must be
+
+            contained in the list of event types in the [Subscription](entity:WebhookSubscription).'
+      example:
+        event_type: payment.created
+    TestWebhookSubscriptionResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
 
-        a request to the [RegisterDomain](api-endpoint:ApplePay-RegisterDomain) endpoint.
+        a request to the [TestWebhookSubscription](api-endpoint:WebhookSubscriptions-TestWebhookSubscription) endpoint.
 
 
-        Either `errors` or `status` are present in a given response (never both).'
+        Note: If there are errors processing the request, the [SubscriptionTestResult](entity:SubscriptionTestResult) field is not
+
+        present.'
       x-release-status: PUBLIC
       properties:
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        status:
-          $ref: '#/components/schemas/RegisterDomainResponseStatus'
-          description: 'The status of the domain registration.
-
-
-            See [RegisterDomainResponseStatus](entity:RegisterDomainResponseStatus) for possible values.
-
-            See [RegisterDomainResponseStatus](#type-registerdomainresponsestatus) for possible values'
+          description: Information on errors encountered during the request.
+        subscription_test_result:
+          $ref: '#/components/schemas/SubscriptionTestResult'
+          description: The [SubscriptionTestResult](entity:SubscriptionTestResult).
       example:
-        status: VERIFIED
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.csharp
-        java: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.java
-        javascript: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.javascript
-        php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.php
-        python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.python
-        ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.ruby
-    RegisterDomainRequest:
+        subscription_test_result:
+          created_at: 2022-01-11 00:06:48.322945116 +0000 UTC m=+3863.054453746
+          id: 23eed5a9-2b12-403e-b212-7e2889aea0f6
+          payload: '{"merchant_id":"1ZYMKZY1YFGBW","type":"payment.created","event_id":"23eed5a9-2b12-403e-b212-7e2889aea0f6","created_at":"2022-01-11T00:06:48.322945116Z","data":{"type":"payment","id":"KkAkhdMsgzn59SM8A89WgKwekxLZY","object":{"payment":{"amount_money":{"amount":100,"currency":"USD"},"approved_money":{"amount":100,"currency":"USD"},"capabilities":["EDIT_TIP_AMOUNT","EDIT_TIP_AMOUNT_UP","EDIT_TIP_AMOUNT_DOWN"],"card_details":{"avs_status":"AVS_ACCEPTED","card":{"bin":"540988","card_brand":"MASTERCARD","card_type":"CREDIT","exp_month":11,"exp_year":2022,"fingerprint":"sq-1-Tvruf3vPQxlvI6n0IcKYfBukrcv6IqWr8UyBdViWXU2yzGn5VMJvrsHMKpINMhPmVg","last_4":"9029","prepaid_type":"NOT_PREPAID"},"card_payment_timeline":{"authorized_at":"2020-11-22T21:16:51.198Z"},"cvv_status":"CVV_ACCEPTED","entry_method":"KEYED","statement_description":"SQ *DEFAULT TEST ACCOUNT","status":"AUTHORIZED"},"created_at":"2020-11-22T21:16:51.086Z","delay_action":"CANCEL","delay_duration":"PT168H","delayed_until":"2020-11-29T21:16:51.086Z","id":"hYy9pRFVxpDsO1FB05SunFWUe9JZY","location_id":"S8GWD5R9QB376","order_id":"03O3USaPaAaFnI6kkwB1JxGgBsUZY","receipt_number":"hYy9","risk_evaluation":{"created_at":"2020-11-22T21:16:51.198Z","risk_level":"NORMAL"},"source_type":"CARD","status":"APPROVED","total_money":{"amount":100,"currency":"USD"},"updated_at":"2020-11-22T21:16:51.198Z","version_token":"FfQhQJf9r3VSQIgyWBk1oqhIwiznLwVwJbVVA0bdyEv6o"}}}}'
+          status_code: 404
+          updated_at: 2022-01-11 00:06:48.322945116 +0000 UTC m=+3863.054453746
+    RetrieveWebhookSubscriptionResponse:
       type: object
-      description: 'Defines the parameters that can be included in the body of
+      description: 'Defines the fields that are included in the response body of
 
-        a request to the [RegisterDomain](api-endpoint:ApplePay-RegisterDomain) endpoint.'
+        a request to the [RetrieveWebhookSubscription](api-endpoint:WebhookSubscriptions-RetrieveWebhookSubscription) endpoint.
+
+
+        Note: if there are errors processing the request, the [Subscription](entity:WebhookSubscription) will not be
+
+        present.'
       x-release-status: PUBLIC
-      required:
-      - domain_name
       properties:
-        domain_name:
-          type: string
-          description: A domain name as described in RFC-1034 that will be registered with ApplePay.
-          minLength: 1
-          maxLength: 255
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/WebhookSubscription'
+          description: The requested [Subscription](entity:WebhookSubscription).
       example:
-        domain_name: example.com
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.csharp
-        java: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.java
-        javascript: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.javascript
-        php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.php
-        python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.python
-        ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.ruby
-    Error:
+        subscription:
+          api_version: '2021-12-15'
+          created_at: 2022-01-10 23:29:48 +0000 UTC
+          enabled: true
+          event_types:
+          - payment.created
+          - payment.updated
+          id: wbhk_b35f6b3145074cf9ad513610786c19d5
+          name: Example Webhook Subscription
+          notification_url: https://example-webhook-url.com
+          signature_key: 1k9bIJKCeTmSQwyagtNRLg
+          updated_at: 2022-01-10 23:29:48 +0000 UTC
+    UpdateWebhookSubscriptionResponse:
       type: object
-      description: 'Represents an error encountered during a request to the Connect API.
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [UpdateWebhookSubscription](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscription) endpoint.
 
 
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+        Note: If there are errors processing the request, the [Subscription](entity:WebhookSubscription) is not
+
+        present.'
       x-release-status: PUBLIC
-      required:
-      - category
-      - code
       properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/WebhookSubscription'
+          description: The updated [Subscription](entity:WebhookSubscription).
+      example:
+        subscription:
+          api_version: '2021-12-15'
+          created_at: 2022-01-10 23:29:48 +0000 UTC
+          enabled: false
+          event_types:
+          - payment.created
+          - payment.updated
+          id: wbhk_b35f6b3145074cf9ad513610786c19d5
+          name: Updated Example Webhook Subscription
+          notification_url: https://example-webhook-url.com
+          updated_at: 2022-01-10 23:45:51 +0000 UTC
+    ListWebhookEventTypesResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
 
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
+        a request to the [ListWebhookEventTypes](api-endpoint:WebhookSubscriptions-ListWebhookEventTypes) endpoint.
 
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
 
-            the error pertains to.'
+        Note: if there are errors processing the request, the event types field will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        event_types:
+          type: array
+          items:
+            type: string
+          description: The list of event types.
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventTypeMetadata'
+          description: Contains the metadata of a webhook event type. For more information, see [EventTypeMetadata](entity:EventTypeMetadata).
+      example:
+        event_types:
+        - inventory.count.updated
+        metadata:
+        - api_version_introduced: '2018-07-12'
+          event_type: inventory.count.updated
+          release_status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2

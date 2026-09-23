@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay CashDrawers API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Customer Segments API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -109,63 +109,43 @@ servers:
 - url: https://connect.squareup.com
   variables: {}
 tags:
-- name: CashDrawers
+- name: Customer Segments
 paths:
-  /v2/cash-drawers/shifts:
+  /v2/customers/segments:
     get:
       tags:
-      - CashDrawers
-      summary: Square List Cash Drawer Shifts
-      operationId: ListCashDrawerShifts
+      - Customer Segments
+      summary: Square List Customer Segments
+      operationId: ListCustomerSegments
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Provides the details for all of the cash drawer shifts for a location
-
-        in a date range.'
+      description: Retrieves the list of customer segments of a business.
       x-release-status: PUBLIC
       security:
       - oauth2:
-        - CASH_DRAWER_READ
+        - CUSTOMERS_READ
       parameters:
-      - name: location_id
-        description: The ID of the location to query for a list of cash drawer shifts.
-        schema:
-          type: string
-        in: query
-        required: true
-      - name: sort_order
-        description: 'The order in which cash drawer shifts are listed in the response,
+      - name: cursor
+        description: 'A pagination cursor returned by previous calls to `ListCustomerSegments`.
 
-          based on their opened_at field. Default value: ASC'
-        schema:
-          $ref: '#/components/schemas/SortOrder'
-        in: query
-        required: false
-      - name: begin_time
-        description: The inclusive start time of the query on opened_at, in ISO 8601 format.
-        schema:
-          type: string
-        in: query
-        required: false
-      - name: end_time
-        description: The exclusive end date of the query on opened_at, in ISO 8601 format.
+          This cursor is used to retrieve the next set of query results.
+
+
+          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
         schema:
           type: string
         in: query
         required: false
       - name: limit
-        description: 'Number of cash drawer shift events in a page of results (200 by
+        description: 'The maximum number of results to return in a single page. This limit is advisory. The response might contain more or fewer results.
 
-          default, 1000 max).'
+          If the specified limit is less than 1 or greater than 50, Square returns a `400 VALUE_TOO_LOW` or `400 VALUE_TOO_HIGH` error. The default value is 50.
+
+
+          For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
         schema:
           type: integer
-        in: query
-        required: false
-      - name: cursor
-        description: Opaque cursor for fetching the next page of results.
-        schema:
-          type: string
         in: query
         required: false
       responses:
@@ -174,32 +154,24 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListCashDrawerShiftsResponse'
-  /v2/cash-drawers/shifts/{shift_id}:
+                $ref: '#/components/schemas/ListCustomerSegmentsResponse'
+  /v2/customers/segments/{segment_id}:
     get:
       tags:
-      - CashDrawers
-      summary: Square Retrieve Cash Drawer Shift
-      operationId: RetrieveCashDrawerShift
+      - Customer Segments
+      summary: Square Retrieve Customer Segment
+      operationId: RetrieveCustomerSegment
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Provides the summary details for a single cash drawer shift. See
-
-        [ListCashDrawerShiftEvents](api-endpoint:CashDrawers-ListCashDrawerShiftEvents) for a list of cash drawer shift events.'
+      description: Retrieves a specific customer segment as identified by the `segment_id` value.
       x-release-status: PUBLIC
       security:
       - oauth2:
-        - CASH_DRAWER_READ
+        - CUSTOMERS_READ
       parameters:
-      - name: location_id
-        description: The ID of the location to retrieve cash drawer shifts from.
-        schema:
-          type: string
-        in: query
-        required: true
-      - name: shift_id
-        description: The shift ID.
+      - name: segment_id
+        description: The Square-issued ID of the customer segment.
         schema:
           type: string
         in: path
@@ -210,169 +182,101 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RetrieveCashDrawerShiftResponse'
-  /v2/cash-drawers/shifts/{shift_id}/events:
-    get:
-      tags:
-      - CashDrawers
-      summary: Square List Cash Drawer Shift Events
-      operationId: ListCashDrawerShiftEvents
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-      description: Provides a paginated list of events for a single cash drawer shift.
-      x-release-status: PUBLIC
-      security:
-      - oauth2:
-        - CASH_DRAWER_READ
-      parameters:
-      - name: location_id
-        description: The ID of the location to list cash drawer shifts for.
-        schema:
-          type: string
-        in: query
-        required: true
-      - name: shift_id
-        description: The shift ID.
-        schema:
-          type: string
-        in: path
-        required: true
-      - name: limit
-        description: 'Number of resources to be returned in a page of results (200 by
-
-          default, 1000 max).'
-        schema:
-          type: integer
-        in: query
-        required: false
-      - name: cursor
-        description: Opaque cursor for fetching the next page of results.
-        schema:
-          type: string
-        in: query
-        required: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListCashDrawerShiftEventsResponse'
+                $ref: '#/components/schemas/RetrieveCustomerSegmentResponse'
 components:
   schemas:
-    CashDrawerDevice:
+    RetrieveCustomerSegmentResponse:
       type: object
+      description: 'Defines the fields that are included in the response body for requests to the `RetrieveCustomerSegment` endpoint.
+
+
+        Either `errors` or `segment` is present in a given response (never both).'
       x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        segment:
+          $ref: '#/components/schemas/CustomerSegment'
+          description: The retrieved customer segment.
+      example:
+        segment:
+          created_at: '2020-01-09T19:33:24.469Z'
+          id: GMNXRZVEXNQDF.CHURN_RISK
+          name: Lapsed
+          updated_at: '2020-04-13T23:01:13Z'
+    ListCustomerSegmentsResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body for requests to the `ListCustomerSegments` endpoint.
+
+
+        Either `errors` or `segments` is present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerSegment'
+          description: The list of customer segments belonging to the associated Square account.
+        cursor:
+          type: string
+          description: 'A pagination cursor to be used in subsequent calls to `ListCustomerSegments`
+
+            to retrieve the next set of query results. The cursor is only present if the request succeeded and
+
+            additional results are available.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+      example:
+        segments:
+        - created_at: '2020-01-09T19:33:24.469Z'
+          id: GMNXRZVEXNQDF.CHURN_RISK
+          name: Lapsed
+          updated_at: '2020-04-13T21:47:04Z'
+        - created_at: '2020-01-09T19:33:24.486Z'
+          id: GMNXRZVEXNQDF.LOYAL
+          name: Regulars
+          updated_at: '2020-04-13T21:47:04Z'
+        - created_at: '2020-01-09T19:33:21.813Z'
+          id: GMNXRZVEXNQDF.REACHABLE
+          name: Reachable
+          updated_at: '2020-04-13T21:47:04Z'
+        - created_at: '2020-01-09T19:33:25Z'
+          id: gv2:KF92J19VXN5FK30GX2E8HSGQ20
+          name: Instant Profile
+          updated_at: '2020-04-13T23:01:03Z'
+    CustomerSegment:
+      type: object
+      description: "Represents a group of customer profiles that match one or more predefined filter criteria. \n\nSegments (also known as Smart Groups) are defined and created within the Customer Directory in the\nSquare Seller Dashboard or Point of Sale."
+      x-release-status: PUBLIC
+      required:
+      - name
       properties:
         id:
           type: string
-          description: The device Square-issued ID
+          description: A unique Square-generated ID for the segment.
+          maxLength: 255
+          readOnly: true
         name:
           type: string
-          description: The device merchant-specified name.
-          nullable: true
-    CashDrawerShiftEvent:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: The unique ID of the event.
-        event_type:
-          $ref: '#/components/schemas/CashDrawerEventType'
-          description: 'The type of cash drawer shift event.
-
-            See [CashDrawerEventType](#type-cashdrawereventtype) for possible values'
-          nullable: true
-        event_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money that was added to or removed from the cash drawer
-
-            in the event. The amount can be positive (for added money)
-
-            or zero (for other tender type payments). The addition or removal of money can be determined by
-
-            by the event type.'
-          nullable: true
+          description: The name of the segment.
+          readOnly: true
         created_at:
           type: string
-          description: The event time in RFC 3339 format.
+          description: The timestamp when the segment was created, in RFC 3339 format.
           readOnly: true
-        description:
+        updated_at:
           type: string
-          description: 'An optional description of the event, entered by the employee that
-
-            created the event.'
-          nullable: true
-        team_member_id:
-          type: string
-          description: The ID of the team member that created the event.
+          description: The timestamp when the segment was last updated, in RFC 3339 format.
           readOnly: true
-    CashDrawerShiftState:
-      type: string
-      enum:
-      - OPEN
-      - ENDED
-      - CLOSED
-      x-enum-elements:
-      - name: OPEN
-        description: An open cash drawer shift.
-      - name: ENDED
-        description: A cash drawer shift that is ended but has not yet had an employee content audit.
-      - name: CLOSED
-        description: 'An ended cash drawer shift that is closed with a completed employee
-
-          content audit and recorded result.'
-      description: The current state of a cash drawer shift.
-      x-release-status: PUBLIC
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
     ErrorCode:
       type: string
       enum:
@@ -1119,1046 +1023,6 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    RetrieveCashDrawerShiftResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        cash_drawer_shift:
-          $ref: '#/components/schemas/CashDrawerShift'
-          description: The cash drawer shift queried for.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        cash_drawer_shift:
-          cash_paid_in_money:
-            amount: 10000
-            currency: USD
-          cash_paid_out_money:
-            amount: -10000
-            currency: USD
-          cash_payment_money:
-            amount: 100
-            currency: USD
-          cash_refunds_money:
-            amount: -100
-            currency: USD
-          closed_at: '2019-11-22T00:44:49.000Z'
-          closed_cash_money:
-            amount: 9970
-            currency: USD
-          closing_team_member_id: ''
-          description: Misplaced some change
-          device:
-            name: My iPad
-          ended_at: '2019-11-22T00:44:49.000Z'
-          ending_team_member_id: ''
-          expected_cash_money:
-            amount: 10000
-            currency: USD
-          id: DCC99978-09A6-4926-849F-300BE9C5793A
-          opened_at: '2019-11-22T00:42:54.000Z'
-          opened_cash_money:
-            amount: 10000
-            currency: USD
-          opening_team_member_id: ''
-          state: CLOSED
-    Currency:
-      type: string
-      enum:
-      - UNKNOWN_CURRENCY
-      - AED
-      - AFN
-      - ALL
-      - AMD
-      - ANG
-      - AOA
-      - ARS
-      - AUD
-      - AWG
-      - AZN
-      - BAM
-      - BBD
-      - BDT
-      - BGN
-      - BHD
-      - BIF
-      - BMD
-      - BND
-      - BOB
-      - BOV
-      - BRL
-      - BSD
-      - BTN
-      - BWP
-      - BYR
-      - BZD
-      - CAD
-      - CDF
-      - CHE
-      - CHF
-      - CHW
-      - CLF
-      - CLP
-      - CNY
-      - COP
-      - COU
-      - CRC
-      - CUC
-      - CUP
-      - CVE
-      - CZK
-      - DJF
-      - DKK
-      - DOP
-      - DZD
-      - EGP
-      - ERN
-      - ETB
-      - EUR
-      - FJD
-      - FKP
-      - GBP
-      - GEL
-      - GHS
-      - GIP
-      - GMD
-      - GNF
-      - GTQ
-      - GYD
-      - HKD
-      - HNL
-      - HRK
-      - HTG
-      - HUF
-      - IDR
-      - ILS
-      - INR
-      - IQD
-      - IRR
-      - ISK
-      - JMD
-      - JOD
-      - JPY
-      - KES
-      - KGS
-      - KHR
-      - KMF
-      - KPW
-      - KRW
-      - KWD
-      - KYD
-      - KZT
-      - LAK
-      - LBP
-      - LKR
-      - LRD
-      - LSL
-      - LTL
-      - LVL
-      - LYD
-      - MAD
-      - MDL
-      - MGA
-      - MKD
-      - MMK
-      - MNT
-      - MOP
-      - MRO
-      - MUR
-      - MVR
-      - MWK
-      - MXN
-      - MXV
-      - MYR
-      - MZN
-      - NAD
-      - NGN
-      - NIO
-      - NOK
-      - NPR
-      - NZD
-      - OMR
-      - PAB
-      - PEN
-      - PGK
-      - PHP
-      - PKR
-      - PLN
-      - PYG
-      - QAR
-      - RON
-      - RSD
-      - RUB
-      - RWF
-      - SAR
-      - SBD
-      - SCR
-      - SDG
-      - SEK
-      - SGD
-      - SHP
-      - SLL
-      - SLE
-      - SOS
-      - SRD
-      - SSP
-      - STD
-      - SVC
-      - SYP
-      - SZL
-      - THB
-      - TJS
-      - TMT
-      - TND
-      - TOP
-      - TRY
-      - TTD
-      - TWD
-      - TZS
-      - UAH
-      - UGX
-      - USD
-      - USN
-      - USS
-      - UYI
-      - UYU
-      - UZS
-      - VEF
-      - VND
-      - VUV
-      - WST
-      - XAF
-      - XAG
-      - XAU
-      - XBA
-      - XBB
-      - XBC
-      - XBD
-      - XCD
-      - XDR
-      - XOF
-      - XPD
-      - XPF
-      - XPT
-      - XTS
-      - XXX
-      - YER
-      - ZAR
-      - ZMK
-      - ZMW
-      - BTC
-      - XUS
-      x-enum-elements:
-      - name: UNKNOWN_CURRENCY
-        description: Unknown currency
-      - name: AED
-        description: United Arab Emirates dirham
-      - name: AFN
-        description: Afghan afghani
-      - name: ALL
-        description: Albanian lek
-      - name: AMD
-        description: Armenian dram
-      - name: ANG
-        description: Netherlands Antillean guilder
-      - name: AOA
-        description: Angolan kwanza
-      - name: ARS
-        description: Argentine peso
-      - name: AUD
-        description: Australian dollar
-      - name: AWG
-        description: Aruban florin
-      - name: AZN
-        description: Azerbaijani manat
-      - name: BAM
-        description: Bosnia and Herzegovina convertible mark
-      - name: BBD
-        description: Barbados dollar
-      - name: BDT
-        description: Bangladeshi taka
-      - name: BGN
-        description: Bulgarian lev
-      - name: BHD
-        description: Bahraini dinar
-      - name: BIF
-        description: Burundian franc
-      - name: BMD
-        description: Bermudian dollar
-      - name: BND
-        description: Brunei dollar
-      - name: BOB
-        description: Boliviano
-      - name: BOV
-        description: Bolivian Mvdol
-      - name: BRL
-        description: Brazilian real
-      - name: BSD
-        description: Bahamian dollar
-      - name: BTN
-        description: Bhutanese ngultrum
-      - name: BWP
-        description: Botswana pula
-      - name: BYR
-        description: Belarusian ruble
-      - name: BZD
-        description: Belize dollar
-      - name: CAD
-        description: Canadian dollar
-      - name: CDF
-        description: Congolese franc
-      - name: CHE
-        description: WIR Euro
-      - name: CHF
-        description: Swiss franc
-      - name: CHW
-        description: WIR Franc
-      - name: CLF
-        description: Unidad de Fomento
-      - name: CLP
-        description: Chilean peso
-      - name: CNY
-        description: Chinese yuan
-      - name: COP
-        description: Colombian peso
-      - name: COU
-        description: Unidad de Valor Real
-      - name: CRC
-        description: Costa Rican colon
-      - name: CUC
-        description: Cuban convertible peso
-      - name: CUP
-        description: Cuban peso
-      - name: CVE
-        description: Cape Verdean escudo
-      - name: CZK
-        description: Czech koruna
-      - name: DJF
-        description: Djiboutian franc
-      - name: DKK
-        description: Danish krone
-      - name: DOP
-        description: Dominican peso
-      - name: DZD
-        description: Algerian dinar
-      - name: EGP
-        description: Egyptian pound
-      - name: ERN
-        description: Eritrean nakfa
-      - name: ETB
-        description: Ethiopian birr
-      - name: EUR
-        description: Euro
-      - name: FJD
-        description: Fiji dollar
-      - name: FKP
-        description: Falkland Islands pound
-      - name: GBP
-        description: Pound sterling
-      - name: GEL
-        description: Georgian lari
-      - name: GHS
-        description: Ghanaian cedi
-      - name: GIP
-        description: Gibraltar pound
-      - name: GMD
-        description: Gambian dalasi
-      - name: GNF
-        description: Guinean franc
-      - name: GTQ
-        description: Guatemalan quetzal
-      - name: GYD
-        description: Guyanese dollar
-      - name: HKD
-        description: Hong Kong dollar
-      - name: HNL
-        description: Honduran lempira
-      - name: HRK
-        description: Croatian kuna
-      - name: HTG
-        description: Haitian gourde
-      - name: HUF
-        description: Hungarian forint
-      - name: IDR
-        description: Indonesian rupiah
-      - name: ILS
-        description: Israeli new shekel
-      - name: INR
-        description: Indian rupee
-      - name: IQD
-        description: Iraqi dinar
-      - name: IRR
-        description: Iranian rial
-      - name: ISK
-        description: Icelandic króna
-      - name: JMD
-        description: Jamaican dollar
-      - name: JOD
-        description: Jordanian dinar
-      - name: JPY
-        description: Japanese yen
-      - name: KES
-        description: Kenyan shilling
-      - name: KGS
-        description: Kyrgyzstani som
-      - name: KHR
-        description: Cambodian riel
-      - name: KMF
-        description: Comoro franc
-      - name: KPW
-        description: North Korean won
-      - name: KRW
-        description: South Korean won
-      - name: KWD
-        description: Kuwaiti dinar
-      - name: KYD
-        description: Cayman Islands dollar
-      - name: KZT
-        description: Kazakhstani tenge
-      - name: LAK
-        description: Lao kip
-      - name: LBP
-        description: Lebanese pound
-      - name: LKR
-        description: Sri Lankan rupee
-      - name: LRD
-        description: Liberian dollar
-      - name: LSL
-        description: Lesotho loti
-      - name: LTL
-        description: Lithuanian litas
-      - name: LVL
-        description: Latvian lats
-      - name: LYD
-        description: Libyan dinar
-      - name: MAD
-        description: Moroccan dirham
-      - name: MDL
-        description: Moldovan leu
-      - name: MGA
-        description: Malagasy ariary
-      - name: MKD
-        description: Macedonian denar
-      - name: MMK
-        description: Myanmar kyat
-      - name: MNT
-        description: Mongolian tögrög
-      - name: MOP
-        description: Macanese pataca
-      - name: MRO
-        description: Mauritanian ouguiya
-      - name: MUR
-        description: Mauritian rupee
-      - name: MVR
-        description: Maldivian rufiyaa
-      - name: MWK
-        description: Malawian kwacha
-      - name: MXN
-        description: Mexican peso
-      - name: MXV
-        description: Mexican Unidad de Inversion
-      - name: MYR
-        description: Malaysian ringgit
-      - name: MZN
-        description: Mozambican metical
-      - name: NAD
-        description: Namibian dollar
-      - name: NGN
-        description: Nigerian naira
-      - name: NIO
-        description: Nicaraguan córdoba
-      - name: NOK
-        description: Norwegian krone
-      - name: NPR
-        description: Nepalese rupee
-      - name: NZD
-        description: New Zealand dollar
-      - name: OMR
-        description: Omani rial
-      - name: PAB
-        description: Panamanian balboa
-      - name: PEN
-        description: Peruvian sol
-      - name: PGK
-        description: Papua New Guinean kina
-      - name: PHP
-        description: Philippine peso
-      - name: PKR
-        description: Pakistani rupee
-      - name: PLN
-        description: Polish zBoty
-      - name: PYG
-        description: Paraguayan guaraní
-      - name: QAR
-        description: Qatari riyal
-      - name: RON
-        description: Romanian leu
-      - name: RSD
-        description: Serbian dinar
-      - name: RUB
-        description: Russian ruble
-      - name: RWF
-        description: Rwandan franc
-      - name: SAR
-        description: Saudi riyal
-      - name: SBD
-        description: Solomon Islands dollar
-      - name: SCR
-        description: Seychelles rupee
-      - name: SDG
-        description: Sudanese pound
-      - name: SEK
-        description: Swedish krona
-      - name: SGD
-        description: Singapore dollar
-      - name: SHP
-        description: Saint Helena pound
-      - name: SLL
-        description: Sierra Leonean first leone
-      - name: SLE
-        description: Sierra Leonean second leone
-      - name: SOS
-        description: Somali shilling
-      - name: SRD
-        description: Surinamese dollar
-      - name: SSP
-        description: South Sudanese pound
-      - name: STD
-        description: São Tomé and Príncipe dobra
-      - name: SVC
-        description: Salvadoran colón
-      - name: SYP
-        description: Syrian pound
-      - name: SZL
-        description: Swazi lilangeni
-      - name: THB
-        description: Thai baht
-      - name: TJS
-        description: Tajikstani somoni
-      - name: TMT
-        description: Turkmenistan manat
-      - name: TND
-        description: Tunisian dinar
-      - name: TOP
-        description: Tongan pa'anga
-      - name: TRY
-        description: Turkish lira
-      - name: TTD
-        description: Trinidad and Tobago dollar
-      - name: TWD
-        description: New Taiwan dollar
-      - name: TZS
-        description: Tanzanian shilling
-      - name: UAH
-        description: Ukrainian hryvnia
-      - name: UGX
-        description: Ugandan shilling
-      - name: USD
-        description: United States dollar
-      - name: USN
-        description: United States dollar (next day)
-      - name: USS
-        description: United States dollar (same day)
-      - name: UYI
-        description: Uruguay Peso en Unidedades Indexadas
-      - name: UYU
-        description: Uruguyan peso
-      - name: UZS
-        description: Uzbekistan som
-      - name: VEF
-        description: Venezuelan bolívar soberano
-      - name: VND
-        description: Vietnamese ’Óng
-      - name: VUV
-        description: Vanuatu vatu
-      - name: WST
-        description: Samoan tala
-      - name: XAF
-        description: CFA franc BEAC
-      - name: XAG
-        description: Silver
-      - name: XAU
-        description: Gold
-      - name: XBA
-        description: European Composite Unit
-      - name: XBB
-        description: European Monetary Unit
-      - name: XBC
-        description: European Unit of Account 9
-      - name: XBD
-        description: European Unit of Account 17
-      - name: XCD
-        description: East Caribbean dollar
-      - name: XDR
-        description: Special drawing rights (International Monetary Fund)
-      - name: XOF
-        description: CFA franc BCEAO
-      - name: XPD
-        description: Palladium
-      - name: XPF
-        description: CFP franc
-      - name: XPT
-        description: Platinum
-      - name: XTS
-        description: Code reserved for testing
-      - name: XXX
-        description: No currency
-      - name: YER
-        description: Yemeni rial
-      - name: ZAR
-        description: South African rand
-      - name: ZMK
-        description: Zambian kwacha
-      - name: ZMW
-        description: Zambian kwacha
-      - name: BTC
-        description: Bitcoin
-      - name: XUS
-        description: USD Coin
-      description: 'Indicates the associated currency for an amount of money. Values correspond
-
-        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
-      x-release-status: PUBLIC
-    ListCashDrawerShiftEventsResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        cursor:
-          type: string
-          description: 'Opaque cursor for fetching the next page. Cursor is not present in
-
-            the last page of results.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        cash_drawer_shift_events:
-          type: array
-          items:
-            $ref: '#/components/schemas/CashDrawerShiftEvent'
-          description: 'All of the events (payments, refunds, etc.) for a cash drawer during
-
-            the shift.'
-      example:
-        cash_drawer_shift_events:
-        - created_at: '2019-11-22T00:43:02.000Z'
-          description: ''
-          event_money:
-            amount: 100
-            currency: USD
-          event_type: CASH_TENDER_PAYMENT
-          id: 9F07DB01-D85A-4B77-88C3-D5C64CEB5155
-          team_member_id: ''
-        - created_at: '2019-11-22T00:43:12.000Z'
-          description: ''
-          event_money:
-            amount: 250
-            currency: USD
-          event_type: CASH_TENDER_PAYMENT
-          id: B2854CEA-A781-49B3-8F31-C64558231F48
-          team_member_id: ''
-        - created_at: '2019-11-22T00:43:23.000Z'
-          description: ''
-          event_money:
-            amount: 250
-            currency: USD
-          event_type: CASH_TENDER_CANCELLED_PAYMENT
-          id: B5FB7F72-95CD-44A3-974D-26C41064D042
-          team_member_id: ''
-        - created_at: '2019-11-22T00:43:46.000Z'
-          description: ''
-          event_money:
-            amount: 100
-            currency: USD
-          event_type: CASH_TENDER_REFUND
-          id: 0B425480-8504-40B4-A867-37B23543931B
-          team_member_id: ''
-        - created_at: '2019-11-22T00:44:18.000Z'
-          description: Transfer from another drawer
-          event_money:
-            amount: 10000
-            currency: USD
-          event_type: PAID_IN
-          id: 8C66E60E-FDCF-4EEF-A98D-3B14B7ED5CBE
-          team_member_id: ''
-        - created_at: '2019-11-22T00:44:29.000Z'
-          description: Transfer out to another drawer
-          event_money:
-            amount: 10000
-            currency: USD
-          event_type: PAID_OUT
-          id: D5ACA7FE-C64D-4ADA-8BC8-82118A2DAE4F
-          team_member_id: ''
-    CashDrawerShiftSummary:
-      type: object
-      description: 'The summary of a closed cash drawer shift.
-
-        This model contains only the money counted to start a cash drawer shift, counted
-
-        at the end of the shift, and the amount that should be in the drawer at shift
-
-        end based on summing all cash drawer shift events.'
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: The shift unique ID.
-        state:
-          $ref: '#/components/schemas/CashDrawerShiftState'
-          description: 'The shift current state.
-
-            See [CashDrawerShiftState](#type-cashdrawershiftstate) for possible values'
-          nullable: true
-        opened_at:
-          type: string
-          description: The shift start time in ISO 8601 format.
-          nullable: true
-        ended_at:
-          type: string
-          description: The shift end time in ISO 8601 format.
-          nullable: true
-        closed_at:
-          type: string
-          description: The shift close time in ISO 8601 format.
-          nullable: true
-        description:
-          type: string
-          description: An employee free-text description of a cash drawer shift.
-          nullable: true
-        opened_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money in the cash drawer at the start of the shift. This
-
-            must be a positive amount.'
-          nullable: true
-        expected_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money that should be in the cash drawer at the end of the
-
-            shift, based on the cash drawer events on the shift.
-
-            The amount is correct if all shift employees accurately recorded their
-
-            cash drawer shift events. Unrecorded events and events with the wrong amount
-
-            result in an incorrect expected_cash_money amount that can be negative.'
-          nullable: true
-        closed_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money found in the cash drawer at the end of the shift by
-
-            an auditing employee. The amount must be greater than or equal to zero.'
-          nullable: true
-        created_at:
-          type: string
-          description: The shift start time in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The shift updated at time in RFC 3339 format.
-          readOnly: true
-        location_id:
-          type: string
-          description: The ID of the location the cash drawer shift belongs to.
-          readOnly: true
-    ListCashDrawerShiftsResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        cursor:
-          type: string
-          description: 'Opaque cursor for fetching the next page of results. Cursor is not
-
-            present in the last page of results.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        cash_drawer_shifts:
-          type: array
-          items:
-            $ref: '#/components/schemas/CashDrawerShiftSummary'
-          description: 'A collection of CashDrawerShiftSummary objects for shifts that match
-
-            the query.'
-      example:
-        cash_drawer_shifts:
-        - closed_at: '2019-11-22T00:44:49.000Z'
-          closed_cash_money:
-            amount: 9970
-            currency: USD
-          description: Misplaced some change
-          ended_at: '2019-11-22T00:44:49.000Z'
-          expected_cash_money:
-            amount: 10000
-            currency: USD
-          id: DCC99978-09A6-4926-849F-300BE9C5793A
-          opened_at: '2019-11-22T00:42:54.000Z'
-          opened_cash_money:
-            amount: 10000
-            currency: USD
-          state: CLOSED
-    Money:
-      type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
-
-        Fields that do not explicitly define whether they are signed or unsigned are
-
-        considered unsigned and can only hold positive amounts. For signed fields, the
-
-        sign of the value indicates the purpose of the money transfer. See
-
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
-
-        for more information.'
-      x-release-status: PUBLIC
-      properties:
-        amount:
-          type: integer
-          description: 'The amount of money, in the smallest denomination of the currency
-
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
-
-            in cents. Monetary amounts can be positive or negative. See the specific
-
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-          nullable: true
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
-
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
-          nullable: true
-    CashDrawerShift:
-      type: object
-      description: 'This model gives the details of a cash drawer shift.
-
-        The cash_payment_money, cash_refund_money, cash_paid_in_money,
-
-        and cash_paid_out_money fields are all computed by summing their respective
-
-        event types.'
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: The shift unique ID.
-        state:
-          $ref: '#/components/schemas/CashDrawerShiftState'
-          description: 'The shift current state.
-
-            See [CashDrawerShiftState](#type-cashdrawershiftstate) for possible values'
-          nullable: true
-        opened_at:
-          type: string
-          description: The time when the shift began, in ISO 8601 format.
-          nullable: true
-        ended_at:
-          type: string
-          description: The time when the shift ended, in ISO 8601 format.
-          nullable: true
-        closed_at:
-          type: string
-          description: The time when the shift was closed, in ISO 8601 format.
-          nullable: true
-        description:
-          type: string
-          description: The free-form text description of a cash drawer by an employee.
-          nullable: true
-        opened_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money in the cash drawer at the start of the shift.
-
-            The amount must be greater than or equal to zero.'
-          nullable: true
-        cash_payment_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money added to the cash drawer from cash payments.
-
-            This is computed by summing all events with the types CASH_TENDER_PAYMENT and
-
-            CASH_TENDER_CANCELED_PAYMENT. The amount is always greater than or equal to
-
-            zero.'
-          nullable: true
-        cash_refunds_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money removed from the cash drawer from cash refunds.
-
-            It is computed by summing the events of type CASH_TENDER_REFUND. The amount
-
-            is always greater than or equal to zero.'
-          nullable: true
-        cash_paid_in_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money added to the cash drawer for reasons other than cash
-
-            payments. It is computed by summing the events of type PAID_IN. The amount is
-
-            always greater than or equal to zero.'
-          nullable: true
-        cash_paid_out_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money removed from the cash drawer for reasons other than
-
-            cash refunds. It is computed by summing the events of type PAID_OUT. The amount
-
-            is always greater than or equal to zero.'
-          nullable: true
-        expected_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money that should be in the cash drawer at the end of the
-
-            shift, based on the shift''s other money amounts.
-
-            This can be negative if employees have not correctly recorded all the events
-
-            on the cash drawer.
-
-            cash_paid_out_money is a summation of amounts from cash_payment_money (zero
-
-            or positive), cash_refunds_money (zero or negative), cash_paid_in_money (zero
-
-            or positive), and cash_paid_out_money (zero or negative) event types.'
-          nullable: true
-        closed_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money found in the cash drawer at the end of the shift
-
-            by an auditing employee. The amount should be positive.'
-          nullable: true
-        device:
-          $ref: '#/components/schemas/CashDrawerDevice'
-          description: The device running Square Point of Sale that was connected to the cash drawer.
-          nullable: true
-        created_at:
-          type: string
-          description: The shift start time in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The shift updated at time in RFC 3339 format.
-          readOnly: true
-        location_id:
-          type: string
-          description: The ID of the location the cash drawer shift belongs to.
-          readOnly: true
-        team_member_ids:
-          type: array
-          items:
-            type: string
-          description: 'The IDs of all team members that were logged into Square Point of Sale at any
-
-            point while the cash drawer shift was open.'
-          readOnly: true
-        opening_team_member_id:
-          type: string
-          description: The ID of the team member that started the cash drawer shift.
-          readOnly: true
-        ending_team_member_id:
-          type: string
-          description: The ID of the team member that ended the cash drawer shift.
-          readOnly: true
-        closing_team_member_id:
-          type: string
-          description: 'The ID of the team member that closed the cash drawer shift by auditing
-
-            the cash drawer contents.'
-          readOnly: true
-    CashDrawerEventType:
-      type: string
-      enum:
-      - NO_SALE
-      - CASH_TENDER_PAYMENT
-      - OTHER_TENDER_PAYMENT
-      - CASH_TENDER_CANCELLED_PAYMENT
-      - OTHER_TENDER_CANCELLED_PAYMENT
-      - CASH_TENDER_REFUND
-      - OTHER_TENDER_REFUND
-      - PAID_IN
-      - PAID_OUT
-      x-enum-elements:
-      - name: NO_SALE
-        description: 'Triggered when a no sale occurs on a cash drawer.
-
-          A CashDrawerEvent of this type must have a zero money amount.'
-      - name: CASH_TENDER_PAYMENT
-        description: 'Triggered when a cash tender payment occurs on a cash drawer.
-
-          A CashDrawerEvent of this type can must not have a negative amount.'
-      - name: OTHER_TENDER_PAYMENT
-        description: 'Triggered when a check, gift card, or other non-cash payment occurs
-
-          on a cash drawer.
-
-          A CashDrawerEvent of this type must have a zero money amount.'
-      - name: CASH_TENDER_CANCELLED_PAYMENT
-        description: 'Triggered when a split tender bill is cancelled after cash has been
-
-          tendered.
-
-          A CASH_TENDER_CANCELLED_PAYMENT should have a corresponding CASH_TENDER_PAYMENT.
-
-          A CashDrawerEvent of this type must not have a negative amount.'
-      - name: OTHER_TENDER_CANCELLED_PAYMENT
-        description: 'Triggered when a split tender bill is cancelled after a non-cash tender
-
-          has been tendered. An OTHER_TENDER_CANCELLED_PAYMENT should have a corresponding
-
-          OTHER_TENDER_PAYMENT. A CashDrawerEvent of this type must have a zero money
-
-          amount.'
-      - name: CASH_TENDER_REFUND
-        description: 'Triggered when a cash tender refund occurs.
-
-          A CashDrawerEvent of this type must not have a negative amount.'
-      - name: OTHER_TENDER_REFUND
-        description: 'Triggered when an other tender refund occurs.
-
-          A CashDrawerEvent of this type must have a zero money amount.'
-      - name: PAID_IN
-        description: 'Triggered when money unrelated to a payment is added to the cash drawer.
-
-          For example, an employee adds coins to the drawer.
-
-          A CashDrawerEvent of this type must not have a negative amount.'
-      - name: PAID_OUT
-        description: 'Triggered when money is removed from the drawer for other reasons
-
-          than making change.
-
-          For example, an employee pays a delivery person with cash from the cash drawer.
-
-          A CashDrawerEvent of this type must not have a negative amount.'
-      description: 'The types of events on a CashDrawerShift.
-
-        Each event type represents an employee action on the actual cash drawer
-
-        represented by a CashDrawerShift.'
-      x-release-status: PUBLIC
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -2188,6 +1052,53 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2

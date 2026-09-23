@@ -1,8 +1,8 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: '2.0'
-  title: Square ApplePay Subscriptions API
-  description: 'Supercharge Square for sellers of every size. Our entire connected commerce platform  from elegant hardware to a rich suite of Square APIs  is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen. '
+  title: Square Subscriptions API
+  description: Supercharge Square for sellers of every size. Our entire connected commerce platform from elegant hardware to a rich suite of Square APIs is yours to build with. Whether youre developing an app or composing a bespoke solution, this is the place to make it happen.
   termsOfService: https://connect.squareup.com/tos
   contact:
     name: Square Developer Platform
@@ -132,7 +132,7 @@ paths:
         the optional `start_date`. Each individual subscription is associated with a particular location.
 
 
-        For more information, see [Create a subscription](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#create-a-subscription).'
+        For more information, see Create a subscription.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -178,7 +178,7 @@ paths:
         dispatcher: FALLBACK
       description: 'Schedules a plan variation change for all active subscriptions under a given plan
 
-        variation. For more information, see [Swap Subscription Plan Variations](https://developer.squareup.com/docs/subscriptions-api/swap-plan-variations).'
+        variation. For more information, see Swap Subscription Plan Variations.'
       x-release-status: BETA
       security:
       - oauth2:
@@ -388,7 +388,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: 'Changes the [billing anchor date](https://developer.squareup.com/docs/subscriptions-api/subscription-billing#billing-dates)
+      description: 'Changes the billing anchor date
 
         for a subscription.'
       x-release-status: BETA
@@ -430,7 +430,11 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: "Schedules a `CANCEL` action to cancel an active subscription. This \nsets the `canceled_date` field to the end of the active billing period. After this date, \nthe subscription status changes from ACTIVE to CANCELED."
+      description: 'Schedules a `CANCEL` action to cancel an active subscription. This
+
+        sets the `canceled_date` field to the end of the active billing period. After this date,
+
+        the subscription status changes from ACTIVE to CANCELED.'
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -458,7 +462,7 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: Lists all [events](https://developer.squareup.com/docs/subscriptions-api/actions-events) for a specific subscription.
+      description: Lists all events for a specific subscription.
       x-release-status: PUBLIC
       security:
       - oauth2:
@@ -598,7 +602,9 @@ paths:
       x-microcks-operation:
         delay: 0
         dispatcher: FALLBACK
-      description: "Schedules a `SWAP_PLAN` action to swap a subscription plan variation in an existing subscription. \nFor more information, see [Swap Subscription Plan Variations](https://developer.squareup.com/docs/subscriptions-api/swap-plan-variations)."
+      description: 'Schedules a `SWAP_PLAN` action to swap a subscription plan variation in an existing subscription.
+
+        For more information, see Swap Subscription Plan Variations.'
       x-release-status: BETA
       security:
       - oauth2:
@@ -637,9 +643,11 @@ paths:
       - error-code: CUSTOMER_NOT_FOUND
 components:
   schemas:
-    CancelSubscriptionResponse:
+    RetrieveSubscriptionResponse:
       type: object
-      description: "Defines output parameters in a response from the \n[CancelSubscription](api-endpoint:Subscriptions-CancelSubscription) endpoint."
+      description: 'Defines output parameters in a response from the
+
+        [RetrieveSubscription](api-endpoint:Subscriptions-RetrieveSubscription) endpoint.'
       x-release-status: PUBLIC
       properties:
         errors:
@@ -649,78 +657,1534 @@ components:
           description: Errors encountered during the request.
         subscription:
           $ref: '#/components/schemas/Subscription'
-          description: The specified subscription scheduled for cancellation according to the action created by the request.
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionAction'
-          description: A list of a single `CANCEL` action scheduled for the subscription.
-          x-release-status: BETA
+          description: The subscription retrieved.
       example:
         subscription:
-          canceled_date: '2023-06-05'
-          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
-          created_at: '2022-01-19T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: 910afd30-464a-4e00-a8d8-2296e
+          card_id: ccof:IkWfpLj4tNHMyFii3GB
+          charged_through_date: '2023-11-20'
+          created_at: '2022-07-27T21:53:10Z'
+          customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          id: 8151fc89-da15-4eb9-a685-1a70883cebfc
           invoice_ids:
           - inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
           - inv:0-ChrcX_i3sNmfsHTGKhI4Wg2mceA
           location_id: S8GWD5R9QB376
-          paid_until_date: '2023-12-31'
+          paid_until_date: '2024-08-01'
           plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          price_override_money:
+            amount: 25000
+            currency: USD
+          source:
+            name: My Application
+          start_date: '2022-07-27'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+    SubscriptionEvent:
+      type: object
+      description: Describes changes to a subscription and the subscription status.
+      x-release-status: PUBLIC
+      required:
+      - id
+      - subscription_event_type
+      - effective_date
+      - plan_variation_id
+      properties:
+        id:
+          type: string
+          description: The ID of the subscription event.
+        subscription_event_type:
+          $ref: '#/components/schemas/SubscriptionEventSubscriptionEventType'
+          description: 'Type of the subscription event.
+
+            See [SubscriptionEventSubscriptionEventType](#type-subscriptioneventsubscriptioneventtype) for possible values'
+        effective_date:
+          type: string
+          description: The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) when the subscription event occurred.
+        monthly_billing_anchor_date:
+          type: integer
+          description: The day-of-the-month the billing anchor date was changed to, if applicable.
+          readOnly: true
+          x-release-status: BETA
+        info:
+          $ref: '#/components/schemas/SubscriptionEventInfo'
+          description: Additional information about the subscription event.
+        phases:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Phase'
+          description: A list of Phases, to pass phase-specific information used in the swap.
+        plan_variation_id:
+          type: string
+          description: The ID of the subscription plan variation associated with the subscription.
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    SearchSubscriptionsRequest:
+      type: object
+      description: "Defines input parameters in a request to the \n[SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint."
+      x-release-status: PUBLIC
+      properties:
+        cursor:
+          type: string
+          description: "When the total number of resulting subscriptions exceeds the limit of a paged response, \nspecify the cursor returned from a preceding response here to fetch the next set of results.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+        limit:
+          type: integer
+          description: 'The upper limit on the number of subscriptions to return
+
+            in a paged response.'
+          minimum: 1
+        query:
+          $ref: '#/components/schemas/SearchSubscriptionsQuery'
+          description: 'A subscription query consisting of specified filtering conditions.
+
+
+            If this `query` field is unspecified, the `SearchSubscriptions` call will return all subscriptions.'
+        include:
+          type: array
+          items:
+            type: string
+          description: "An option to include related information in the response. \n\nThe supported values are: \n\n- `actions`: to include scheduled actions on the targeted subscriptions."
+          x-release-status: BETA
+      example:
+        query:
+          filter:
+            customer_ids:
+            - CHFGVKYY8RSV93M5KCYTG4PN0G
+            location_ids:
+            - S8GWD5R9QB376
+            source_names:
+            - My App
+    BulkSwapPlanResponse:
+      type: object
+      description: 'Defines output parameters in a response of the
+
+        [BulkSwapPlan](api-endpoint:Subscriptions-BulkSwapPlan) endpoint.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        affected_subscriptions:
+          type: integer
+          description: The number of affected subscriptions.
+      example:
+        affected_subscriptions: 12
+    PauseSubscriptionRequest:
+      type: object
+      description: 'Defines input parameters in a request to the
+
+        [PauseSubscription](api-endpoint:Subscriptions-PauseSubscription) endpoint.'
+      x-release-status: BETA
+      properties:
+        pause_effective_date:
+          type:
+          - string
+          - 'null'
+          description: 'The `YYYY-MM-DD`-formatted date when the scheduled `PAUSE` action takes place on the subscription.
+
+
+            When this date is unspecified or falls within the current billing cycle, the subscription is paused
+
+            on the starting date of the next billing cycle.'
+        pause_cycle_duration:
+          type:
+          - integer
+          - 'null'
+          description: "The number of billing cycles the subscription will be paused before it is reactivated. \n\nWhen this is set, a `RESUME` action is also scheduled to take place on the subscription at \nthe end of the specified pause cycle duration. In this case, neither `resume_effective_date` \nnor `resume_change_timing` may be specified."
+          format: int64
+        resume_effective_date:
+          type:
+          - string
+          - 'null'
+          description: "The date when the subscription is reactivated by a scheduled `RESUME` action. \nThis date must be at least one billing cycle ahead of `pause_effective_date`."
+        resume_change_timing:
+          $ref: '#/components/schemas/ChangeTiming'
+          description: "The timing whether the subscription is reactivated immediately or at the end of the billing cycle, relative to \n`resume_effective_date`.\nSee [ChangeTiming](#type-changetiming) for possible values"
+        pause_reason:
+          type:
+          - string
+          - 'null'
+          description: The user-provided reason to pause the subscription.
+          maxLength: 255
+    SubscriptionActionType:
+      type: string
+      enum:
+      - CANCEL
+      - PAUSE
+      - RESUME
+      - SWAP_PLAN
+      - CHANGE_BILLING_ANCHOR_DATE
+      x-enum-elements:
+      - name: CANCEL
+        description: The action to execute a scheduled cancellation of a subscription.
+      - name: PAUSE
+        description: The action to execute a scheduled pause of a subscription.
+      - name: RESUME
+        description: The action to execute a scheduled resumption of a subscription.
+      - name: SWAP_PLAN
+        description: The action to execute a scheduled swap of a subscription plan in a subscription.
+      - name: CHANGE_BILLING_ANCHOR_DATE
+        description: A billing anchor date change action.
+      description: Supported types of an action as a pending change to a subscription.
+      x-release-status: BETA
+    ChangeTiming:
+      type: string
+      enum:
+      - IMMEDIATE
+      - END_OF_BILLING_CYCLE
+      x-enum-elements:
+      - name: IMMEDIATE
+        description: The action occurs immediately.
+      - name: END_OF_BILLING_CYCLE
+        description: The action occurs at the end of the billing cycle.
+      description: Supported timings when a pending change, as an action, takes place to a subscription.
+      x-release-status: BETA
+    ListSubscriptionEventsResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [ListSubscriptionEvents](api-endpoint:Subscriptions-ListSubscriptionEvents).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription_events:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionEvent'
+          description: The retrieved subscription events.
+        cursor:
+          type: string
+          description: "When the total number of resulting subscription events exceeds the limit of a paged response, \nthe response includes a cursor for you to use in a subsequent request to fetch the next set of events.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        subscription_events:
+        - effective_date: '2020-04-24'
+          id: 06809161-3867-4598-8269-8aea5be4f9de
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: START_SUBSCRIPTION
+        - effective_date: '2020-05-01'
+          id: f2736603-cd2e-47ec-8675-f815fff54f88
+          info:
+            code: CUSTOMER_NO_NAME
+            detail: The customer with ID `V74BMG0GPS2KNCWJE1BTYJ37Y0` does not have a name on record.
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: DEACTIVATE_SUBSCRIPTION
+        - effective_date: '2022-05-01'
+          id: b426fc85-6859-450b-b0d0-fe3a5d1b565f
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: RESUME_SUBSCRIPTION
+        - effective_date: '2022-09-01'
+          id: 09f14de1-2f53-4dae-9091-49aa53f83d01
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: PAUSE_SUBSCRIPTION
+        - effective_date: '2022-12-01'
+          id: f28a73ac-1a1b-4b0f-8eeb-709a72945776
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: RESUME_SUBSCRIPTION
+        - effective_date: '2023-04-01'
+          id: 1eee8790-472d-4efe-8c69-8ad84e9cefe0
+          plan_variation_id: 02CD53CFA4d1498AFAD42
+          subscription_event_type: PLAN_CHANGE
+        - effective_date: '2023-06-21'
+          id: a0c08083-5db0-4800-85c7-d398de4fbb6e
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          subscription_event_type: STOP_SUBSCRIPTION
+    SearchSubscriptionsResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+          description: The subscriptions matching the specified query expressions.
+        cursor:
+          type: string
+          description: "When the total number of resulting subscription exceeds the limit of a paged response, \nthe response includes a cursor for you to use in a subsequent request to fetch the next set of results.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        subscriptions:
+        - canceled_date: '2021-10-30'
+          card_id: ccof:mueUsvgajChmjEbp4GB
+          charged_through_date: '2021-11-20'
+          created_at: '2021-10-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: de86fc96-8664-474b-af1a-abbe59cacf0e
+          location_id: S8GWD5R9QB376
+          paid_until_date: '2021-11-20'
+          plan_variation_id: L3TJVDHVBEQEGQDEZL2JJM7R
+          source:
+            name: My Application
+          start_date: '2021-10-20'
+          status: CANCELED
+          timezone: UTC
+        - charged_through_date: '2022-08-19'
+          created_at: '2022-01-19T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          invoice_ids:
+          - grebK0Q_l8H4fqoMMVvt-Q
+          - rcX_i3sNmHTGKhI4W2mceA
+          location_id: S8GWD5R9QB376
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          price_override_money:
+            amount: 1000
+            currency: USD
           source:
             name: My Application
           start_date: '2022-01-19'
+          status: PAUSED
+          tax_percentage: '5'
+          timezone: America/Los_Angeles
+          version: 2
+        - card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+            ordinal: 0
+            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
+            uid: 873451e0-745b-4e87-ab0b-c574933fe616
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2023-06-20'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 1
+    BulkSwapPlanRequest:
+      type: object
+      description: 'Defines input parameters in a call to the
+
+        [BulkSwapPlan](api-endpoint:Subscriptions-BulkSwapPlan) endpoint.'
+      x-release-status: BETA
+      required:
+      - new_plan_variation_id
+      - old_plan_variation_id
+      - location_id
+      properties:
+        new_plan_variation_id:
+          type: string
+          description: 'The ID of the new subscription plan variation.
+
+
+            This field is required.'
+          minLength: 1
+        old_plan_variation_id:
+          type: string
+          description: 'The ID of the plan variation whose subscriptions should be swapped. Active subscriptions
+
+            using this plan variation will be subscribed to the new plan variation on their next billing
+
+            day.'
+          minLength: 1
+        location_id:
+          type: string
+          description: The ID of the location to associate with the swapped subscriptions.
+          minLength: 1
+      example:
+        location_id: S8GWD5R9QB376
+        new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+        old_plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+    SubscriptionEventInfo:
+      type: object
+      description: Provides information about the subscription event.
+      x-release-status: PUBLIC
+      properties:
+        detail:
+          type:
+          - string
+          - 'null'
+          description: A human-readable explanation for the event.
+        code:
+          $ref: '#/components/schemas/SubscriptionEventInfoCode'
+          description: 'An info code indicating the subscription event that occurred.
+
+            See [InfoCode](#type-infocode) for possible values'
+    Subscription:
+      type: object
+      description: 'Represents a subscription purchased by a customer.
+
+
+        For more information, see
+
+        [Manage Subscriptions](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions).'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the subscription.
+          maxLength: 255
+          readOnly: true
+        location_id:
+          type: string
+          description: The ID of the location associated with the subscription.
+          readOnly: true
+        plan_variation_id:
+          type: string
+          description: The ID of the subscribed-to [subscription plan variation](entity:CatalogSubscriptionPlanVariation).
+          readOnly: true
+        customer_id:
+          type: string
+          description: The ID of the subscribing [customer](entity:Customer) profile.
+          readOnly: true
+        start_date:
+          type: string
+          description: The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) to start the subscription.
+          readOnly: true
+        canceled_date:
+          type:
+          - string
+          - 'null'
+          description: "The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) to cancel the subscription, \nwhen the subscription status changes to `CANCELED` and the subscription billing stops.\n\nIf this field is not set, the subscription ends according its subscription plan.\n\nThis field cannot be updated, other than being cleared."
+        charged_through_date:
+          type: string
+          description: 'The `YYYY-MM-DD`-formatted date up to when the subscriber is invoiced for the
+
+            subscription.
+
+
+            After the invoice is sent for a given billing period,
+
+            this date will be the last day of the billing period.
+
+            For example,
+
+            suppose for the month of May a subscriber gets an invoice
+
+            (or charged the card) on May 1. For the monthly billing scenario,
+
+            this date is then set to May 31.'
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/SubscriptionStatus'
+          description: 'The current status of the subscription.
+
+            See [SubscriptionStatus](#type-subscriptionstatus) for possible values'
+          readOnly: true
+        tax_percentage:
+          type:
+          - string
+          - 'null'
+          description: 'The tax amount applied when billing the subscription. The
+
+            percentage is expressed in decimal form, using a `''.''` as the decimal
+
+            separator and without a `''%''` sign. For example, a value of `7.5`
+
+            corresponds to 7.5%.'
+        invoice_ids:
+          type: array
+          items:
+            type: string
+          description: 'The IDs of the [invoices](entity:Invoice) created for the
+
+            subscription, listed in order when the invoices were created
+
+            (newest invoices appear first).'
+          readOnly: true
+        price_override_money:
+          $ref: '#/components/schemas/Money'
+          description: "A custom price which overrides the cost of a subscription plan variation with `STATIC` pricing.\nThis field does not affect itemized subscriptions with `RELATIVE` pricing. Instead, \nyou should edit the Subscription's [order template](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#phases-and-order-templates)."
+        version:
+          type: integer
+          description: 'The version of the object. When updating an object, the version
+
+            supplied must match the version in the database, otherwise the write will
+
+            be rejected as conflicting.'
+          format: int64
+        created_at:
+          type: string
+          description: The timestamp when the subscription was created, in RFC 3339 format.
+          readOnly: true
+        card_id:
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the [subscriber''s](entity:Customer) [card](entity:Card)
+
+            used to charge for the subscription.'
+        timezone:
+          type: string
+          description: 'Timezone that will be used in date calculations for the subscription.
+
+            Defaults to the timezone of the location based on `location_id`.
+
+            Format: the IANA Timezone Database identifier for the location timezone (for example, `America/Los_Angeles`).'
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/SubscriptionSource'
+          description: The origination details of the subscription.
+          x-release-status: BETA
+        actions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: "The list of scheduled actions on this subscription. It is set only in the response from  \n[RetrieveSubscription](api-endpoint:Subscriptions-RetrieveSubscription) with the query parameter\nof `include=actions` or from \n[SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) with the input parameter \nof `include:[\"actions\"]`."
+          x-release-status: BETA
+        monthly_billing_anchor_date:
+          type: integer
+          description: The day of the month on which the subscription will issue invoices and publish orders.
+          readOnly: true
+          x-release-status: BETA
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
+          description: array of phases for this subscription
+          readOnly: true
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    ChangeBillingAnchorDateResponse:
+      type: object
+      description: 'Defines output parameters in a request to the
+
+        [ChangeBillingAnchorDate](api-endpoint:Subscriptions-ChangeBillingAnchorDate) endpoint.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The specified subscription for updating billing anchor date.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: A list of a single billing anchor date change for the subscription.
+      example:
+        actions:
+        - effective_date: '2023-11-01'
+          id: f0a1dfdc-675b-3a14-a640-99f7ac1cee83
+          monthly_billing_anchor_date: 1
+          type: CHANGE_BILLING_ANCHOR_DATE
+        subscription:
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 9ba40961-995a-4a3d-8c53-048c40cafc13
+          location_id: S8GWD5R9QB376
+          monthly_billing_anchor_date: 20
+          phases:
+          - order_template_id: E6oBY5WfQ2eN4pkYZwq4ka6n7KeZY
+            ordinal: 0
+            plan_phase_uid: C66BKH3ASTDYGJJCEZXQQSS7
+            uid: 98d6f53b-40e1-4714-8827-032fd923be25
+          plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+          price_override_money:
+            amount: 2000
+            currency: USD
+          source:
+            name: My Application
           status: ACTIVE
           timezone: America/Los_Angeles
           version: 3
-    ErrorCategory:
+    SubscriptionEventSubscriptionEventType:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - START_SUBSCRIPTION
+      - PLAN_CHANGE
+      - STOP_SUBSCRIPTION
+      - DEACTIVATE_SUBSCRIPTION
+      - RESUME_SUBSCRIPTION
+      - PAUSE_SUBSCRIPTION
+      - BILLING_ANCHOR_DATE_CHANGED
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
+      - name: START_SUBSCRIPTION
+        description: The subscription was started.
+      - name: PLAN_CHANGE
+        description: The subscription plan was changed.
+      - name: STOP_SUBSCRIPTION
+        description: The subscription was stopped.
+      - name: DEACTIVATE_SUBSCRIPTION
+        description: The subscription was deactivated
+      - name: RESUME_SUBSCRIPTION
+        description: The subscription was resumed.
+      - name: PAUSE_SUBSCRIPTION
+        description: The subscription was paused.
+      - name: BILLING_ANCHOR_DATE_CHANGED
+        description: The billing anchor date was changed.
+      description: Supported types of an event occurred to a subscription.
+      x-release-status: PUBLIC
+    CreateSubscriptionResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
 
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
+        [CreateSubscription](api-endpoint:Subscriptions-CreateSubscription) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: 'The newly created subscription.
 
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
 
-          to Square APIs in a short period of time.
+            For more information, see
+
+            [Subscription object](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#subscription-object).'
+      example:
+        subscription:
+          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+            ordinal: 0
+            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
+            uid: 873451e0-745b-4e87-ab0b-c574933fe616
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2023-06-20'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 1
+    PauseSubscriptionResponse:
+      type: object
+      description: 'Defines output parameters in a response from the
+
+        [PauseSubscription](api-endpoint:Subscriptions-PauseSubscription) endpoint.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The subscription to be paused by the scheduled `PAUSE` action.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: The list of a `PAUSE` action and a possible `RESUME` action created by the request.
+      example:
+        actions:
+        - effective_date: '2023-11-17'
+          id: 99b2439e-63f7-3ad5-95f7-ab2447a80673
+          type: PAUSE
+        subscription:
+          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+            ordinal: 0
+            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
+            uid: 873451e0-745b-4e87-ab0b-c574933fe616
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2023-06-20'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 1
+    ResumeSubscriptionResponse:
+      type: object
+      description: "Defines output parameters in a response from the \n[ResumeSubscription](api-endpoint:Subscriptions-ResumeSubscription) endpoint."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The resumed subscription.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: A list of `RESUME` actions created by the request and scheduled for the subscription.
+          x-release-status: BETA
+      example:
+        actions:
+        - effective_date: '2023-09-01'
+          id: 18ff74f4-3da4-30c5-929f-7d6fca84f115
+          type: RESUME
+        subscription:
+          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
+            ordinal: 0
+            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
+            uid: 873451e0-745b-4e87-ab0b-c574933fe616
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          source:
+            name: My Application
+          start_date: '2023-06-20'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 1
+    SwapPlanRequest:
+      type: object
+      description: 'Defines input parameters in a call to the
+
+        [SwapPlan](api-endpoint:Subscriptions-SwapPlan) endpoint.'
+      x-release-status: BETA
+      properties:
+        new_plan_variation_id:
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the new subscription plan variation.
 
 
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+            This field is required.'
+        phases:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PhaseInput'
+          description: A list of PhaseInputs, to pass phase-specific information used in the swap.
+      example:
+        new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+        phases:
+        - order_template_id: uhhnjH9osVv3shUADwaC0b3hNxQZY
+          ordinal: 0
+    SwapPlanResponse:
+      type: object
+      description: "Defines output parameters in a response of the \n[SwapPlan](api-endpoint:Subscriptions-SwapPlan) endpoint."
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The subscription with the updated subscription plan.
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: A list of a `SWAP_PLAN` action created by the request.
+      example:
+        actions:
+        - effective_date: '2023-11-17'
+          id: f0a1dfdc-675b-3a14-a640-99f7ac1cee83
+          new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+          phases:
+          - order_template_id: uhhnjH9osVv3shUADwaC0b3hNxQZY
+            ordinal: 0
+          type: SWAP_PLAN
+        subscription:
+          created_at: '2023-06-20T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 9ba40961-995a-4a3d-8c53-048c40cafc13
+          location_id: S8GWD5R9QB376
+          phases:
+          - order_template_id: E6oBY5WfQ2eN4pkYZwq4ka6n7KeZY
+            ordinal: 0
+            plan_phase_uid: C66BKH3ASTDYGJJCEZXQQSS7
+            uid: 98d6f53b-40e1-4714-8827-032fd923be25
+          plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
+          price_override_money:
+            amount: 2000
+            currency: USD
+          source:
+            name: My Application
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 3
+    SubscriptionStatus:
+      type: string
+      enum:
+      - PENDING
+      - ACTIVE
+      - CANCELED
+      - DEACTIVATED
+      - PAUSED
+      x-enum-elements:
+      - name: PENDING
+        description: The subscription is pending to start in the future.
+      - name: ACTIVE
+        description: The subscription is active.
+      - name: CANCELED
+        description: The subscription is canceled.
+      - name: DEACTIVATED
+        description: The subscription is deactivated.
+      - name: PAUSED
+        description: The subscription is paused.
+      description: Supported subscription statuses.
+      x-release-status: PUBLIC
+    ResumeSubscriptionRequest:
+      type: object
+      description: 'Defines input parameters in a request to the
 
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
+        [ResumeSubscription](api-endpoint:Subscriptions-ResumeSubscription) endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        resume_effective_date:
+          type:
+          - string
+          - 'null'
+          description: The `YYYY-MM-DD`-formatted date when the subscription reactivated.
+          x-release-status: BETA
+        resume_change_timing:
+          $ref: '#/components/schemas/ChangeTiming'
+          description: 'The timing to resume a subscription, relative to the specified
 
-          the details of the payment method were invalid (such as a card''s CVV
+            `resume_effective_date` attribute value.
 
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
+            See [ChangeTiming](#type-changetiming) for possible values'
+          x-release-status: BETA
+    SubscriptionAction:
+      type: object
+      description: Represents an action as a pending change to a subscription.
+      x-release-status: BETA
+      properties:
+        id:
+          type: string
+          description: The ID of an action scoped to a subscription.
+        type:
+          $ref: '#/components/schemas/SubscriptionActionType'
+          description: 'The type of the action.
 
-        request to the Connect API.'
+            See [SubscriptionActionType](#type-subscriptionactiontype) for possible values'
+        effective_date:
+          type:
+          - string
+          - 'null'
+          description: The `YYYY-MM-DD`-formatted date when the action occurs on the subscription.
+        monthly_billing_anchor_date:
+          type:
+          - integer
+          - 'null'
+          description: The new billing anchor day value, for a `CHANGE_BILLING_ANCHOR_DATE` action.
+        phases:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Phase'
+          description: A list of Phases, to pass phase-specific information used in the swap.
+        new_plan_variation_id:
+          type:
+          - string
+          - 'null'
+          description: The target subscription plan variation that a subscription switches to, for a `SWAP_PLAN` action.
+    DeleteSubscriptionActionResponse:
+      type: object
+      description: 'Defines output parameters in a response of the [DeleteSubscriptionAction](api-endpoint:Subscriptions-DeleteSubscriptionAction)
+
+        endpoint.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The subscription that has the specified action deleted.
+      example:
+        subscription:
+          card_id: ccof:IkWfpLj4tNHMyFii3GB
+          charged_through_date: '2023-11-20'
+          created_at: '2022-07-27T21:53:10Z'
+          customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          id: 8151fc89-da15-4eb9-a685-1a70883cebfc
+          invoice_ids:
+          - inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          - inv:0-ChrcX_i3sNmfsHTGKhI4Wg2mceA
+          location_id: S8GWD5R9QB376
+          paid_until_date: '2024-08-01'
+          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
+          price_override_money:
+            amount: 25000
+            currency: USD
+          source:
+            name: My Application
+          start_date: '2022-07-27'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+    ChangeBillingAnchorDateRequest:
+      type: object
+      description: 'Defines input parameters in a request to the
+
+        [ChangeBillingAnchorDate](api-endpoint:Subscriptions-ChangeBillingAnchorDate) endpoint.'
+      x-release-status: BETA
+      properties:
+        monthly_billing_anchor_date:
+          type:
+          - integer
+          - 'null'
+          description: The anchor day for the billing cycle.
+          minimum: 1
+          maximum: 31
+        effective_date:
+          type:
+          - string
+          - 'null'
+          description: 'The `YYYY-MM-DD`-formatted date when the scheduled `BILLING_ANCHOR_CHANGE` action takes
+
+            place on the subscription.
+
+
+            When this date is unspecified or falls within the current billing cycle, the billing anchor date
+
+            is changed immediately.'
+      example:
+        monthly_billing_anchor_date: 1
+    PhaseInput:
+      type: object
+      description: Represents the arguments used to construct a new phase.
+      x-release-status: PUBLIC
+      required:
+      - ordinal
+      properties:
+        ordinal:
+          type: integer
+          description: index of phase in total subscription plan
+          format: int64
+        order_template_id:
+          type:
+          - string
+          - 'null'
+          description: id of order to be used in billing
+    SubscriptionEventInfoCode:
+      type: string
+      enum:
+      - LOCATION_NOT_ACTIVE
+      - LOCATION_CANNOT_ACCEPT_PAYMENT
+      - CUSTOMER_DELETED
+      - CUSTOMER_NO_EMAIL
+      - CUSTOMER_NO_NAME
+      - USER_PROVIDED
+      x-enum-elements:
+      - name: LOCATION_NOT_ACTIVE
+        description: The location is not active.
+      - name: LOCATION_CANNOT_ACCEPT_PAYMENT
+        description: The location cannot accept payments.
+      - name: CUSTOMER_DELETED
+        description: The subscribing customer profile has been deleted.
+      - name: CUSTOMER_NO_EMAIL
+        description: The subscribing customer does not have an email.
+      - name: CUSTOMER_NO_NAME
+        description: The subscribing customer does not have a name.
+      - name: USER_PROVIDED
+        description: User-provided detail.
+      description: Supported info codes of a subscription event.
       x-release-status: PUBLIC
     ErrorCode:
       type: string
@@ -1468,563 +2932,32 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    Currency:
-      type: string
-      enum:
-      - UNKNOWN_CURRENCY
-      - AED
-      - AFN
-      - ALL
-      - AMD
-      - ANG
-      - AOA
-      - ARS
-      - AUD
-      - AWG
-      - AZN
-      - BAM
-      - BBD
-      - BDT
-      - BGN
-      - BHD
-      - BIF
-      - BMD
-      - BND
-      - BOB
-      - BOV
-      - BRL
-      - BSD
-      - BTN
-      - BWP
-      - BYR
-      - BZD
-      - CAD
-      - CDF
-      - CHE
-      - CHF
-      - CHW
-      - CLF
-      - CLP
-      - CNY
-      - COP
-      - COU
-      - CRC
-      - CUC
-      - CUP
-      - CVE
-      - CZK
-      - DJF
-      - DKK
-      - DOP
-      - DZD
-      - EGP
-      - ERN
-      - ETB
-      - EUR
-      - FJD
-      - FKP
-      - GBP
-      - GEL
-      - GHS
-      - GIP
-      - GMD
-      - GNF
-      - GTQ
-      - GYD
-      - HKD
-      - HNL
-      - HRK
-      - HTG
-      - HUF
-      - IDR
-      - ILS
-      - INR
-      - IQD
-      - IRR
-      - ISK
-      - JMD
-      - JOD
-      - JPY
-      - KES
-      - KGS
-      - KHR
-      - KMF
-      - KPW
-      - KRW
-      - KWD
-      - KYD
-      - KZT
-      - LAK
-      - LBP
-      - LKR
-      - LRD
-      - LSL
-      - LTL
-      - LVL
-      - LYD
-      - MAD
-      - MDL
-      - MGA
-      - MKD
-      - MMK
-      - MNT
-      - MOP
-      - MRO
-      - MUR
-      - MVR
-      - MWK
-      - MXN
-      - MXV
-      - MYR
-      - MZN
-      - NAD
-      - NGN
-      - NIO
-      - NOK
-      - NPR
-      - NZD
-      - OMR
-      - PAB
-      - PEN
-      - PGK
-      - PHP
-      - PKR
-      - PLN
-      - PYG
-      - QAR
-      - RON
-      - RSD
-      - RUB
-      - RWF
-      - SAR
-      - SBD
-      - SCR
-      - SDG
-      - SEK
-      - SGD
-      - SHP
-      - SLL
-      - SLE
-      - SOS
-      - SRD
-      - SSP
-      - STD
-      - SVC
-      - SYP
-      - SZL
-      - THB
-      - TJS
-      - TMT
-      - TND
-      - TOP
-      - TRY
-      - TTD
-      - TWD
-      - TZS
-      - UAH
-      - UGX
-      - USD
-      - USN
-      - USS
-      - UYI
-      - UYU
-      - UZS
-      - VEF
-      - VND
-      - VUV
-      - WST
-      - XAF
-      - XAG
-      - XAU
-      - XBA
-      - XBB
-      - XBC
-      - XBD
-      - XCD
-      - XDR
-      - XOF
-      - XPD
-      - XPF
-      - XPT
-      - XTS
-      - XXX
-      - YER
-      - ZAR
-      - ZMK
-      - ZMW
-      - BTC
-      - XUS
-      x-enum-elements:
-      - name: UNKNOWN_CURRENCY
-        description: Unknown currency
-      - name: AED
-        description: United Arab Emirates dirham
-      - name: AFN
-        description: Afghan afghani
-      - name: ALL
-        description: Albanian lek
-      - name: AMD
-        description: Armenian dram
-      - name: ANG
-        description: Netherlands Antillean guilder
-      - name: AOA
-        description: Angolan kwanza
-      - name: ARS
-        description: Argentine peso
-      - name: AUD
-        description: Australian dollar
-      - name: AWG
-        description: Aruban florin
-      - name: AZN
-        description: Azerbaijani manat
-      - name: BAM
-        description: Bosnia and Herzegovina convertible mark
-      - name: BBD
-        description: Barbados dollar
-      - name: BDT
-        description: Bangladeshi taka
-      - name: BGN
-        description: Bulgarian lev
-      - name: BHD
-        description: Bahraini dinar
-      - name: BIF
-        description: Burundian franc
-      - name: BMD
-        description: Bermudian dollar
-      - name: BND
-        description: Brunei dollar
-      - name: BOB
-        description: Boliviano
-      - name: BOV
-        description: Bolivian Mvdol
-      - name: BRL
-        description: Brazilian real
-      - name: BSD
-        description: Bahamian dollar
-      - name: BTN
-        description: Bhutanese ngultrum
-      - name: BWP
-        description: Botswana pula
-      - name: BYR
-        description: Belarusian ruble
-      - name: BZD
-        description: Belize dollar
-      - name: CAD
-        description: Canadian dollar
-      - name: CDF
-        description: Congolese franc
-      - name: CHE
-        description: WIR Euro
-      - name: CHF
-        description: Swiss franc
-      - name: CHW
-        description: WIR Franc
-      - name: CLF
-        description: Unidad de Fomento
-      - name: CLP
-        description: Chilean peso
-      - name: CNY
-        description: Chinese yuan
-      - name: COP
-        description: Colombian peso
-      - name: COU
-        description: Unidad de Valor Real
-      - name: CRC
-        description: Costa Rican colon
-      - name: CUC
-        description: Cuban convertible peso
-      - name: CUP
-        description: Cuban peso
-      - name: CVE
-        description: Cape Verdean escudo
-      - name: CZK
-        description: Czech koruna
-      - name: DJF
-        description: Djiboutian franc
-      - name: DKK
-        description: Danish krone
-      - name: DOP
-        description: Dominican peso
-      - name: DZD
-        description: Algerian dinar
-      - name: EGP
-        description: Egyptian pound
-      - name: ERN
-        description: Eritrean nakfa
-      - name: ETB
-        description: Ethiopian birr
-      - name: EUR
-        description: Euro
-      - name: FJD
-        description: Fiji dollar
-      - name: FKP
-        description: Falkland Islands pound
-      - name: GBP
-        description: Pound sterling
-      - name: GEL
-        description: Georgian lari
-      - name: GHS
-        description: Ghanaian cedi
-      - name: GIP
-        description: Gibraltar pound
-      - name: GMD
-        description: Gambian dalasi
-      - name: GNF
-        description: Guinean franc
-      - name: GTQ
-        description: Guatemalan quetzal
-      - name: GYD
-        description: Guyanese dollar
-      - name: HKD
-        description: Hong Kong dollar
-      - name: HNL
-        description: Honduran lempira
-      - name: HRK
-        description: Croatian kuna
-      - name: HTG
-        description: Haitian gourde
-      - name: HUF
-        description: Hungarian forint
-      - name: IDR
-        description: Indonesian rupiah
-      - name: ILS
-        description: Israeli new shekel
-      - name: INR
-        description: Indian rupee
-      - name: IQD
-        description: Iraqi dinar
-      - name: IRR
-        description: Iranian rial
-      - name: ISK
-        description: Icelandic króna
-      - name: JMD
-        description: Jamaican dollar
-      - name: JOD
-        description: Jordanian dinar
-      - name: JPY
-        description: Japanese yen
-      - name: KES
-        description: Kenyan shilling
-      - name: KGS
-        description: Kyrgyzstani som
-      - name: KHR
-        description: Cambodian riel
-      - name: KMF
-        description: Comoro franc
-      - name: KPW
-        description: North Korean won
-      - name: KRW
-        description: South Korean won
-      - name: KWD
-        description: Kuwaiti dinar
-      - name: KYD
-        description: Cayman Islands dollar
-      - name: KZT
-        description: Kazakhstani tenge
-      - name: LAK
-        description: Lao kip
-      - name: LBP
-        description: Lebanese pound
-      - name: LKR
-        description: Sri Lankan rupee
-      - name: LRD
-        description: Liberian dollar
-      - name: LSL
-        description: Lesotho loti
-      - name: LTL
-        description: Lithuanian litas
-      - name: LVL
-        description: Latvian lats
-      - name: LYD
-        description: Libyan dinar
-      - name: MAD
-        description: Moroccan dirham
-      - name: MDL
-        description: Moldovan leu
-      - name: MGA
-        description: Malagasy ariary
-      - name: MKD
-        description: Macedonian denar
-      - name: MMK
-        description: Myanmar kyat
-      - name: MNT
-        description: Mongolian tögrög
-      - name: MOP
-        description: Macanese pataca
-      - name: MRO
-        description: Mauritanian ouguiya
-      - name: MUR
-        description: Mauritian rupee
-      - name: MVR
-        description: Maldivian rufiyaa
-      - name: MWK
-        description: Malawian kwacha
-      - name: MXN
-        description: Mexican peso
-      - name: MXV
-        description: Mexican Unidad de Inversion
-      - name: MYR
-        description: Malaysian ringgit
-      - name: MZN
-        description: Mozambican metical
-      - name: NAD
-        description: Namibian dollar
-      - name: NGN
-        description: Nigerian naira
-      - name: NIO
-        description: Nicaraguan córdoba
-      - name: NOK
-        description: Norwegian krone
-      - name: NPR
-        description: Nepalese rupee
-      - name: NZD
-        description: New Zealand dollar
-      - name: OMR
-        description: Omani rial
-      - name: PAB
-        description: Panamanian balboa
-      - name: PEN
-        description: Peruvian sol
-      - name: PGK
-        description: Papua New Guinean kina
-      - name: PHP
-        description: Philippine peso
-      - name: PKR
-        description: Pakistani rupee
-      - name: PLN
-        description: Polish zBoty
-      - name: PYG
-        description: Paraguayan guaraní
-      - name: QAR
-        description: Qatari riyal
-      - name: RON
-        description: Romanian leu
-      - name: RSD
-        description: Serbian dinar
-      - name: RUB
-        description: Russian ruble
-      - name: RWF
-        description: Rwandan franc
-      - name: SAR
-        description: Saudi riyal
-      - name: SBD
-        description: Solomon Islands dollar
-      - name: SCR
-        description: Seychelles rupee
-      - name: SDG
-        description: Sudanese pound
-      - name: SEK
-        description: Swedish krona
-      - name: SGD
-        description: Singapore dollar
-      - name: SHP
-        description: Saint Helena pound
-      - name: SLL
-        description: Sierra Leonean first leone
-      - name: SLE
-        description: Sierra Leonean second leone
-      - name: SOS
-        description: Somali shilling
-      - name: SRD
-        description: Surinamese dollar
-      - name: SSP
-        description: South Sudanese pound
-      - name: STD
-        description: São Tomé and Príncipe dobra
-      - name: SVC
-        description: Salvadoran colón
-      - name: SYP
-        description: Syrian pound
-      - name: SZL
-        description: Swazi lilangeni
-      - name: THB
-        description: Thai baht
-      - name: TJS
-        description: Tajikstani somoni
-      - name: TMT
-        description: Turkmenistan manat
-      - name: TND
-        description: Tunisian dinar
-      - name: TOP
-        description: Tongan pa'anga
-      - name: TRY
-        description: Turkish lira
-      - name: TTD
-        description: Trinidad and Tobago dollar
-      - name: TWD
-        description: New Taiwan dollar
-      - name: TZS
-        description: Tanzanian shilling
-      - name: UAH
-        description: Ukrainian hryvnia
-      - name: UGX
-        description: Ugandan shilling
-      - name: USD
-        description: United States dollar
-      - name: USN
-        description: United States dollar (next day)
-      - name: USS
-        description: United States dollar (same day)
-      - name: UYI
-        description: Uruguay Peso en Unidedades Indexadas
-      - name: UYU
-        description: Uruguyan peso
-      - name: UZS
-        description: Uzbekistan som
-      - name: VEF
-        description: Venezuelan bolívar soberano
-      - name: VND
-        description: Vietnamese ’Óng
-      - name: VUV
-        description: Vanuatu vatu
-      - name: WST
-        description: Samoan tala
-      - name: XAF
-        description: CFA franc BEAC
-      - name: XAG
-        description: Silver
-      - name: XAU
-        description: Gold
-      - name: XBA
-        description: European Composite Unit
-      - name: XBB
-        description: European Monetary Unit
-      - name: XBC
-        description: European Unit of Account 9
-      - name: XBD
-        description: European Unit of Account 17
-      - name: XCD
-        description: East Caribbean dollar
-      - name: XDR
-        description: Special drawing rights (International Monetary Fund)
-      - name: XOF
-        description: CFA franc BCEAO
-      - name: XPD
-        description: Palladium
-      - name: XPF
-        description: CFP franc
-      - name: XPT
-        description: Platinum
-      - name: XTS
-        description: Code reserved for testing
-      - name: XXX
-        description: No currency
-      - name: YER
-        description: Yemeni rial
-      - name: ZAR
-        description: South African rand
-      - name: ZMK
-        description: Zambian kwacha
-      - name: ZMW
-        description: Zambian kwacha
-      - name: BTC
-        description: Bitcoin
-      - name: XUS
-        description: USD Coin
-      description: 'Indicates the associated currency for an amount of money. Values correspond
-
-        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+    Phase:
+      type: object
+      description: Represents a phase, which can override subscription phases as defined by plan_id
       x-release-status: PUBLIC
+      properties:
+        uid:
+          type:
+          - string
+          - 'null'
+          description: id of subscription phase
+        ordinal:
+          type:
+          - integer
+          - 'null'
+          description: index of phase in total subscription plan
+          format: int64
+        order_template_id:
+          type:
+          - string
+          - 'null'
+          description: id of order to be used in billing
+        plan_phase_uid:
+          type:
+          - string
+          - 'null'
+          description: the uid from the plan's phase in catalog
     SearchSubscriptionsQuery:
       type: object
       description: Represents a query, consisting of specified query expressions, used to search for subscriptions.
@@ -2033,12 +2966,9 @@ components:
         filter:
           $ref: '#/components/schemas/SearchSubscriptionsFilter'
           description: A list of query expressions.
-          nullable: true
-    ListSubscriptionEventsResponse:
+    CancelSubscriptionResponse:
       type: object
-      description: 'Defines output parameters in a response from the
-
-        [ListSubscriptionEvents](api-endpoint:Subscriptions-ListSubscriptionEvents).'
+      description: "Defines output parameters in a response from the \n[CancelSubscription](api-endpoint:Subscriptions-CancelSubscription) endpoint."
       x-release-status: PUBLIC
       properties:
         errors:
@@ -2046,96 +2976,67 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Errors encountered during the request.
-        subscription_events:
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The specified subscription scheduled for cancellation according to the action created by the request.
+        actions:
           type: array
           items:
-            $ref: '#/components/schemas/SubscriptionEvent'
-          description: The retrieved subscription events.
-        cursor:
-          type: string
-          description: "When the total number of resulting subscription events exceeds the limit of a paged response, \nthe response includes a cursor for you to use in a subsequent request to fetch the next set of events.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+            $ref: '#/components/schemas/SubscriptionAction'
+          description: A list of a single `CANCEL` action scheduled for the subscription.
+          x-release-status: BETA
       example:
-        subscription_events:
-        - effective_date: '2020-04-24'
-          id: 06809161-3867-4598-8269-8aea5be4f9de
+        subscription:
+          canceled_date: '2023-06-05'
+          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
+          created_at: '2022-01-19T21:53:10Z'
+          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
+          id: 910afd30-464a-4e00-a8d8-2296e
+          invoice_ids:
+          - inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          - inv:0-ChrcX_i3sNmfsHTGKhI4Wg2mceA
+          location_id: S8GWD5R9QB376
+          paid_until_date: '2023-12-31'
           plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          subscription_event_type: START_SUBSCRIPTION
-        - effective_date: '2020-05-01'
-          id: f2736603-cd2e-47ec-8675-f815fff54f88
-          info:
-            code: CUSTOMER_NO_NAME
-            detail: The customer with ID `V74BMG0GPS2KNCWJE1BTYJ37Y0` does not have a name on record.
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          subscription_event_type: DEACTIVATE_SUBSCRIPTION
-        - effective_date: '2022-05-01'
-          id: b426fc85-6859-450b-b0d0-fe3a5d1b565f
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          subscription_event_type: RESUME_SUBSCRIPTION
-        - effective_date: '2022-09-01'
-          id: 09f14de1-2f53-4dae-9091-49aa53f83d01
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          subscription_event_type: PAUSE_SUBSCRIPTION
-        - effective_date: '2022-12-01'
-          id: f28a73ac-1a1b-4b0f-8eeb-709a72945776
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          subscription_event_type: RESUME_SUBSCRIPTION
-        - effective_date: '2023-04-01'
-          id: 1eee8790-472d-4efe-8c69-8ad84e9cefe0
-          plan_variation_id: 02CD53CFA4d1498AFAD42
-          subscription_event_type: PLAN_CHANGE
-        - effective_date: '2023-06-21'
-          id: a0c08083-5db0-4800-85c7-d398de4fbb6e
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          subscription_event_type: STOP_SUBSCRIPTION
-    ChangeTiming:
-      type: string
-      enum:
-      - IMMEDIATE
-      - END_OF_BILLING_CYCLE
-      x-enum-elements:
-      - name: IMMEDIATE
-        description: The action occurs immediately.
-      - name: END_OF_BILLING_CYCLE
-        description: The action occurs at the end of the billing cycle.
-      description: Supported timings when a pending change, as an action, takes place to a subscription.
-      x-release-status: BETA
-    Money:
+          source:
+            name: My Application
+          start_date: '2022-01-19'
+          status: ACTIVE
+          timezone: America/Los_Angeles
+          version: 3
+    UpdateSubscriptionResponse:
       type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+      description: 'Defines output parameters in a response from the
 
-        Fields that do not explicitly define whether they are signed or unsigned are
-
-        considered unsigned and can only hold positive amounts. For signed fields, the
-
-        sign of the value indicates the purpose of the money transfer. See
-
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
-
-        for more information.'
+        [UpdateSubscription](api-endpoint:Subscriptions-UpdateSubscription) endpoint.'
       x-release-status: PUBLIC
       properties:
-        amount:
-          type: integer
-          description: 'The amount of money, in the smallest denomination of the currency
-
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
-
-            in cents. Monetary amounts can be positive or negative. See the specific
-
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-          nullable: true
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
-
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
-          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+          description: The updated subscription.
+      example:
+        subscription:
+          card_id: '{NEW CARD ID}'
+          charged_through_date: '2023-03-13'
+          created_at: '2023-01-30T19:27:32Z'
+          customer_id: AM69AB81FT4479YH9HGWS1HZY8
+          id: 7217d8ca-1fee-4446-a9e5-8540b5d8c9bb
+          invoice_ids:
+          - inv:0-ChAPSfVYvNewckgf3x4iigN_ENMM
+          - inv:0-ChBQaCCLfjcm9WEUBGxvuydJENMM
+          location_id: LPJKHYR7WFDKN
+          plan_variation_id: XOUNEKCE6NSXQW5NTSQ73MMX
+          source:
+            name: My Application
+          start_date: '2023-01-30'
+          status: ACTIVE
+          timezone: UTC
+          version: 3
     CreateSubscriptionRequest:
       type: object
       description: "Defines input parameters in a request to the \n[CreateSubscription](api-endpoint:Subscriptions-CreateSubscription) endpoint."
@@ -2226,288 +3127,6 @@ components:
           name: My Application
         start_date: '2023-06-20'
         timezone: America/Los_Angeles
-    SearchSubscriptionsRequest:
-      type: object
-      description: "Defines input parameters in a request to the \n[SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint."
-      x-release-status: PUBLIC
-      properties:
-        cursor:
-          type: string
-          description: "When the total number of resulting subscriptions exceeds the limit of a paged response, \nspecify the cursor returned from a preceding response here to fetch the next set of results.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
-        limit:
-          type: integer
-          description: 'The upper limit on the number of subscriptions to return
-
-            in a paged response.'
-          minimum: 1
-        query:
-          $ref: '#/components/schemas/SearchSubscriptionsQuery'
-          description: 'A subscription query consisting of specified filtering conditions.
-
-
-            If this `query` field is unspecified, the `SearchSubscriptions` call will return all subscriptions.'
-        include:
-          type: array
-          items:
-            type: string
-          description: "An option to include related information in the response. \n\nThe supported values are: \n\n- `actions`: to include scheduled actions on the targeted subscriptions."
-          x-release-status: BETA
-      example:
-        query:
-          filter:
-            customer_ids:
-            - CHFGVKYY8RSV93M5KCYTG4PN0G
-            location_ids:
-            - S8GWD5R9QB376
-            source_names:
-            - My App
-    SubscriptionEventSubscriptionEventType:
-      type: string
-      enum:
-      - START_SUBSCRIPTION
-      - PLAN_CHANGE
-      - STOP_SUBSCRIPTION
-      - DEACTIVATE_SUBSCRIPTION
-      - RESUME_SUBSCRIPTION
-      - PAUSE_SUBSCRIPTION
-      - BILLING_ANCHOR_DATE_CHANGED
-      x-enum-elements:
-      - name: START_SUBSCRIPTION
-        description: The subscription was started.
-      - name: PLAN_CHANGE
-        description: The subscription plan was changed.
-      - name: STOP_SUBSCRIPTION
-        description: The subscription was stopped.
-      - name: DEACTIVATE_SUBSCRIPTION
-        description: The subscription was deactivated
-      - name: RESUME_SUBSCRIPTION
-        description: The subscription was resumed.
-      - name: PAUSE_SUBSCRIPTION
-        description: The subscription was paused.
-      - name: BILLING_ANCHOR_DATE_CHANGED
-        description: The billing anchor date was changed.
-      description: Supported types of an event occurred to a subscription.
-      x-release-status: PUBLIC
-    SubscriptionAction:
-      type: object
-      description: Represents an action as a pending change to a subscription.
-      x-release-status: BETA
-      properties:
-        id:
-          type: string
-          description: The ID of an action scoped to a subscription.
-        type:
-          $ref: '#/components/schemas/SubscriptionActionType'
-          description: 'The type of the action.
-
-            See [SubscriptionActionType](#type-subscriptionactiontype) for possible values'
-          nullable: true
-        effective_date:
-          type: string
-          description: The `YYYY-MM-DD`-formatted date when the action occurs on the subscription.
-          nullable: true
-        monthly_billing_anchor_date:
-          type: integer
-          description: The new billing anchor day value, for a `CHANGE_BILLING_ANCHOR_DATE` action.
-          nullable: true
-        phases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Phase'
-          description: A list of Phases, to pass phase-specific information used in the swap.
-          nullable: true
-        new_plan_variation_id:
-          type: string
-          description: The target subscription plan variation that a subscription switches to, for a `SWAP_PLAN` action.
-          nullable: true
-    ChangeBillingAnchorDateRequest:
-      type: object
-      description: 'Defines input parameters in a request to the
-
-        [ChangeBillingAnchorDate](api-endpoint:Subscriptions-ChangeBillingAnchorDate) endpoint.'
-      x-release-status: BETA
-      properties:
-        monthly_billing_anchor_date:
-          type: integer
-          description: The anchor day for the billing cycle.
-          minimum: 1
-          maximum: 31
-          nullable: true
-        effective_date:
-          type: string
-          description: 'The `YYYY-MM-DD`-formatted date when the scheduled `BILLING_ANCHOR_CHANGE` action takes
-
-            place on the subscription.
-
-
-            When this date is unspecified or falls within the current billing cycle, the billing anchor date
-
-            is changed immediately.'
-          nullable: true
-      example:
-        monthly_billing_anchor_date: 1
-    SubscriptionStatus:
-      type: string
-      enum:
-      - PENDING
-      - ACTIVE
-      - CANCELED
-      - DEACTIVATED
-      - PAUSED
-      x-enum-elements:
-      - name: PENDING
-        description: The subscription is pending to start in the future.
-      - name: ACTIVE
-        description: The subscription is active.
-      - name: CANCELED
-        description: The subscription is canceled.
-      - name: DEACTIVATED
-        description: The subscription is deactivated.
-      - name: PAUSED
-        description: The subscription is paused.
-      description: Supported subscription statuses.
-      x-release-status: PUBLIC
-    RetrieveSubscriptionResponse:
-      type: object
-      description: 'Defines output parameters in a response from the
-
-        [RetrieveSubscription](api-endpoint:Subscriptions-RetrieveSubscription) endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-          description: The subscription retrieved.
-      example:
-        subscription:
-          card_id: ccof:IkWfpLj4tNHMyFii3GB
-          charged_through_date: '2023-11-20'
-          created_at: '2022-07-27T21:53:10Z'
-          customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-          id: 8151fc89-da15-4eb9-a685-1a70883cebfc
-          invoice_ids:
-          - inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
-          - inv:0-ChrcX_i3sNmfsHTGKhI4Wg2mceA
-          location_id: S8GWD5R9QB376
-          paid_until_date: '2024-08-01'
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          price_override_money:
-            amount: 25000
-            currency: USD
-          source:
-            name: My Application
-          start_date: '2022-07-27'
-          status: ACTIVE
-          timezone: America/Los_Angeles
-    PauseSubscriptionRequest:
-      type: object
-      description: 'Defines input parameters in a request to the
-
-        [PauseSubscription](api-endpoint:Subscriptions-PauseSubscription) endpoint.'
-      x-release-status: BETA
-      properties:
-        pause_effective_date:
-          type: string
-          description: 'The `YYYY-MM-DD`-formatted date when the scheduled `PAUSE` action takes place on the subscription.
-
-
-            When this date is unspecified or falls within the current billing cycle, the subscription is paused
-
-            on the starting date of the next billing cycle.'
-          nullable: true
-        pause_cycle_duration:
-          type: integer
-          description: "The number of billing cycles the subscription will be paused before it is reactivated. \n\nWhen this is set, a `RESUME` action is also scheduled to take place on the subscription at \nthe end of the specified pause cycle duration. In this case, neither `resume_effective_date` \nnor `resume_change_timing` may be specified."
-          format: int64
-          nullable: true
-        resume_effective_date:
-          type: string
-          description: "The date when the subscription is reactivated by a scheduled `RESUME` action. \nThis date must be at least one billing cycle ahead of `pause_effective_date`."
-          nullable: true
-        resume_change_timing:
-          $ref: '#/components/schemas/ChangeTiming'
-          description: "The timing whether the subscription is reactivated immediately or at the end of the billing cycle, relative to \n`resume_effective_date`.\nSee [ChangeTiming](#type-changetiming) for possible values"
-          nullable: true
-        pause_reason:
-          type: string
-          description: The user-provided reason to pause the subscription.
-          maxLength: 255
-          nullable: true
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    ResumeSubscriptionResponse:
-      type: object
-      description: "Defines output parameters in a response from the \n[ResumeSubscription](api-endpoint:Subscriptions-ResumeSubscription) endpoint."
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-          description: The resumed subscription.
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionAction'
-          description: A list of `RESUME` actions created by the request and scheduled for the subscription.
-          x-release-status: BETA
-      example:
-        actions:
-        - effective_date: '2023-09-01'
-          id: 18ff74f4-3da4-30c5-929f-7d6fca84f115
-          type: RESUME
-        subscription:
-          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
-          created_at: '2023-06-20T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
-          location_id: S8GWD5R9QB376
-          phases:
-          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
-            ordinal: 0
-            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
-            uid: 873451e0-745b-4e87-ab0b-c574933fe616
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          source:
-            name: My Application
-          start_date: '2023-06-20'
-          status: ACTIVE
-          timezone: America/Los_Angeles
-          version: 1
     UpdateSubscriptionRequest:
       type: object
       description: "Defines input parameters in a request to the \n[UpdateSubscription](api-endpoint:Subscriptions-UpdateSubscription) endpoint."
@@ -2520,730 +3139,136 @@ components:
             Unset fields will be left at their current server values, and JSON `null` values will
 
             be treated as a request to clear the relevant data.'
-          nullable: true
       example:
         subscription:
           canceled_date: null
           card_id: '{NEW CARD ID}'
-    DeleteSubscriptionActionResponse:
+    Money:
       type: object
-      description: 'Defines output parameters in a response of the [DeleteSubscriptionAction](api-endpoint:Subscriptions-DeleteSubscriptionAction)
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
 
-        endpoint.'
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-          description: The subscription that has the specified action deleted.
-      example:
-        subscription:
-          card_id: ccof:IkWfpLj4tNHMyFii3GB
-          charged_through_date: '2023-11-20'
-          created_at: '2022-07-27T21:53:10Z'
-          customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-          id: 8151fc89-da15-4eb9-a685-1a70883cebfc
-          invoice_ids:
-          - inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
-          - inv:0-ChrcX_i3sNmfsHTGKhI4Wg2mceA
-          location_id: S8GWD5R9QB376
-          paid_until_date: '2024-08-01'
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          price_override_money:
-            amount: 25000
-            currency: USD
-          source:
-            name: My Application
-          start_date: '2022-07-27'
-          status: ACTIVE
-          timezone: America/Los_Angeles
-    SubscriptionEvent:
-      type: object
-      description: Describes changes to a subscription and the subscription status.
-      x-release-status: PUBLIC
-      required:
-      - id
-      - subscription_event_type
-      - effective_date
-      - plan_variation_id
-      properties:
-        id:
-          type: string
-          description: The ID of the subscription event.
-        subscription_event_type:
-          $ref: '#/components/schemas/SubscriptionEventSubscriptionEventType'
-          description: 'Type of the subscription event.
+        Fields that do not explicitly define whether they are signed or unsigned are
 
-            See [SubscriptionEventSubscriptionEventType](#type-subscriptioneventsubscriptioneventtype) for possible values'
-        effective_date:
-          type: string
-          description: The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) when the subscription event occurred.
-        monthly_billing_anchor_date:
-          type: integer
-          description: The day-of-the-month the billing anchor date was changed to, if applicable.
-          readOnly: true
-          x-release-status: BETA
-        info:
-          $ref: '#/components/schemas/SubscriptionEventInfo'
-          description: Additional information about the subscription event.
-          nullable: true
-        phases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Phase'
-          description: A list of Phases, to pass phase-specific information used in the swap.
-          nullable: true
-        plan_variation_id:
-          type: string
-          description: The ID of the subscription plan variation associated with the subscription.
-    Subscription:
-      type: object
-      description: 'Represents a subscription purchased by a customer.
+        considered unsigned and can only hold positive amounts. For signed fields, the
 
+        sign of the value indicates the purpose of the money transfer. See
 
-        For more information, see
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
 
-        [Manage Subscriptions](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions).'
+        for more information.'
       x-release-status: PUBLIC
       properties:
-        id:
-          type: string
-          description: The Square-assigned ID of the subscription.
-          maxLength: 255
-          readOnly: true
-        location_id:
-          type: string
-          description: The ID of the location associated with the subscription.
-          readOnly: true
-        plan_variation_id:
-          type: string
-          description: The ID of the subscribed-to [subscription plan variation](entity:CatalogSubscriptionPlanVariation).
-          readOnly: true
-        customer_id:
-          type: string
-          description: The ID of the subscribing [customer](entity:Customer) profile.
-          readOnly: true
-        start_date:
-          type: string
-          description: The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) to start the subscription.
-          readOnly: true
-        canceled_date:
-          type: string
-          description: "The `YYYY-MM-DD`-formatted date (for example, 2013-01-15) to cancel the subscription, \nwhen the subscription status changes to `CANCELED` and the subscription billing stops.\n\nIf this field is not set, the subscription ends according its subscription plan.\n\nThis field cannot be updated, other than being cleared."
-          nullable: true
-        charged_through_date:
-          type: string
-          description: 'The `YYYY-MM-DD`-formatted date up to when the subscriber is invoiced for the
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
 
-            subscription.
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
 
+            in cents. Monetary amounts can be positive or negative. See the specific
 
-            After the invoice is sent for a given billing period,
-
-            this date will be the last day of the billing period.
-
-            For example,
-
-            suppose for the month of May a subscriber gets an invoice
-
-            (or charged the card) on May 1. For the monthly billing scenario,
-
-            this date is then set to May 31.'
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/SubscriptionStatus'
-          description: 'The current status of the subscription.
-
-            See [SubscriptionStatus](#type-subscriptionstatus) for possible values'
-          readOnly: true
-        tax_percentage:
-          type: string
-          description: 'The tax amount applied when billing the subscription. The
-
-            percentage is expressed in decimal form, using a `''.''` as the decimal
-
-            separator and without a `''%''` sign. For example, a value of `7.5`
-
-            corresponds to 7.5%.'
-          nullable: true
-        invoice_ids:
-          type: array
-          items:
-            type: string
-          description: 'The IDs of the [invoices](entity:Invoice) created for the
-
-            subscription, listed in order when the invoices were created
-
-            (newest invoices appear first).'
-          readOnly: true
-        price_override_money:
-          $ref: '#/components/schemas/Money'
-          description: "A custom price which overrides the cost of a subscription plan variation with `STATIC` pricing.\nThis field does not affect itemized subscriptions with `RELATIVE` pricing. Instead, \nyou should edit the Subscription's [order template](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#phases-and-order-templates)."
-          nullable: true
-        version:
-          type: integer
-          description: 'The version of the object. When updating an object, the version
-
-            supplied must match the version in the database, otherwise the write will
-
-            be rejected as conflicting.'
+            field description to determine the meaning of the sign in a particular case.'
           format: int64
-        created_at:
-          type: string
-          description: The timestamp when the subscription was created, in RFC 3339 format.
-          readOnly: true
-        card_id:
-          type: string
-          description: 'The ID of the [subscriber''s](entity:Customer) [card](entity:Card)
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
 
-            used to charge for the subscription.'
-          nullable: true
-        timezone:
-          type: string
-          description: 'Timezone that will be used in date calculations for the subscription.
-
-            Defaults to the timezone of the location based on `location_id`.
-
-            Format: the IANA Timezone Database identifier for the location timezone (for example, `America/Los_Angeles`).'
-          readOnly: true
-        source:
-          $ref: '#/components/schemas/SubscriptionSource'
-          description: The origination details of the subscription.
-          x-release-status: BETA
-          nullable: true
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionAction'
-          description: "The list of scheduled actions on this subscription. It is set only in the response from  \n[RetrieveSubscription](api-endpoint:Subscriptions-RetrieveSubscription) with the query parameter\nof `include=actions` or from \n[SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) with the input parameter \nof `include:[\"actions\"]`."
-          x-release-status: BETA
-          nullable: true
-        monthly_billing_anchor_date:
-          type: integer
-          description: The day of the month on which the subscription will issue invoices and publish orders.
-          readOnly: true
-          x-release-status: BETA
-        phases:
-          type: array
-          items:
-            $ref: '#/components/schemas/Phase'
-          description: array of phases for this subscription
-          readOnly: true
-    SearchSubscriptionsFilter:
-      type: object
-      description: "Represents a set of query expressions (filters) to narrow the scope of targeted subscriptions returned by \nthe [SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint."
-      x-release-status: PUBLIC
-      properties:
-        customer_ids:
-          type: array
-          items:
-            type: string
-          description: A filter to select subscriptions based on the subscribing customer IDs.
-          nullable: true
-        location_ids:
-          type: array
-          items:
-            type: string
-          description: A filter to select subscriptions based on the location.
-          nullable: true
-        source_names:
-          type: array
-          items:
-            type: string
-          description: A filter to select subscriptions based on the source application.
-          x-release-status: BETA
-          nullable: true
-    SubscriptionEventInfoCode:
-      type: string
-      enum:
-      - LOCATION_NOT_ACTIVE
-      - LOCATION_CANNOT_ACCEPT_PAYMENT
-      - CUSTOMER_DELETED
-      - CUSTOMER_NO_EMAIL
-      - CUSTOMER_NO_NAME
-      - USER_PROVIDED
-      x-enum-elements:
-      - name: LOCATION_NOT_ACTIVE
-        description: The location is not active.
-      - name: LOCATION_CANNOT_ACCEPT_PAYMENT
-        description: The location cannot accept payments.
-      - name: CUSTOMER_DELETED
-        description: The subscribing customer profile has been deleted.
-      - name: CUSTOMER_NO_EMAIL
-        description: The subscribing customer does not have an email.
-      - name: CUSTOMER_NO_NAME
-        description: The subscribing customer does not have a name.
-      - name: USER_PROVIDED
-        description: User-provided detail.
-      description: Supported info codes of a subscription event.
-      x-release-status: PUBLIC
-    PauseSubscriptionResponse:
-      type: object
-      description: 'Defines output parameters in a response from the
-
-        [PauseSubscription](api-endpoint:Subscriptions-PauseSubscription) endpoint.'
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-          description: The subscription to be paused by the scheduled `PAUSE` action.
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionAction'
-          description: The list of a `PAUSE` action and a possible `RESUME` action created by the request.
-      example:
-        actions:
-        - effective_date: '2023-11-17'
-          id: 99b2439e-63f7-3ad5-95f7-ab2447a80673
-          type: PAUSE
-        subscription:
-          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
-          created_at: '2023-06-20T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
-          location_id: S8GWD5R9QB376
-          phases:
-          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
-            ordinal: 0
-            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
-            uid: 873451e0-745b-4e87-ab0b-c574933fe616
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          source:
-            name: My Application
-          start_date: '2023-06-20'
-          status: ACTIVE
-          timezone: America/Los_Angeles
-          version: 1
-    SwapPlanResponse:
-      type: object
-      description: "Defines output parameters in a response of the \n[SwapPlan](api-endpoint:Subscriptions-SwapPlan) endpoint."
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-          description: The subscription with the updated subscription plan.
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionAction'
-          description: A list of a `SWAP_PLAN` action created by the request.
-      example:
-        actions:
-        - effective_date: '2023-11-17'
-          id: f0a1dfdc-675b-3a14-a640-99f7ac1cee83
-          new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
-          phases:
-          - order_template_id: uhhnjH9osVv3shUADwaC0b3hNxQZY
-            ordinal: 0
-          type: SWAP_PLAN
-        subscription:
-          created_at: '2023-06-20T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: 9ba40961-995a-4a3d-8c53-048c40cafc13
-          location_id: S8GWD5R9QB376
-          phases:
-          - order_template_id: E6oBY5WfQ2eN4pkYZwq4ka6n7KeZY
-            ordinal: 0
-            plan_phase_uid: C66BKH3ASTDYGJJCEZXQQSS7
-            uid: 98d6f53b-40e1-4714-8827-032fd923be25
-          plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
-          price_override_money:
-            amount: 2000
-            currency: USD
-          source:
-            name: My Application
-          status: ACTIVE
-          timezone: America/Los_Angeles
-          version: 3
-    SearchSubscriptionsResponse:
-      type: object
-      description: 'Defines output parameters in a response from the
-
-        [SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscriptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Subscription'
-          description: The subscriptions matching the specified query expressions.
-        cursor:
-          type: string
-          description: "When the total number of resulting subscription exceeds the limit of a paged response, \nthe response includes a cursor for you to use in a subsequent request to fetch the next set of results.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
-      example:
-        subscriptions:
-        - canceled_date: '2021-10-30'
-          card_id: ccof:mueUsvgajChmjEbp4GB
-          charged_through_date: '2021-11-20'
-          created_at: '2021-10-20T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: de86fc96-8664-474b-af1a-abbe59cacf0e
-          location_id: S8GWD5R9QB376
-          paid_until_date: '2021-11-20'
-          plan_variation_id: L3TJVDHVBEQEGQDEZL2JJM7R
-          source:
-            name: My Application
-          start_date: '2021-10-20'
-          status: CANCELED
-          timezone: UTC
-        - charged_through_date: '2022-08-19'
-          created_at: '2022-01-19T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
-          invoice_ids:
-          - grebK0Q_l8H4fqoMMVvt-Q
-          - rcX_i3sNmHTGKhI4W2mceA
-          location_id: S8GWD5R9QB376
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          price_override_money:
-            amount: 1000
-            currency: USD
-          source:
-            name: My Application
-          start_date: '2022-01-19'
-          status: PAUSED
-          tax_percentage: '5'
-          timezone: America/Los_Angeles
-          version: 2
-        - card_id: ccof:qy5x8hHGYsgLrp4Q4GB
-          created_at: '2023-06-20T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
-          location_id: S8GWD5R9QB376
-          phases:
-          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
-            ordinal: 0
-            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
-            uid: 873451e0-745b-4e87-ab0b-c574933fe616
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          source:
-            name: My Application
-          start_date: '2023-06-20'
-          status: ACTIVE
-          timezone: America/Los_Angeles
-          version: 1
-    BulkSwapPlanRequest:
-      type: object
-      description: 'Defines input parameters in a call to the
-
-        [BulkSwapPlan](api-endpoint:Subscriptions-BulkSwapPlan) endpoint.'
-      x-release-status: BETA
-      required:
-      - new_plan_variation_id
-      - old_plan_variation_id
-      - location_id
-      properties:
-        new_plan_variation_id:
-          type: string
-          description: 'The ID of the new subscription plan variation.
+            code for US dollars is `USD`.
 
 
-            This field is required.'
-          minLength: 1
-        old_plan_variation_id:
-          type: string
-          description: 'The ID of the plan variation whose subscriptions should be swapped. Active subscriptions
+            See [Currency](entity:Currency) for possible values.
 
-            using this plan variation will be subscribed to the new plan variation on their next billing
-
-            day.'
-          minLength: 1
-        location_id:
-          type: string
-          description: The ID of the location to associate with the swapped subscriptions.
-          minLength: 1
-      example:
-        location_id: S8GWD5R9QB376
-        new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
-        old_plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-    BulkSwapPlanResponse:
-      type: object
-      description: 'Defines output parameters in a response of the
-
-        [BulkSwapPlan](api-endpoint:Subscriptions-BulkSwapPlan) endpoint.'
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        affected_subscriptions:
-          type: integer
-          description: The number of affected subscriptions.
-      example:
-        affected_subscriptions: 12
-    ChangeBillingAnchorDateResponse:
-      type: object
-      description: 'Defines output parameters in a request to the
-
-        [ChangeBillingAnchorDate](api-endpoint:Subscriptions-ChangeBillingAnchorDate) endpoint.'
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-          description: The specified subscription for updating billing anchor date.
-        actions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionAction'
-          description: A list of a single billing anchor date change for the subscription.
-      example:
-        actions:
-        - effective_date: '2023-11-01'
-          id: f0a1dfdc-675b-3a14-a640-99f7ac1cee83
-          monthly_billing_anchor_date: 1
-          type: CHANGE_BILLING_ANCHOR_DATE
-        subscription:
-          created_at: '2023-06-20T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: 9ba40961-995a-4a3d-8c53-048c40cafc13
-          location_id: S8GWD5R9QB376
-          monthly_billing_anchor_date: 20
-          phases:
-          - order_template_id: E6oBY5WfQ2eN4pkYZwq4ka6n7KeZY
-            ordinal: 0
-            plan_phase_uid: C66BKH3ASTDYGJJCEZXQQSS7
-            uid: 98d6f53b-40e1-4714-8827-032fd923be25
-          plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
-          price_override_money:
-            amount: 2000
-            currency: USD
-          source:
-            name: My Application
-          status: ACTIVE
-          timezone: America/Los_Angeles
-          version: 3
-    CreateSubscriptionResponse:
-      type: object
-      description: 'Defines output parameters in a response from the
-
-        [CreateSubscription](api-endpoint:Subscriptions-CreateSubscription) endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-          description: 'The newly created subscription.
-
-
-            For more information, see
-
-            [Subscription object](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#subscription-object).'
-      example:
-        subscription:
-          card_id: ccof:qy5x8hHGYsgLrp4Q4GB
-          created_at: '2023-06-20T21:53:10Z'
-          customer_id: CHFGVKYY8RSV93M5KCYTG4PN0G
-          id: 56214fb2-cc85-47a1-93bc-44f3766bb56f
-          location_id: S8GWD5R9QB376
-          phases:
-          - order_template_id: U2NaowWxzXwpsZU697x7ZHOAnCNZY
-            ordinal: 0
-            plan_phase_uid: X2Q2AONPB3RB64Y27S25QCZP
-            uid: 873451e0-745b-4e87-ab0b-c574933fe616
-          plan_variation_id: 6JHXF3B2CW3YKHDV4XEM674H
-          source:
-            name: My Application
-          start_date: '2023-06-20'
-          status: ACTIVE
-          timezone: America/Los_Angeles
-          version: 1
-    SwapPlanRequest:
-      type: object
-      description: 'Defines input parameters in a call to the
-
-        [SwapPlan](api-endpoint:Subscriptions-SwapPlan) endpoint.'
-      x-release-status: BETA
-      properties:
-        new_plan_variation_id:
-          type: string
-          description: 'The ID of the new subscription plan variation.
-
-
-            This field is required.'
-          nullable: true
-        phases:
-          type: array
-          items:
-            $ref: '#/components/schemas/PhaseInput'
-          description: A list of PhaseInputs, to pass phase-specific information used in the swap.
-          nullable: true
-      example:
-        new_plan_variation_id: FQ7CDXXWSLUJRPM3GFJSJGZ7
-        phases:
-        - order_template_id: uhhnjH9osVv3shUADwaC0b3hNxQZY
-          ordinal: 0
-    PhaseInput:
-      type: object
-      description: Represents the arguments used to construct a new phase.
-      x-release-status: PUBLIC
-      required:
-      - ordinal
-      properties:
-        ordinal:
-          type: integer
-          description: index of phase in total subscription plan
-          format: int64
-        order_template_id:
-          type: string
-          description: id of order to be used in billing
-          nullable: true
-    UpdateSubscriptionResponse:
-      type: object
-      description: 'Defines output parameters in a response from the
-
-        [UpdateSubscription](api-endpoint:Subscriptions-UpdateSubscription) endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/Subscription'
-          description: The updated subscription.
-      example:
-        subscription:
-          card_id: '{NEW CARD ID}'
-          charged_through_date: '2023-03-13'
-          created_at: '2023-01-30T19:27:32Z'
-          customer_id: AM69AB81FT4479YH9HGWS1HZY8
-          id: 7217d8ca-1fee-4446-a9e5-8540b5d8c9bb
-          invoice_ids:
-          - inv:0-ChAPSfVYvNewckgf3x4iigN_ENMM
-          - inv:0-ChBQaCCLfjcm9WEUBGxvuydJENMM
-          location_id: LPJKHYR7WFDKN
-          plan_variation_id: XOUNEKCE6NSXQW5NTSQ73MMX
-          source:
-            name: My Application
-          start_date: '2023-01-30'
-          status: ACTIVE
-          timezone: UTC
-          version: 3
+            See [Currency](#type-currency) for possible values'
     SubscriptionSource:
       type: object
       description: The origination details of the subscription.
       x-release-status: BETA
       properties:
         name:
-          type: string
+          type:
+          - string
+          - 'null'
           description: 'The name used to identify the place (physical or digital) that
 
             a subscription originates. If unset, the name defaults to the name
 
             of the application that created the subscription.'
           maxLength: 255
-          nullable: true
-    ResumeSubscriptionRequest:
+    SearchSubscriptionsFilter:
       type: object
-      description: 'Defines input parameters in a request to the
-
-        [ResumeSubscription](api-endpoint:Subscriptions-ResumeSubscription) endpoint.'
+      description: "Represents a set of query expressions (filters) to narrow the scope of targeted subscriptions returned by \nthe [SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint."
       x-release-status: PUBLIC
       properties:
-        resume_effective_date:
-          type: string
-          description: The `YYYY-MM-DD`-formatted date when the subscription reactivated.
+        customer_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A filter to select subscriptions based on the subscribing customer IDs.
+        location_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A filter to select subscriptions based on the location.
+        source_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A filter to select subscriptions based on the source application.
           x-release-status: BETA
-          nullable: true
-        resume_change_timing:
-          $ref: '#/components/schemas/ChangeTiming'
-          description: 'The timing to resume a subscription, relative to the specified
-
-            `resume_effective_date` attribute value.
-
-            See [ChangeTiming](#type-changetiming) for possible values'
-          x-release-status: BETA
-          nullable: true
-    SubscriptionEventInfo:
-      type: object
-      description: Provides information about the subscription event.
-      x-release-status: PUBLIC
-      properties:
-        detail:
-          type: string
-          description: A human-readable explanation for the event.
-          nullable: true
-        code:
-          $ref: '#/components/schemas/SubscriptionEventInfoCode'
-          description: 'An info code indicating the subscription event that occurred.
-
-            See [InfoCode](#type-infocode) for possible values'
-          nullable: true
-    SubscriptionActionType:
+    ErrorCategory:
       type: string
       enum:
-      - CANCEL
-      - PAUSE
-      - RESUME
-      - SWAP_PLAN
-      - CHANGE_BILLING_ANCHOR_DATE
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
       x-enum-elements:
-      - name: CANCEL
-        description: The action to execute a scheduled cancellation of a subscription.
-      - name: PAUSE
-        description: The action to execute a scheduled pause of a subscription.
-      - name: RESUME
-        description: The action to execute a scheduled resumption of a subscription.
-      - name: SWAP_PLAN
-        description: The action to execute a scheduled swap of a subscription plan in a subscription.
-      - name: CHANGE_BILLING_ANCHOR_DATE
-        description: A billing anchor date change action.
-      description: Supported types of an action as a pending change to a subscription.
-      x-release-status: BETA
-    Phase:
-      type: object
-      description: Represents a phase, which can override subscription phases as defined by plan_id
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
       x-release-status: PUBLIC
-      properties:
-        uid:
-          type: string
-          description: id of subscription phase
-          nullable: true
-        ordinal:
-          type: integer
-          description: index of phase in total subscription plan
-          format: int64
-          nullable: true
-        order_template_id:
-          type: string
-          description: id of order to be used in billing
-          nullable: true
-        plan_phase_uid:
-          type: string
-          description: the uid from the plan's phase in catalog
-          nullable: true
   securitySchemes:
     oauth2:
       type: oauth2
