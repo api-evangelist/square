@@ -395,18 +395,87 @@ paths:
                 $ref: '#/components/schemas/TestWebhookSubscriptionResponse'
 components:
   schemas:
-    UpdateWebhookSubscriptionRequest:
+    ListWebhookEventTypesResponse:
       type: object
-      description: Updates a [Subscription](entity:WebhookSubscription).
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [ListWebhookEventTypes](api-endpoint:WebhookSubscriptions-ListWebhookEventTypes) endpoint.
+
+
+        Note: if there are errors processing the request, the event types field will not be
+
+        present.'
       x-release-status: PUBLIC
       properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        event_types:
+          type: array
+          items:
+            type: string
+          description: The list of event types.
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventTypeMetadata'
+          description: Contains the metadata of a webhook event type. For more information, see [EventTypeMetadata](entity:EventTypeMetadata).
+      example:
+        event_types:
+        - inventory.count.updated
+        metadata:
+        - api_version_introduced: '2018-07-12'
+          event_type: inventory.count.updated
+          release_status: PUBLIC
+    RetrieveWebhookSubscriptionResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [RetrieveWebhookSubscription](api-endpoint:WebhookSubscriptions-RetrieveWebhookSubscription) endpoint.
+
+
+        Note: if there are errors processing the request, the [Subscription](entity:WebhookSubscription) will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
         subscription:
           $ref: '#/components/schemas/WebhookSubscription'
-          description: The [Subscription](entity:WebhookSubscription) to update.
+          description: The requested [Subscription](entity:WebhookSubscription).
       example:
         subscription:
-          enabled: false
-          name: Updated Example Webhook Subscription
+          api_version: '2021-12-15'
+          created_at: 2022-01-10 23:29:48 +0000 UTC
+          enabled: true
+          event_types:
+          - payment.created
+          - payment.updated
+          id: wbhk_b35f6b3145074cf9ad513610786c19d5
+          name: Example Webhook Subscription
+          notification_url: https://example-webhook-url.com
+          signature_key: 1k9bIJKCeTmSQwyagtNRLg
+          updated_at: 2022-01-10 23:29:48 +0000 UTC
+    TestWebhookSubscriptionRequest:
+      type: object
+      description: Tests a [Subscription](entity:WebhookSubscription) by sending a test event to its notification URL.
+      x-release-status: PUBLIC
+      properties:
+        event_type:
+          type:
+          - string
+          - 'null'
+          description: 'The event type that will be used to test the [Subscription](entity:WebhookSubscription). The event type must be
+
+            contained in the list of event types in the [Subscription](entity:WebhookSubscription).'
+      example:
+        event_type: payment.created
     DeleteWebhookSubscriptionResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -420,6 +489,123 @@ components:
             $ref: '#/components/schemas/Error'
           description: Information on errors encountered during the request.
       example: {}
+    UpdateWebhookSubscriptionResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [UpdateWebhookSubscription](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscription) endpoint.
+
+
+        Note: If there are errors processing the request, the [Subscription](entity:WebhookSubscription) is not
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/WebhookSubscription'
+          description: The updated [Subscription](entity:WebhookSubscription).
+      example:
+        subscription:
+          api_version: '2021-12-15'
+          created_at: 2022-01-10 23:29:48 +0000 UTC
+          enabled: false
+          event_types:
+          - payment.created
+          - payment.updated
+          id: wbhk_b35f6b3145074cf9ad513610786c19d5
+          name: Updated Example Webhook Subscription
+          notification_url: https://example-webhook-url.com
+          updated_at: 2022-01-10 23:45:51 +0000 UTC
+    UpdateWebhookSubscriptionSignatureKeyResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [UpdateWebhookSubscriptionSignatureKey](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscriptionSignatureKey) endpoint.
+
+
+        Note: If there are errors processing the request, the [Subscription](entity:WebhookSubscription) is not
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        signature_key:
+          type: string
+          description: The new Square-generated signature key used to validate the origin of the webhook event.
+          readOnly: true
+      example:
+        signature_key: 1k9bIJKCeTmSQwyagtNRLg
+    EventTypeMetadata:
+      type: object
+      description: Contains the metadata of a webhook event type.
+      x-release-status: PUBLIC
+      properties:
+        event_type:
+          type: string
+          description: The event type.
+          readOnly: true
+        api_version_introduced:
+          type: string
+          description: The API version at which the event type was introduced.
+          readOnly: true
+        release_status:
+          type: string
+          description: The release status of the event type.
+          readOnly: true
+    UpdateWebhookSubscriptionSignatureKeyRequest:
+      type: object
+      description: Updates a [Subscription](entity:WebhookSubscription) by replacing the existing signature key with a new one.
+      x-release-status: PUBLIC
+      properties:
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: A unique string that identifies the [UpdateWebhookSubscriptionSignatureKey](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscriptionSignatureKey) request.
+          maxLength: 45
+      example:
+        idempotency_key: ed80ae6b-0654-473b-bbab-a39aee89a60d
+    SubscriptionTestResult:
+      type: object
+      description: 'Represents the details of a webhook subscription, including notification URL,
+
+        event types, and signature key.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: A Square-generated unique ID for the subscription test result.
+          maxLength: 64
+          readOnly: true
+        status_code:
+          type:
+          - integer
+          - 'null'
+          description: The status code returned by the subscription notification URL.
+        payload:
+          type:
+          - string
+          - 'null'
+          description: An object containing the payload of the test event. For example, a `payment.created` event.
+        created_at:
+          type: string
+          description: "The timestamp of when the subscription was created, in RFC 3339 format. \nFor example, \"2016-09-04T23:59:33.123Z\"."
+          readOnly: true
+        updated_at:
+          type: string
+          description: 'The timestamp of when the subscription was updated, in RFC 3339 format. For example, "2016-09-04T23:59:33.123Z".
+
+            Because a subscription test result is unique, this field is the same as the `created_at` field.'
+          readOnly: true
     ListWebhookSubscriptionsResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -462,67 +648,6 @@ components:
           name: Example Webhook Subscription
           notification_url: https://example-webhook-url.com
           updated_at: 2022-01-10 23:29:48 +0000 UTC
-    SubscriptionTestResult:
-      type: object
-      description: 'Represents the details of a webhook subscription, including notification URL,
-
-        event types, and signature key.'
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: A Square-generated unique ID for the subscription test result.
-          maxLength: 64
-          readOnly: true
-        status_code:
-          type:
-          - integer
-          - 'null'
-          description: The status code returned by the subscription notification URL.
-        payload:
-          type:
-          - string
-          - 'null'
-          description: An object containing the payload of the test event. For example, a `payment.created` event.
-        created_at:
-          type: string
-          description: "The timestamp of when the subscription was created, in RFC 3339 format. \nFor example, \"2016-09-04T23:59:33.123Z\"."
-          readOnly: true
-        updated_at:
-          type: string
-          description: 'The timestamp of when the subscription was updated, in RFC 3339 format. For example, "2016-09-04T23:59:33.123Z".
-
-            Because a subscription test result is unique, this field is the same as the `created_at` field.'
-          readOnly: true
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
     ErrorCategory:
       type: string
       enum:
@@ -570,104 +695,6 @@ components:
 
         request to the Connect API.'
       x-release-status: PUBLIC
-    EventTypeMetadata:
-      type: object
-      description: Contains the metadata of a webhook event type.
-      x-release-status: PUBLIC
-      properties:
-        event_type:
-          type: string
-          description: The event type.
-          readOnly: true
-        api_version_introduced:
-          type: string
-          description: The API version at which the event type was introduced.
-          readOnly: true
-        release_status:
-          type: string
-          description: The release status of the event type.
-          readOnly: true
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    UpdateWebhookSubscriptionSignatureKeyResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [UpdateWebhookSubscriptionSignatureKey](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscriptionSignatureKey) endpoint.
-
-
-        Note: If there are errors processing the request, the [Subscription](entity:WebhookSubscription) is not
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        signature_key:
-          type: string
-          description: The new Square-generated signature key used to validate the origin of the webhook event.
-          readOnly: true
-      example:
-        signature_key: 1k9bIJKCeTmSQwyagtNRLg
-    CreateWebhookSubscriptionResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [CreateWebhookSubscription](api-endpoint:WebhookSubscriptions-CreateWebhookSubscription) endpoint.
-
-
-        Note: if there are errors processing the request, the [Subscription](entity:WebhookSubscription) will not be
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/WebhookSubscription'
-          description: The new [Subscription](entity:WebhookSubscription).
-      example:
-        subscription:
-          api_version: '2021-12-15'
-          created_at: 2022-01-10 23:29:48 +0000 UTC
-          enabled: true
-          event_types:
-          - payment.created
-          - payment.updated
-          id: wbhk_b35f6b3145074cf9ad513610786c19d5
-          name: Example Webhook Subscription
-          notification_url: https://example-webhook-url.com
-          signature_key: 1k9bIJKCeTmSQwyagtNRLg
-          updated_at: 2022-01-10 23:29:48 +0000 UTC
-    UpdateWebhookSubscriptionSignatureKeyRequest:
-      type: object
-      description: Updates a [Subscription](entity:WebhookSubscription) by replacing the existing signature key with a new one.
-      x-release-status: PUBLIC
-      properties:
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: A unique string that identifies the [UpdateWebhookSubscriptionSignatureKey](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscriptionSignatureKey) request.
-          maxLength: 45
-      example:
-        idempotency_key: ed80ae6b-0654-473b-bbab-a39aee89a60d
     WebhookSubscription:
       type: object
       description: 'Represents the details of a webhook subscription, including notification URL,
@@ -722,6 +749,63 @@ components:
 
             For example, "2016-09-04T23:59:33.123Z".'
           readOnly: true
+    CreateWebhookSubscriptionResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [CreateWebhookSubscription](api-endpoint:WebhookSubscriptions-CreateWebhookSubscription) endpoint.
+
+
+        Note: if there are errors processing the request, the [Subscription](entity:WebhookSubscription) will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        subscription:
+          $ref: '#/components/schemas/WebhookSubscription'
+          description: The new [Subscription](entity:WebhookSubscription).
+      example:
+        subscription:
+          api_version: '2021-12-15'
+          created_at: 2022-01-10 23:29:48 +0000 UTC
+          enabled: true
+          event_types:
+          - payment.created
+          - payment.updated
+          id: wbhk_b35f6b3145074cf9ad513610786c19d5
+          name: Example Webhook Subscription
+          notification_url: https://example-webhook-url.com
+          signature_key: 1k9bIJKCeTmSQwyagtNRLg
+          updated_at: 2022-01-10 23:29:48 +0000 UTC
+    UpdateWebhookSubscriptionRequest:
+      type: object
+      description: Updates a [Subscription](entity:WebhookSubscription).
+      x-release-status: PUBLIC
+      properties:
+        subscription:
+          $ref: '#/components/schemas/WebhookSubscription'
+          description: The [Subscription](entity:WebhookSubscription) to update.
+      example:
+        subscription:
+          enabled: false
+          name: Updated Example Webhook Subscription
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
     ErrorCode:
       type: string
       enum:
@@ -1491,20 +1575,35 @@ components:
           - payment.updated
           name: Example Webhook Subscription
           notification_url: https://example-webhook-url.com
-    TestWebhookSubscriptionRequest:
+    Error:
       type: object
-      description: Tests a [Subscription](entity:WebhookSubscription) by sending a test event to its notification URL.
-      x-release-status: PUBLIC
-      properties:
-        event_type:
-          type:
-          - string
-          - 'null'
-          description: 'The event type that will be used to test the [Subscription](entity:WebhookSubscription). The event type must be
+      description: 'Represents an error encountered during a request to the Connect API.
 
-            contained in the list of event types in the [Subscription](entity:WebhookSubscription).'
-      example:
-        event_type: payment.created
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     TestWebhookSubscriptionResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -1532,105 +1631,6 @@ components:
           payload: '{"merchant_id":"1ZYMKZY1YFGBW","type":"payment.created","event_id":"23eed5a9-2b12-403e-b212-7e2889aea0f6","created_at":"2022-01-11T00:06:48.322945116Z","data":{"type":"payment","id":"KkAkhdMsgzn59SM8A89WgKwekxLZY","object":{"payment":{"amount_money":{"amount":100,"currency":"USD"},"approved_money":{"amount":100,"currency":"USD"},"capabilities":["EDIT_TIP_AMOUNT","EDIT_TIP_AMOUNT_UP","EDIT_TIP_AMOUNT_DOWN"],"card_details":{"avs_status":"AVS_ACCEPTED","card":{"bin":"540988","card_brand":"MASTERCARD","card_type":"CREDIT","exp_month":11,"exp_year":2022,"fingerprint":"sq-1-Tvruf3vPQxlvI6n0IcKYfBukrcv6IqWr8UyBdViWXU2yzGn5VMJvrsHMKpINMhPmVg","last_4":"9029","prepaid_type":"NOT_PREPAID"},"card_payment_timeline":{"authorized_at":"2020-11-22T21:16:51.198Z"},"cvv_status":"CVV_ACCEPTED","entry_method":"KEYED","statement_description":"SQ *DEFAULT TEST ACCOUNT","status":"AUTHORIZED"},"created_at":"2020-11-22T21:16:51.086Z","delay_action":"CANCEL","delay_duration":"PT168H","delayed_until":"2020-11-29T21:16:51.086Z","id":"hYy9pRFVxpDsO1FB05SunFWUe9JZY","location_id":"S8GWD5R9QB376","order_id":"03O3USaPaAaFnI6kkwB1JxGgBsUZY","receipt_number":"hYy9","risk_evaluation":{"created_at":"2020-11-22T21:16:51.198Z","risk_level":"NORMAL"},"source_type":"CARD","status":"APPROVED","total_money":{"amount":100,"currency":"USD"},"updated_at":"2020-11-22T21:16:51.198Z","version_token":"FfQhQJf9r3VSQIgyWBk1oqhIwiznLwVwJbVVA0bdyEv6o"}}}}'
           status_code: 404
           updated_at: 2022-01-11 00:06:48.322945116 +0000 UTC m=+3863.054453746
-    RetrieveWebhookSubscriptionResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [RetrieveWebhookSubscription](api-endpoint:WebhookSubscriptions-RetrieveWebhookSubscription) endpoint.
-
-
-        Note: if there are errors processing the request, the [Subscription](entity:WebhookSubscription) will not be
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/WebhookSubscription'
-          description: The requested [Subscription](entity:WebhookSubscription).
-      example:
-        subscription:
-          api_version: '2021-12-15'
-          created_at: 2022-01-10 23:29:48 +0000 UTC
-          enabled: true
-          event_types:
-          - payment.created
-          - payment.updated
-          id: wbhk_b35f6b3145074cf9ad513610786c19d5
-          name: Example Webhook Subscription
-          notification_url: https://example-webhook-url.com
-          signature_key: 1k9bIJKCeTmSQwyagtNRLg
-          updated_at: 2022-01-10 23:29:48 +0000 UTC
-    UpdateWebhookSubscriptionResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [UpdateWebhookSubscription](api-endpoint:WebhookSubscriptions-UpdateWebhookSubscription) endpoint.
-
-
-        Note: If there are errors processing the request, the [Subscription](entity:WebhookSubscription) is not
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        subscription:
-          $ref: '#/components/schemas/WebhookSubscription'
-          description: The updated [Subscription](entity:WebhookSubscription).
-      example:
-        subscription:
-          api_version: '2021-12-15'
-          created_at: 2022-01-10 23:29:48 +0000 UTC
-          enabled: false
-          event_types:
-          - payment.created
-          - payment.updated
-          id: wbhk_b35f6b3145074cf9ad513610786c19d5
-          name: Updated Example Webhook Subscription
-          notification_url: https://example-webhook-url.com
-          updated_at: 2022-01-10 23:45:51 +0000 UTC
-    ListWebhookEventTypesResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [ListWebhookEventTypes](api-endpoint:WebhookSubscriptions-ListWebhookEventTypes) endpoint.
-
-
-        Note: if there are errors processing the request, the event types field will not be
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        event_types:
-          type: array
-          items:
-            type: string
-          description: The list of event types.
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/EventTypeMetadata'
-          description: Contains the metadata of a webhook event type. For more information, see [EventTypeMetadata](entity:EventTypeMetadata).
-      example:
-        event_types:
-        - inventory.count.updated
-        metadata:
-        - api_version_introduced: '2018-07-12'
-          event_type: inventory.count.updated
-          release_status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2

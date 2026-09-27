@@ -1017,115 +1017,436 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
-    DisputeReason:
+    ListDisputeEvidenceResponse:
+      type: object
+      description: Defines the fields in a `ListDisputeEvidence` response.
+      x-release-status: PUBLIC
+      properties:
+        evidence:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisputeEvidence'
+          description: The list of evidence previously uploaded to the specified dispute.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request.
+
+            If unset, this is the final response. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+      example:
+        evidence:
+        - dispute_id: bVTprrwk0gygTLZ96VX1oB
+          evidence_file:
+            filename: customer-interaction
+            filetype: JPG
+          evidence_type: CARDHOLDER_COMMUNICATION
+          id: CpfnkwGselCwS8QFvxN6
+          uploaded_at: '2022-05-10T15:57:13.802Z'
+        - dispute_id: bVTprrwk0gygTLZ96VX1oB
+          evidence_file:
+            filename: ''
+            filetype: ''
+          evidence_type: REBUTTAL_EXPLANATION
+          id: TOomLInj6iWmP3N8qfCXrB
+          uploaded_at: '2022-05-18T16:01:10.000Z'
+    CreateDisputeEvidenceTextResponse:
+      type: object
+      description: Defines the fields in a `CreateDisputeEvidenceText` response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        evidence:
+          $ref: '#/components/schemas/DisputeEvidence'
+          description: The newly uploaded dispute evidence metadata.
+      example:
+        evidence:
+          dispute_id: bVTprrwk0gygTLZ96VX1oB
+          evidence_text: The customer purchased the item twice, on April 11 and April 28.
+          evidence_type: REBUTTAL_EXPLANATION
+          id: TOomLInj6iWmP3N8qfCXrB
+          uploaded_at: '2022-05-18T16:01:10.000Z'
+    AcceptDisputeResponse:
+      type: object
+      description: Defines the fields in an `AcceptDispute` response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        dispute:
+          $ref: '#/components/schemas/Dispute'
+          description: Details about the accepted dispute.
+      example:
+        dispute:
+          amount_money:
+            amount: 2500
+            currency: USD
+          brand_dispute_id: '100000809947'
+          card_brand: VISA
+          created_at: '2022-06-29T18:45:22.265Z'
+          disputed_payment:
+            payment_id: zhyh1ch64kRBrrlfVhwjCEjZWzNZY
+          due_at: '2022-07-13T00:00:00.000Z'
+          id: XDgyFu7yo1E2S5lQGGpYn
+          location_id: L1HN3ZMQK64X9
+          reason: NO_KNOWLEDGE
+          reported_at: '2022-06-29T00:00:00.000Z'
+          state: ACCEPTED
+          updated_at: '2022-07-07T19:14:42.650Z'
+          version: 2
+    DisputeEvidence:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        evidence_id:
+          type:
+          - string
+          - 'null'
+          description: The Square-generated ID of the evidence.
+          minLength: 1
+          maxLength: 40
+          x-release-status: DEPRECATED
+        id:
+          type: string
+          description: The Square-generated ID of the evidence.
+          minLength: 1
+          maxLength: 40
+        dispute_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the dispute the evidence is associated with.
+          minLength: 1
+          maxLength: 40
+        evidence_file:
+          $ref: '#/components/schemas/DisputeEvidenceFile'
+          description: Image, PDF, TXT
+        evidence_text:
+          type:
+          - string
+          - 'null'
+          description: Raw text
+          minLength: 1
+          maxLength: 500
+        uploaded_at:
+          type:
+          - string
+          - 'null'
+          description: The time when the evidence was uploaded, in RFC 3339 format.
+          minLength: 1
+          maxLength: 40
+        evidence_type:
+          $ref: '#/components/schemas/DisputeEvidenceType'
+          description: 'The type of the evidence.
+
+            See [DisputeEvidenceType](#type-disputeevidencetype) for possible values'
+    DisputeEvidenceType:
       type: string
       enum:
-      - AMOUNT_DIFFERS
-      - CANCELLED
-      - DUPLICATE
-      - NO_KNOWLEDGE
-      - NOT_AS_DESCRIBED
-      - NOT_RECEIVED
-      - PAID_BY_OTHER_MEANS
-      - CUSTOMER_REQUESTS_CREDIT
-      - EMV_LIABILITY_SHIFT
+      - GENERIC_EVIDENCE
+      - ONLINE_OR_APP_ACCESS_LOG
+      - AUTHORIZATION_DOCUMENTATION
+      - CANCELLATION_OR_REFUND_DOCUMENTATION
+      - CARDHOLDER_COMMUNICATION
+      - CARDHOLDER_INFORMATION
+      - PURCHASE_ACKNOWLEDGEMENT
+      - DUPLICATE_CHARGE_DOCUMENTATION
+      - PRODUCT_OR_SERVICE_DESCRIPTION
+      - RECEIPT
+      - SERVICE_RECEIVED_DOCUMENTATION
+      - PROOF_OF_DELIVERY_DOCUMENTATION
+      - RELATED_TRANSACTION_DOCUMENTATION
+      - REBUTTAL_EXPLANATION
+      - TRACKING_NUMBER
       x-enum-elements:
-      - name: AMOUNT_DIFFERS
-        description: 'The cardholder claims that they were charged the wrong amount for the purchase.
+      - name: GENERIC_EVIDENCE
+        description: 'Square assumes this evidence type if you do not provide a type when uploading evidence.
 
-          To challenge this dispute, provide specific and concrete evidence that the cardholder agreed
 
-          to the amount charged.'
-      - name: CANCELLED
-        description: 'The cardholder claims that they attempted to return the goods or cancel the service.
+          Use when uploading evidence as a file or string.'
+      - name: ONLINE_OR_APP_ACCESS_LOG
+        description: 'Server or activity logs that show proof of the cardholder’s identity and that the
 
-          To challenge this dispute, provide specific and concrete evidence to prove that the cardholder
+          cardholder successfully ordered and received the goods (digitally or otherwise).
 
-          is not due a refund and that the cardholder acknowledged your cancellation policy.'
-      - name: DUPLICATE
-        description: 'The cardholder claims that they were charged twice for the same purchase.
+          Example evidence includes IP addresses, corresponding timestamps/dates, cardholder’s name and email
 
-          To challenge this dispute, provide specific and concrete evidence that shows both charges are
+          address linked to a cardholder profile held by the seller, proof the same device and card (used
 
-          legitimate and independent of one another.'
-      - name: NO_KNOWLEDGE
-        description: 'The cardholder claims that they did not make this purchase nor authorized the charge.
+          in dispute) were previously used in prior undisputed transaction, and any related detailed activity.
 
-          To challenge this dispute, provide specific and concrete evidence that proves that the cardholder
 
-          identity was verified at the time of purchase and that the purchase was authorized.'
-      - name: NOT_AS_DESCRIBED
-        description: 'The cardholder claims the product or service was provided, but the quality of the deliverable
+          Use when uploading evidence as a file or string.'
+      - name: AUTHORIZATION_DOCUMENTATION
+        description: 'Evidence that the cardholder did provide authorization for the charge.
 
-          did not align with the expectations of the cardholder based on the description.
+          Example evidence includes a signed credit card authorization.
 
-          To challenge this dispute, provide specific and concrete evidence that shows the cardholder is in
 
-          possession of the product as described or received the service as described and agreed on.'
-      - name: NOT_RECEIVED
-        description: 'The cardholder claims the product or service was not received by the cardholder within the
+          Use when uploading evidence as a file.'
+      - name: CANCELLATION_OR_REFUND_DOCUMENTATION
+        description: 'Evidence that the cardholder acknowledged your refund or cancellation policy.
 
-          stated time frame.
+          Example evidence includes a signature or checkbox showing the cardholder’s acknowledgement of your
 
-          To challenge this dispute, provide specific and concrete evidence to prove that the cardholder is
+          refund or cancellation policy.
 
-          in possession of or received the product or service sold.'
-      - name: PAID_BY_OTHER_MEANS
-        description: 'The cardholder claims that they previously paid for this purchase.
 
-          To challenge this dispute, provide specific and concrete evidence that shows both charges are
+          Use when uploading evidence as a file or string.'
+      - name: CARDHOLDER_COMMUNICATION
+        description: 'Evidence that shows relevant communication with the cardholder.
 
-          legitimate and independent of one another or proof that you already provided a credit for the charge.'
-      - name: CUSTOMER_REQUESTS_CREDIT
-        description: 'The cardholder claims that the purchase was canceled or returned, but they have not yet received
+          Example evidence includes emails or texts that show the cardholder received goods/services or
 
-          the credit.
+          demonstrate cardholder satisfaction.
 
-          To challenge this dispute, provide specific and concrete evidence to prove that the cardholder is not
 
-          due a refund and that they acknowledged your cancellation and/or refund policy.'
-      - name: EMV_LIABILITY_SHIFT
-        description: 'A chip-enabled card was not processed through a compliant chip-card reader (for example, it was swiped
+          Use when uploading evidence as a file.'
+      - name: CARDHOLDER_INFORMATION
+        description: 'Evidence that validates the customer''s identity.
 
-          instead of dipped into a chip-card reader).
+          Example evidence includes personally identifiable details such as name, email address, purchaser IP
 
-          You cannot challenge this dispute because the payment did not comply with EMV security requirements.
+          address, and a copy of the cardholder ID.
 
-          For more information, see [What Is EMV?](https://squareup.com/emv)'
-      description: 'The list of possible reasons why a cardholder might initiate a
 
-        dispute with their bank.'
+          Use when uploading evidence as a file or string.'
+      - name: PURCHASE_ACKNOWLEDGEMENT
+        description: 'Evidence that shows proof of the sale/transaction.
+
+          Example evidence includes an invoice, contract, or other item showing the customer’s acknowledgement
+
+          of the purchase and your terms.
+
+
+          Use when uploading evidence as a file or string.'
+      - name: DUPLICATE_CHARGE_DOCUMENTATION
+        description: 'Evidence that shows the charges in question are valid and distinct from one another.
+
+          Example evidence includes receipts, shipping labels, and invoices along with their distinct payment IDs.
+
+
+          Use when uploading evidence as a file.'
+      - name: PRODUCT_OR_SERVICE_DESCRIPTION
+        description: 'A description of the product or service sold.
+
+
+          Use when uploading evidence as a file or string.'
+      - name: RECEIPT
+        description: 'A receipt or message sent to the cardholder detailing the charge.
+
+          Note: You do not need to upload the Square receipt; Square submits the receipt on your behalf.
+
+
+          Use when uploading evidence as a file or string.'
+      - name: SERVICE_RECEIVED_DOCUMENTATION
+        description: 'Evidence that the service was provided to the cardholder or the expected date that services will be rendered.
+
+          Example evidence includes a signed delivery form, work order, expected delivery date, or other written agreements.
+
+
+          Use when uploading evidence as a file or string.'
+      - name: PROOF_OF_DELIVERY_DOCUMENTATION
+        description: 'Evidence that shows the product was provided to the cardholder or the expected date of delivery.
+
+          Example evidence includes a signed delivery form or written agreement acknowledging receipt of the goods or services.
+
+
+          Use when uploading evidence as a file or string.'
+      - name: RELATED_TRANSACTION_DOCUMENTATION
+        description: 'Evidence that shows the cardholder previously processed transactions on the same card and did not dispute them.
+
+          Note: Square automatically provides up to five distinct Square receipts for related transactions, when available.
+
+
+          Use when uploading evidence as a file or string.'
+      - name: REBUTTAL_EXPLANATION
+        description: 'An explanation of why the cardholder’s claim is invalid.
+
+          Example evidence includes an explanation of why each distinct charge is a legitimate purchase, why the cardholder’s claim
+
+          for credit owed due to their attempt to cancel, return, or refund is invalid per your stated policy and cardholder
+
+          agreement, or an explanation of how the cardholder did not attempt to remedy the issue with you first to receive credit.
+
+
+          Use when uploading evidence as a file or string.'
+      - name: TRACKING_NUMBER
+        description: 'The tracking number for the order provided by the shipping carrier. If you have multiple numbers, they need to be
+
+          submitted individually as separate pieces of evidence.
+
+
+          Use when uploading evidence as a string.'
+      description: The type of the dispute evidence.
       x-release-status: PUBLIC
-    DisputeState:
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+    CardBrand:
       type: string
       enum:
-      - INQUIRY_EVIDENCE_REQUIRED
-      - INQUIRY_PROCESSING
-      - INQUIRY_CLOSED
-      - EVIDENCE_REQUIRED
-      - PROCESSING
-      - WON
-      - LOST
-      - ACCEPTED
+      - OTHER_BRAND
+      - VISA
+      - MASTERCARD
+      - AMERICAN_EXPRESS
+      - DISCOVER
+      - DISCOVER_DINERS
+      - JCB
+      - CHINA_UNIONPAY
+      - SQUARE_GIFT_CARD
+      - SQUARE_CAPITAL_CARD
+      - INTERAC
+      - EFTPOS
+      - FELICA
+      - EBT
       x-enum-elements:
-      - name: INQUIRY_EVIDENCE_REQUIRED
-        description: The initial state of an inquiry with evidence required
-      - name: INQUIRY_PROCESSING
-        description: Inquiry evidence has been submitted and the bank is processing the inquiry
-      - name: INQUIRY_CLOSED
-        description: The inquiry is complete
-      - name: EVIDENCE_REQUIRED
-        description: The initial state of a dispute with evidence required
-      - name: PROCESSING
-        description: Dispute evidence has been submitted and the bank is processing the dispute
-      - name: WON
-        description: The bank has completed processing the dispute and the seller has won
-      - name: LOST
-        description: The bank has completed processing the dispute and the seller has lost
-      - name: ACCEPTED
-        description: The seller has accepted the dispute
-      description: The list of possible dispute states.
+      - name: OTHER_BRAND
+        description: ''
+      - name: VISA
+        description: ''
+      - name: MASTERCARD
+        description: ''
+      - name: AMERICAN_EXPRESS
+        description: ''
+      - name: DISCOVER
+        description: ''
+      - name: DISCOVER_DINERS
+        description: ''
+      - name: JCB
+        description: ''
+      - name: CHINA_UNIONPAY
+        description: ''
+      - name: SQUARE_GIFT_CARD
+        description: ''
+      - name: SQUARE_CAPITAL_CARD
+        description: ''
+      - name: INTERAC
+        description: ''
+      - name: EFTPOS
+        description: ''
+      - name: FELICA
+        description: ''
+      - name: EBT
+        description: ''
+      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
       x-release-status: PUBLIC
+    RetrieveDisputeEvidenceResponse:
+      type: object
+      description: Defines the fields in a `RetrieveDisputeEvidence` response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        evidence:
+          $ref: '#/components/schemas/DisputeEvidence'
+          description: Metadata about the dispute evidence file.
+      example:
+        evidence:
+          dispute_id: bVTprrwk0gygTLZ96VX1oB
+          evidence_file:
+            filename: customer-interaction.jpg
+            filetype: image/jpeg
+          evidence_type: CARDHOLDER_COMMUNICATION
+          id: TOomLInj6iWmP3N8qfCXrB
+          uploaded_at: '2022-05-18T16:01:10.000Z'
+    DisputeEvidenceFile:
+      type: object
+      description: A file to be uploaded as dispute evidence.
+      x-release-status: PUBLIC
+      properties:
+        filename:
+          type:
+          - string
+          - 'null'
+          description: 'The file name including the file extension. For example: "receipt.tiff".'
+          minLength: 1
+          maxLength: 40
+        filetype:
+          type:
+          - string
+          - 'null'
+          description: Dispute evidence files must be application/pdf, image/heic, image/heif, image/jpeg, image/png, or image/tiff formats.
+          minLength: 1
+          maxLength: 40
+    SubmitEvidenceResponse:
+      type: object
+      description: Defines the fields in a `SubmitEvidence` response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        dispute:
+          $ref: '#/components/schemas/Dispute'
+          description: The `Dispute` for which evidence was submitted.
+      example:
+        dispute:
+          amount_money:
+            amount: 4350
+            currency: USD
+          brand_dispute_id: '100000399240'
+          card_brand: VISA
+          created_at: '2022-05-18T16:02:15.313Z'
+          disputed_payment:
+            payment_id: 2yeBUWJzllJTpmnSqtMRAL19taB
+          due_at: '2022-06-01T00:00:00.000Z'
+          id: EAZoK70gX3fyvibecLwIGB
+          location_id: LSY8XKGSMMX94
+          reason: CUSTOMER_REQUESTS_CREDIT
+          reported_at: '2022-05-18T00:00:00.000Z'
+          state: PROCESSING
+          updated_at: '2022-05-18T16:02:15.313Z'
+          version: 4
     ListDisputesResponse:
       type: object
       description: Defines fields in a `ListDisputes` response.
@@ -1181,206 +1502,6 @@ components:
           state: EVIDENCE_REQUIRED
           updated_at: '2022-04-29T18:45:22.265Z'
           version: 1
-    DisputeEvidenceFile:
-      type: object
-      description: A file to be uploaded as dispute evidence.
-      x-release-status: PUBLIC
-      properties:
-        filename:
-          type:
-          - string
-          - 'null'
-          description: 'The file name including the file extension. For example: "receipt.tiff".'
-          minLength: 1
-          maxLength: 40
-        filetype:
-          type:
-          - string
-          - 'null'
-          description: Dispute evidence files must be application/pdf, image/heic, image/heif, image/jpeg, image/png, or image/tiff formats.
-          minLength: 1
-          maxLength: 40
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    DisputedPayment:
-      type: object
-      description: The payment the cardholder disputed.
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: Square-generated unique ID of the payment being disputed.
-          minLength: 1
-          maxLength: 192
-    RetrieveDisputeEvidenceResponse:
-      type: object
-      description: Defines the fields in a `RetrieveDisputeEvidence` response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        evidence:
-          $ref: '#/components/schemas/DisputeEvidence'
-          description: Metadata about the dispute evidence file.
-      example:
-        evidence:
-          dispute_id: bVTprrwk0gygTLZ96VX1oB
-          evidence_file:
-            filename: customer-interaction.jpg
-            filetype: image/jpeg
-          evidence_type: CARDHOLDER_COMMUNICATION
-          id: TOomLInj6iWmP3N8qfCXrB
-          uploaded_at: '2022-05-18T16:01:10.000Z'
-    SubmitEvidenceResponse:
-      type: object
-      description: Defines the fields in a `SubmitEvidence` response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        dispute:
-          $ref: '#/components/schemas/Dispute'
-          description: The `Dispute` for which evidence was submitted.
-      example:
-        dispute:
-          amount_money:
-            amount: 4350
-            currency: USD
-          brand_dispute_id: '100000399240'
-          card_brand: VISA
-          created_at: '2022-05-18T16:02:15.313Z'
-          disputed_payment:
-            payment_id: 2yeBUWJzllJTpmnSqtMRAL19taB
-          due_at: '2022-06-01T00:00:00.000Z'
-          id: EAZoK70gX3fyvibecLwIGB
-          location_id: LSY8XKGSMMX94
-          reason: CUSTOMER_REQUESTS_CREDIT
-          reported_at: '2022-05-18T00:00:00.000Z'
-          state: PROCESSING
-          updated_at: '2022-05-18T16:02:15.313Z'
-          version: 4
-    ListDisputeEvidenceResponse:
-      type: object
-      description: Defines the fields in a `ListDisputeEvidence` response.
-      x-release-status: PUBLIC
-      properties:
-        evidence:
-          type: array
-          items:
-            $ref: '#/components/schemas/DisputeEvidence'
-          description: The list of evidence previously uploaded to the specified dispute.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request.
-
-            If unset, this is the final response. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-      example:
-        evidence:
-        - dispute_id: bVTprrwk0gygTLZ96VX1oB
-          evidence_file:
-            filename: customer-interaction
-            filetype: JPG
-          evidence_type: CARDHOLDER_COMMUNICATION
-          id: CpfnkwGselCwS8QFvxN6
-          uploaded_at: '2022-05-10T15:57:13.802Z'
-        - dispute_id: bVTprrwk0gygTLZ96VX1oB
-          evidence_file:
-            filename: ''
-            filetype: ''
-          evidence_type: REBUTTAL_EXPLANATION
-          id: TOomLInj6iWmP3N8qfCXrB
-          uploaded_at: '2022-05-18T16:01:10.000Z'
-    AcceptDisputeResponse:
-      type: object
-      description: Defines the fields in an `AcceptDispute` response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        dispute:
-          $ref: '#/components/schemas/Dispute'
-          description: Details about the accepted dispute.
-      example:
-        dispute:
-          amount_money:
-            amount: 2500
-            currency: USD
-          brand_dispute_id: '100000809947'
-          card_brand: VISA
-          created_at: '2022-06-29T18:45:22.265Z'
-          disputed_payment:
-            payment_id: zhyh1ch64kRBrrlfVhwjCEjZWzNZY
-          due_at: '2022-07-13T00:00:00.000Z'
-          id: XDgyFu7yo1E2S5lQGGpYn
-          location_id: L1HN3ZMQK64X9
-          reason: NO_KNOWLEDGE
-          reported_at: '2022-06-29T00:00:00.000Z'
-          state: ACCEPTED
-          updated_at: '2022-07-07T19:14:42.650Z'
-          version: 2
-    CreateDisputeEvidenceTextResponse:
-      type: object
-      description: Defines the fields in a `CreateDisputeEvidenceText` response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        evidence:
-          $ref: '#/components/schemas/DisputeEvidence'
-          description: The newly uploaded dispute evidence metadata.
-      example:
-        evidence:
-          dispute_id: bVTprrwk0gygTLZ96VX1oB
-          evidence_text: The customer purchased the item twice, on April 11 and April 28.
-          evidence_type: REBUTTAL_EXPLANATION
-          id: TOomLInj6iWmP3N8qfCXrB
-          uploaded_at: '2022-05-18T16:01:10.000Z'
     Dispute:
       type: object
       description: Represents a [dispute](https://developer.squareup.com/docs/disputes-api/overview) a cardholder initiated with their bank.
@@ -1481,100 +1602,214 @@ components:
           description: The ID of the location where the dispute originated.
           minLength: 1
           maxLength: 40
-    CardBrand:
+    DisputeReason:
       type: string
       enum:
-      - OTHER_BRAND
-      - VISA
-      - MASTERCARD
-      - AMERICAN_EXPRESS
-      - DISCOVER
-      - DISCOVER_DINERS
-      - JCB
-      - CHINA_UNIONPAY
-      - SQUARE_GIFT_CARD
-      - SQUARE_CAPITAL_CARD
-      - INTERAC
-      - EFTPOS
-      - FELICA
-      - EBT
+      - AMOUNT_DIFFERS
+      - CANCELLED
+      - DUPLICATE
+      - NO_KNOWLEDGE
+      - NOT_AS_DESCRIBED
+      - NOT_RECEIVED
+      - PAID_BY_OTHER_MEANS
+      - CUSTOMER_REQUESTS_CREDIT
+      - EMV_LIABILITY_SHIFT
       x-enum-elements:
-      - name: OTHER_BRAND
-        description: ''
-      - name: VISA
-        description: ''
-      - name: MASTERCARD
-        description: ''
-      - name: AMERICAN_EXPRESS
-        description: ''
-      - name: DISCOVER
-        description: ''
-      - name: DISCOVER_DINERS
-        description: ''
-      - name: JCB
-        description: ''
-      - name: CHINA_UNIONPAY
-        description: ''
-      - name: SQUARE_GIFT_CARD
-        description: ''
-      - name: SQUARE_CAPITAL_CARD
-        description: ''
-      - name: INTERAC
-        description: ''
-      - name: EFTPOS
-        description: ''
-      - name: FELICA
-        description: ''
-      - name: EBT
-        description: ''
-      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
+      - name: AMOUNT_DIFFERS
+        description: 'The cardholder claims that they were charged the wrong amount for the purchase.
+
+          To challenge this dispute, provide specific and concrete evidence that the cardholder agreed
+
+          to the amount charged.'
+      - name: CANCELLED
+        description: 'The cardholder claims that they attempted to return the goods or cancel the service.
+
+          To challenge this dispute, provide specific and concrete evidence to prove that the cardholder
+
+          is not due a refund and that the cardholder acknowledged your cancellation policy.'
+      - name: DUPLICATE
+        description: 'The cardholder claims that they were charged twice for the same purchase.
+
+          To challenge this dispute, provide specific and concrete evidence that shows both charges are
+
+          legitimate and independent of one another.'
+      - name: NO_KNOWLEDGE
+        description: 'The cardholder claims that they did not make this purchase nor authorized the charge.
+
+          To challenge this dispute, provide specific and concrete evidence that proves that the cardholder
+
+          identity was verified at the time of purchase and that the purchase was authorized.'
+      - name: NOT_AS_DESCRIBED
+        description: 'The cardholder claims the product or service was provided, but the quality of the deliverable
+
+          did not align with the expectations of the cardholder based on the description.
+
+          To challenge this dispute, provide specific and concrete evidence that shows the cardholder is in
+
+          possession of the product as described or received the service as described and agreed on.'
+      - name: NOT_RECEIVED
+        description: 'The cardholder claims the product or service was not received by the cardholder within the
+
+          stated time frame.
+
+          To challenge this dispute, provide specific and concrete evidence to prove that the cardholder is
+
+          in possession of or received the product or service sold.'
+      - name: PAID_BY_OTHER_MEANS
+        description: 'The cardholder claims that they previously paid for this purchase.
+
+          To challenge this dispute, provide specific and concrete evidence that shows both charges are
+
+          legitimate and independent of one another or proof that you already provided a credit for the charge.'
+      - name: CUSTOMER_REQUESTS_CREDIT
+        description: 'The cardholder claims that the purchase was canceled or returned, but they have not yet received
+
+          the credit.
+
+          To challenge this dispute, provide specific and concrete evidence to prove that the cardholder is not
+
+          due a refund and that they acknowledged your cancellation and/or refund policy.'
+      - name: EMV_LIABILITY_SHIFT
+        description: 'A chip-enabled card was not processed through a compliant chip-card reader (for example, it was swiped
+
+          instead of dipped into a chip-card reader).
+
+          You cannot challenge this dispute because the payment did not comply with EMV security requirements.
+
+          For more information, see [What Is EMV?](https://squareup.com/emv)'
+      description: 'The list of possible reasons why a cardholder might initiate a
+
+        dispute with their bank.'
       x-release-status: PUBLIC
-    DisputeEvidence:
+    RetrieveDisputeResponse:
       type: object
+      description: Defines fields in a `RetrieveDispute` response.
       x-release-status: PUBLIC
       properties:
-        evidence_id:
-          type:
-          - string
-          - 'null'
-          description: The Square-generated ID of the evidence.
-          minLength: 1
-          maxLength: 40
-          x-release-status: DEPRECATED
-        id:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        dispute:
+          $ref: '#/components/schemas/Dispute'
+          description: Details about the requested `Dispute`.
+      example:
+        dispute:
+          amount_money:
+            amount: 2500
+            currency: USD
+          brand_dispute_id: '100000809947'
+          card_brand: VISA
+          created_at: '2022-06-29T18:45:22.265Z'
+          disputed_payment:
+            payment_id: zhyh1ch64kRBrrlfVhwjCEjZWzNZY
+          due_at: '2022-07-13T00:00:00.000Z'
+          id: XDgyFu7yo1E2S5lQGGpYn
+          location_id: L1HN3ZMQK64X9
+          reason: NO_KNOWLEDGE
+          reported_at: '2022-06-29T00:00:00.000Z'
+          state: ACCEPTED
+          updated_at: '2022-07-07T19:14:42.650Z'
+          version: 2
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    CreateDisputeEvidenceTextRequest:
+      type: object
+      description: Defines the parameters for a `CreateDisputeEvidenceText` request.
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      - evidence_text
+      properties:
+        idempotency_key:
           type: string
-          description: The Square-generated ID of the evidence.
+          description: A unique key identifying the request. For more information, see [Idempotency](https://developer.squareup.com/docs/working-with-apis/idempotency).
           minLength: 1
-          maxLength: 40
-        dispute_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the dispute the evidence is associated with.
-          minLength: 1
-          maxLength: 40
-        evidence_file:
-          $ref: '#/components/schemas/DisputeEvidenceFile'
-          description: Image, PDF, TXT
-        evidence_text:
-          type:
-          - string
-          - 'null'
-          description: Raw text
-          minLength: 1
-          maxLength: 500
-        uploaded_at:
-          type:
-          - string
-          - 'null'
-          description: The time when the evidence was uploaded, in RFC 3339 format.
-          minLength: 1
-          maxLength: 40
+          maxLength: 45
         evidence_type:
           $ref: '#/components/schemas/DisputeEvidenceType'
-          description: 'The type of the evidence.
+          description: 'The type of evidence you are uploading.
 
             See [DisputeEvidenceType](#type-disputeevidencetype) for possible values'
+        evidence_text:
+          type: string
+          description: The evidence string.
+          minLength: 1
+          maxLength: 500
+      example:
+        evidence_text: 1Z8888888888888888
+        evidence_type: TRACKING_NUMBER
+        idempotency_key: ed3ee3933d946f1514d505d173c82648
+    CreateDisputeEvidenceFileRequest:
+      type: object
+      description: Defines the parameters for a `CreateDisputeEvidenceFile` request.
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      properties:
+        idempotency_key:
+          type: string
+          description: A unique key identifying the request. For more information, see [Idempotency](https://developer.squareup.com/docs/working-with-apis/idempotency).
+          minLength: 1
+          maxLength: 45
+        evidence_type:
+          $ref: '#/components/schemas/DisputeEvidenceType'
+          description: 'The type of evidence you are uploading.
+
+            See [DisputeEvidenceType](#type-disputeevidencetype) for possible values'
+        content_type:
+          type: string
+          description: 'The MIME type of the uploaded file.
+
+            The type can be image/heic, image/heif, image/jpeg, application/pdf, image/png, or image/tiff.'
+          minLength: 1
+          maxLength: 40
     ErrorCode:
       type: string
       enum:
@@ -2321,169 +2556,47 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    CreateDisputeEvidenceFileRequest:
+    DisputedPayment:
       type: object
-      description: Defines the parameters for a `CreateDisputeEvidenceFile` request.
+      description: The payment the cardholder disputed.
       x-release-status: PUBLIC
-      required:
-      - idempotency_key
       properties:
-        idempotency_key:
-          type: string
-          description: A unique key identifying the request. For more information, see [Idempotency](https://developer.squareup.com/docs/working-with-apis/idempotency).
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: Square-generated unique ID of the payment being disputed.
           minLength: 1
-          maxLength: 45
-        evidence_type:
-          $ref: '#/components/schemas/DisputeEvidenceType'
-          description: 'The type of evidence you are uploading.
-
-            See [DisputeEvidenceType](#type-disputeevidencetype) for possible values'
-        content_type:
-          type: string
-          description: 'The MIME type of the uploaded file.
-
-            The type can be image/heic, image/heif, image/jpeg, application/pdf, image/png, or image/tiff.'
-          minLength: 1
-          maxLength: 40
-    DisputeEvidenceType:
+          maxLength: 192
+    DisputeState:
       type: string
       enum:
-      - GENERIC_EVIDENCE
-      - ONLINE_OR_APP_ACCESS_LOG
-      - AUTHORIZATION_DOCUMENTATION
-      - CANCELLATION_OR_REFUND_DOCUMENTATION
-      - CARDHOLDER_COMMUNICATION
-      - CARDHOLDER_INFORMATION
-      - PURCHASE_ACKNOWLEDGEMENT
-      - DUPLICATE_CHARGE_DOCUMENTATION
-      - PRODUCT_OR_SERVICE_DESCRIPTION
-      - RECEIPT
-      - SERVICE_RECEIVED_DOCUMENTATION
-      - PROOF_OF_DELIVERY_DOCUMENTATION
-      - RELATED_TRANSACTION_DOCUMENTATION
-      - REBUTTAL_EXPLANATION
-      - TRACKING_NUMBER
+      - INQUIRY_EVIDENCE_REQUIRED
+      - INQUIRY_PROCESSING
+      - INQUIRY_CLOSED
+      - EVIDENCE_REQUIRED
+      - PROCESSING
+      - WON
+      - LOST
+      - ACCEPTED
       x-enum-elements:
-      - name: GENERIC_EVIDENCE
-        description: 'Square assumes this evidence type if you do not provide a type when uploading evidence.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: ONLINE_OR_APP_ACCESS_LOG
-        description: 'Server or activity logs that show proof of the cardholder’s identity and that the
-
-          cardholder successfully ordered and received the goods (digitally or otherwise).
-
-          Example evidence includes IP addresses, corresponding timestamps/dates, cardholder’s name and email
-
-          address linked to a cardholder profile held by the seller, proof the same device and card (used
-
-          in dispute) were previously used in prior undisputed transaction, and any related detailed activity.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: AUTHORIZATION_DOCUMENTATION
-        description: 'Evidence that the cardholder did provide authorization for the charge.
-
-          Example evidence includes a signed credit card authorization.
-
-
-          Use when uploading evidence as a file.'
-      - name: CANCELLATION_OR_REFUND_DOCUMENTATION
-        description: 'Evidence that the cardholder acknowledged your refund or cancellation policy.
-
-          Example evidence includes a signature or checkbox showing the cardholder’s acknowledgement of your
-
-          refund or cancellation policy.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: CARDHOLDER_COMMUNICATION
-        description: 'Evidence that shows relevant communication with the cardholder.
-
-          Example evidence includes emails or texts that show the cardholder received goods/services or
-
-          demonstrate cardholder satisfaction.
-
-
-          Use when uploading evidence as a file.'
-      - name: CARDHOLDER_INFORMATION
-        description: 'Evidence that validates the customer''s identity.
-
-          Example evidence includes personally identifiable details such as name, email address, purchaser IP
-
-          address, and a copy of the cardholder ID.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: PURCHASE_ACKNOWLEDGEMENT
-        description: 'Evidence that shows proof of the sale/transaction.
-
-          Example evidence includes an invoice, contract, or other item showing the customer’s acknowledgement
-
-          of the purchase and your terms.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: DUPLICATE_CHARGE_DOCUMENTATION
-        description: 'Evidence that shows the charges in question are valid and distinct from one another.
-
-          Example evidence includes receipts, shipping labels, and invoices along with their distinct payment IDs.
-
-
-          Use when uploading evidence as a file.'
-      - name: PRODUCT_OR_SERVICE_DESCRIPTION
-        description: 'A description of the product or service sold.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: RECEIPT
-        description: 'A receipt or message sent to the cardholder detailing the charge.
-
-          Note: You do not need to upload the Square receipt; Square submits the receipt on your behalf.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: SERVICE_RECEIVED_DOCUMENTATION
-        description: 'Evidence that the service was provided to the cardholder or the expected date that services will be rendered.
-
-          Example evidence includes a signed delivery form, work order, expected delivery date, or other written agreements.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: PROOF_OF_DELIVERY_DOCUMENTATION
-        description: 'Evidence that shows the product was provided to the cardholder or the expected date of delivery.
-
-          Example evidence includes a signed delivery form or written agreement acknowledging receipt of the goods or services.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: RELATED_TRANSACTION_DOCUMENTATION
-        description: 'Evidence that shows the cardholder previously processed transactions on the same card and did not dispute them.
-
-          Note: Square automatically provides up to five distinct Square receipts for related transactions, when available.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: REBUTTAL_EXPLANATION
-        description: 'An explanation of why the cardholder’s claim is invalid.
-
-          Example evidence includes an explanation of why each distinct charge is a legitimate purchase, why the cardholder’s claim
-
-          for credit owed due to their attempt to cancel, return, or refund is invalid per your stated policy and cardholder
-
-          agreement, or an explanation of how the cardholder did not attempt to remedy the issue with you first to receive credit.
-
-
-          Use when uploading evidence as a file or string.'
-      - name: TRACKING_NUMBER
-        description: 'The tracking number for the order provided by the shipping carrier. If you have multiple numbers, they need to be
-
-          submitted individually as separate pieces of evidence.
-
-
-          Use when uploading evidence as a string.'
-      description: The type of the dispute evidence.
+      - name: INQUIRY_EVIDENCE_REQUIRED
+        description: The initial state of an inquiry with evidence required
+      - name: INQUIRY_PROCESSING
+        description: Inquiry evidence has been submitted and the bank is processing the inquiry
+      - name: INQUIRY_CLOSED
+        description: The inquiry is complete
+      - name: EVIDENCE_REQUIRED
+        description: The initial state of a dispute with evidence required
+      - name: PROCESSING
+        description: Dispute evidence has been submitted and the bank is processing the dispute
+      - name: WON
+        description: The bank has completed processing the dispute and the seller has won
+      - name: LOST
+        description: The bank has completed processing the dispute and the seller has lost
+      - name: ACCEPTED
+        description: The seller has accepted the dispute
+      description: The list of possible dispute states.
       x-release-status: PUBLIC
     CreateDisputeEvidenceFileResponse:
       type: object
@@ -2506,6 +2619,35 @@ components:
             filetype: image/jpeg
           id: TOomLInj6iWmP3N8qfCXrB
           uploaded_at: '2022-05-18T16:01:10.000Z'
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     DeleteDisputeEvidenceResponse:
       type: object
       description: Defines the fields in a `DeleteDisputeEvidence` response.
@@ -2517,148 +2659,6 @@ components:
             $ref: '#/components/schemas/Error'
           description: Information about errors encountered during the request.
       example: {}
-    Money:
-      type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
-
-        Fields that do not explicitly define whether they are signed or unsigned are
-
-        considered unsigned and can only hold positive amounts. For signed fields, the
-
-        sign of the value indicates the purpose of the money transfer. See
-
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
-
-        for more information.'
-      x-release-status: PUBLIC
-      properties:
-        amount:
-          type:
-          - integer
-          - 'null'
-          description: 'The amount of money, in the smallest denomination of the currency
-
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
-
-            in cents. Monetary amounts can be positive or negative. See the specific
-
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
-
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
-    CreateDisputeEvidenceTextRequest:
-      type: object
-      description: Defines the parameters for a `CreateDisputeEvidenceText` request.
-      x-release-status: PUBLIC
-      required:
-      - idempotency_key
-      - evidence_text
-      properties:
-        idempotency_key:
-          type: string
-          description: A unique key identifying the request. For more information, see [Idempotency](https://developer.squareup.com/docs/working-with-apis/idempotency).
-          minLength: 1
-          maxLength: 45
-        evidence_type:
-          $ref: '#/components/schemas/DisputeEvidenceType'
-          description: 'The type of evidence you are uploading.
-
-            See [DisputeEvidenceType](#type-disputeevidencetype) for possible values'
-        evidence_text:
-          type: string
-          description: The evidence string.
-          minLength: 1
-          maxLength: 500
-      example:
-        evidence_text: 1Z8888888888888888
-        evidence_type: TRACKING_NUMBER
-        idempotency_key: ed3ee3933d946f1514d505d173c82648
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    RetrieveDisputeResponse:
-      type: object
-      description: Defines fields in a `RetrieveDispute` response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        dispute:
-          $ref: '#/components/schemas/Dispute'
-          description: Details about the requested `Dispute`.
-      example:
-        dispute:
-          amount_money:
-            amount: 2500
-            currency: USD
-          brand_dispute_id: '100000809947'
-          card_brand: VISA
-          created_at: '2022-06-29T18:45:22.265Z'
-          disputed_payment:
-            payment_id: zhyh1ch64kRBrrlfVhwjCEjZWzNZY
-          due_at: '2022-07-13T00:00:00.000Z'
-          id: XDgyFu7yo1E2S5lQGGpYn
-          location_id: L1HN3ZMQK64X9
-          reason: NO_KNOWLEDGE
-          reported_at: '2022-06-29T00:00:00.000Z'
-          state: ACCEPTED
-          updated_at: '2022-07-07T19:14:42.650Z'
-          version: 2
   securitySchemes:
     oauth2:
       type: oauth2

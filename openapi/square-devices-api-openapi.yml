@@ -332,158 +332,15 @@ paths:
       - error-code: NOT_FOUND
 components:
   schemas:
-    GetDeviceCodeResponse:
+    DeviceStatus:
       type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        device_code:
-          $ref: '#/components/schemas/DeviceCode'
-          description: The queried DeviceCode.
-      example:
-        device_code:
-          code: EBCARJ
-          created_at: '2020-02-06T18:44:33.000Z'
-          device_id: 907CS13101300122
-          id: B3Z6NAMYQSMTM
-          location_id: B5E4484SHHNYH
-          name: Counter 1
-          pair_by: '2020-02-06T18:49:33.000Z'
-          product_type: TERMINAL_API
-          status: PAIRED
-          status_changed_at: '2020-02-06T18:47:28.000Z'
-    ProductType:
-      type: string
-      enum:
-      - TERMINAL_API
-      x-enum-elements:
-      - name: TERMINAL_API
-        description: ''
-      x-release-status: PUBLIC
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
+      x-release-status: BETA
       properties:
         category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
+          $ref: '#/components/schemas/DeviceStatusCategory'
+          description: '
 
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    GetDeviceResponse:
-      type: object
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        device:
-          $ref: '#/components/schemas/Device'
-          description: The requested `Device`.
-      example:
-        device:
-          attributes:
-            manufacturer: Square
-            manufacturers_id: 995CS397A6475287
-            merchant_token: MLCHXZCBWFGDW
-            model: T2
-            name: Square Terminal 995
-            type: TERMINAL
-            updated_at: '2023-09-29T13:12:22.365049321Z'
-            version: 5.41.0085
-          components:
-          - application_details:
-              application_type: TERMINAL_API
-              session_location: LMN2K7S3RTOU3
-              version: '6.25'
-            type: APPLICATION
-          - card_reader_details:
-              version: 3.53.70
-            type: CARD_READER
-          - battery_details:
-              external_power: AVAILABLE_CHARGING
-              visible_percent: 5
-            type: BATTERY
-          - type: WIFI
-            wifi_details:
-              active: true
-              ip_address_v4: 10.0.0.7
-              secure_connection: WPA/WPA2 PSK
-              signal_strength:
-                value: 2
-              ssid: Staff Network
-          - ethernet_details:
-              active: false
-            type: ETHERNET
-          id: device:995CS397A6475287
-          status:
-            category: AVAILABLE
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    Component:
-      type: object
-      description: The wrapper object for the component entries of a given component type.
-      x-release-status: BETA
-      required:
-      - type
-      properties:
-        type:
-          $ref: '#/components/schemas/ComponentComponentType'
-          description: 'The type of this component. Each component type has expected properties expressed
-
-            in a structured format within its corresponding `*_details` field.
-
-            See [ComponentType](#type-componenttype) for possible values'
-        application_details:
-          $ref: '#/components/schemas/DeviceComponentDetailsApplicationDetails'
-          description: Structured data for an `Application`, set for Components of type `APPLICATION`.
-        card_reader_details:
-          $ref: '#/components/schemas/DeviceComponentDetailsCardReaderDetails'
-          description: Structured data for a `CardReader`, set for Components of type `CARD_READER`.
-        battery_details:
-          $ref: '#/components/schemas/DeviceComponentDetailsBatteryDetails'
-          description: Structured data for a `Battery`, set for Components of type `BATTERY`.
-        wifi_details:
-          $ref: '#/components/schemas/DeviceComponentDetailsWiFiDetails'
-          description: Structured data for a `WiFi` interface, set for Components of type `WIFI`.
-        ethernet_details:
-          $ref: '#/components/schemas/DeviceComponentDetailsEthernetDetails'
-          description: Structured data for an `Ethernet` interface, set for Components of type `ETHERNET`.
+            See [Category](#type-category) for possible values'
     DeviceCodeStatus:
       type: string
       enum:
@@ -502,6 +359,101 @@ components:
         description: The device code was unpaired and expired before it was paired.
       description: DeviceCode.Status enum.
       x-release-status: PUBLIC
+    ComponentComponentType:
+      type: string
+      enum:
+      - APPLICATION
+      - CARD_READER
+      - BATTERY
+      - WIFI
+      - ETHERNET
+      - PRINTER
+      x-enum-elements:
+      - name: APPLICATION
+        description: ''
+      - name: CARD_READER
+        description: ''
+      - name: BATTERY
+        description: ''
+      - name: WIFI
+        description: ''
+      - name: ETHERNET
+        description: ''
+      - name: PRINTER
+        description: ''
+      description: An enum for ComponentType.
+      x-release-status: BETA
+    DeviceAttributes:
+      type: object
+      x-release-status: BETA
+      required:
+      - type
+      - manufacturer
+      properties:
+        type:
+          $ref: '#/components/schemas/DeviceAttributesDeviceType'
+          description: 'The device type.
+
+            See [DeviceType](#type-devicetype) for possible values'
+        manufacturer:
+          type: string
+          description: The maker of the device.
+        model:
+          type:
+          - string
+          - 'null'
+          description: The specific model of the device.
+        name:
+          type:
+          - string
+          - 'null'
+          description: A seller-specified name for the device.
+        manufacturers_id:
+          type:
+          - string
+          - 'null'
+          description: 'The manufacturer-supplied identifier for the device (where available). In many cases,
+
+            this identifier will be a serial number.'
+        updated_at:
+          type: string
+          description: 'The RFC 3339-formatted value of the most recent update to the device information.
+
+            (Could represent any field update on the device.)'
+        version:
+          type: string
+          description: The current version of software installed on the device.
+        merchant_token:
+          type:
+          - string
+          - 'null'
+          description: The merchant_token identifying the merchant controlling the device.
+    CreateDeviceCodeRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      - device_code
+      properties:
+        idempotency_key:
+          type: string
+          description: 'A unique string that identifies this CreateDeviceCode request. Keys can
+
+            be any valid string but must be unique for every CreateDeviceCode request.
+
+
+            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
+          minLength: 1
+          maxLength: 128
+        device_code:
+          $ref: '#/components/schemas/DeviceCode'
+          description: The device code to create.
+      example:
+        device_code:
+          location_id: B5E4484SHHNYH
+          name: Counter 1
+          product_type: TERMINAL_API
+        idempotency_key: 01bb00a6-0c86-4770-94ed-f5fca973cd56
     ListDeviceCodesResponse:
       type: object
       x-release-status: PUBLIC
@@ -547,46 +499,133 @@ components:
           product_type: TERMINAL_API
           status: UNPAIRED
           status_changed_at: '2020-02-07T19:55:04.000Z'
-    DeviceComponentDetailsBatteryDetails:
+    DeviceComponentDetailsApplicationDetails:
       type: object
       x-release-status: BETA
       properties:
-        visible_percent:
-          type:
-          - integer
-          - 'null'
-          description: The battery charge percentage as displayed on the device.
-        external_power:
-          $ref: '#/components/schemas/DeviceComponentDetailsExternalPower'
-          description: 'The status of external_power.
+        application_type:
+          $ref: '#/components/schemas/ApplicationType'
+          description: 'The type of application.
 
-            See [ExternalPower](#type-externalpower) for possible values'
-    CreateDeviceCodeRequest:
-      type: object
-      x-release-status: PUBLIC
-      required:
-      - idempotency_key
-      - device_code
-      properties:
-        idempotency_key:
+            See [ApplicationType](#type-applicationtype) for possible values'
+        version:
           type: string
-          description: 'A unique string that identifies this CreateDeviceCode request. Keys can
+          description: The version of the application.
+        session_location:
+          type:
+          - string
+          - 'null'
+          description: The location_id of the session for the application.
+        device_code_id:
+          type:
+          - string
+          - 'null'
+          description: The id of the device code that was used to log in to the device.
+    DeviceAttributesDeviceType:
+      type: string
+      enum:
+      - TERMINAL
+      x-enum-elements:
+      - name: TERMINAL
+        description: ''
+      description: An enum identifier of the device type.
+      x-release-status: BETA
+    ListDevicesResponse:
+      type: object
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors that occurred during the request.
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+          description: The requested list of `Device` objects.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If empty,
 
-            be any valid string but must be unique for every CreateDeviceCode request.
+            this is the final response.
 
-
-            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
-          minLength: 1
-          maxLength: 128
-        device_code:
-          $ref: '#/components/schemas/DeviceCode'
-          description: The device code to create.
+            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
       example:
-        device_code:
-          location_id: B5E4484SHHNYH
-          name: Counter 1
-          product_type: TERMINAL_API
-        idempotency_key: 01bb00a6-0c86-4770-94ed-f5fca973cd56
+        cursor: GcXjlV2iaizH7R0fMT6wUDbw6l4otigjzx8XOOspUKHo9EPLRByM
+        devices:
+        - attributes:
+            manufacturer: Square
+            manufacturers_id: 995CS397A6475287
+            merchant_token: MLCHNZCBWFDZB
+            model: T2
+            name: Square Terminal 995
+            type: TERMINAL
+            updated_at: '2023-09-29T13:04:56.335762883Z'
+            version: 5.41.0085
+          components:
+          - application_details:
+              application_type: TERMINAL_API
+              session_location: LMN2K7S3RTOU3
+              version: '6.25'
+            type: APPLICATION
+          - card_reader_details:
+              version: 3.53.70
+            type: CARD_READER
+          - battery_details:
+              external_power: AVAILABLE_CHARGING
+              visible_percent: 5
+            type: BATTERY
+          - type: WIFI
+            wifi_details:
+              active: true
+              ip_address_v4: 10.0.0.7
+              secure_connection: WPA/WPA2 PSK
+              signal_strength:
+                value: 2
+              ssid: Staff Network
+          - ethernet_details:
+              active: false
+            type: ETHERNET
+          id: device:995CS397A6475287
+          status:
+            category: AVAILABLE
+        - attributes:
+            manufacturer: Square
+            manufacturers_id: 995CS234B5493559
+            merchant_token: MLCHXZCBWFGDW
+            model: T2
+            name: Square Terminal 995
+            type: TERMINAL
+            updated_at: '2023-09-29T12:39:56.335742073Z'
+            version: 5.41.0085
+          components:
+          - application_details:
+              application_type: TERMINAL_API
+              session_location: LMN2K7S3RTOU3
+              version: '6.25'
+            type: APPLICATION
+          - card_reader_details:
+              version: 3.53.70
+            type: CARD_READER
+          - battery_details:
+              external_power: AVAILABLE_CHARGING
+              visible_percent: 24
+            type: BATTERY
+          - type: WIFI
+            wifi_details:
+              active: true
+              ip_address_v4: 10.0.0.7
+              secure_connection: WPA/WPA2 PSK
+              signal_strength:
+                value: 2
+              ssid: Staff Network
+          - ethernet_details:
+              active: false
+            type: ETHERNET
+          id: device:995CS234B5493559
+          status:
+            category: NEEDS_ATTENTION
     DeviceCode:
       type: object
       x-release-status: PUBLIC
@@ -642,29 +681,86 @@ components:
           type: string
           description: When this DeviceCode was paired. Timestamp in RFC 3339 format.
           readOnly: true
-    ComponentComponentType:
+    Component:
+      type: object
+      description: The wrapper object for the component entries of a given component type.
+      x-release-status: BETA
+      required:
+      - type
+      properties:
+        type:
+          $ref: '#/components/schemas/ComponentComponentType'
+          description: 'The type of this component. Each component type has expected properties expressed
+
+            in a structured format within its corresponding `*_details` field.
+
+            See [ComponentType](#type-componenttype) for possible values'
+        application_details:
+          $ref: '#/components/schemas/DeviceComponentDetailsApplicationDetails'
+          description: Structured data for an `Application`, set for Components of type `APPLICATION`.
+        card_reader_details:
+          $ref: '#/components/schemas/DeviceComponentDetailsCardReaderDetails'
+          description: Structured data for a `CardReader`, set for Components of type `CARD_READER`.
+        battery_details:
+          $ref: '#/components/schemas/DeviceComponentDetailsBatteryDetails'
+          description: Structured data for a `Battery`, set for Components of type `BATTERY`.
+        wifi_details:
+          $ref: '#/components/schemas/DeviceComponentDetailsWiFiDetails'
+          description: Structured data for a `WiFi` interface, set for Components of type `WIFI`.
+        ethernet_details:
+          $ref: '#/components/schemas/DeviceComponentDetailsEthernetDetails'
+          description: Structured data for an `Ethernet` interface, set for Components of type `ETHERNET`.
+    GetDeviceCodeResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        device_code:
+          $ref: '#/components/schemas/DeviceCode'
+          description: The queried DeviceCode.
+      example:
+        device_code:
+          code: EBCARJ
+          created_at: '2020-02-06T18:44:33.000Z'
+          device_id: 907CS13101300122
+          id: B3Z6NAMYQSMTM
+          location_id: B5E4484SHHNYH
+          name: Counter 1
+          pair_by: '2020-02-06T18:49:33.000Z'
+          product_type: TERMINAL_API
+          status: PAIRED
+          status_changed_at: '2020-02-06T18:47:28.000Z'
+    DeviceComponentDetailsEthernetDetails:
+      type: object
+      x-release-status: BETA
+      properties:
+        active:
+          type:
+          - boolean
+          - 'null'
+          description: A boolean to represent whether the Ethernet interface is currently active.
+        ip_address_v4:
+          type:
+          - string
+          - 'null'
+          description: The string representation of the device’s IPv4 address.
+    DeviceStatusCategory:
       type: string
       enum:
-      - APPLICATION
-      - CARD_READER
-      - BATTERY
-      - WIFI
-      - ETHERNET
-      - PRINTER
+      - AVAILABLE
+      - NEEDS_ATTENTION
+      - OFFLINE
       x-enum-elements:
-      - name: APPLICATION
+      - name: AVAILABLE
         description: ''
-      - name: CARD_READER
+      - name: NEEDS_ATTENTION
         description: ''
-      - name: BATTERY
+      - name: OFFLINE
         description: ''
-      - name: WIFI
-        description: ''
-      - name: ETHERNET
-        description: ''
-      - name: PRINTER
-        description: ''
-      description: An enum for ComponentType.
       x-release-status: BETA
     DeviceComponentDetailsCardReaderDetails:
       type: object
@@ -673,15 +769,151 @@ components:
         version:
           type: string
           description: The version of the card reader.
-    DeviceStatus:
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    Device:
+      type: object
+      x-release-status: BETA
+      required:
+      - attributes
+      properties:
+        id:
+          type: string
+          description: 'A synthetic identifier for the device. The identifier includes a standardized prefix and
+
+            is otherwise an opaque id generated from key device fields.'
+          readOnly: true
+        attributes:
+          $ref: '#/components/schemas/DeviceAttributes'
+          description: A collection of DeviceAttributes representing the device.
+        components:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Component'
+          description: A list of components applicable to the device.
+        status:
+          $ref: '#/components/schemas/DeviceStatus'
+          description: The current status of the device.
+          readOnly: true
+    GetDeviceResponse:
       type: object
       x-release-status: BETA
       properties:
-        category:
-          $ref: '#/components/schemas/DeviceStatusCategory'
-          description: '
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        device:
+          $ref: '#/components/schemas/Device'
+          description: The requested `Device`.
+      example:
+        device:
+          attributes:
+            manufacturer: Square
+            manufacturers_id: 995CS397A6475287
+            merchant_token: MLCHXZCBWFGDW
+            model: T2
+            name: Square Terminal 995
+            type: TERMINAL
+            updated_at: '2023-09-29T13:12:22.365049321Z'
+            version: 5.41.0085
+          components:
+          - application_details:
+              application_type: TERMINAL_API
+              session_location: LMN2K7S3RTOU3
+              version: '6.25'
+            type: APPLICATION
+          - card_reader_details:
+              version: 3.53.70
+            type: CARD_READER
+          - battery_details:
+              external_power: AVAILABLE_CHARGING
+              visible_percent: 5
+            type: BATTERY
+          - type: WIFI
+            wifi_details:
+              active: true
+              ip_address_v4: 10.0.0.7
+              secure_connection: WPA/WPA2 PSK
+              signal_strength:
+                value: 2
+              ssid: Staff Network
+          - ethernet_details:
+              active: false
+            type: ETHERNET
+          id: device:995CS397A6475287
+          status:
+            category: AVAILABLE
+    ProductType:
+      type: string
+      enum:
+      - TERMINAL_API
+      x-enum-elements:
+      - name: TERMINAL_API
+        description: ''
+      x-release-status: PUBLIC
+    DeviceComponentDetailsBatteryDetails:
+      type: object
+      x-release-status: BETA
+      properties:
+        visible_percent:
+          type:
+          - integer
+          - 'null'
+          description: The battery charge percentage as displayed on the device.
+        external_power:
+          $ref: '#/components/schemas/DeviceComponentDetailsExternalPower'
+          description: 'The status of external_power.
 
-            See [Category](#type-category) for possible values'
+            See [ExternalPower](#type-externalpower) for possible values'
     ApplicationType:
       type: string
       enum:
@@ -690,6 +922,36 @@ components:
       - name: TERMINAL_API
         description: ''
       x-release-status: BETA
+    DeviceComponentDetailsExternalPower:
+      type: string
+      enum:
+      - AVAILABLE_CHARGING
+      - AVAILABLE_NOT_IN_USE
+      - UNAVAILABLE
+      - AVAILABLE_INSUFFICIENT
+      x-enum-elements:
+      - name: AVAILABLE_CHARGING
+        description: Plugged in and charging.
+      - name: AVAILABLE_NOT_IN_USE
+        description: Fully charged.
+      - name: UNAVAILABLE
+        description: On battery power.
+      - name: AVAILABLE_INSUFFICIENT
+        description: Not providing enough power for the device.
+      description: An enum for ExternalPower.
+      x-release-status: BETA
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
     ErrorCode:
       type: string
       enum:
@@ -1436,202 +1698,15 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    DeviceComponentDetailsExternalPower:
-      type: string
-      enum:
-      - AVAILABLE_CHARGING
-      - AVAILABLE_NOT_IN_USE
-      - UNAVAILABLE
-      - AVAILABLE_INSUFFICIENT
-      x-enum-elements:
-      - name: AVAILABLE_CHARGING
-        description: Plugged in and charging.
-      - name: AVAILABLE_NOT_IN_USE
-        description: Fully charged.
-      - name: UNAVAILABLE
-        description: On battery power.
-      - name: AVAILABLE_INSUFFICIENT
-        description: Not providing enough power for the device.
-      description: An enum for ExternalPower.
-      x-release-status: BETA
-    DeviceStatusCategory:
-      type: string
-      enum:
-      - AVAILABLE
-      - NEEDS_ATTENTION
-      - OFFLINE
-      x-enum-elements:
-      - name: AVAILABLE
-        description: ''
-      - name: NEEDS_ATTENTION
-        description: ''
-      - name: OFFLINE
-        description: ''
-      x-release-status: BETA
-    DeviceAttributes:
+    DeviceComponentDetailsMeasurement:
       type: object
-      x-release-status: BETA
-      required:
-      - type
-      - manufacturer
-      properties:
-        type:
-          $ref: '#/components/schemas/DeviceAttributesDeviceType'
-          description: 'The device type.
-
-            See [DeviceType](#type-devicetype) for possible values'
-        manufacturer:
-          type: string
-          description: The maker of the device.
-        model:
-          type:
-          - string
-          - 'null'
-          description: The specific model of the device.
-        name:
-          type:
-          - string
-          - 'null'
-          description: A seller-specified name for the device.
-        manufacturers_id:
-          type:
-          - string
-          - 'null'
-          description: 'The manufacturer-supplied identifier for the device (where available). In many cases,
-
-            this identifier will be a serial number.'
-        updated_at:
-          type: string
-          description: 'The RFC 3339-formatted value of the most recent update to the device information.
-
-            (Could represent any field update on the device.)'
-        version:
-          type: string
-          description: The current version of software installed on the device.
-        merchant_token:
-          type:
-          - string
-          - 'null'
-          description: The merchant_token identifying the merchant controlling the device.
-    ListDevicesResponse:
-      type: object
+      description: A value qualified by unit of measure.
       x-release-status: BETA
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors that occurred during the request.
-        devices:
-          type: array
-          items:
-            $ref: '#/components/schemas/Device'
-          description: The requested list of `Device` objects.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If empty,
-
-            this is the final response.
-
-            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
-      example:
-        cursor: GcXjlV2iaizH7R0fMT6wUDbw6l4otigjzx8XOOspUKHo9EPLRByM
-        devices:
-        - attributes:
-            manufacturer: Square
-            manufacturers_id: 995CS397A6475287
-            merchant_token: MLCHNZCBWFDZB
-            model: T2
-            name: Square Terminal 995
-            type: TERMINAL
-            updated_at: '2023-09-29T13:04:56.335762883Z'
-            version: 5.41.0085
-          components:
-          - application_details:
-              application_type: TERMINAL_API
-              session_location: LMN2K7S3RTOU3
-              version: '6.25'
-            type: APPLICATION
-          - card_reader_details:
-              version: 3.53.70
-            type: CARD_READER
-          - battery_details:
-              external_power: AVAILABLE_CHARGING
-              visible_percent: 5
-            type: BATTERY
-          - type: WIFI
-            wifi_details:
-              active: true
-              ip_address_v4: 10.0.0.7
-              secure_connection: WPA/WPA2 PSK
-              signal_strength:
-                value: 2
-              ssid: Staff Network
-          - ethernet_details:
-              active: false
-            type: ETHERNET
-          id: device:995CS397A6475287
-          status:
-            category: AVAILABLE
-        - attributes:
-            manufacturer: Square
-            manufacturers_id: 995CS234B5493559
-            merchant_token: MLCHXZCBWFGDW
-            model: T2
-            name: Square Terminal 995
-            type: TERMINAL
-            updated_at: '2023-09-29T12:39:56.335742073Z'
-            version: 5.41.0085
-          components:
-          - application_details:
-              application_type: TERMINAL_API
-              session_location: LMN2K7S3RTOU3
-              version: '6.25'
-            type: APPLICATION
-          - card_reader_details:
-              version: 3.53.70
-            type: CARD_READER
-          - battery_details:
-              external_power: AVAILABLE_CHARGING
-              visible_percent: 24
-            type: BATTERY
-          - type: WIFI
-            wifi_details:
-              active: true
-              ip_address_v4: 10.0.0.7
-              secure_connection: WPA/WPA2 PSK
-              signal_strength:
-                value: 2
-              ssid: Staff Network
-          - ethernet_details:
-              active: false
-            type: ETHERNET
-          id: device:995CS234B5493559
-          status:
-            category: NEEDS_ATTENTION
-    CreateDeviceCodeResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        device_code:
-          $ref: '#/components/schemas/DeviceCode'
-          description: The created DeviceCode object containing the device code string.
-      example:
-        device_code:
-          code: EBCARJ
-          created_at: '2020-02-06T18:44:33.000Z'
-          id: B3Z6NAMYQSMTM
-          location_id: B5E4484SHHNYH
-          name: Counter 1
-          pair_by: '2020-02-06T18:49:33.000Z'
-          product_type: TERMINAL_API
-          status: UNPAIRED
-          status_changed_at: '2020-02-06T18:44:33.000Z'
+        value:
+          type:
+          - integer
+          - 'null'
     DeviceComponentDetailsWiFiDetails:
       type: object
       x-release-status: BETA
@@ -1661,133 +1736,58 @@ components:
         signal_strength:
           $ref: '#/components/schemas/DeviceComponentDetailsMeasurement'
           description: A representation of signal strength of the WIFI network connection.
-    DeviceAttributesDeviceType:
-      type: string
-      enum:
-      - TERMINAL
-      x-enum-elements:
-      - name: TERMINAL
-        description: ''
-      description: An enum identifier of the device type.
-      x-release-status: BETA
-    DeviceComponentDetailsEthernetDetails:
+    Error:
       type: object
-      x-release-status: BETA
-      properties:
-        active:
-          type:
-          - boolean
-          - 'null'
-          description: A boolean to represent whether the Ethernet interface is currently active.
-        ip_address_v4:
-          type:
-          - string
-          - 'null'
-          description: The string representation of the device’s IPv4 address.
-    DeviceComponentDetailsApplicationDetails:
-      type: object
-      x-release-status: BETA
-      properties:
-        application_type:
-          $ref: '#/components/schemas/ApplicationType'
-          description: 'The type of application.
-
-            See [ApplicationType](#type-applicationtype) for possible values'
-        version:
-          type: string
-          description: The version of the application.
-        session_location:
-          type:
-          - string
-          - 'null'
-          description: The location_id of the session for the application.
-        device_code_id:
-          type:
-          - string
-          - 'null'
-          description: The id of the device code that was used to log in to the device.
-    DeviceComponentDetailsMeasurement:
-      type: object
-      description: A value qualified by unit of measure.
-      x-release-status: BETA
-      properties:
-        value:
-          type:
-          - integer
-          - 'null'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
+      description: 'Represents an error encountered during a request to the Connect API.
 
 
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
       x-release-status: PUBLIC
-    Device:
-      type: object
-      x-release-status: BETA
       required:
-      - attributes
+      - category
+      - code
       properties:
-        id:
-          type: string
-          description: 'A synthetic identifier for the device. The identifier includes a standardized prefix and
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
 
-            is otherwise an opaque id generated from key device fields.'
-          readOnly: true
-        attributes:
-          $ref: '#/components/schemas/DeviceAttributes'
-          description: A collection of DeviceAttributes representing the device.
-        components:
-          type:
-          - array
-          - 'null'
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    CreateDeviceCodeResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
           items:
-            $ref: '#/components/schemas/Component'
-          description: A list of components applicable to the device.
-        status:
-          $ref: '#/components/schemas/DeviceStatus'
-          description: The current status of the device.
-          readOnly: true
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        device_code:
+          $ref: '#/components/schemas/DeviceCode'
+          description: The created DeviceCode object containing the device code string.
+      example:
+        device_code:
+          code: EBCARJ
+          created_at: '2020-02-06T18:44:33.000Z'
+          id: B3Z6NAMYQSMTM
+          location_id: B5E4484SHHNYH
+          name: Counter 1
+          pair_by: '2020-02-06T18:49:33.000Z'
+          product_type: TERMINAL_API
+          status: UNPAIRED
+          status_changed_at: '2020-02-06T18:44:33.000Z'
   securitySchemes:
     oauth2:
       type: oauth2

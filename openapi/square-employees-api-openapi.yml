@@ -199,17 +199,6 @@ paths:
                 $ref: '#/components/schemas/RetrieveEmployeeResponse'
 components:
   schemas:
-    RetrieveEmployeeResponse:
-      type: object
-      x-release-status: DEPRECATED
-      properties:
-        employee:
-          $ref: '#/components/schemas/Employee'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
     Employee:
       type: object
       description: 'An employee object that is used by the external API.
@@ -270,21 +259,6 @@ components:
           type: string
           description: A read-only timestamp in RFC 3339 format.
           readOnly: true
-    EmployeeStatus:
-      type: string
-      enum:
-      - ACTIVE
-      - INACTIVE
-      x-enum-elements:
-      - name: ACTIVE
-        description: Specifies that the employee is in the Active state.
-      - name: INACTIVE
-        description: Specifies that the employee is in the Inactive state.
-      description: 'The status of the Employee being retrieved.
-
-
-        DEPRECATED at version 2020-08-26. Replaced by [TeamMemberStatus](entity:TeamMemberStatus).'
-      x-release-status: DEPRECATED
     ErrorCode:
       type: string
       enum:
@@ -1031,17 +1005,12 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    ListEmployeesResponse:
+    RetrieveEmployeeResponse:
       type: object
       x-release-status: DEPRECATED
       properties:
-        employees:
-          type: array
-          items:
-            $ref: '#/components/schemas/Employee'
-        cursor:
-          type: string
-          description: The token to be used to retrieve the next page of results.
+        employee:
+          $ref: '#/components/schemas/Employee'
         errors:
           type: array
           items:
@@ -1076,6 +1045,22 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
+    ListEmployeesResponse:
+      type: object
+      x-release-status: DEPRECATED
+      properties:
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+        cursor:
+          type: string
+          description: The token to be used to retrieve the next page of results.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
     ErrorCategory:
       type: string
       enum:
@@ -1123,6 +1108,21 @@ components:
 
         request to the Connect API.'
       x-release-status: PUBLIC
+    EmployeeStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - INACTIVE
+      x-enum-elements:
+      - name: ACTIVE
+        description: Specifies that the employee is in the Active state.
+      - name: INACTIVE
+        description: Specifies that the employee is in the Inactive state.
+      description: 'The status of the Employee being retrieved.
+
+
+        DEPRECATED at version 2020-08-26. Replaced by [TeamMemberStatus](entity:TeamMemberStatus).'
+      x-release-status: DEPRECATED
   securitySchemes:
     oauth2:
       type: oauth2

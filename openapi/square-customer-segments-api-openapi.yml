@@ -185,28 +185,30 @@ paths:
                 $ref: '#/components/schemas/RetrieveCustomerSegmentResponse'
 components:
   schemas:
-    RetrieveCustomerSegmentResponse:
+    CustomerSegment:
       type: object
-      description: 'Defines the fields that are included in the response body for requests to the `RetrieveCustomerSegment` endpoint.
-
-
-        Either `errors` or `segment` is present in a given response (never both).'
+      description: "Represents a group of customer profiles that match one or more predefined filter criteria. \n\nSegments (also known as Smart Groups) are defined and created within the Customer Directory in the\nSquare Seller Dashboard or Point of Sale."
       x-release-status: PUBLIC
+      required:
+      - name
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        segment:
-          $ref: '#/components/schemas/CustomerSegment'
-          description: The retrieved customer segment.
-      example:
-        segment:
-          created_at: '2020-01-09T19:33:24.469Z'
-          id: GMNXRZVEXNQDF.CHURN_RISK
-          name: Lapsed
-          updated_at: '2020-04-13T23:01:13Z'
+        id:
+          type: string
+          description: A unique Square-generated ID for the segment.
+          maxLength: 255
+          readOnly: true
+        name:
+          type: string
+          description: The name of the segment.
+          readOnly: true
+        created_at:
+          type: string
+          description: The timestamp when the segment was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the segment was last updated, in RFC 3339 format.
+          readOnly: true
     ListCustomerSegmentsResponse:
       type: object
       description: 'Defines the fields that are included in the response body for requests to the `ListCustomerSegments` endpoint.
@@ -253,30 +255,6 @@ components:
           id: gv2:KF92J19VXN5FK30GX2E8HSGQ20
           name: Instant Profile
           updated_at: '2020-04-13T23:01:03Z'
-    CustomerSegment:
-      type: object
-      description: "Represents a group of customer profiles that match one or more predefined filter criteria. \n\nSegments (also known as Smart Groups) are defined and created within the Customer Directory in the\nSquare Seller Dashboard or Point of Sale."
-      x-release-status: PUBLIC
-      required:
-      - name
-      properties:
-        id:
-          type: string
-          description: A unique Square-generated ID for the segment.
-          maxLength: 255
-          readOnly: true
-        name:
-          type: string
-          description: The name of the segment.
-          readOnly: true
-        created_at:
-          type: string
-          description: The timestamp when the segment was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp when the segment was last updated, in RFC 3339 format.
-          readOnly: true
     ErrorCode:
       type: string
       enum:
@@ -1099,6 +1077,28 @@ components:
 
         request to the Connect API.'
       x-release-status: PUBLIC
+    RetrieveCustomerSegmentResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body for requests to the `RetrieveCustomerSegment` endpoint.
+
+
+        Either `errors` or `segment` is present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        segment:
+          $ref: '#/components/schemas/CustomerSegment'
+          description: The retrieved customer segment.
+      example:
+        segment:
+          created_at: '2020-01-09T19:33:24.469Z'
+          id: GMNXRZVEXNQDF.CHURN_RISK
+          name: Lapsed
+          updated_at: '2020-04-13T23:01:13Z'
   securitySchemes:
     oauth2:
       type: oauth2

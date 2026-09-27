@@ -270,28 +270,58 @@ paths:
       - error-code: BAD_REQUEST
 components:
   schemas:
-    UpdateLocationRequest:
+    LocationStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - INACTIVE
+      x-enum-elements:
+      - name: ACTIVE
+        description: A location that is active for business.
+      - name: INACTIVE
+        description: 'A location that is not active for business. Inactive locations provide historical
+
+          information. Hide inactive locations unless the user has requested to see them.'
+      description: A location's status.
+      x-release-status: PUBLIC
+    CreateLocationResponse:
       type: object
-      description: The request object for the [UpdateLocation](api-endpoint:Locations-UpdateLocation) endpoint.
+      description: The response object returned by the [CreateLocation](api-endpoint:Locations-CreateLocation) endpoint.
       x-release-status: PUBLIC
       properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about [errors](https://developer.squareup.com/docs/build-basics/handling-errors) encountered during the request.
         location:
           $ref: '#/components/schemas/Location'
-          description: The `Location` object with only the fields to update.
+          description: The newly created `Location` object.
       example:
         location:
-          business_hours:
-            periods:
-            - day_of_week: FRI
-              end_local_time: '18:00'
-              start_local_time: 07:00
-            - day_of_week: SAT
-              end_local_time: '18:00'
-              start_local_time: 07:00
-            - day_of_week: SUN
-              end_local_time: '15:00'
-              start_local_time: 09:00
-          description: Midtown Atlanta store - Open weekends
+          address:
+            address_line_1: 1234 Peachtree St. NE
+            administrative_district_level_1: GA
+            locality: Atlanta
+            postal_code: '30309'
+          business_name: Jet Fuel Coffee
+          capabilities:
+          - CREDIT_CARD_PROCESSING
+          coordinates:
+            latitude: 33.7889
+            longitude: -84.3841
+          country: US
+          created_at: '2022-02-19T17:58:25Z'
+          currency: USD
+          description: Midtown Atlanta store
+          id: 3Z4V4WHQK64X9
+          language_code: en-US
+          mcc: '7299'
+          merchant_id: 3MYCJG5GVYQ8Q
+          name: Midtown
+          status: ACTIVE
+          timezone: America/New_York
+          type: PHYSICAL
     Currency:
       type: string
       enum:
@@ -849,6 +879,55 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
+    UpdateLocationResponse:
+      type: object
+      description: The response object returned by the [UpdateLocation](api-endpoint:Locations-UpdateLocation) endpoint.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        location:
+          $ref: '#/components/schemas/Location'
+          description: The updated `Location` object.
+      example:
+        location:
+          address:
+            address_line_1: 1234 Peachtree St. NE
+            administrative_district_level_1: GA
+            locality: Atlanta
+            postal_code: '30309'
+          business_hours:
+            periods:
+            - day_of_week: FRI
+              end_local_time: '18:00'
+              start_local_time: 07:00
+            - day_of_week: SAT
+              end_local_time: '18:00'
+              start_local_time: 07:00
+            - day_of_week: SUN
+              end_local_time: '15:00'
+              start_local_time: 09:00
+          business_name: Jet Fuel Coffee
+          capabilities:
+          - CREDIT_CARD_PROCESSING
+          coordinates:
+            latitude: 33.7889
+            longitude: -84.3841
+          country: US
+          created_at: '2022-02-19T17:58:25Z'
+          currency: USD
+          description: Midtown Atlanta store - Open weekends
+          id: 3Z4V4WHQK64X9
+          language_code: en-US
+          mcc: '7299'
+          merchant_id: 3MYCJG5GVYQ8Q
+          name: Midtown
+          status: ACTIVE
+          timezone: America/New_York
+          type: PHYSICAL
     Coordinates:
       type: object
       description: Latitude and longitude coordinates.
@@ -864,89 +943,179 @@ components:
           - number
           - 'null'
           description: The longitude of the coordinate expressed in degrees.
-    LocationCapability:
+    Address:
+      type: object
+      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
+      x-release-status: PUBLIC
+      properties:
+        address_line_1:
+          type:
+          - string
+          - 'null'
+          description: 'The first line of the address.
+
+
+            Fields that start with `address_line` provide the address''s most specific
+
+            details, like street number, street name, and building name. They do *not*
+
+            provide less specific details like city, state/province, or country (these
+
+            details are provided in other fields).'
+        address_line_2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the address, if any.
+        address_line_3:
+          type:
+          - string
+          - 'null'
+          description: The third line of the address, if any.
+        locality:
+          type:
+          - string
+          - 'null'
+          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        sublocality:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `locality`, if any.
+        sublocality_2:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality`, if any.
+        sublocality_3:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality_2`, if any.
+        administrative_district_level_1:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s country. In the US, this
+
+            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
+        administrative_district_level_2:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_1`.
+
+            In the US, this is the county.'
+        administrative_district_level_3:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_2`,
+
+            if any.'
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        country:
+          $ref: '#/components/schemas/Country'
+          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
+
+            See [Country](#type-country) for possible values'
+        first_name:
+          type:
+          - string
+          - 'null'
+          description: Optional first name when it's representing recipient.
+        last_name:
+          type:
+          - string
+          - 'null'
+          description: Optional last name when it's representing recipient.
+    LocationType:
       type: string
       enum:
-      - CREDIT_CARD_PROCESSING
-      - AUTOMATIC_TRANSFERS
-      - UNLINKED_REFUNDS
+      - PHYSICAL
+      - MOBILE
       x-enum-elements:
-      - name: CREDIT_CARD_PROCESSING
-        description: The capability to process credit card transactions with Square.
-      - name: AUTOMATIC_TRANSFERS
-        description: The capability to receive automatic transfers from Square.
-      - name: UNLINKED_REFUNDS
-        description: The capability to process unlinked refunds with Square.
-      description: The capabilities a location might have.
+      - name: PHYSICAL
+        description: A place of business with a physical location.
+      - name: MOBILE
+        description: A place of business that is mobile, such as a food truck or online store.
+      description: A location's type.
       x-release-status: PUBLIC
-    Error:
+    BusinessHoursPeriod:
       type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      description: Represents a period of time during which a business location is open.
       x-release-status: PUBLIC
-      required:
-      - category
-      - code
       properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
+        day_of_week:
+          $ref: '#/components/schemas/DayOfWeek'
+          description: 'The day of the week for this time period.
 
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
+            See [DayOfWeek](#type-dayofweek) for possible values'
+        start_local_time:
+          type:
+          - string
+          - 'null'
+          description: 'The start time of a business hours period, specified in local time using partial-time
 
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
+            RFC 3339 format. For example, `8:30:00` for a period starting at 8:30 in the morning.
 
-            the error pertains to.'
-    TaxIds:
+            Note that the seconds value is always :00, but it is appended for conformance to the RFC.'
+        end_local_time:
+          type:
+          - string
+          - 'null'
+          description: 'The end time of a business hours period, specified in local time using partial-time
+
+            RFC 3339 format. For example, `21:00:00` for a period ending at 9:00 in the evening.
+
+            Note that the seconds value is always :00, but it is appended for conformance to the RFC.'
+    UpdateLocationRequest:
       type: object
-      description: Identifiers for the location used by various governments for tax purposes.
-      x-release-status: BETA
+      description: The request object for the [UpdateLocation](api-endpoint:Locations-UpdateLocation) endpoint.
+      x-release-status: PUBLIC
       properties:
-        eu_vat:
-          type: string
-          description: 'The EU VAT number for this location. For example, `IE3426675K`.
+        location:
+          $ref: '#/components/schemas/Location'
+          description: The `Location` object with only the fields to update.
+      example:
+        location:
+          business_hours:
+            periods:
+            - day_of_week: FRI
+              end_local_time: '18:00'
+              start_local_time: 07:00
+            - day_of_week: SAT
+              end_local_time: '18:00'
+              start_local_time: 07:00
+            - day_of_week: SUN
+              end_local_time: '15:00'
+              start_local_time: 09:00
+          description: Midtown Atlanta store - Open weekends
+    CreateLocationRequest:
+      type: object
+      description: The request object for the [CreateLocation](api-endpoint:Locations-CreateLocation) endpoint.
+      x-release-status: PUBLIC
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+          description: 'The initial values of the location being created. The `name` field is required and must be unique within a seller account.
 
-            If the EU VAT number is present, it is well-formed and has been
+            All other fields are optional, but any information you care about for the location should be included.
 
-            validated with VIES, the VAT Information Exchange System.'
-          readOnly: true
-        fr_siret:
-          type: string
-          description: 'The SIRET (Système d''Identification du Répertoire des Entreprises et de leurs Etablissements)
-
-            number is a 14-digit code issued by the French INSEE. For example, `39922799000021`.'
-          readOnly: true
-        fr_naf:
-          type: string
-          description: 'The French government uses the NAF (Nomenclature des Activités Françaises) to display and
-
-            track economic statistical data. This is also called the APE (Activite Principale de l’Entreprise) code.
-
-            For example, `6910Z`.'
-          readOnly: true
-        es_nif:
-          type: string
-          description: 'The NIF (Numero de Identificacion Fiscal) number is a nine-character tax identifier used in Spain.
-
-            If it is present, it has been validated. For example, `73628495A`.'
-          readOnly: true
-        jp_qii:
-          type: string
-          description: 'The QII (Qualified Invoice Issuer) number is a 14-character tax identifier used in Japan.
-
-            For example, `T1234567890123`.'
-          readOnly: true
+            The remaining fields are automatically added based on the data from the [main location](https://developer.squareup.com/docs/locations-api#about-the-main-location).'
+      example:
+        location:
+          address:
+            address_line_1: 1234 Peachtree St. NE
+            administrative_district_level_1: GA
+            locality: Atlanta
+            postal_code: '30309'
+          description: Midtown Atlanta store
+          name: Midtown
     Country:
       type: string
       enum:
@@ -1705,20 +1874,18 @@ components:
 
         Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
       x-release-status: PUBLIC
-    LocationStatus:
-      type: string
-      enum:
-      - ACTIVE
-      - INACTIVE
-      x-enum-elements:
-      - name: ACTIVE
-        description: A location that is active for business.
-      - name: INACTIVE
-        description: 'A location that is not active for business. Inactive locations provide historical
-
-          information. Hide inactive locations unless the user has requested to see them.'
-      description: A location's status.
+    BusinessHours:
+      type: object
+      description: The hours of operation for a location.
       x-release-status: PUBLIC
+      properties:
+        periods:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/BusinessHoursPeriod'
+          description: The list of time periods during which the business is open. There can be at most 10 periods per day.
     ListLocationsResponse:
       type: object
       description: 'Defines the fields that are included in the response body of a request
@@ -1775,82 +1942,6 @@ components:
           created_at: '2022-02-19T17:58:25Z'
           currency: USD
           description: Midtown Atlanta store
-          id: 3Z4V4WHQK64X9
-          language_code: en-US
-          mcc: '7299'
-          merchant_id: 3MYCJG5GVYQ8Q
-          name: Midtown
-          status: ACTIVE
-          timezone: America/New_York
-          type: PHYSICAL
-    DayOfWeek:
-      type: string
-      enum:
-      - SUN
-      - MON
-      - TUE
-      - WED
-      - THU
-      - FRI
-      - SAT
-      x-enum-elements:
-      - name: SUN
-        description: Sunday
-      - name: MON
-        description: Monday
-      - name: TUE
-        description: Tuesday
-      - name: WED
-        description: Wednesday
-      - name: THU
-        description: Thursday
-      - name: FRI
-        description: Friday
-      - name: SAT
-        description: Saturday
-      description: Indicates the specific day  of the week.
-      x-release-status: PUBLIC
-    UpdateLocationResponse:
-      type: object
-      description: The response object returned by the [UpdateLocation](api-endpoint:Locations-UpdateLocation) endpoint.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        location:
-          $ref: '#/components/schemas/Location'
-          description: The updated `Location` object.
-      example:
-        location:
-          address:
-            address_line_1: 1234 Peachtree St. NE
-            administrative_district_level_1: GA
-            locality: Atlanta
-            postal_code: '30309'
-          business_hours:
-            periods:
-            - day_of_week: FRI
-              end_local_time: '18:00'
-              start_local_time: 07:00
-            - day_of_week: SAT
-              end_local_time: '18:00'
-              start_local_time: 07:00
-            - day_of_week: SUN
-              end_local_time: '15:00'
-              start_local_time: 09:00
-          business_name: Jet Fuel Coffee
-          capabilities:
-          - CREDIT_CARD_PROCESSING
-          coordinates:
-            latitude: 33.7889
-            longitude: -84.3841
-          country: US
-          created_at: '2022-02-19T17:58:25Z'
-          currency: USD
-          description: Midtown Atlanta store - Open weekends
           id: 3Z4V4WHQK64X9
           language_code: en-US
           mcc: '7299'
@@ -2048,18 +2139,89 @@ components:
           description: The tax IDs for this location.
           readOnly: true
           x-release-status: BETA
-    BusinessHours:
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    RetrieveLocationResponse:
       type: object
-      description: The hours of operation for a location.
+      description: 'Defines the fields that the [RetrieveLocation](api-endpoint:Locations-RetrieveLocation)
+
+        endpoint returns in a response.'
       x-release-status: PUBLIC
       properties:
-        periods:
-          type:
-          - array
-          - 'null'
+        errors:
+          type: array
           items:
-            $ref: '#/components/schemas/BusinessHoursPeriod'
-          description: The list of time periods during which the business is open. There can be at most 10 periods per day.
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        location:
+          $ref: '#/components/schemas/Location'
+          description: The requested location.
+      example:
+        location:
+          address:
+            address_line_1: 123 Main St
+            administrative_district_level_1: CA
+            country: US
+            locality: San Francisco
+            postal_code: '94114'
+          business_name: Jet Fuel Coffee
+          capabilities:
+          - CREDIT_CARD_PROCESSING
+          country: US
+          created_at: '2016-09-19T17:33:12Z'
+          currency: USD
+          id: 18YC4JDH91E1H
+          language_code: en-US
+          merchant_id: 3MYCJG5GVYQ8Q
+          name: Grant Park
+          phone_number: +1 650-354-7217
+          status: ACTIVE
+          timezone: America/Los_Angeles
     ErrorCode:
       type: string
       enum:
@@ -2806,278 +2968,116 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    LocationType:
+    TaxIds:
+      type: object
+      description: Identifiers for the location used by various governments for tax purposes.
+      x-release-status: BETA
+      properties:
+        eu_vat:
+          type: string
+          description: 'The EU VAT number for this location. For example, `IE3426675K`.
+
+            If the EU VAT number is present, it is well-formed and has been
+
+            validated with VIES, the VAT Information Exchange System.'
+          readOnly: true
+        fr_siret:
+          type: string
+          description: 'The SIRET (Système d''Identification du Répertoire des Entreprises et de leurs Etablissements)
+
+            number is a 14-digit code issued by the French INSEE. For example, `39922799000021`.'
+          readOnly: true
+        fr_naf:
+          type: string
+          description: 'The French government uses the NAF (Nomenclature des Activités Françaises) to display and
+
+            track economic statistical data. This is also called the APE (Activite Principale de l’Entreprise) code.
+
+            For example, `6910Z`.'
+          readOnly: true
+        es_nif:
+          type: string
+          description: 'The NIF (Numero de Identificacion Fiscal) number is a nine-character tax identifier used in Spain.
+
+            If it is present, it has been validated. For example, `73628495A`.'
+          readOnly: true
+        jp_qii:
+          type: string
+          description: 'The QII (Qualified Invoice Issuer) number is a 14-character tax identifier used in Japan.
+
+            For example, `T1234567890123`.'
+          readOnly: true
+    LocationCapability:
       type: string
       enum:
-      - PHYSICAL
-      - MOBILE
+      - CREDIT_CARD_PROCESSING
+      - AUTOMATIC_TRANSFERS
+      - UNLINKED_REFUNDS
       x-enum-elements:
-      - name: PHYSICAL
-        description: A place of business with a physical location.
-      - name: MOBILE
-        description: A place of business that is mobile, such as a food truck or online store.
-      description: A location's type.
+      - name: CREDIT_CARD_PROCESSING
+        description: The capability to process credit card transactions with Square.
+      - name: AUTOMATIC_TRANSFERS
+        description: The capability to receive automatic transfers from Square.
+      - name: UNLINKED_REFUNDS
+        description: The capability to process unlinked refunds with Square.
+      description: The capabilities a location might have.
       x-release-status: PUBLIC
-    Address:
+    Error:
       type: object
-      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
       x-release-status: PUBLIC
+      required:
+      - category
+      - code
       properties:
-        address_line_1:
-          type:
-          - string
-          - 'null'
-          description: 'The first line of the address.
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
 
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
 
-            Fields that start with `address_line` provide the address''s most specific
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
 
-            details, like street number, street name, and building name. They do *not*
-
-            provide less specific details like city, state/province, or country (these
-
-            details are provided in other fields).'
-        address_line_2:
-          type:
-          - string
-          - 'null'
-          description: The second line of the address, if any.
-        address_line_3:
-          type:
-          - string
-          - 'null'
-          description: The third line of the address, if any.
-        locality:
-          type:
-          - string
-          - 'null'
-          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-        sublocality:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `locality`, if any.
-        sublocality_2:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `sublocality`, if any.
-        sublocality_3:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `sublocality_2`, if any.
-        administrative_district_level_1:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s country. In the US, this
-
-            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
-        administrative_district_level_2:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s `administrative_district_level_1`.
-
-            In the US, this is the county.'
-        administrative_district_level_3:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s `administrative_district_level_2`,
-
-            if any.'
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-        country:
-          $ref: '#/components/schemas/Country'
-          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
-
-            See [Country](#type-country) for possible values'
-        first_name:
-          type:
-          - string
-          - 'null'
-          description: Optional first name when it's representing recipient.
-        last_name:
-          type:
-          - string
-          - 'null'
-          description: Optional last name when it's representing recipient.
-    BusinessHoursPeriod:
-      type: object
-      description: Represents a period of time during which a business location is open.
-      x-release-status: PUBLIC
-      properties:
-        day_of_week:
-          $ref: '#/components/schemas/DayOfWeek'
-          description: 'The day of the week for this time period.
-
-            See [DayOfWeek](#type-dayofweek) for possible values'
-        start_local_time:
-          type:
-          - string
-          - 'null'
-          description: 'The start time of a business hours period, specified in local time using partial-time
-
-            RFC 3339 format. For example, `8:30:00` for a period starting at 8:30 in the morning.
-
-            Note that the seconds value is always :00, but it is appended for conformance to the RFC.'
-        end_local_time:
-          type:
-          - string
-          - 'null'
-          description: 'The end time of a business hours period, specified in local time using partial-time
-
-            RFC 3339 format. For example, `21:00:00` for a period ending at 9:00 in the evening.
-
-            Note that the seconds value is always :00, but it is appended for conformance to the RFC.'
-    CreateLocationRequest:
-      type: object
-      description: The request object for the [CreateLocation](api-endpoint:Locations-CreateLocation) endpoint.
-      x-release-status: PUBLIC
-      properties:
-        location:
-          $ref: '#/components/schemas/Location'
-          description: 'The initial values of the location being created. The `name` field is required and must be unique within a seller account.
-
-            All other fields are optional, but any information you care about for the location should be included.
-
-            The remaining fields are automatically added based on the data from the [main location](https://developer.squareup.com/docs/locations-api#about-the-main-location).'
-      example:
-        location:
-          address:
-            address_line_1: 1234 Peachtree St. NE
-            administrative_district_level_1: GA
-            locality: Atlanta
-            postal_code: '30309'
-          description: Midtown Atlanta store
-          name: Midtown
-    RetrieveLocationResponse:
-      type: object
-      description: 'Defines the fields that the [RetrieveLocation](api-endpoint:Locations-RetrieveLocation)
-
-        endpoint returns in a response.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        location:
-          $ref: '#/components/schemas/Location'
-          description: The requested location.
-      example:
-        location:
-          address:
-            address_line_1: 123 Main St
-            administrative_district_level_1: CA
-            country: US
-            locality: San Francisco
-            postal_code: '94114'
-          business_name: Jet Fuel Coffee
-          capabilities:
-          - CREDIT_CARD_PROCESSING
-          country: US
-          created_at: '2016-09-19T17:33:12Z'
-          currency: USD
-          id: 18YC4JDH91E1H
-          language_code: en-US
-          merchant_id: 3MYCJG5GVYQ8Q
-          name: Grant Park
-          phone_number: +1 650-354-7217
-          status: ACTIVE
-          timezone: America/Los_Angeles
-    ErrorCategory:
+            the error pertains to.'
+    DayOfWeek:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - SUN
+      - MON
+      - TUE
+      - WED
+      - THU
+      - FRI
+      - SAT
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+      - name: SUN
+        description: Sunday
+      - name: MON
+        description: Monday
+      - name: TUE
+        description: Tuesday
+      - name: WED
+        description: Wednesday
+      - name: THU
+        description: Thursday
+      - name: FRI
+        description: Friday
+      - name: SAT
+        description: Saturday
+      description: Indicates the specific day  of the week.
       x-release-status: PUBLIC
-    CreateLocationResponse:
-      type: object
-      description: The response object returned by the [CreateLocation](api-endpoint:Locations-CreateLocation) endpoint.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about [errors](https://developer.squareup.com/docs/build-basics/handling-errors) encountered during the request.
-        location:
-          $ref: '#/components/schemas/Location'
-          description: The newly created `Location` object.
-      example:
-        location:
-          address:
-            address_line_1: 1234 Peachtree St. NE
-            administrative_district_level_1: GA
-            locality: Atlanta
-            postal_code: '30309'
-          business_name: Jet Fuel Coffee
-          capabilities:
-          - CREDIT_CARD_PROCESSING
-          coordinates:
-            latitude: 33.7889
-            longitude: -84.3841
-          country: US
-          created_at: '2022-02-19T17:58:25Z'
-          currency: USD
-          description: Midtown Atlanta store
-          id: 3Z4V4WHQK64X9
-          language_code: en-US
-          mcc: '7299'
-          merchant_id: 3MYCJG5GVYQ8Q
-          name: Midtown
-          status: ACTIVE
-          timezone: America/New_York
-          type: PHYSICAL
   securitySchemes:
     oauth2:
       type: oauth2

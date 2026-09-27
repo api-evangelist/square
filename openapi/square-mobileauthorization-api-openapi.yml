@@ -163,6 +163,34 @@ paths:
                 $ref: '#/components/schemas/CreateMobileAuthorizationCodeResponse'
 components:
   schemas:
+    CreateMobileAuthorizationCodeResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `CreateMobileAuthorizationCode` endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        authorization_code:
+          type: string
+          description: 'The generated authorization code that connects a mobile application instance
+
+            to a Square account.'
+          maxLength: 191
+        expires_at:
+          type: string
+          description: 'The timestamp when `authorization_code` expires, in
+
+            [RFC 3339](https://tools.ietf.org/html/rfc3339) format (for example, "2016-09-04T23:59:33.123Z").'
+          minLength: 20
+          maxLength: 48
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        authorization_code: YOUR_MOBILE_AUTHORIZATION_CODE
+        expires_at: '2019-01-10T19:42:08Z'
     ErrorCode:
       type: string
       enum:
@@ -909,48 +937,6 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    CreateMobileAuthorizationCodeResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the `CreateMobileAuthorizationCode` endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        authorization_code:
-          type: string
-          description: 'The generated authorization code that connects a mobile application instance
-
-            to a Square account.'
-          maxLength: 191
-        expires_at:
-          type: string
-          description: 'The timestamp when `authorization_code` expires, in
-
-            [RFC 3339](https://tools.ietf.org/html/rfc3339) format (for example, "2016-09-04T23:59:33.123Z").'
-          minLength: 20
-          maxLength: 48
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        authorization_code: YOUR_MOBILE_AUTHORIZATION_CODE
-        expires_at: '2019-01-10T19:42:08Z'
-    CreateMobileAuthorizationCodeRequest:
-      type: object
-      description: 'Defines the body parameters that can be provided in a request to the
-
-        `CreateMobileAuthorizationCode` endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        location_id:
-          type: string
-          description: The Square location ID that the authorization code should be tied to.
-          minLength: 1
-          maxLength: 191
-      example:
-        location_id: YOUR_LOCATION_ID
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -1027,6 +1013,20 @@ components:
 
         request to the Connect API.'
       x-release-status: PUBLIC
+    CreateMobileAuthorizationCodeRequest:
+      type: object
+      description: 'Defines the body parameters that can be provided in a request to the
+
+        `CreateMobileAuthorizationCode` endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        location_id:
+          type: string
+          description: The Square location ID that the authorization code should be tied to.
+          minLength: 1
+          maxLength: 191
+      example:
+        location_id: YOUR_LOCATION_ID
   securitySchemes:
     oauth2:
       type: oauth2

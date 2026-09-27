@@ -217,39 +217,15 @@ paths:
                 $ref: '#/components/schemas/ListEventTypesResponse'
 components:
   schemas:
-    SearchEventsSort:
-      type: object
-      description: Criteria to sort events by.
+    SearchEventsSortField:
+      type: string
+      enum:
+      - DEFAULT
+      x-enum-elements:
+      - name: DEFAULT
+        description: Use the default sort key. The default behavior is to sort events by when they were created (`created_at`).
+      description: Specifies the sort key for events returned from a search.
       x-release-status: BETA
-      properties:
-        field:
-          $ref: '#/components/schemas/SearchEventsSortField'
-          description: 'Sort events by event types.
-
-            See [SearchEventsSortField](#type-searcheventssortfield) for possible values'
-        order:
-          $ref: '#/components/schemas/SortOrder'
-          description: 'The order to use for sorting the events.
-
-            See [SortOrder](#type-sortorder) for possible values'
-    DisableEventsResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [DisableEvents](api-endpoint:Events-DisableEvents) endpoint.
-
-
-        Note: if there are errors processing the request, the events field will not be
-
-        present.'
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-      example: {}
     SearchEventsFilter:
       type: object
       description: Criteria to filter events by.
@@ -279,167 +255,6 @@ components:
         created_at:
           $ref: '#/components/schemas/TimeRange'
           description: Filter events by when they were created.
-    EventData:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          description: The name of the affected object’s type.
-        id:
-          type: string
-          description: The ID of the affected object.
-        deleted:
-          type:
-          - boolean
-          - 'null'
-          description: This is true if the affected object has been deleted; otherwise, it's absent.
-        object:
-          type:
-          - object
-          - 'null'
-          description: An object containing fields and values relevant to the event. It is absent if the affected object has been deleted.
-    SearchEventsSortField:
-      type: string
-      enum:
-      - DEFAULT
-      x-enum-elements:
-      - name: DEFAULT
-        description: Use the default sort key. The default behavior is to sort events by when they were created (`created_at`).
-      description: Specifies the sort key for events returned from a search.
-      x-release-status: BETA
-    TimeRange:
-      type: object
-      description: 'Represents a generic time range. The start and end values are
-
-        represented in RFC 3339 format. Time ranges are customized to be
-
-        inclusive or exclusive based on the needs of a particular endpoint.
-
-        Refer to the relevant endpoint-specific documentation to determine
-
-        how time ranges are handled.'
-      x-release-status: PUBLIC
-      properties:
-        start_at:
-          type:
-          - string
-          - 'null'
-          description: 'A datetime value in RFC 3339 format indicating when the time range
-
-            starts.'
-        end_at:
-          type:
-          - string
-          - 'null'
-          description: 'A datetime value in RFC 3339 format indicating when the time range
-
-            ends.'
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    SearchEventsRequest:
-      type: object
-      description: Searches [Event](entity:Event)s for your application.
-      x-release-status: BETA
-      properties:
-        cursor:
-          type: string
-          description: 'A pagination cursor returned by a previous call to this endpoint. Provide this cursor to retrieve the next set of events for your original query.
-
-
-            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-          maxLength: 256
-        limit:
-          type: integer
-          description: 'The maximum number of events to return in a single page. The response might contain fewer events. The default value is 100, which is also the maximum allowed value.
-
-
-            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).
-
-
-            Default: 100'
-          minimum: 1
-          maximum: 100
-        query:
-          $ref: '#/components/schemas/SearchEventsQuery'
-          description: The filtering and sorting criteria for the search request. To retrieve additional pages using a cursor, you must use the original query.
-    ListEventTypesResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [ListEventTypes](api-endpoint:Events-ListEventTypes) endpoint.
-
-
-        Note: if there are errors processing the request, the event types field will not be
-
-        present.'
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        event_types:
-          type: array
-          items:
-            type: string
-          description: The list of event types.
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/EventTypeMetadata'
-          description: Contains the metadata of an event type. For more information, see [EventTypeMetadata](entity:EventTypeMetadata).
-      example:
-        event_types:
-        - inventory.count.updated
-        metadata:
-        - api_version_introduced: '2018-07-12'
-          event_type: inventory.count.updated
-          release_status: PUBLIC
-    Event:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        merchant_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the target merchant associated with the event.
-        location_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the target location associated with the event.
-        type:
-          type:
-          - string
-          - 'null'
-          description: The type of event this represents.
-        event_id:
-          type:
-          - string
-          - 'null'
-          description: A unique ID for the event.
-        created_at:
-          type: string
-          description: Timestamp of when the event was created, in RFC 3339 format.
-          readOnly: true
-        data:
-          $ref: '#/components/schemas/EventData'
-          description: The data associated with the event.
     EventMetadata:
       type: object
       description: Contains metadata about a particular [Event](entity:Event).
@@ -455,6 +270,44 @@ components:
           - string
           - 'null'
           description: The API version of the event. This corresponds to the default API version of the developer application at the time when the event was created.
+    SearchEventsSort:
+      type: object
+      description: Criteria to sort events by.
+      x-release-status: BETA
+      properties:
+        field:
+          $ref: '#/components/schemas/SearchEventsSortField'
+          description: 'Sort events by event types.
+
+            See [SearchEventsSortField](#type-searcheventssortfield) for possible values'
+        order:
+          $ref: '#/components/schemas/SortOrder'
+          description: 'The order to use for sorting the events.
+
+            See [SortOrder](#type-sortorder) for possible values'
+    SearchEventsQuery:
+      type: object
+      description: Contains query criteria for the search.
+      x-release-status: BETA
+      properties:
+        filter:
+          $ref: '#/components/schemas/SearchEventsFilter'
+          description: Criteria to filter events by.
+        sort:
+          $ref: '#/components/schemas/SearchEventsSort'
+          description: Criteria to sort events by.
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
     ErrorCode:
       type: string
       enum:
@@ -1201,17 +1054,137 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    SearchEventsQuery:
+    EventTypeMetadata:
       type: object
-      description: Contains query criteria for the search.
+      description: Contains the metadata of a webhook event type.
+      x-release-status: PUBLIC
+      properties:
+        event_type:
+          type: string
+          description: The event type.
+          readOnly: true
+        api_version_introduced:
+          type: string
+          description: The API version at which the event type was introduced.
+          readOnly: true
+        release_status:
+          type: string
+          description: The release status of the event type.
+          readOnly: true
+    ListEventTypesResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [ListEventTypes](api-endpoint:Events-ListEventTypes) endpoint.
+
+
+        Note: if there are errors processing the request, the event types field will not be
+
+        present.'
       x-release-status: BETA
       properties:
-        filter:
-          $ref: '#/components/schemas/SearchEventsFilter'
-          description: Criteria to filter events by.
-        sort:
-          $ref: '#/components/schemas/SearchEventsSort'
-          description: Criteria to sort events by.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        event_types:
+          type: array
+          items:
+            type: string
+          description: The list of event types.
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventTypeMetadata'
+          description: Contains the metadata of an event type. For more information, see [EventTypeMetadata](entity:EventTypeMetadata).
+      example:
+        event_types:
+        - inventory.count.updated
+        metadata:
+        - api_version_introduced: '2018-07-12'
+          event_type: inventory.count.updated
+          release_status: PUBLIC
+    TimeRange:
+      type: object
+      description: 'Represents a generic time range. The start and end values are
+
+        represented in RFC 3339 format. Time ranges are customized to be
+
+        inclusive or exclusive based on the needs of a particular endpoint.
+
+        Refer to the relevant endpoint-specific documentation to determine
+
+        how time ranges are handled.'
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type:
+          - string
+          - 'null'
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            starts.'
+        end_at:
+          type:
+          - string
+          - 'null'
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            ends.'
+    Event:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        merchant_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the target merchant associated with the event.
+        location_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the target location associated with the event.
+        type:
+          type:
+          - string
+          - 'null'
+          description: The type of event this represents.
+        event_id:
+          type:
+          - string
+          - 'null'
+          description: A unique ID for the event.
+        created_at:
+          type: string
+          description: Timestamp of when the event was created, in RFC 3339 format.
+          readOnly: true
+        data:
+          $ref: '#/components/schemas/EventData'
+          description: The data associated with the event.
+    EventData:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: The name of the affected object’s type.
+        id:
+          type: string
+          description: The ID of the affected object.
+        deleted:
+          type:
+          - boolean
+          - 'null'
+          description: This is true if the affected object has been deleted; otherwise, it's absent.
+        object:
+          type:
+          - object
+          - 'null'
+          description: An object containing fields and values relevant to the event. It is absent if the affected object has been deleted.
     EnableEventsResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -1230,82 +1203,6 @@ components:
             $ref: '#/components/schemas/Error'
           description: Information on errors encountered during the request.
       example: {}
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
     SearchEventsResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -1371,23 +1268,126 @@ components:
         metadata:
         - api_version: '2022-12-13'
           event_id: 73ecd468-0aba-424f-b862-583d44efe7c8
-    EventTypeMetadata:
+    Error:
       type: object
-      description: Contains the metadata of a webhook event type.
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
       x-release-status: PUBLIC
+      required:
+      - category
+      - code
       properties:
-        event_type:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
           type: string
-          description: The event type.
-          readOnly: true
-        api_version_introduced:
+          description: A human-readable description of the error for debugging purposes.
+        field:
           type: string
-          description: The API version at which the event type was introduced.
-          readOnly: true
-        release_status:
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    DisableEventsResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [DisableEvents](api-endpoint:Events-DisableEvents) endpoint.
+
+
+        Note: if there are errors processing the request, the events field will not be
+
+        present.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+      example: {}
+    SearchEventsRequest:
+      type: object
+      description: Searches [Event](entity:Event)s for your application.
+      x-release-status: BETA
+      properties:
+        cursor:
           type: string
-          description: The release status of the event type.
-          readOnly: true
+          description: 'A pagination cursor returned by a previous call to this endpoint. Provide this cursor to retrieve the next set of events for your original query.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+          maxLength: 256
+        limit:
+          type: integer
+          description: 'The maximum number of events to return in a single page. The response might contain fewer events. The default value is 100, which is also the maximum allowed value.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).
+
+
+            Default: 100'
+          minimum: 1
+          maximum: 100
+        query:
+          $ref: '#/components/schemas/SearchEventsQuery'
+          description: The filtering and sorting criteria for the search request. To retrieve additional pages using a cursor, you must use the original query.
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2

@@ -225,6 +225,19 @@ paths:
                 $ref: '#/components/schemas/UpsertSnippetResponse'
 components:
   schemas:
+    UpsertSnippetRequest:
+      type: object
+      description: Represents an `UpsertSnippet` request.
+      x-release-status: PUBLIC
+      required:
+      - snippet
+      properties:
+        snippet:
+          $ref: '#/components/schemas/Snippet'
+          description: The snippet for the site.
+      example:
+        snippet:
+          content: <script>var js = 1;</script>
     RetrieveSnippetResponse:
       type: object
       description: Represents a `RetrieveSnippet` response. The response can include either `snippet` or `errors`.
@@ -245,37 +258,35 @@ components:
           id: snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7
           site_id: site_278075276488921835
           updated_at: '2021-03-11T25:40:09.000000Z'
-    UpsertSnippetResponse:
+    Snippet:
       type: object
-      description: Represents an `UpsertSnippet` response. The response can include either `snippet` or `errors`.
+      description: Represents the snippet that is added to a Square Online site. The snippet code is injected into the `head` element of all pages on the site, except for checkout pages.
       x-release-status: PUBLIC
+      required:
+      - content
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        snippet:
-          $ref: '#/components/schemas/Snippet'
-          description: The new or updated snippet.
-      example:
-        snippet:
-          content: <script>var js = 1;</script>
-          created_at: '2021-03-11T25:40:09.000000Z'
-          id: snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7
-          site_id: site_278075276488921835
-          updated_at: '2021-03-11T25:40:09.000000Z'
-    DeleteSnippetResponse:
-      type: object
-      description: Represents a `DeleteSnippet` response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
+        id:
+          type: string
+          description: The Square-assigned ID for the snippet.
+          maxLength: 48
+          readOnly: true
+        site_id:
+          type: string
+          description: The ID of the site that contains the snippet.
+          readOnly: true
+        content:
+          type: string
+          description: The snippet code, which can contain valid HTML, JavaScript, or both.
+          minLength: 1
+          maxLength: 65535
+        created_at:
+          type: string
+          description: The timestamp of when the snippet was initially added to the site, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp of when the snippet was last updated on the site, in RFC 3339 format.
+          readOnly: true
     ErrorCode:
       type: string
       enum:
@@ -1022,48 +1033,37 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    Snippet:
+    UpsertSnippetResponse:
       type: object
-      description: Represents the snippet that is added to a Square Online site. The snippet code is injected into the `head` element of all pages on the site, except for checkout pages.
+      description: Represents an `UpsertSnippet` response. The response can include either `snippet` or `errors`.
       x-release-status: PUBLIC
-      required:
-      - content
       properties:
-        id:
-          type: string
-          description: The Square-assigned ID for the snippet.
-          maxLength: 48
-          readOnly: true
-        site_id:
-          type: string
-          description: The ID of the site that contains the snippet.
-          readOnly: true
-        content:
-          type: string
-          description: The snippet code, which can contain valid HTML, JavaScript, or both.
-          minLength: 1
-          maxLength: 65535
-        created_at:
-          type: string
-          description: The timestamp of when the snippet was initially added to the site, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp of when the snippet was last updated on the site, in RFC 3339 format.
-          readOnly: true
-    UpsertSnippetRequest:
-      type: object
-      description: Represents an `UpsertSnippet` request.
-      x-release-status: PUBLIC
-      required:
-      - snippet
-      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
         snippet:
           $ref: '#/components/schemas/Snippet'
-          description: The snippet for the site.
+          description: The new or updated snippet.
       example:
         snippet:
           content: <script>var js = 1;</script>
+          created_at: '2021-03-11T25:40:09.000000Z'
+          id: snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7
+          site_id: site_278075276488921835
+          updated_at: '2021-03-11T25:40:09.000000Z'
+    DeleteSnippetResponse:
+      type: object
+      description: Represents a `DeleteSnippet` response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
