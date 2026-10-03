@@ -341,20 +341,122 @@ paths:
       - error-code: DELAYED_TRANSACTION_EXPIRED
 components:
   schemas:
-    TenderSquareAccountDetails:
+    TenderBuyNowPayLaterDetails:
       type: object
-      description: Represents the details of a tender with `type` `SQUARE_ACCOUNT`.
+      description: Represents the details of a tender with `type` `BUY_NOW_PAY_LATER`.
       x-release-status: PUBLIC
       properties:
-        status:
-          $ref: '#/components/schemas/TenderSquareAccountDetailsStatus'
-          description: 'The Square Account payment''s current state (such as `AUTHORIZED` or
+        buy_now_pay_later_brand:
+          $ref: '#/components/schemas/TenderBuyNowPayLaterDetailsBrand'
+          description: 'The Buy Now Pay Later brand.
 
-            `CAPTURED`). See [TenderSquareAccountDetailsStatus](entity:TenderSquareAccountDetailsStatus)
+            See [Brand](#type-brand) for possible values'
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/TenderBuyNowPayLaterDetailsStatus'
+          description: 'The buy now pay later payment''s current state (such as `AUTHORIZED` or
+
+            `CAPTURED`). See [TenderBuyNowPayLaterDetailsStatus](entity:TenderBuyNowPayLaterDetailsStatus)
 
             for possible values.
 
             See [Status](#type-status) for possible values'
+    RefundStatus:
+      type: string
+      enum:
+      - PENDING
+      - APPROVED
+      - REJECTED
+      - FAILED
+      x-enum-elements:
+      - name: PENDING
+        description: The refund is pending.
+      - name: APPROVED
+        description: The refund has been approved by Square.
+      - name: REJECTED
+        description: The refund has been rejected by Square.
+      - name: FAILED
+        description: The refund failed.
+      description: Indicates a refund's current status.
+      x-release-status: PUBLIC
+    TenderBankAccountDetails:
+      type: object
+      description: 'Represents the details of a tender with `type` `BANK_ACCOUNT`.
+
+
+        See [BankAccountPaymentDetails](entity:BankAccountPaymentDetails)
+
+        for more exposed details of a bank account payment.'
+      x-release-status: PUBLIC
+      properties:
+        status:
+          $ref: '#/components/schemas/TenderBankAccountDetailsStatus'
+          description: 'The bank account payment''s current state.
+
+
+            See [TenderBankAccountPaymentDetailsStatus](entity:TenderBankAccountDetailsStatus) for possible values.
+
+            See [TenderBankAccountDetailsStatus](#type-tenderbankaccountdetailsstatus) for possible values'
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
+    TenderType:
+      type: string
+      enum:
+      - CARD
+      - CASH
+      - THIRD_PARTY_CARD
+      - SQUARE_GIFT_CARD
+      - NO_SALE
+      - BANK_ACCOUNT
+      - WALLET
+      - BUY_NOW_PAY_LATER
+      - SQUARE_ACCOUNT
+      - OTHER
+      x-enum-elements:
+      - name: CARD
+        description: A credit card.
+      - name: CASH
+        description: Cash.
+      - name: THIRD_PARTY_CARD
+        description: 'A credit card processed with a card processor other than Square.
+
+
+          This value applies only to merchants in countries where Square does not
+
+          yet provide card processing.'
+      - name: SQUARE_GIFT_CARD
+        description: A Square gift card.
+      - name: NO_SALE
+        description: This tender represents the register being opened for a "no sale" event.
+      - name: BANK_ACCOUNT
+        description: A bank account payment.
+      - name: WALLET
+        description: 'A payment from a digital wallet, e.g. Cash App, Paypay, Rakuten Pay,
+
+          Au Pay, D Barai, Merpay, Wechat Pay, Alipay.
+
+
+          Note: Some "digital wallets", including Google Pay and Apple Pay, facilitate
+
+          card payments.  Those payments have the `CARD` type.'
+      - name: BUY_NOW_PAY_LATER
+        description: A Buy Now Pay Later payment.
+      - name: SQUARE_ACCOUNT
+        description: A Square House Account payment.
+      - name: OTHER
+        description: A form of tender that does not match any other value.
+      description: Indicates a tender's type.
+      x-release-status: PUBLIC
     Transaction:
       type: object
       description: 'Represents a transaction processed with Square, either with the
@@ -441,6 +543,1038 @@ components:
           - 'null'
           description: The order_id is an identifier for the order associated with this transaction, if any.
           maxLength: 192
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    TenderCardDetailsEntryMethod:
+      type: string
+      enum:
+      - SWIPED
+      - KEYED
+      - EMV
+      - ON_FILE
+      - CONTACTLESS
+      x-enum-elements:
+      - name: SWIPED
+        description: The card was swiped through a Square reader or Square stand.
+      - name: KEYED
+        description: 'The card information was keyed manually into Square Point of Sale or a
+
+          Square-hosted web form.'
+      - name: EMV
+        description: The card was processed via EMV with a Square reader.
+      - name: ON_FILE
+        description: The buyer's card details were already on file with Square.
+      - name: CONTACTLESS
+        description: 'The card was processed via a contactless (i.e., NFC) transaction
+
+          with a Square reader.'
+      description: Indicates the method used to enter the card's details.
+      x-release-status: PUBLIC
+    CardBrand:
+      type: string
+      enum:
+      - OTHER_BRAND
+      - VISA
+      - MASTERCARD
+      - AMERICAN_EXPRESS
+      - DISCOVER
+      - DISCOVER_DINERS
+      - JCB
+      - CHINA_UNIONPAY
+      - SQUARE_GIFT_CARD
+      - SQUARE_CAPITAL_CARD
+      - INTERAC
+      - EFTPOS
+      - FELICA
+      - EBT
+      x-enum-elements:
+      - name: OTHER_BRAND
+        description: ''
+      - name: VISA
+        description: ''
+      - name: MASTERCARD
+        description: ''
+      - name: AMERICAN_EXPRESS
+        description: ''
+      - name: DISCOVER
+        description: ''
+      - name: DISCOVER_DINERS
+        description: ''
+      - name: JCB
+        description: ''
+      - name: CHINA_UNIONPAY
+        description: ''
+      - name: SQUARE_GIFT_CARD
+        description: ''
+      - name: SQUARE_CAPITAL_CARD
+        description: ''
+      - name: INTERAC
+        description: ''
+      - name: EFTPOS
+        description: ''
+      - name: FELICA
+        description: ''
+      - name: EBT
+        description: ''
+      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
+      x-release-status: PUBLIC
+    TenderCardDetails:
+      type: object
+      description: Represents additional details of a tender with `type` `CARD` or `SQUARE_GIFT_CARD`
+      x-release-status: PUBLIC
+      properties:
+        status:
+          $ref: '#/components/schemas/TenderCardDetailsStatus'
+          description: 'The credit card payment''s current state (such as `AUTHORIZED` or
+
+            `CAPTURED`). See [TenderCardDetailsStatus](entity:TenderCardDetailsStatus)
+
+            for possible values.
+
+            See [TenderCardDetailsStatus](#type-tendercarddetailsstatus) for possible values'
+        card:
+          $ref: '#/components/schemas/Card'
+          description: The credit card's non-confidential details.
+        entry_method:
+          $ref: '#/components/schemas/TenderCardDetailsEntryMethod'
+          description: 'The method used to enter the card''s details for the transaction.
+
+            See [TenderCardDetailsEntryMethod](#type-tendercarddetailsentrymethod) for possible values'
+    TenderBuyNowPayLaterDetailsBrand:
+      type: string
+      enum:
+      - OTHER_BRAND
+      - AFTERPAY
+      x-enum-elements:
+      - name: OTHER_BRAND
+        description: ''
+      - name: AFTERPAY
+        description: ''
+      x-release-status: PUBLIC
+    TenderCashDetails:
+      type: object
+      description: Represents the details of a tender with `type` `CASH`.
+      x-release-status: PUBLIC
+      properties:
+        buyer_tendered_money:
+          $ref: '#/components/schemas/Money'
+          description: The total amount of cash provided by the buyer, before change is given.
+        change_back_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of change returned to the buyer.
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+    AdditionalRecipient:
+      type: object
+      description: Represents an additional recipient (other than the merchant) receiving a portion of this tender.
+      x-release-status: DEPRECATED
+      required:
+      - location_id
+      - amount_money
+      properties:
+        location_id:
+          type: string
+          description: The location ID for a recipient (other than the merchant) receiving a portion of this tender.
+          minLength: 1
+          maxLength: 50
+        description:
+          type:
+          - string
+          - 'null'
+          description: The description of the additional recipient.
+          maxLength: 100
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of money distributed to the recipient.
+        receivable_id:
+          type:
+          - string
+          - 'null'
+          description: The unique ID for the RETIRED `AdditionalRecipientReceivable` object. This field should be empty for any `AdditionalRecipient` objects created after the retirement.
+          maxLength: 192
+    CardCoBrand:
+      type: string
+      enum:
+      - UNKNOWN
+      - AFTERPAY
+      - CLEARPAY
+      x-enum-elements:
+      - name: UNKNOWN
+        description: ''
+      - name: AFTERPAY
+        description: ''
+      - name: CLEARPAY
+        description: ''
+      description: Indicates the brand for a co-branded card.
+      x-release-status: PUBLIC
+    RetrieveTransactionResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [RetrieveTransaction](api-endpoint:Transactions-RetrieveTransaction) endpoint.
+
+
+        One of `errors` or `transaction` is present in a given response (never both).'
+      x-release-status: DEPRECATED
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+          description: The requested transaction.
+      example:
+        transaction:
+          created_at: '2016-03-10T22:57:56Z'
+          id: KnL67ZIwXCPtzOrqj0HrkxMF
+          location_id: 18YC4JDH91E1H
+          product: EXTERNAL_API
+          reference_id: some optional reference id
+          tenders:
+          - additional_recipients:
+            - amount_money:
+                amount: 20
+                currency: USD
+              description: Application fees
+              location_id: 057P5VYJ4A5X1
+            amount_money:
+              amount: 5000
+              currency: USD
+            card_details:
+              card:
+                card_brand: VISA
+                last_4: '1111'
+              entry_method: KEYED
+              status: CAPTURED
+            created_at: '2016-03-10T22:57:56Z'
+            id: MtZRYYdDrYNQbOvV7nbuBvMF
+            location_id: 18YC4JDH91E1H
+            note: some optional note
+            processing_fee_money:
+              amount: 138
+              currency: USD
+            transaction_id: KnL67ZIwXCPtzOrqj0HrkxMF
+            type: CARD
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.csharp
+        java: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.java
+        javascript: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.javascript
+        php: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.php
+        python: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.python
+        ruby: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.ruby
+    CardType:
+      type: string
+      enum:
+      - UNKNOWN_CARD_TYPE
+      - CREDIT
+      - DEBIT
+      x-enum-elements:
+      - name: UNKNOWN_CARD_TYPE
+        description: ''
+      - name: CREDIT
+        description: ''
+      - name: DEBIT
+        description: ''
+      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
+      x-release-status: PUBLIC
+    TenderSquareAccountDetailsStatus:
+      type: string
+      enum:
+      - AUTHORIZED
+      - CAPTURED
+      - VOIDED
+      - FAILED
+      x-enum-elements:
+      - name: AUTHORIZED
+        description: The Square Account payment has been authorized but not yet captured.
+      - name: CAPTURED
+        description: The Square Account payment was authorized and subsequently captured (i.e., completed).
+      - name: VOIDED
+        description: The Square Account payment was authorized and subsequently voided (i.e., canceled).
+      - name: FAILED
+        description: The Square Account payment failed.
+      x-release-status: PUBLIC
     Currency:
       type: string
       enum:
@@ -998,696 +2132,52 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
-    TenderBuyNowPayLaterDetailsBrand:
+    ErrorCategory:
       type: string
       enum:
-      - OTHER_BRAND
-      - AFTERPAY
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
       x-enum-elements:
-      - name: OTHER_BRAND
-        description: ''
-      - name: AFTERPAY
-        description: ''
-      x-release-status: PUBLIC
-    CardType:
-      type: string
-      enum:
-      - UNKNOWN_CARD_TYPE
-      - CREDIT
-      - DEBIT
-      x-enum-elements:
-      - name: UNKNOWN_CARD_TYPE
-        description: ''
-      - name: CREDIT
-        description: ''
-      - name: DEBIT
-        description: ''
-      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
-      x-release-status: PUBLIC
-    RefundStatus:
-      type: string
-      enum:
-      - PENDING
-      - APPROVED
-      - REJECTED
-      - FAILED
-      x-enum-elements:
-      - name: PENDING
-        description: The refund is pending.
-      - name: APPROVED
-        description: The refund has been approved by Square.
-      - name: REJECTED
-        description: The refund has been rejected by Square.
-      - name: FAILED
-        description: The refund failed.
-      description: Indicates a refund's current status.
-      x-release-status: PUBLIC
-    TenderBuyNowPayLaterDetailsStatus:
-      type: string
-      enum:
-      - AUTHORIZED
-      - CAPTURED
-      - VOIDED
-      - FAILED
-      x-enum-elements:
-      - name: AUTHORIZED
-        description: The buy now pay later payment has been authorized but not yet captured.
-      - name: CAPTURED
-        description: The buy now pay later payment was authorized and subsequently captured (i.e., completed).
-      - name: VOIDED
-        description: The buy now pay later payment was authorized and subsequently voided (i.e., canceled).
-      - name: FAILED
-        description: The buy now pay later payment failed.
-      x-release-status: PUBLIC
-    TenderSquareAccountDetailsStatus:
-      type: string
-      enum:
-      - AUTHORIZED
-      - CAPTURED
-      - VOIDED
-      - FAILED
-      x-enum-elements:
-      - name: AUTHORIZED
-        description: The Square Account payment has been authorized but not yet captured.
-      - name: CAPTURED
-        description: The Square Account payment was authorized and subsequently captured (i.e., completed).
-      - name: VOIDED
-        description: The Square Account payment was authorized and subsequently voided (i.e., canceled).
-      - name: FAILED
-        description: The Square Account payment failed.
-      x-release-status: PUBLIC
-    Money:
-      type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
 
-        Fields that do not explicitly define whether they are signed or unsigned are
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
 
-        considered unsigned and can only hold positive amounts. For signed fields, the
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
 
-        sign of the value indicates the purpose of the money transfer. See
+          to Square APIs in a short period of time.
 
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
 
-        for more information.'
-      x-release-status: PUBLIC
-      properties:
-        amount:
-          type:
-          - integer
-          - 'null'
-          description: 'The amount of money, in the smallest denomination of the currency
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
 
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
 
-            in cents. Monetary amounts can be positive or negative. See the specific
+          the details of the payment method were invalid (such as a card''s CVV
 
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
 
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
-    Address:
-      type: object
-      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
-      x-release-status: PUBLIC
-      properties:
-        address_line_1:
-          type:
-          - string
-          - 'null'
-          description: 'The first line of the address.
-
-
-            Fields that start with `address_line` provide the address''s most specific
-
-            details, like street number, street name, and building name. They do *not*
-
-            provide less specific details like city, state/province, or country (these
-
-            details are provided in other fields).'
-        address_line_2:
-          type:
-          - string
-          - 'null'
-          description: The second line of the address, if any.
-        address_line_3:
-          type:
-          - string
-          - 'null'
-          description: The third line of the address, if any.
-        locality:
-          type:
-          - string
-          - 'null'
-          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-        sublocality:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `locality`, if any.
-        sublocality_2:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `sublocality`, if any.
-        sublocality_3:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `sublocality_2`, if any.
-        administrative_district_level_1:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s country. In the US, this
-
-            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
-        administrative_district_level_2:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s `administrative_district_level_1`.
-
-            In the US, this is the county.'
-        administrative_district_level_3:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s `administrative_district_level_2`,
-
-            if any.'
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-        country:
-          $ref: '#/components/schemas/Country'
-          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
-
-            See [Country](#type-country) for possible values'
-        first_name:
-          type:
-          - string
-          - 'null'
-          description: Optional first name when it's representing recipient.
-        last_name:
-          type:
-          - string
-          - 'null'
-          description: Optional last name when it's representing recipient.
-    AdditionalRecipient:
-      type: object
-      description: Represents an additional recipient (other than the merchant) receiving a portion of this tender.
-      x-release-status: DEPRECATED
-      required:
-      - location_id
-      - amount_money
-      properties:
-        location_id:
-          type: string
-          description: The location ID for a recipient (other than the merchant) receiving a portion of this tender.
-          minLength: 1
-          maxLength: 50
-        description:
-          type:
-          - string
-          - 'null'
-          description: The description of the additional recipient.
-          maxLength: 100
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of money distributed to the recipient.
-        receivable_id:
-          type:
-          - string
-          - 'null'
-          description: The unique ID for the RETIRED `AdditionalRecipientReceivable` object. This field should be empty for any `AdditionalRecipient` objects created after the retirement.
-          maxLength: 192
-    CardBrand:
-      type: string
-      enum:
-      - OTHER_BRAND
-      - VISA
-      - MASTERCARD
-      - AMERICAN_EXPRESS
-      - DISCOVER
-      - DISCOVER_DINERS
-      - JCB
-      - CHINA_UNIONPAY
-      - SQUARE_GIFT_CARD
-      - SQUARE_CAPITAL_CARD
-      - INTERAC
-      - EFTPOS
-      - FELICA
-      - EBT
-      x-enum-elements:
-      - name: OTHER_BRAND
-        description: ''
-      - name: VISA
-        description: ''
-      - name: MASTERCARD
-        description: ''
-      - name: AMERICAN_EXPRESS
-        description: ''
-      - name: DISCOVER
-        description: ''
-      - name: DISCOVER_DINERS
-        description: ''
-      - name: JCB
-        description: ''
-      - name: CHINA_UNIONPAY
-        description: ''
-      - name: SQUARE_GIFT_CARD
-        description: ''
-      - name: SQUARE_CAPITAL_CARD
-        description: ''
-      - name: INTERAC
-        description: ''
-      - name: EFTPOS
-        description: ''
-      - name: FELICA
-        description: ''
-      - name: EBT
-        description: ''
-      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
-      x-release-status: PUBLIC
-    CardPrepaidType:
-      type: string
-      enum:
-      - UNKNOWN_PREPAID_TYPE
-      - NOT_PREPAID
-      - PREPAID
-      x-enum-elements:
-      - name: UNKNOWN_PREPAID_TYPE
-        description: ''
-      - name: NOT_PREPAID
-        description: ''
-      - name: PREPAID
-        description: ''
-      description: Indicates a card's prepaid type, such as `NOT_PREPAID` or `PREPAID`.
-      x-release-status: PUBLIC
-    Refund:
-      type: object
-      description: Represents a refund processed for a Square transaction.
-      x-release-status: PUBLIC
-      required:
-      - id
-      - location_id
-      - tender_id
-      - reason
-      - amount_money
-      - status
-      properties:
-        id:
-          type: string
-          description: The refund's unique ID.
-          maxLength: 255
-        location_id:
-          type: string
-          description: The ID of the refund's associated location.
-          maxLength: 50
-        transaction_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the transaction that the refunded tender is part of.
-          maxLength: 192
-        tender_id:
-          type: string
-          description: The ID of the refunded tender.
-          maxLength: 192
-        created_at:
-          type: string
-          description: The timestamp for when the refund was created, in RFC 3339 format.
-          maxLength: 32
-          readOnly: true
-        reason:
-          type: string
-          description: The reason for the refund being issued.
-          maxLength: 192
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of money refunded to the buyer.
-        status:
-          $ref: '#/components/schemas/RefundStatus'
-          description: 'The current status of the refund (`PENDING`, `APPROVED`, `REJECTED`,
-
-            or `FAILED`).
-
-            See [RefundStatus](#type-refundstatus) for possible values'
-        processing_fee_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of Square processing fee money refunded to the *merchant*.
-        additional_recipients:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AdditionalRecipient'
-          description: 'Additional recipients (other than the merchant) receiving a portion of this refund.
-
-            For example, fees assessed on a refund of a purchase by a third party integration.'
-          x-release-status: DEPRECATED
-    VoidTransactionResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [VoidTransaction](api-endpoint:Transactions-VoidTransaction) endpoint.'
-      x-release-status: DEPRECATED
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/VoidTransaction/VoidTransactionResponse.csharp
-        java: /sdk_samples/VoidTransaction/VoidTransactionResponse.java
-        javascript: /sdk_samples/VoidTransaction/VoidTransactionResponse.javascript
-        php: /sdk_samples/VoidTransaction/VoidTransactionResponse.php
-        python: /sdk_samples/VoidTransaction/VoidTransactionResponse.python
-        ruby: /sdk_samples/VoidTransaction/VoidTransactionResponse.ruby
-    Tender:
-      type: object
-      description: Represents a tender (i.e., a method of payment) used in a Square transaction.
-      x-release-status: PUBLIC
-      required:
-      - type
-      properties:
-        id:
-          type: string
-          description: The tender's unique ID. It is the associated payment ID.
-          maxLength: 192
-        location_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the transaction's associated location.
-          maxLength: 50
-        transaction_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the tender's associated transaction.
-          maxLength: 192
-        created_at:
-          type: string
-          description: The timestamp for when the tender was created, in RFC 3339 format.
-          maxLength: 32
-          readOnly: true
-        note:
-          type:
-          - string
-          - 'null'
-          description: An optional note associated with the tender at the time of payment.
-          maxLength: 500
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The total amount of the tender, including `tip_money`. If the tender has a `payment_id`,
-
-            the `total_money` of the corresponding [Payment](entity:Payment) will be equal to the
-
-            `amount_money` of the tender.'
-        tip_money:
-          $ref: '#/components/schemas/Money'
-          description: The tip's amount of the tender.
-        processing_fee_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of any Square processing fees applied to the tender.
-
-
-            This field is not immediately populated when a new transaction is created.
-
-            It is usually available after about ten seconds.'
-        customer_id:
-          type:
-          - string
-          - 'null'
-          description: 'If the tender is associated with a customer or represents a customer''s card on file,
-
-            this is the ID of the associated customer.'
-          maxLength: 191
-        type:
-          $ref: '#/components/schemas/TenderType'
-          description: 'The type of tender, such as `CARD` or `CASH`.
-
-            See [TenderType](#type-tendertype) for possible values'
-        card_details:
-          $ref: '#/components/schemas/TenderCardDetails'
-          description: 'The details of the card tender.
-
-
-            This value is present only if the value of `type` is `CARD`.'
-        cash_details:
-          $ref: '#/components/schemas/TenderCashDetails'
-          description: 'The details of the cash tender.
-
-
-            This value is present only if the value of `type` is `CASH`.'
-        bank_account_details:
-          $ref: '#/components/schemas/TenderBankAccountDetails'
-          description: 'The details of the bank account tender.
-
-
-            This value is present only if the value of `type` is `BANK_ACCOUNT`.'
-        buy_now_pay_later_details:
-          $ref: '#/components/schemas/TenderBuyNowPayLaterDetails'
-          description: 'The details of a Buy Now Pay Later tender.
-
-
-            This value is present only if the value of `type` is `BUY_NOW_PAY_LATER`.'
-        square_account_details:
-          $ref: '#/components/schemas/TenderSquareAccountDetails'
-          description: 'The details of a Square Account tender.
-
-
-            This value is present only if the value of `type` is `SQUARE_ACCOUNT`.'
-        additional_recipients:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AdditionalRecipient'
-          description: 'Additional recipients (other than the merchant) receiving a portion of this tender.
-
-            For example, fees assessed on the purchase by a third party integration.'
-          x-release-status: DEPRECATED
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: 'The ID of the [Payment](entity:Payment) that corresponds to this tender.
-
-            This value is only present for payments created with the v2 Payments API.'
-          maxLength: 192
-    Card:
-      type: object
-      description: 'Represents the payment details of a card to be used for payments. These
-
-        details are determined by the payment token generated by Web Payments SDK.'
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: Unique ID for this card. Generated by Square.
-          maxLength: 64
-          readOnly: true
-        card_brand:
-          $ref: '#/components/schemas/CardBrand'
-          description: 'The card''s brand.
-
-            See [CardBrand](#type-cardbrand) for possible values'
-          readOnly: true
-        last_4:
-          type: string
-          description: The last 4 digits of the card number.
-          maxLength: 4
-          readOnly: true
-        exp_month:
-          type:
-          - integer
-          - 'null'
-          description: The expiration month of the associated card as an integer between 1 and 12.
-          format: int64
-        exp_year:
-          type:
-          - integer
-          - 'null'
-          description: The four-digit year of the card's expiration date.
-          format: int64
-        cardholder_name:
-          type:
-          - string
-          - 'null'
-          description: The name of the cardholder.
-          maxLength: 96
-        billing_address:
-          $ref: '#/components/schemas/Address'
-          description: The billing address for this card.
-        fingerprint:
-          type: string
-          description: 'Intended as a Square-assigned identifier, based
-
-            on the card number, to identify the card across multiple locations within a
-
-            single application.'
-          maxLength: 255
-          readOnly: true
-        customer_id:
-          type:
-          - string
-          - 'null'
-          description: '**Required** The ID of a customer created using the Customers API to be associated with the card.'
-        merchant_id:
-          type: string
-          description: The ID of the merchant associated with the card.
-          readOnly: true
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: 'An optional user-defined reference ID that associates this card with
-
-            another entity in an external system. For example, a customer ID from an
-
-            external customer management system.'
-          maxLength: 128
-        enabled:
-          type: boolean
-          description: Indicates whether or not a card can be used for payments.
-          readOnly: true
-        card_type:
-          $ref: '#/components/schemas/CardType'
-          description: 'The type of the card.
-
-            The Card object includes this field only in response to Payments API calls.
-
-            See [CardType](#type-cardtype) for possible values'
-          readOnly: true
-        prepaid_type:
-          $ref: '#/components/schemas/CardPrepaidType'
-          description: 'Indicates whether the Card is prepaid or not.
-
-            The Card object includes this field only in response to Payments API calls.
-
-            See [CardPrepaidType](#type-cardprepaidtype) for possible values'
-          readOnly: true
-        bin:
-          type: string
-          description: 'The first six digits of the card number, known as the Bank Identification Number (BIN). Only the Payments API
-
-            returns this field.'
-          maxLength: 6
-          readOnly: true
-        version:
-          type: integer
-          description: 'Current version number of the card. Increments with each card update. Requests to update an
-
-            existing Card object will be rejected unless the version in the request matches the current
-
-            version for the Card.'
-          format: int64
-        card_co_brand:
-          $ref: '#/components/schemas/CardCoBrand'
-          description: 'The card''s co-brand if available. For example, an Afterpay virtual card would have a
-
-            co-brand of AFTERPAY.
-
-            See [CardCoBrand](#type-cardcobrand) for possible values'
-          readOnly: true
-    TenderCardDetails:
-      type: object
-      description: Represents additional details of a tender with `type` `CARD` or `SQUARE_GIFT_CARD`
-      x-release-status: PUBLIC
-      properties:
-        status:
-          $ref: '#/components/schemas/TenderCardDetailsStatus'
-          description: 'The credit card payment''s current state (such as `AUTHORIZED` or
-
-            `CAPTURED`). See [TenderCardDetailsStatus](entity:TenderCardDetailsStatus)
-
-            for possible values.
-
-            See [TenderCardDetailsStatus](#type-tendercarddetailsstatus) for possible values'
-        card:
-          $ref: '#/components/schemas/Card'
-          description: The credit card's non-confidential details.
-        entry_method:
-          $ref: '#/components/schemas/TenderCardDetailsEntryMethod'
-          description: 'The method used to enter the card''s details for the transaction.
-
-            See [TenderCardDetailsEntryMethod](#type-tendercarddetailsentrymethod) for possible values'
-    TenderType:
-      type: string
-      enum:
-      - CARD
-      - CASH
-      - THIRD_PARTY_CARD
-      - SQUARE_GIFT_CARD
-      - NO_SALE
-      - BANK_ACCOUNT
-      - WALLET
-      - BUY_NOW_PAY_LATER
-      - SQUARE_ACCOUNT
-      - OTHER
-      x-enum-elements:
-      - name: CARD
-        description: A credit card.
-      - name: CASH
-        description: Cash.
-      - name: THIRD_PARTY_CARD
-        description: 'A credit card processed with a card processor other than Square.
-
-
-          This value applies only to merchants in countries where Square does not
-
-          yet provide card processing.'
-      - name: SQUARE_GIFT_CARD
-        description: A Square gift card.
-      - name: NO_SALE
-        description: This tender represents the register being opened for a "no sale" event.
-      - name: BANK_ACCOUNT
-        description: A bank account payment.
-      - name: WALLET
-        description: 'A payment from a digital wallet, e.g. Cash App, Paypay, Rakuten Pay,
-
-          Au Pay, D Barai, Merpay, Wechat Pay, Alipay.
-
-
-          Note: Some "digital wallets", including Google Pay and Apple Pay, facilitate
-
-          card payments.  Those payments have the `CARD` type.'
-      - name: BUY_NOW_PAY_LATER
-        description: A Buy Now Pay Later payment.
-      - name: SQUARE_ACCOUNT
-        description: A Square House Account payment.
-      - name: OTHER
-        description: A form of tender that does not match any other value.
-      description: Indicates a tender's type.
-      x-release-status: PUBLIC
-    TenderBankAccountDetailsStatus:
-      type: string
-      enum:
-      - PENDING
-      - COMPLETED
-      - FAILED
-      x-enum-elements:
-      - name: PENDING
-        description: The bank account payment is in progress.
-      - name: COMPLETED
-        description: The bank account payment has been completed.
-      - name: FAILED
-        description: The bank account payment failed.
-      description: Indicates the bank account payment's current status.
+        request to the Connect API.'
       x-release-status: PUBLIC
     Country:
       type: string
@@ -2447,26 +2937,197 @@ components:
 
         Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
       x-release-status: PUBLIC
-    TenderBuyNowPayLaterDetails:
+    TenderBuyNowPayLaterDetailsStatus:
+      type: string
+      enum:
+      - AUTHORIZED
+      - CAPTURED
+      - VOIDED
+      - FAILED
+      x-enum-elements:
+      - name: AUTHORIZED
+        description: The buy now pay later payment has been authorized but not yet captured.
+      - name: CAPTURED
+        description: The buy now pay later payment was authorized and subsequently captured (i.e., completed).
+      - name: VOIDED
+        description: The buy now pay later payment was authorized and subsequently voided (i.e., canceled).
+      - name: FAILED
+        description: The buy now pay later payment failed.
+      x-release-status: PUBLIC
+    Card:
       type: object
-      description: Represents the details of a tender with `type` `BUY_NOW_PAY_LATER`.
+      description: 'Represents the payment details of a card to be used for payments. These
+
+        details are determined by the payment token generated by Web Payments SDK.'
       x-release-status: PUBLIC
       properties:
-        buy_now_pay_later_brand:
-          $ref: '#/components/schemas/TenderBuyNowPayLaterDetailsBrand'
-          description: 'The Buy Now Pay Later brand.
-
-            See [Brand](#type-brand) for possible values'
+        id:
+          type: string
+          description: Unique ID for this card. Generated by Square.
+          maxLength: 64
           readOnly: true
-        status:
-          $ref: '#/components/schemas/TenderBuyNowPayLaterDetailsStatus'
-          description: 'The buy now pay later payment''s current state (such as `AUTHORIZED` or
+        card_brand:
+          $ref: '#/components/schemas/CardBrand'
+          description: 'The card''s brand.
 
-            `CAPTURED`). See [TenderBuyNowPayLaterDetailsStatus](entity:TenderBuyNowPayLaterDetailsStatus)
+            See [CardBrand](#type-cardbrand) for possible values'
+          readOnly: true
+        last_4:
+          type: string
+          description: The last 4 digits of the card number.
+          maxLength: 4
+          readOnly: true
+        exp_month:
+          type:
+          - integer
+          - 'null'
+          description: The expiration month of the associated card as an integer between 1 and 12.
+          format: int64
+        exp_year:
+          type:
+          - integer
+          - 'null'
+          description: The four-digit year of the card's expiration date.
+          format: int64
+        cardholder_name:
+          type:
+          - string
+          - 'null'
+          description: The name of the cardholder.
+          maxLength: 96
+        billing_address:
+          $ref: '#/components/schemas/Address'
+          description: The billing address for this card.
+        fingerprint:
+          type: string
+          description: 'Intended as a Square-assigned identifier, based
+
+            on the card number, to identify the card across multiple locations within a
+
+            single application.'
+          maxLength: 255
+          readOnly: true
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: '**Required** The ID of a customer created using the Customers API to be associated with the card.'
+        merchant_id:
+          type: string
+          description: The ID of the merchant associated with the card.
+          readOnly: true
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: 'An optional user-defined reference ID that associates this card with
+
+            another entity in an external system. For example, a customer ID from an
+
+            external customer management system.'
+          maxLength: 128
+        enabled:
+          type: boolean
+          description: Indicates whether or not a card can be used for payments.
+          readOnly: true
+        card_type:
+          $ref: '#/components/schemas/CardType'
+          description: 'The type of the card.
+
+            The Card object includes this field only in response to Payments API calls.
+
+            See [CardType](#type-cardtype) for possible values'
+          readOnly: true
+        prepaid_type:
+          $ref: '#/components/schemas/CardPrepaidType'
+          description: 'Indicates whether the Card is prepaid or not.
+
+            The Card object includes this field only in response to Payments API calls.
+
+            See [CardPrepaidType](#type-cardprepaidtype) for possible values'
+          readOnly: true
+        bin:
+          type: string
+          description: 'The first six digits of the card number, known as the Bank Identification Number (BIN). Only the Payments API
+
+            returns this field.'
+          maxLength: 6
+          readOnly: true
+        version:
+          type: integer
+          description: 'Current version number of the card. Increments with each card update. Requests to update an
+
+            existing Card object will be rejected unless the version in the request matches the current
+
+            version for the Card.'
+          format: int64
+        card_co_brand:
+          $ref: '#/components/schemas/CardCoBrand'
+          description: 'The card''s co-brand if available. For example, an Afterpay virtual card would have a
+
+            co-brand of AFTERPAY.
+
+            See [CardCoBrand](#type-cardcobrand) for possible values'
+          readOnly: true
+    TenderBankAccountDetailsStatus:
+      type: string
+      enum:
+      - PENDING
+      - COMPLETED
+      - FAILED
+      x-enum-elements:
+      - name: PENDING
+        description: The bank account payment is in progress.
+      - name: COMPLETED
+        description: The bank account payment has been completed.
+      - name: FAILED
+        description: The bank account payment failed.
+      description: Indicates the bank account payment's current status.
+      x-release-status: PUBLIC
+    TenderSquareAccountDetails:
+      type: object
+      description: Represents the details of a tender with `type` `SQUARE_ACCOUNT`.
+      x-release-status: PUBLIC
+      properties:
+        status:
+          $ref: '#/components/schemas/TenderSquareAccountDetailsStatus'
+          description: 'The Square Account payment''s current state (such as `AUTHORIZED` or
+
+            `CAPTURED`). See [TenderSquareAccountDetailsStatus](entity:TenderSquareAccountDetailsStatus)
 
             for possible values.
 
             See [Status](#type-status) for possible values'
+    TransactionProduct:
+      type: string
+      enum:
+      - REGISTER
+      - EXTERNAL_API
+      - BILLING
+      - APPOINTMENTS
+      - INVOICES
+      - ONLINE_STORE
+      - PAYROLL
+      - OTHER
+      x-enum-elements:
+      - name: REGISTER
+        description: Square Point of Sale.
+      - name: EXTERNAL_API
+        description: The Square Connect API.
+      - name: BILLING
+        description: A Square subscription for one of multiple products.
+      - name: APPOINTMENTS
+        description: Square Appointments.
+      - name: INVOICES
+        description: Square Invoices.
+      - name: ONLINE_STORE
+        description: Square Online Store.
+      - name: PAYROLL
+        description: Square Payroll.
+      - name: OTHER
+        description: A Square product that does not match any other value.
+      description: Indicates the Square product used to process a transaction.
+      x-release-status: DEPRECATED
     CaptureTransactionResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -2487,71 +3148,225 @@ components:
         php: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.php
         python: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.python
         ruby: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.ruby
-    ErrorCategory:
+    Refund:
+      type: object
+      description: Represents a refund processed for a Square transaction.
+      x-release-status: PUBLIC
+      required:
+      - id
+      - location_id
+      - tender_id
+      - reason
+      - amount_money
+      - status
+      properties:
+        id:
+          type: string
+          description: The refund's unique ID.
+          maxLength: 255
+        location_id:
+          type: string
+          description: The ID of the refund's associated location.
+          maxLength: 50
+        transaction_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the transaction that the refunded tender is part of.
+          maxLength: 192
+        tender_id:
+          type: string
+          description: The ID of the refunded tender.
+          maxLength: 192
+        created_at:
+          type: string
+          description: The timestamp for when the refund was created, in RFC 3339 format.
+          maxLength: 32
+          readOnly: true
+        reason:
+          type: string
+          description: The reason for the refund being issued.
+          maxLength: 192
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of money refunded to the buyer.
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+          description: 'The current status of the refund (`PENDING`, `APPROVED`, `REJECTED`,
+
+            or `FAILED`).
+
+            See [RefundStatus](#type-refundstatus) for possible values'
+        processing_fee_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of Square processing fee money refunded to the *merchant*.
+        additional_recipients:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AdditionalRecipient'
+          description: 'Additional recipients (other than the merchant) receiving a portion of this refund.
+
+            For example, fees assessed on a refund of a purchase by a third party integration.'
+          x-release-status: DEPRECATED
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    CardPrepaidType:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - UNKNOWN_PREPAID_TYPE
+      - NOT_PREPAID
+      - PREPAID
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+      - name: UNKNOWN_PREPAID_TYPE
+        description: ''
+      - name: NOT_PREPAID
+        description: ''
+      - name: PREPAID
+        description: ''
+      description: Indicates a card's prepaid type, such as `NOT_PREPAID` or `PREPAID`.
       x-release-status: PUBLIC
-    TenderCardDetailsStatus:
-      type: string
-      enum:
-      - AUTHORIZED
-      - CAPTURED
-      - VOIDED
-      - FAILED
-      x-enum-elements:
-      - name: AUTHORIZED
-        description: The card transaction has been authorized but not yet captured.
-      - name: CAPTURED
-        description: The card transaction was authorized and subsequently captured (i.e., completed).
-      - name: VOIDED
-        description: The card transaction was authorized and subsequently voided (i.e., canceled).
-      - name: FAILED
-        description: The card transaction failed.
-      description: Indicates the card transaction's current status.
+    Tender:
+      type: object
+      description: Represents a tender (i.e., a method of payment) used in a Square transaction.
       x-release-status: PUBLIC
+      required:
+      - type
+      properties:
+        id:
+          type: string
+          description: The tender's unique ID. It is the associated payment ID.
+          maxLength: 192
+        location_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the transaction's associated location.
+          maxLength: 50
+        transaction_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the tender's associated transaction.
+          maxLength: 192
+        created_at:
+          type: string
+          description: The timestamp for when the tender was created, in RFC 3339 format.
+          maxLength: 32
+          readOnly: true
+        note:
+          type:
+          - string
+          - 'null'
+          description: An optional note associated with the tender at the time of payment.
+          maxLength: 500
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The total amount of the tender, including `tip_money`. If the tender has a `payment_id`,
+
+            the `total_money` of the corresponding [Payment](entity:Payment) will be equal to the
+
+            `amount_money` of the tender.'
+        tip_money:
+          $ref: '#/components/schemas/Money'
+          description: The tip's amount of the tender.
+        processing_fee_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of any Square processing fees applied to the tender.
+
+
+            This field is not immediately populated when a new transaction is created.
+
+            It is usually available after about ten seconds.'
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: 'If the tender is associated with a customer or represents a customer''s card on file,
+
+            this is the ID of the associated customer.'
+          maxLength: 191
+        type:
+          $ref: '#/components/schemas/TenderType'
+          description: 'The type of tender, such as `CARD` or `CASH`.
+
+            See [TenderType](#type-tendertype) for possible values'
+        card_details:
+          $ref: '#/components/schemas/TenderCardDetails'
+          description: 'The details of the card tender.
+
+
+            This value is present only if the value of `type` is `CARD`.'
+        cash_details:
+          $ref: '#/components/schemas/TenderCashDetails'
+          description: 'The details of the cash tender.
+
+
+            This value is present only if the value of `type` is `CASH`.'
+        bank_account_details:
+          $ref: '#/components/schemas/TenderBankAccountDetails'
+          description: 'The details of the bank account tender.
+
+
+            This value is present only if the value of `type` is `BANK_ACCOUNT`.'
+        buy_now_pay_later_details:
+          $ref: '#/components/schemas/TenderBuyNowPayLaterDetails'
+          description: 'The details of a Buy Now Pay Later tender.
+
+
+            This value is present only if the value of `type` is `BUY_NOW_PAY_LATER`.'
+        square_account_details:
+          $ref: '#/components/schemas/TenderSquareAccountDetails'
+          description: 'The details of a Square Account tender.
+
+
+            This value is present only if the value of `type` is `SQUARE_ACCOUNT`.'
+        additional_recipients:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AdditionalRecipient'
+          description: 'Additional recipients (other than the merchant) receiving a portion of this tender.
+
+            For example, fees assessed on the purchase by a third party integration.'
+          x-release-status: DEPRECATED
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the [Payment](entity:Payment) that corresponds to this tender.
+
+            This value is only present for payments created with the v2 Payments API.'
+          maxLength: 192
     ListTransactionsResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -2641,820 +3456,101 @@ components:
         php: /sdk_samples/ListTransactions/ListTransactionsResponse.php
         python: /sdk_samples/ListTransactions/ListTransactionsResponse.python
         ruby: /sdk_samples/ListTransactions/ListTransactionsResponse.ruby
-    TenderBankAccountDetails:
+    Address:
       type: object
-      description: 'Represents the details of a tender with `type` `BANK_ACCOUNT`.
-
-
-        See [BankAccountPaymentDetails](entity:BankAccountPaymentDetails)
-
-        for more exposed details of a bank account payment.'
+      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
       x-release-status: PUBLIC
       properties:
-        status:
-          $ref: '#/components/schemas/TenderBankAccountDetailsStatus'
-          description: 'The bank account payment''s current state.
-
-
-            See [TenderBankAccountPaymentDetailsStatus](entity:TenderBankAccountDetailsStatus) for possible values.
-
-            See [TenderBankAccountDetailsStatus](#type-tenderbankaccountdetailsstatus) for possible values'
-    TransactionProduct:
-      type: string
-      enum:
-      - REGISTER
-      - EXTERNAL_API
-      - BILLING
-      - APPOINTMENTS
-      - INVOICES
-      - ONLINE_STORE
-      - PAYROLL
-      - OTHER
-      x-enum-elements:
-      - name: REGISTER
-        description: Square Point of Sale.
-      - name: EXTERNAL_API
-        description: The Square Connect API.
-      - name: BILLING
-        description: A Square subscription for one of multiple products.
-      - name: APPOINTMENTS
-        description: Square Appointments.
-      - name: INVOICES
-        description: Square Invoices.
-      - name: ONLINE_STORE
-        description: Square Online Store.
-      - name: PAYROLL
-        description: Square Payroll.
-      - name: OTHER
-        description: A Square product that does not match any other value.
-      description: Indicates the Square product used to process a transaction.
-      x-release-status: DEPRECATED
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    ErrorCode:
-      type: string
-      enum:
-      - INTERNAL_SERVER_ERROR
-      - UNAUTHORIZED
-      - ACCESS_TOKEN_EXPIRED
-      - ACCESS_TOKEN_REVOKED
-      - CLIENT_DISABLED
-      - FORBIDDEN
-      - INSUFFICIENT_SCOPES
-      - APPLICATION_DISABLED
-      - V1_APPLICATION
-      - V1_ACCESS_TOKEN
-      - CARD_PROCESSING_NOT_ENABLED
-      - MERCHANT_SUBSCRIPTION_NOT_FOUND
-      - BAD_REQUEST
-      - MISSING_REQUIRED_PARAMETER
-      - INCORRECT_TYPE
-      - INVALID_TIME
-      - INVALID_TIME_RANGE
-      - INVALID_VALUE
-      - INVALID_CURSOR
-      - UNKNOWN_QUERY_PARAMETER
-      - CONFLICTING_PARAMETERS
-      - EXPECTED_JSON_BODY
-      - INVALID_SORT_ORDER
-      - VALUE_REGEX_MISMATCH
-      - VALUE_TOO_SHORT
-      - VALUE_TOO_LONG
-      - VALUE_TOO_LOW
-      - VALUE_TOO_HIGH
-      - VALUE_EMPTY
-      - ARRAY_LENGTH_TOO_LONG
-      - ARRAY_LENGTH_TOO_SHORT
-      - ARRAY_EMPTY
-      - EXPECTED_BOOLEAN
-      - EXPECTED_INTEGER
-      - EXPECTED_FLOAT
-      - EXPECTED_STRING
-      - EXPECTED_OBJECT
-      - EXPECTED_ARRAY
-      - EXPECTED_MAP
-      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
-      - INVALID_ARRAY_VALUE
-      - INVALID_ENUM_VALUE
-      - INVALID_CONTENT_TYPE
-      - INVALID_FORM_VALUE
-      - CUSTOMER_NOT_FOUND
-      - ONE_INSTRUMENT_EXPECTED
-      - NO_FIELDS_SET
-      - TOO_MANY_MAP_ENTRIES
-      - MAP_KEY_LENGTH_TOO_SHORT
-      - MAP_KEY_LENGTH_TOO_LONG
-      - CUSTOMER_MISSING_NAME
-      - CUSTOMER_MISSING_EMAIL
-      - INVALID_PAUSE_LENGTH
-      - INVALID_DATE
-      - UNSUPPORTED_COUNTRY
-      - UNSUPPORTED_CURRENCY
-      - APPLE_TTP_PIN_TOKEN
-      - CARD_EXPIRED
-      - INVALID_EXPIRATION
-      - INVALID_EXPIRATION_YEAR
-      - INVALID_EXPIRATION_DATE
-      - UNSUPPORTED_CARD_BRAND
-      - UNSUPPORTED_ENTRY_METHOD
-      - INVALID_ENCRYPTED_CARD
-      - INVALID_CARD
-      - PAYMENT_AMOUNT_MISMATCH
-      - GENERIC_DECLINE
-      - CVV_FAILURE
-      - ADDRESS_VERIFICATION_FAILURE
-      - INVALID_ACCOUNT
-      - CURRENCY_MISMATCH
-      - INSUFFICIENT_FUNDS
-      - INSUFFICIENT_PERMISSIONS
-      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
-      - INVALID_LOCATION
-      - TRANSACTION_LIMIT
-      - VOICE_FAILURE
-      - PAN_FAILURE
-      - EXPIRATION_FAILURE
-      - CARD_NOT_SUPPORTED
-      - INVALID_PIN
-      - MISSING_PIN
-      - MISSING_ACCOUNT_TYPE
-      - INVALID_POSTAL_CODE
-      - INVALID_FEES
-      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
-      - PAYMENT_LIMIT_EXCEEDED
-      - GIFT_CARD_AVAILABLE_AMOUNT
-      - ACCOUNT_UNUSABLE
-      - BUYER_REFUSED_PAYMENT
-      - DELAYED_TRANSACTION_EXPIRED
-      - DELAYED_TRANSACTION_CANCELED
-      - DELAYED_TRANSACTION_CAPTURED
-      - DELAYED_TRANSACTION_FAILED
-      - CARD_TOKEN_EXPIRED
-      - CARD_TOKEN_USED
-      - AMOUNT_TOO_HIGH
-      - UNSUPPORTED_INSTRUMENT_TYPE
-      - REFUND_AMOUNT_INVALID
-      - REFUND_ALREADY_PENDING
-      - PAYMENT_NOT_REFUNDABLE
-      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
-      - REFUND_DECLINED
-      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
-      - INVALID_CARD_DATA
-      - SOURCE_USED
-      - SOURCE_EXPIRED
-      - UNSUPPORTED_LOYALTY_REWARD_TIER
-      - LOCATION_MISMATCH
-      - IDEMPOTENCY_KEY_REUSED
-      - UNEXPECTED_VALUE
-      - SANDBOX_NOT_SUPPORTED
-      - INVALID_EMAIL_ADDRESS
-      - INVALID_PHONE_NUMBER
-      - CHECKOUT_EXPIRED
-      - BAD_CERTIFICATE
-      - INVALID_SQUARE_VERSION_FORMAT
-      - API_VERSION_INCOMPATIBLE
-      - CARD_PRESENCE_REQUIRED
-      - UNSUPPORTED_SOURCE_TYPE
-      - CARD_MISMATCH
-      - PLAID_ERROR
-      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
-      - PLAID_ERROR_RATE_LIMIT
-      - CARD_DECLINED
-      - VERIFY_CVV_FAILURE
-      - VERIFY_AVS_FAILURE
-      - CARD_DECLINED_CALL_ISSUER
-      - CARD_DECLINED_VERIFICATION_REQUIRED
-      - BAD_EXPIRATION
-      - CHIP_INSERTION_REQUIRED
-      - ALLOWABLE_PIN_TRIES_EXCEEDED
-      - RESERVATION_DECLINED
-      - UNKNOWN_BODY_PARAMETER
-      - NOT_FOUND
-      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
-      - METHOD_NOT_ALLOWED
-      - NOT_ACCEPTABLE
-      - REQUEST_TIMEOUT
-      - CONFLICT
-      - GONE
-      - REQUEST_ENTITY_TOO_LARGE
-      - UNSUPPORTED_MEDIA_TYPE
-      - UNPROCESSABLE_ENTITY
-      - RATE_LIMITED
-      - NOT_IMPLEMENTED
-      - BAD_GATEWAY
-      - SERVICE_UNAVAILABLE
-      - TEMPORARY_ERROR
-      - GATEWAY_TIMEOUT
-      x-enum-elements:
-      - name: INTERNAL_SERVER_ERROR
-        description: A general server error occurred.
-        error-category: API_ERROR
-      - name: UNAUTHORIZED
-        description: A general authorization error occurred.
-        error-category: AUTHENTICATION_ERROR
-      - name: ACCESS_TOKEN_EXPIRED
-        description: The provided access token has expired.
-        error-category: AUTHENTICATION_ERROR
-      - name: ACCESS_TOKEN_REVOKED
-        description: The provided access token has been revoked.
-        error-category: AUTHENTICATION_ERROR
-      - name: CLIENT_DISABLED
-        description: The provided client has been disabled.
-        error-category: AUTHENTICATION_ERROR
-      - name: FORBIDDEN
-        description: A general access error occurred.
-        error-category: AUTHENTICATION_ERROR
-      - name: INSUFFICIENT_SCOPES
-        description: 'The provided access token does not have permission
-
-          to execute the requested action.'
-        error-category: AUTHENTICATION_ERROR
-      - name: APPLICATION_DISABLED
-        description: The calling application was disabled.
-        error-category: INVALID_REQUEST_ERROR
-      - name: V1_APPLICATION
-        description: 'The calling application was created prior to
-
-          2016-03-30 and is not compatible with v2 Square API calls.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: V1_ACCESS_TOKEN
-        description: 'The calling application is using an access token
-
-          created prior to 2016-03-30 and is not compatible with v2 Square API
-
-          calls.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_PROCESSING_NOT_ENABLED
-        description: 'The location provided in the API call is not
-
-          enabled for credit card processing.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
-        description: A required subscription was not found for the merchant
-        error-category: MERCHANT_SUBSCRIPTION_ERROR
-      - name: BAD_REQUEST
-        description: A general error occurred with the request.
-        error-category: INVALID_REQUEST_ERROR
-      - name: MISSING_REQUIRED_PARAMETER
-        description: 'The request is missing a required path, query, or
-
-          body parameter.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INCORRECT_TYPE
-        description: 'The value provided in the request is the wrong
-
-          type. For example, a string instead of an integer.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_TIME
-        description: 'Formatting for the provided time value is
-
-          incorrect.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_TIME_RANGE
-        description: 'The time range provided in the request is invalid.
-
-          For example, the end time is before the start time.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_VALUE
-        description: 'The provided value is invalid. For example,
-
-          including `%` in a phone number.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_CURSOR
-        description: 'The pagination cursor included in the request is
-
-          invalid.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNKNOWN_QUERY_PARAMETER
-        description: 'The query parameters provided is invalid for the
-
-          requested endpoint.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: CONFLICTING_PARAMETERS
-        description: 'One or more of the request parameters conflict with
-
-          each other.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_JSON_BODY
-        description: The request body is not a JSON object.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_SORT_ORDER
-        description: 'The provided sort order is not a valid key.
-
-          Currently, sort order must be `ASC` or `DESC`.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_REGEX_MISMATCH
-        description: 'The provided value does not match an expected
-
-          regular expression.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_TOO_SHORT
-        description: 'The provided string value is shorter than the
-
-          minimum length allowed.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_TOO_LONG
-        description: 'The provided string value is longer than the
-
-          maximum length allowed.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_TOO_LOW
-        description: 'The provided value is less than the supported
-
-          minimum.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_TOO_HIGH
-        description: 'The provided value is greater than the supported
-
-          maximum.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_EMPTY
-        description: 'The provided value has a default (empty) value
-
-          such as a blank string.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: ARRAY_LENGTH_TOO_LONG
-        description: The provided array has too many elements.
-        error-category: INVALID_REQUEST_ERROR
-      - name: ARRAY_LENGTH_TOO_SHORT
-        description: The provided array has too few elements.
-        error-category: INVALID_REQUEST_ERROR
-      - name: ARRAY_EMPTY
-        description: The provided array is empty.
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_BOOLEAN
-        description: 'The endpoint expected the provided value to be a
-
-          boolean.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_INTEGER
-        description: 'The endpoint expected the provided value to be an
-
-          integer.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_FLOAT
-        description: 'The endpoint expected the provided value to be a
-
-          float.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_STRING
-        description: 'The endpoint expected the provided value to be a
-
-          string.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_OBJECT
-        description: 'The endpoint expected the provided value to be a
-
-          JSON object.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_ARRAY
-        description: 'The endpoint expected the provided value to be an
-
-          array or list.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_MAP
-        description: 'The endpoint expected the provided value to be a
-
-          map or associative array.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
-        description: 'The endpoint expected the provided value to be an
-
-          array encoded in base64.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_ARRAY_VALUE
-        description: 'One or more objects in the array does not match the
-
-          array type.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_ENUM_VALUE
-        description: 'The provided static string is not valid for the
-
-          field.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_CONTENT_TYPE
-        description: Invalid content type header.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_FORM_VALUE
-        description: 'Only relevant for applications created prior to
-
-          2016-03-30. Indicates there was an error while parsing form values.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: CUSTOMER_NOT_FOUND
-        description: The provided customer id can't be found in the merchant's customers list.
-        error-category: INVALID_REQUEST_ERROR
-      - name: ONE_INSTRUMENT_EXPECTED
-        description: A general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: NO_FIELDS_SET
-        description: A general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: TOO_MANY_MAP_ENTRIES
-        description: Too many entries in the map field.
-        error-category: INVALID_REQUEST_ERROR
-      - name: MAP_KEY_LENGTH_TOO_SHORT
-        description: The length of one of the provided keys in the map is too short.
-        error-category: INVALID_REQUEST_ERROR
-      - name: MAP_KEY_LENGTH_TOO_LONG
-        description: The length of one of the provided keys in the map is too long.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CUSTOMER_MISSING_NAME
-        description: The provided customer does not have a recorded name.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CUSTOMER_MISSING_EMAIL
-        description: The provided customer does not have a recorded email.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_PAUSE_LENGTH
-        description: The subscription cannot be paused longer than the duration of the current phase.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_DATE
-        description: The subscription cannot be paused/resumed on the given date.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_COUNTRY
-        description: The API request references an unsupported country.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_CURRENCY
-        description: The API request references an unsupported currency.
-        error-category: INVALID_REQUEST_ERROR
-      - name: APPLE_TTP_PIN_TOKEN
-        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
-
-          transaction with a request for the card''s PIN. This code will be returned alongside
-
-          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
-
-          issuer-provided token in the `details` field that is needed to initiate the PIN
-
-          collection flow on the iOS device.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARD_EXPIRED
-        description: The card issuer declined the request because the card is expired.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_EXPIRATION
-        description: 'The expiration date for the payment card is invalid. For example,
-
-          it indicates a date in the past.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_EXPIRATION_YEAR
-        description: 'The expiration year for the payment card is invalid. For example,
-
-          it indicates a year in the past or contains invalid characters.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_EXPIRATION_DATE
-        description: 'The expiration date for the payment card is invalid. For example,
-
-          it contains invalid characters.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_CARD_BRAND
-        description: The credit card provided is not from a supported issuer.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: UNSUPPORTED_ENTRY_METHOD
-        description: The entry method for the credit card (swipe, dip, tap) is not supported.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_ENCRYPTED_CARD
-        description: The encrypted card information is invalid.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_CARD
-        description: The credit card cannot be validated based on the provided details.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: PAYMENT_AMOUNT_MISMATCH
-        description: 'The payment was declined because there was a payment amount mismatch.
-
-          The money amount Square was expecting does not match the amount provided.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: GENERIC_DECLINE
-        description: 'Square received a decline without any additional information.
-
-          If the payment information seems correct, the buyer can contact their
-
-          issuer to ask for more information.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CVV_FAILURE
-        description: The card issuer declined the request because the CVV value is invalid.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: ADDRESS_VERIFICATION_FAILURE
-        description: The card issuer declined the request because the postal code is invalid.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_ACCOUNT
-        description: The issuer was not able to locate the account on record.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CURRENCY_MISMATCH
-        description: 'The currency associated with the payment is not valid for the provided
-
-          funding source. For example, a gift card funded in USD cannot be used to process
-
-          payments in GBP.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INSUFFICIENT_FUNDS
-        description: The funding source has insufficient funds to cover the payment.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INSUFFICIENT_PERMISSIONS
-        description: 'The Square account does not have the permissions to accept
-
-          this payment. For example, Square may limit which merchants are
-
-          allowed to receive gift card payments.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
-        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
-
-          For example, a gift card is limited to a single merchant.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_LOCATION
-        description: 'The Square account cannot take payments in the specified region.
-
-          A Square account can take payments only from the region where the account was created.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: TRANSACTION_LIMIT
-        description: 'The card issuer has determined the payment amount is either too high or too low.
-
-          The API returns the error code mostly for credit cards (for example, the card reached
-
-          the credit limit). However, sometimes the issuer bank can indicate the error for debit
-
-          or prepaid cards (for example, card has insufficient funds).'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: VOICE_FAILURE
-        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: PAN_FAILURE
-        description: 'The specified card number is invalid. For example, it is of
-
-          incorrect length or is incorrectly formatted.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: EXPIRATION_FAILURE
-        description: 'The card expiration date is either invalid or indicates that the
-
-          card is expired.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARD_NOT_SUPPORTED
-        description: 'The card is not supported either in the geographic region or by
-
-          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_PIN
-        description: The card issuer declined the request because the PIN is invalid.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: MISSING_PIN
-        description: The payment is missing a required PIN.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: MISSING_ACCOUNT_TYPE
-        description: The payment is missing a required ACCOUNT_TYPE parameter.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_POSTAL_CODE
-        description: The postal code is incorrectly formatted.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_FEES
-        description: The app_fee_money on a payment is too high.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
-        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: PAYMENT_LIMIT_EXCEEDED
-        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: GIFT_CARD_AVAILABLE_AMOUNT
-        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
-
-          by adding the `accept_partial_authorization` parameter in the request.
-
-          However, taking such a partial payment does not work if your request also includes
-
-          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
-
-          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
-
-          For more information, see
-
-          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: ACCOUNT_UNUSABLE
-        description: The account provided cannot carry out transactions.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: BUYER_REFUSED_PAYMENT
-        description: Bank account rejected or was not authorized for the payment.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: DELAYED_TRANSACTION_EXPIRED
-        description: The application tried to update a delayed-capture payment that has expired.
-        error-category: INVALID_REQUEST_ERROR
-      - name: DELAYED_TRANSACTION_CANCELED
-        description: The application tried to cancel a delayed-capture payment that was already cancelled.
-        error-category: INVALID_REQUEST_ERROR
-      - name: DELAYED_TRANSACTION_CAPTURED
-        description: The application tried to capture a delayed-capture payment that was already captured.
-        error-category: INVALID_REQUEST_ERROR
-      - name: DELAYED_TRANSACTION_FAILED
-        description: The application tried to update a delayed-capture payment that failed.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_TOKEN_EXPIRED
-        description: The provided card token (nonce) has expired.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_TOKEN_USED
-        description: The provided card token (nonce) was already used to process the payment or refund.
-        error-category: INVALID_REQUEST_ERROR
-      - name: AMOUNT_TOO_HIGH
-        description: The requested payment amount is too high for the provided payment source.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_INSTRUMENT_TYPE
-        description: The API request references an unsupported instrument type.
-        error-category: INVALID_REQUEST_ERROR
-      - name: REFUND_AMOUNT_INVALID
-        description: The requested refund amount exceeds the amount available to refund.
-        error-category: REFUND_ERROR
-      - name: REFUND_ALREADY_PENDING
-        description: The payment already has a pending refund.
-        error-category: REFUND_ERROR
-      - name: PAYMENT_NOT_REFUNDABLE
-        description: The payment is not refundable. For example, the payment is too old to be refunded.
-        error-category: REFUND_ERROR
-      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
-        description: The payment is not refundable because it has been disputed.
-        error-category: REFUND_ERROR
-      - name: REFUND_DECLINED
-        description: Request failed - The card issuer declined the refund.
-        error-category: REFUND_ERROR
-      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
-        description: The Square account does not have the permissions to process this refund.
-        error-category: REFUND_ERROR
-      - name: INVALID_CARD_DATA
-        description: Generic error - the provided card data is invalid.
-        error-category: INVALID_REQUEST_ERROR
-      - name: SOURCE_USED
-        description: The provided source id was already used to create a card.
-        error-category: INVALID_REQUEST_ERROR
-      - name: SOURCE_EXPIRED
-        description: The provided source id has expired.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
-        description: 'The referenced loyalty program reward tier is not supported.
-
-          This could happen if the reward tier created in a first party
-
-          application is incompatible with the Loyalty API.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: LOCATION_MISMATCH
-        description: Generic error - the given location does not matching what is expected.
-        error-category: INVALID_REQUEST_ERROR
-      - name: IDEMPOTENCY_KEY_REUSED
-        description: The provided idempotency key has already been used.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNEXPECTED_VALUE
-        description: General error - the value provided was unexpected.
-        error-category: INVALID_REQUEST_ERROR
-      - name: SANDBOX_NOT_SUPPORTED
-        description: The API request is not supported in sandbox.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_EMAIL_ADDRESS
-        description: The provided email address is invalid.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_PHONE_NUMBER
-        description: The provided phone number is invalid.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CHECKOUT_EXPIRED
-        description: The provided checkout URL has expired.
-        error-category: INVALID_REQUEST_ERROR
-      - name: BAD_CERTIFICATE
-        description: Bad certificate.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_SQUARE_VERSION_FORMAT
-        description: The provided Square-Version is incorrectly formatted.
-        error-category: INVALID_REQUEST_ERROR
-      - name: API_VERSION_INCOMPATIBLE
-        description: The provided Square-Version is incompatible with the requested action.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_PRESENCE_REQUIRED
-        description: The transaction requires that a card be present.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_SOURCE_TYPE
-        description: The API request references an unsupported source type.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_MISMATCH
-        description: The provided card does not match what is expected.
-        error-category: REFUND_ERROR
-      - name: PLAID_ERROR
-        description: Generic plaid error
-        error-category: EXTERNAL_VENDOR_ERROR
-      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
-        description: Plaid error - ITEM_LOGIN_REQUIRED
-        error-category: EXTERNAL_VENDOR_ERROR
-      - name: PLAID_ERROR_RATE_LIMIT
-        description: Plaid error - RATE_LIMIT
-        error-category: EXTERNAL_VENDOR_ERROR
-      - name: CARD_DECLINED
-        description: The card was declined.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: VERIFY_CVV_FAILURE
-        description: The CVV could not be verified.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: VERIFY_AVS_FAILURE
-        description: The AVS could not be verified.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARD_DECLINED_CALL_ISSUER
-        description: 'The payment card was declined with a request
-
-          for the card holder to call the issuer.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARD_DECLINED_VERIFICATION_REQUIRED
-        description: 'The payment card was declined with a request
-
-          for additional verification.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: BAD_EXPIRATION
-        description: 'The card expiration date is either missing or
-
-          incorrectly formatted.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CHIP_INSERTION_REQUIRED
-        description: 'The card issuer requires that the card be read
-
-          using a chip reader.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
-        description: 'The card has exhausted its available pin entry
-
-          retries set by the card issuer. Resolving the error typically requires the
-
-          card holder to contact the card issuer.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: RESERVATION_DECLINED
-        description: The card issuer declined the refund.
-        error-category: REFUND_ERROR
-      - name: UNKNOWN_BODY_PARAMETER
-        description: The body parameter is not recognized by the requested endpoint.
-        error-category: INVALID_REQUEST_ERROR
-      - name: NOT_FOUND
-        description: Not Found - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
-        description: Square could not find the associated Apple Pay certificate.
-        error-category: INVALID_REQUEST_ERROR
-      - name: METHOD_NOT_ALLOWED
-        description: Method Not Allowed - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: NOT_ACCEPTABLE
-        description: Not Acceptable - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: REQUEST_TIMEOUT
-        description: Request Timeout - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CONFLICT
-        description: Conflict - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: GONE
-        description: 'The target resource is no longer available and this
-
-          condition is likely to be permanent.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: REQUEST_ENTITY_TOO_LARGE
-        description: Request Entity Too Large - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_MEDIA_TYPE
-        description: Unsupported Media Type - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNPROCESSABLE_ENTITY
-        description: Unprocessable Entity - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: RATE_LIMITED
-        description: Rate Limited - a general error occurred.
-        error-category: RATE_LIMIT_ERROR
-      - name: NOT_IMPLEMENTED
-        description: Not Implemented - a general error occurred.
-        error-category: API_ERROR
-      - name: BAD_GATEWAY
-        description: Bad Gateway - a general error occurred.
-        error-category: API_ERROR
-      - name: SERVICE_UNAVAILABLE
-        description: Service Unavailable - a general error occurred.
-        error-category: API_ERROR
-      - name: TEMPORARY_ERROR
-        description: 'A temporary internal error occurred. You can safely retry your call
-
-          using the same idempotency key.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: GATEWAY_TIMEOUT
-        description: Gateway Timeout - a general error occurred.
-        error-category: API_ERROR
-      description: 'Indicates the specific error that occurred during a request to a
-
-        Square API.'
-      x-release-status: PUBLIC
-    RetrieveTransactionResponse:
+        address_line_1:
+          type:
+          - string
+          - 'null'
+          description: 'The first line of the address.
+
+
+            Fields that start with `address_line` provide the address''s most specific
+
+            details, like street number, street name, and building name. They do *not*
+
+            provide less specific details like city, state/province, or country (these
+
+            details are provided in other fields).'
+        address_line_2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the address, if any.
+        address_line_3:
+          type:
+          - string
+          - 'null'
+          description: The third line of the address, if any.
+        locality:
+          type:
+          - string
+          - 'null'
+          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        sublocality:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `locality`, if any.
+        sublocality_2:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality`, if any.
+        sublocality_3:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality_2`, if any.
+        administrative_district_level_1:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s country. In the US, this
+
+            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
+        administrative_district_level_2:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_1`.
+
+            In the US, this is the county.'
+        administrative_district_level_3:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_2`,
+
+            if any.'
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        country:
+          $ref: '#/components/schemas/Country'
+          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
+
+            See [Country](#type-country) for possible values'
+        first_name:
+          type:
+          - string
+          - 'null'
+          description: Optional first name when it's representing recipient.
+        last_name:
+          type:
+          - string
+          - 'null'
+          description: Optional last name when it's representing recipient.
+    VoidTransactionResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
 
-        a request to the [RetrieveTransaction](api-endpoint:Transactions-RetrieveTransaction) endpoint.
-
-
-        One of `errors` or `transaction` is present in a given response (never both).'
+        a request to the [VoidTransaction](api-endpoint:Transactions-VoidTransaction) endpoint.'
       x-release-status: DEPRECATED
       properties:
         errors:
@@ -3462,128 +3558,32 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-          description: The requested transaction.
-      example:
-        transaction:
-          created_at: '2016-03-10T22:57:56Z'
-          id: KnL67ZIwXCPtzOrqj0HrkxMF
-          location_id: 18YC4JDH91E1H
-          product: EXTERNAL_API
-          reference_id: some optional reference id
-          tenders:
-          - additional_recipients:
-            - amount_money:
-                amount: 20
-                currency: USD
-              description: Application fees
-              location_id: 057P5VYJ4A5X1
-            amount_money:
-              amount: 5000
-              currency: USD
-            card_details:
-              card:
-                card_brand: VISA
-                last_4: '1111'
-              entry_method: KEYED
-              status: CAPTURED
-            created_at: '2016-03-10T22:57:56Z'
-            id: MtZRYYdDrYNQbOvV7nbuBvMF
-            location_id: 18YC4JDH91E1H
-            note: some optional note
-            processing_fee_money:
-              amount: 138
-              currency: USD
-            transaction_id: KnL67ZIwXCPtzOrqj0HrkxMF
-            type: CARD
+      example: {}
       x-sq-sdk-sample-code:
-        csharp: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.csharp
-        java: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.java
-        javascript: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.javascript
-        php: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.php
-        python: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.python
-        ruby: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.ruby
-    TenderCardDetailsEntryMethod:
+        csharp: /sdk_samples/VoidTransaction/VoidTransactionResponse.csharp
+        java: /sdk_samples/VoidTransaction/VoidTransactionResponse.java
+        javascript: /sdk_samples/VoidTransaction/VoidTransactionResponse.javascript
+        php: /sdk_samples/VoidTransaction/VoidTransactionResponse.php
+        python: /sdk_samples/VoidTransaction/VoidTransactionResponse.python
+        ruby: /sdk_samples/VoidTransaction/VoidTransactionResponse.ruby
+    TenderCardDetailsStatus:
       type: string
       enum:
-      - SWIPED
-      - KEYED
-      - EMV
-      - ON_FILE
-      - CONTACTLESS
+      - AUTHORIZED
+      - CAPTURED
+      - VOIDED
+      - FAILED
       x-enum-elements:
-      - name: SWIPED
-        description: The card was swiped through a Square reader or Square stand.
-      - name: KEYED
-        description: 'The card information was keyed manually into Square Point of Sale or a
-
-          Square-hosted web form.'
-      - name: EMV
-        description: The card was processed via EMV with a Square reader.
-      - name: ON_FILE
-        description: The buyer's card details were already on file with Square.
-      - name: CONTACTLESS
-        description: 'The card was processed via a contactless (i.e., NFC) transaction
-
-          with a Square reader.'
-      description: Indicates the method used to enter the card's details.
+      - name: AUTHORIZED
+        description: The card transaction has been authorized but not yet captured.
+      - name: CAPTURED
+        description: The card transaction was authorized and subsequently captured (i.e., completed).
+      - name: VOIDED
+        description: The card transaction was authorized and subsequently voided (i.e., canceled).
+      - name: FAILED
+        description: The card transaction failed.
+      description: Indicates the card transaction's current status.
       x-release-status: PUBLIC
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    CardCoBrand:
-      type: string
-      enum:
-      - UNKNOWN
-      - AFTERPAY
-      - CLEARPAY
-      x-enum-elements:
-      - name: UNKNOWN
-        description: ''
-      - name: AFTERPAY
-        description: ''
-      - name: CLEARPAY
-        description: ''
-      description: Indicates the brand for a co-branded card.
-      x-release-status: PUBLIC
-    TenderCashDetails:
-      type: object
-      description: Represents the details of a tender with `type` `CASH`.
-      x-release-status: PUBLIC
-      properties:
-        buyer_tendered_money:
-          $ref: '#/components/schemas/Money'
-          description: The total amount of cash provided by the buyer, before change is given.
-        change_back_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of change returned to the buyer.
   securitySchemes:
     oauth2:
       type: oauth2

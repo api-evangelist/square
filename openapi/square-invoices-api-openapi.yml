@@ -561,133 +561,6 @@ paths:
       - error-code: INVALID_CARD
 components:
   schemas:
-    CreateInvoiceResponse:
-      type: object
-      description: The response returned by the `CreateInvoice` request.
-      x-release-status: PUBLIC
-      properties:
-        invoice:
-          $ref: '#/components/schemas/Invoice'
-          description: The newly created invoice.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-      example:
-        invoice:
-          accepted_payment_methods:
-            bank_account: false
-            buy_now_pay_later: false
-            card: true
-            cash_app_pay: false
-            square_gift_card: false
-          created_at: '2020-06-18T17:45:13Z'
-          custom_fields:
-          - label: Event Reference Number
-            placement: ABOVE_LINE_ITEMS
-            value: 'Ref. #1234'
-          - label: Terms of Service
-            placement: BELOW_LINE_ITEMS
-            value: The terms of service are...
-          delivery_method: EMAIL
-          description: We appreciate your business!
-          id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
-          invoice_number: inv-100
-          location_id: ES0RJRZYEC39A
-          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
-          payment_requests:
-          - automatic_payment_source: NONE
-            computed_amount_money:
-              amount: 10000
-              currency: USD
-            due_date: '2030-01-24'
-            reminders:
-            - message: Your invoice is due tomorrow
-              relative_scheduled_days: -1
-              status: PENDING
-              uid: beebd363-e47f-4075-8785-c235aaa7df11
-            request_type: BALANCE
-            tipping_enabled: true
-            total_completed_amount_money:
-              amount: 0
-              currency: USD
-            uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
-          primary_recipient:
-            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-            email_address: Amelia.Earhart@example.com
-            family_name: Earhart
-            given_name: Amelia
-            phone_number: 1-212-555-4240
-          sale_or_service_date: '2030-01-24'
-          scheduled_at: '2030-01-13T10:00:00Z'
-          status: DRAFT
-          store_payment_method_enabled: false
-          timezone: America/Los_Angeles
-          title: Event Planning Services
-          updated_at: '2020-06-18T17:45:13Z'
-          version: 0
-    InvoicePaymentReminderStatus:
-      type: string
-      enum:
-      - PENDING
-      - NOT_APPLICABLE
-      - SENT
-      x-enum-elements:
-      - name: PENDING
-        description: The reminder will be sent on the `relative_scheduled_date` (if the invoice is published).
-      - name: NOT_APPLICABLE
-        description: 'The reminder is not applicable and is not sent. The following are examples
-
-          of when reminders are not applicable and are not sent:
-
-          - You schedule a reminder to be sent before the invoice is published.
-
-          - The invoice is configured with multiple payment requests and a payment request reminder
-
-          is configured to be sent after the next payment request `due_date`.
-
-          - Two reminders (for different payment requests) are configured to be sent on the
-
-          same date. Therefore, only one reminder is sent.
-
-          - You configure a reminder to be sent on the date that the invoice is scheduled to be sent.
-
-          - The payment request is already paid.
-
-          - The invoice status is `CANCELED` or `FAILED`.'
-      - name: SENT
-        description: The reminder is sent.
-      description: The status of a payment request reminder.
-      x-release-status: PUBLIC
-    InvoiceFilter:
-      type: object
-      description: Describes query filters to apply.
-      x-release-status: PUBLIC
-      required:
-      - location_ids
-      properties:
-        location_ids:
-          type: array
-          items:
-            type: string
-          description: "Limits the search to the specified locations. A location is required. \nIn the current implementation, only one location can be specified."
-        customer_ids:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: "Limits the search to the specified customers, within the specified locations. \nSpecifying a customer is optional. In the current implementation, \na maximum of one customer can be specified."
-    InvoiceRecipientTaxIds:
-      type: object
-      description: "Represents the tax IDs for an invoice recipient. The country of the seller account determines \nwhether the corresponding `tax_ids` field is available for the customer. For more information, \nsee [Invoice recipient tax IDs](https://developer.squareup.com/docs/invoices-api/overview#recipient-tax-ids)."
-      x-release-status: PUBLIC
-      properties:
-        eu_vat:
-          type: string
-          description: The EU VAT identification number for the invoice recipient. For example, `IE3426675K`.
-          readOnly: true
     Invoice:
       type: object
       description: 'Stores information about an invoice. You use the Invoices API to create and manage
@@ -884,14 +757,993 @@ components:
 
             [CreateInvoiceAttachment](api-endpoint:Invoices-CreateInvoiceAttachment) and [DeleteInvoiceAttachment](api-endpoint:Invoices-DeleteInvoiceAttachment) endpoints.'
           readOnly: true
-    CancelInvoiceResponse:
+    InvoicePaymentReminder:
       type: object
-      description: The response returned by the `CancelInvoice` request.
+      description: 'Describes a payment request reminder (automatic notification) that Square sends
+
+        to the customer. You configure a reminder relative to the payment request
+
+        `due_date`.'
+      x-release-status: PUBLIC
+      properties:
+        uid:
+          type: string
+          description: 'A Square-assigned ID that uniquely identifies the reminder within the
+
+            `InvoicePaymentRequest`.'
+          readOnly: true
+        relative_scheduled_days:
+          type:
+          - integer
+          - 'null'
+          description: 'The number of days before (a negative number) or after (a positive number)
+
+            the payment request `due_date` when the reminder is sent. For example, -3 indicates that
+
+            the reminder should be sent 3 days before the payment request `due_date`.'
+          minimum: -32767
+          maximum: 32767
+        message:
+          type:
+          - string
+          - 'null'
+          description: The reminder message.
+          minLength: 1
+          maxLength: 1000
+        status:
+          $ref: '#/components/schemas/InvoicePaymentReminderStatus'
+          description: 'The status of the reminder.
+
+            See [InvoicePaymentReminderStatus](#type-invoicepaymentreminderstatus) for possible values'
+          readOnly: true
+        sent_at:
+          type: string
+          description: If sent, the timestamp when the reminder was sent, in RFC 3339 format.
+          readOnly: true
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
+    InvoiceDeliveryMethod:
+      type: string
+      enum:
+      - EMAIL
+      - SHARE_MANUALLY
+      - SMS
+      x-enum-elements:
+      - name: EMAIL
+        description: Directs Square to send invoices, reminders, and receipts to the customer using email.
+      - name: SHARE_MANUALLY
+        description: 'Directs Square to take no action on the invoice. In this case, the seller
+
+          or application developer follows up with the customer for payment. For example,
+
+          a seller might collect a payment in the Seller Dashboard or Point of Sale (POS) application.
+
+          The seller might also share the URL of the Square-hosted invoice page (`public_url`) with the customer to request payment.'
+      - name: SMS
+        description: 'Directs Square to send invoices and receipts to the customer using SMS (text message).
+
+
+          You cannot set `SMS` as a delivery method using the Invoices API, but you can change an `SMS` delivery method to `EMAIL` or `SHARE_MANUALLY`.'
+      description: Indicates how Square delivers the [invoice](entity:Invoice) to the customer.
+      x-release-status: PUBLIC
+    InvoiceFilter:
+      type: object
+      description: Describes query filters to apply.
+      x-release-status: PUBLIC
+      required:
+      - location_ids
+      properties:
+        location_ids:
+          type: array
+          items:
+            type: string
+          description: "Limits the search to the specified locations. A location is required. \nIn the current implementation, only one location can be specified."
+        customer_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: "Limits the search to the specified customers, within the specified locations. \nSpecifying a customer is optional. In the current implementation, \na maximum of one customer can be specified."
+    InvoiceStatus:
+      type: string
+      enum:
+      - DRAFT
+      - UNPAID
+      - SCHEDULED
+      - PARTIALLY_PAID
+      - PAID
+      - PARTIALLY_REFUNDED
+      - REFUNDED
+      - CANCELED
+      - FAILED
+      - PAYMENT_PENDING
+      x-enum-elements:
+      - name: DRAFT
+        description: 'The invoice is a draft. You must publish a draft invoice before Square can process it.
+
+          A draft invoice has no `public_url`, so it is not available to customers.'
+      - name: UNPAID
+        description: The invoice is published but not yet paid.
+      - name: SCHEDULED
+        description: 'The invoice is scheduled to be processed. On the scheduled date,
+
+          Square sends the invoice, initiates an automatic payment, or takes no action, depending on
+
+          the delivery method and payment request settings. Square also sets the invoice status to the
+
+          appropriate state: `UNPAID`, `PAID`, `PARTIALLY_PAID`, or `PAYMENT_PENDING`.'
+      - name: PARTIALLY_PAID
+        description: A partial payment is received for the invoice.
+      - name: PAID
+        description: The customer paid the invoice in full.
+      - name: PARTIALLY_REFUNDED
+        description: 'The invoice is paid (or partially paid) and some but not all the amount paid is
+
+          refunded.'
+      - name: REFUNDED
+        description: The full amount that the customer paid for the invoice is refunded.
+      - name: CANCELED
+        description: 'The invoice is canceled. Square no longer requests payments from the customer.
+
+          The `public_url` page remains and is accessible, but it displays the invoice
+
+          as canceled and does not accept payment.'
+      - name: FAILED
+        description: Square canceled the invoice due to suspicious activity.
+      - name: PAYMENT_PENDING
+        description: 'A payment on the invoice was initiated but has not yet been processed.
+
+
+          When in this state, invoices cannot be updated and other payments cannot be initiated.'
+      description: Indicates the status of an invoice.
+      x-release-status: PUBLIC
+    CreateInvoiceRequest:
+      type: object
+      description: Describes a `CreateInvoice` request.
+      x-release-status: PUBLIC
+      required:
+      - invoice
+      properties:
+        invoice:
+          $ref: '#/components/schemas/Invoice'
+          description: The invoice to create.
+        idempotency_key:
+          type: string
+          description: "A unique string that identifies the `CreateInvoice` request. If you do not \nprovide `idempotency_key` (or provide an empty string as the value), the endpoint \ntreats each request as independent.\n\nFor more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency)."
+          maxLength: 128
+      example:
+        idempotency_key: ce3748f9-5fc1-4762-aa12-aae5e843f1f4
+        invoice:
+          accepted_payment_methods:
+            bank_account: false
+            buy_now_pay_later: false
+            card: true
+            cash_app_pay: false
+            square_gift_card: false
+          custom_fields:
+          - label: Event Reference Number
+            placement: ABOVE_LINE_ITEMS
+            value: 'Ref. #1234'
+          - label: Terms of Service
+            placement: BELOW_LINE_ITEMS
+            value: The terms of service are...
+          delivery_method: EMAIL
+          description: We appreciate your business!
+          invoice_number: inv-100
+          location_id: ES0RJRZYEC39A
+          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
+          payment_requests:
+          - automatic_payment_source: NONE
+            due_date: '2030-01-24'
+            reminders:
+            - message: Your invoice is due tomorrow
+              relative_scheduled_days: -1
+            request_type: BALANCE
+            tipping_enabled: true
+          primary_recipient:
+            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+          sale_or_service_date: '2030-01-24'
+          scheduled_at: '2030-01-13T10:00:00Z'
+          store_payment_method_enabled: false
+          title: Event Planning Services
+    DeleteInvoiceAttachmentResponse:
+      type: object
+      description: Represents a [DeleteInvoiceAttachment](api-endpoint:Invoices-DeleteInvoiceAttachment) response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example: {}
+    ErrorCode:
+      type: string
+      enum:
+      - INTERNAL_SERVER_ERROR
+      - UNAUTHORIZED
+      - ACCESS_TOKEN_EXPIRED
+      - ACCESS_TOKEN_REVOKED
+      - CLIENT_DISABLED
+      - FORBIDDEN
+      - INSUFFICIENT_SCOPES
+      - APPLICATION_DISABLED
+      - V1_APPLICATION
+      - V1_ACCESS_TOKEN
+      - CARD_PROCESSING_NOT_ENABLED
+      - MERCHANT_SUBSCRIPTION_NOT_FOUND
+      - BAD_REQUEST
+      - MISSING_REQUIRED_PARAMETER
+      - INCORRECT_TYPE
+      - INVALID_TIME
+      - INVALID_TIME_RANGE
+      - INVALID_VALUE
+      - INVALID_CURSOR
+      - UNKNOWN_QUERY_PARAMETER
+      - CONFLICTING_PARAMETERS
+      - EXPECTED_JSON_BODY
+      - INVALID_SORT_ORDER
+      - VALUE_REGEX_MISMATCH
+      - VALUE_TOO_SHORT
+      - VALUE_TOO_LONG
+      - VALUE_TOO_LOW
+      - VALUE_TOO_HIGH
+      - VALUE_EMPTY
+      - ARRAY_LENGTH_TOO_LONG
+      - ARRAY_LENGTH_TOO_SHORT
+      - ARRAY_EMPTY
+      - EXPECTED_BOOLEAN
+      - EXPECTED_INTEGER
+      - EXPECTED_FLOAT
+      - EXPECTED_STRING
+      - EXPECTED_OBJECT
+      - EXPECTED_ARRAY
+      - EXPECTED_MAP
+      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+      - INVALID_ARRAY_VALUE
+      - INVALID_ENUM_VALUE
+      - INVALID_CONTENT_TYPE
+      - INVALID_FORM_VALUE
+      - CUSTOMER_NOT_FOUND
+      - ONE_INSTRUMENT_EXPECTED
+      - NO_FIELDS_SET
+      - TOO_MANY_MAP_ENTRIES
+      - MAP_KEY_LENGTH_TOO_SHORT
+      - MAP_KEY_LENGTH_TOO_LONG
+      - CUSTOMER_MISSING_NAME
+      - CUSTOMER_MISSING_EMAIL
+      - INVALID_PAUSE_LENGTH
+      - INVALID_DATE
+      - UNSUPPORTED_COUNTRY
+      - UNSUPPORTED_CURRENCY
+      - APPLE_TTP_PIN_TOKEN
+      - CARD_EXPIRED
+      - INVALID_EXPIRATION
+      - INVALID_EXPIRATION_YEAR
+      - INVALID_EXPIRATION_DATE
+      - UNSUPPORTED_CARD_BRAND
+      - UNSUPPORTED_ENTRY_METHOD
+      - INVALID_ENCRYPTED_CARD
+      - INVALID_CARD
+      - PAYMENT_AMOUNT_MISMATCH
+      - GENERIC_DECLINE
+      - CVV_FAILURE
+      - ADDRESS_VERIFICATION_FAILURE
+      - INVALID_ACCOUNT
+      - CURRENCY_MISMATCH
+      - INSUFFICIENT_FUNDS
+      - INSUFFICIENT_PERMISSIONS
+      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
+      - INVALID_LOCATION
+      - TRANSACTION_LIMIT
+      - VOICE_FAILURE
+      - PAN_FAILURE
+      - EXPIRATION_FAILURE
+      - CARD_NOT_SUPPORTED
+      - INVALID_PIN
+      - MISSING_PIN
+      - MISSING_ACCOUNT_TYPE
+      - INVALID_POSTAL_CODE
+      - INVALID_FEES
+      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+      - PAYMENT_LIMIT_EXCEEDED
+      - GIFT_CARD_AVAILABLE_AMOUNT
+      - ACCOUNT_UNUSABLE
+      - BUYER_REFUSED_PAYMENT
+      - DELAYED_TRANSACTION_EXPIRED
+      - DELAYED_TRANSACTION_CANCELED
+      - DELAYED_TRANSACTION_CAPTURED
+      - DELAYED_TRANSACTION_FAILED
+      - CARD_TOKEN_EXPIRED
+      - CARD_TOKEN_USED
+      - AMOUNT_TOO_HIGH
+      - UNSUPPORTED_INSTRUMENT_TYPE
+      - REFUND_AMOUNT_INVALID
+      - REFUND_ALREADY_PENDING
+      - PAYMENT_NOT_REFUNDABLE
+      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+      - REFUND_DECLINED
+      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
+      - INVALID_CARD_DATA
+      - SOURCE_USED
+      - SOURCE_EXPIRED
+      - UNSUPPORTED_LOYALTY_REWARD_TIER
+      - LOCATION_MISMATCH
+      - IDEMPOTENCY_KEY_REUSED
+      - UNEXPECTED_VALUE
+      - SANDBOX_NOT_SUPPORTED
+      - INVALID_EMAIL_ADDRESS
+      - INVALID_PHONE_NUMBER
+      - CHECKOUT_EXPIRED
+      - BAD_CERTIFICATE
+      - INVALID_SQUARE_VERSION_FORMAT
+      - API_VERSION_INCOMPATIBLE
+      - CARD_PRESENCE_REQUIRED
+      - UNSUPPORTED_SOURCE_TYPE
+      - CARD_MISMATCH
+      - PLAID_ERROR
+      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
+      - PLAID_ERROR_RATE_LIMIT
+      - CARD_DECLINED
+      - VERIFY_CVV_FAILURE
+      - VERIFY_AVS_FAILURE
+      - CARD_DECLINED_CALL_ISSUER
+      - CARD_DECLINED_VERIFICATION_REQUIRED
+      - BAD_EXPIRATION
+      - CHIP_INSERTION_REQUIRED
+      - ALLOWABLE_PIN_TRIES_EXCEEDED
+      - RESERVATION_DECLINED
+      - UNKNOWN_BODY_PARAMETER
+      - NOT_FOUND
+      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - REQUEST_ENTITY_TOO_LARGE
+      - UNSUPPORTED_MEDIA_TYPE
+      - UNPROCESSABLE_ENTITY
+      - RATE_LIMITED
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - TEMPORARY_ERROR
+      - GATEWAY_TIMEOUT
+      x-enum-elements:
+      - name: INTERNAL_SERVER_ERROR
+        description: A general server error occurred.
+        error-category: API_ERROR
+      - name: UNAUTHORIZED
+        description: A general authorization error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_EXPIRED
+        description: The provided access token has expired.
+        error-category: AUTHENTICATION_ERROR
+      - name: ACCESS_TOKEN_REVOKED
+        description: The provided access token has been revoked.
+        error-category: AUTHENTICATION_ERROR
+      - name: CLIENT_DISABLED
+        description: The provided client has been disabled.
+        error-category: AUTHENTICATION_ERROR
+      - name: FORBIDDEN
+        description: A general access error occurred.
+        error-category: AUTHENTICATION_ERROR
+      - name: INSUFFICIENT_SCOPES
+        description: 'The provided access token does not have permission
+
+          to execute the requested action.'
+        error-category: AUTHENTICATION_ERROR
+      - name: APPLICATION_DISABLED
+        description: The calling application was disabled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_APPLICATION
+        description: 'The calling application was created prior to
+
+          2016-03-30 and is not compatible with v2 Square API calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: V1_ACCESS_TOKEN
+        description: 'The calling application is using an access token
+
+          created prior to 2016-03-30 and is not compatible with v2 Square API
+
+          calls.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PROCESSING_NOT_ENABLED
+        description: 'The location provided in the API call is not
+
+          enabled for credit card processing.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
+        description: A required subscription was not found for the merchant
+        error-category: MERCHANT_SUBSCRIPTION_ERROR
+      - name: BAD_REQUEST
+        description: A general error occurred with the request.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MISSING_REQUIRED_PARAMETER
+        description: 'The request is missing a required path, query, or
+
+          body parameter.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INCORRECT_TYPE
+        description: 'The value provided in the request is the wrong
+
+          type. For example, a string instead of an integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME
+        description: 'Formatting for the provided time value is
+
+          incorrect.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_TIME_RANGE
+        description: 'The time range provided in the request is invalid.
+
+          For example, the end time is before the start time.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_VALUE
+        description: 'The provided value is invalid. For example,
+
+          including `%` in a phone number.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CURSOR
+        description: 'The pagination cursor included in the request is
+
+          invalid.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNKNOWN_QUERY_PARAMETER
+        description: 'The query parameters provided is invalid for the
+
+          requested endpoint.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICTING_PARAMETERS
+        description: 'One or more of the request parameters conflict with
+
+          each other.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_JSON_BODY
+        description: The request body is not a JSON object.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SORT_ORDER
+        description: 'The provided sort order is not a valid key.
+
+          Currently, sort order must be `ASC` or `DESC`.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_REGEX_MISMATCH
+        description: 'The provided value does not match an expected
+
+          regular expression.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_SHORT
+        description: 'The provided string value is shorter than the
+
+          minimum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LONG
+        description: 'The provided string value is longer than the
+
+          maximum length allowed.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_LOW
+        description: 'The provided value is less than the supported
+
+          minimum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_TOO_HIGH
+        description: 'The provided value is greater than the supported
+
+          maximum.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: VALUE_EMPTY
+        description: 'The provided value has a default (empty) value
+
+          such as a blank string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_LONG
+        description: The provided array has too many elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_LENGTH_TOO_SHORT
+        description: The provided array has too few elements.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ARRAY_EMPTY
+        description: The provided array is empty.
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BOOLEAN
+        description: 'The endpoint expected the provided value to be a
+
+          boolean.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_INTEGER
+        description: 'The endpoint expected the provided value to be an
+
+          integer.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_FLOAT
+        description: 'The endpoint expected the provided value to be a
+
+          float.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_STRING
+        description: 'The endpoint expected the provided value to be a
+
+          string.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_OBJECT
+        description: 'The endpoint expected the provided value to be a
+
+          JSON object.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array or list.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_MAP
+        description: 'The endpoint expected the provided value to be a
+
+          map or associative array.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
+        description: 'The endpoint expected the provided value to be an
+
+          array encoded in base64.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ARRAY_VALUE
+        description: 'One or more objects in the array does not match the
+
+          array type.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_ENUM_VALUE
+        description: 'The provided static string is not valid for the
+
+          field.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_CONTENT_TYPE
+        description: Invalid content type header.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_FORM_VALUE
+        description: 'Only relevant for applications created prior to
+
+          2016-03-30. Indicates there was an error while parsing form values.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_NOT_FOUND
+        description: The provided customer id can't be found in the merchant's customers list.
+        error-category: INVALID_REQUEST_ERROR
+      - name: ONE_INSTRUMENT_EXPECTED
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NO_FIELDS_SET
+        description: A general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: TOO_MANY_MAP_ENTRIES
+        description: Too many entries in the map field.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_SHORT
+        description: The length of one of the provided keys in the map is too short.
+        error-category: INVALID_REQUEST_ERROR
+      - name: MAP_KEY_LENGTH_TOO_LONG
+        description: The length of one of the provided keys in the map is too long.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_NAME
+        description: The provided customer does not have a recorded name.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CUSTOMER_MISSING_EMAIL
+        description: The provided customer does not have a recorded email.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PAUSE_LENGTH
+        description: The subscription cannot be paused longer than the duration of the current phase.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_DATE
+        description: The subscription cannot be paused/resumed on the given date.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_COUNTRY
+        description: The API request references an unsupported country.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CURRENCY
+        description: The API request references an unsupported currency.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_TTP_PIN_TOKEN
+        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
+
+          transaction with a request for the card''s PIN. This code will be returned alongside
+
+          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
+
+          issuer-provided token in the `details` field that is needed to initiate the PIN
+
+          collection flow on the iOS device.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_EXPIRED
+        description: The card issuer declined the request because the card is expired.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it indicates a date in the past.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_EXPIRATION_YEAR
+        description: 'The expiration year for the payment card is invalid. For example,
+
+          it indicates a year in the past or contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EXPIRATION_DATE
+        description: 'The expiration date for the payment card is invalid. For example,
+
+          it contains invalid characters.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_CARD_BRAND
+        description: The credit card provided is not from a supported issuer.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: UNSUPPORTED_ENTRY_METHOD
+        description: The entry method for the credit card (swipe, dip, tap) is not supported.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ENCRYPTED_CARD
+        description: The encrypted card information is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_CARD
+        description: The credit card cannot be validated based on the provided details.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_AMOUNT_MISMATCH
+        description: 'The payment was declined because there was a payment amount mismatch.
+
+          The money amount Square was expecting does not match the amount provided.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GENERIC_DECLINE
+        description: 'Square received a decline without any additional information.
+
+          If the payment information seems correct, the buyer can contact their
+
+          issuer to ask for more information.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CVV_FAILURE
+        description: The card issuer declined the request because the CVV value is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ADDRESS_VERIFICATION_FAILURE
+        description: The card issuer declined the request because the postal code is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_ACCOUNT
+        description: The issuer was not able to locate the account on record.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CURRENCY_MISMATCH
+        description: 'The currency associated with the payment is not valid for the provided
+
+          funding source. For example, a gift card funded in USD cannot be used to process
+
+          payments in GBP.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_FUNDS
+        description: The funding source has insufficient funds to cover the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INSUFFICIENT_PERMISSIONS
+        description: 'The Square account does not have the permissions to accept
+
+          this payment. For example, Square may limit which merchants are
+
+          allowed to receive gift card payments.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
+        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
+
+          For example, a gift card is limited to a single merchant.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_LOCATION
+        description: 'The Square account cannot take payments in the specified region.
+
+          A Square account can take payments only from the region where the account was created.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: TRANSACTION_LIMIT
+        description: 'The card issuer has determined the payment amount is either too high or too low.
+
+          The API returns the error code mostly for credit cards (for example, the card reached
+
+          the credit limit). However, sometimes the issuer bank can indicate the error for debit
+
+          or prepaid cards (for example, card has insufficient funds).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VOICE_FAILURE
+        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAN_FAILURE
+        description: 'The specified card number is invalid. For example, it is of
+
+          incorrect length or is incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: EXPIRATION_FAILURE
+        description: 'The card expiration date is either invalid or indicates that the
+
+          card is expired.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_NOT_SUPPORTED
+        description: 'The card is not supported either in the geographic region or by
+
+          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_PIN
+        description: The card issuer declined the request because the PIN is invalid.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_PIN
+        description: The payment is missing a required PIN.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MISSING_ACCOUNT_TYPE
+        description: The payment is missing a required ACCOUNT_TYPE parameter.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_POSTAL_CODE
+        description: The postal code is incorrectly formatted.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: INVALID_FEES
+        description: The app_fee_money on a payment is too high.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
+        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: PAYMENT_LIMIT_EXCEEDED
+        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GIFT_CARD_AVAILABLE_AMOUNT
+        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
+
+          by adding the `accept_partial_authorization` parameter in the request.
+
+          However, taking such a partial payment does not work if your request also includes
+
+          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
+
+          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
+
+          For more information, see
+
+          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ACCOUNT_UNUSABLE
+        description: The account provided cannot carry out transactions.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BUYER_REFUSED_PAYMENT
+        description: Bank account rejected or was not authorized for the payment.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: DELAYED_TRANSACTION_EXPIRED
+        description: The application tried to update a delayed-capture payment that has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CANCELED
+        description: The application tried to cancel a delayed-capture payment that was already cancelled.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_CAPTURED
+        description: The application tried to capture a delayed-capture payment that was already captured.
+        error-category: INVALID_REQUEST_ERROR
+      - name: DELAYED_TRANSACTION_FAILED
+        description: The application tried to update a delayed-capture payment that failed.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_EXPIRED
+        description: The provided card token (nonce) has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_TOKEN_USED
+        description: The provided card token (nonce) was already used to process the payment or refund.
+        error-category: INVALID_REQUEST_ERROR
+      - name: AMOUNT_TOO_HIGH
+        description: The requested payment amount is too high for the provided payment source.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_INSTRUMENT_TYPE
+        description: The API request references an unsupported instrument type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REFUND_AMOUNT_INVALID
+        description: The requested refund amount exceeds the amount available to refund.
+        error-category: REFUND_ERROR
+      - name: REFUND_ALREADY_PENDING
+        description: The payment already has a pending refund.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE
+        description: The payment is not refundable. For example, the payment is too old to be refunded.
+        error-category: REFUND_ERROR
+      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
+        description: The payment is not refundable because it has been disputed.
+        error-category: REFUND_ERROR
+      - name: REFUND_DECLINED
+        description: Request failed - The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
+        description: The Square account does not have the permissions to process this refund.
+        error-category: REFUND_ERROR
+      - name: INVALID_CARD_DATA
+        description: Generic error - the provided card data is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_USED
+        description: The provided source id was already used to create a card.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SOURCE_EXPIRED
+        description: The provided source id has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
+        description: 'The referenced loyalty program reward tier is not supported.
+
+          This could happen if the reward tier created in a first party
+
+          application is incompatible with the Loyalty API.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: LOCATION_MISMATCH
+        description: Generic error - the given location does not matching what is expected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: IDEMPOTENCY_KEY_REUSED
+        description: The provided idempotency key has already been used.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNEXPECTED_VALUE
+        description: General error - the value provided was unexpected.
+        error-category: INVALID_REQUEST_ERROR
+      - name: SANDBOX_NOT_SUPPORTED
+        description: The API request is not supported in sandbox.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_EMAIL_ADDRESS
+        description: The provided email address is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_PHONE_NUMBER
+        description: The provided phone number is invalid.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CHECKOUT_EXPIRED
+        description: The provided checkout URL has expired.
+        error-category: INVALID_REQUEST_ERROR
+      - name: BAD_CERTIFICATE
+        description: Bad certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: INVALID_SQUARE_VERSION_FORMAT
+        description: The provided Square-Version is incorrectly formatted.
+        error-category: INVALID_REQUEST_ERROR
+      - name: API_VERSION_INCOMPATIBLE
+        description: The provided Square-Version is incompatible with the requested action.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_PRESENCE_REQUIRED
+        description: The transaction requires that a card be present.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_SOURCE_TYPE
+        description: The API request references an unsupported source type.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CARD_MISMATCH
+        description: The provided card does not match what is expected.
+        error-category: REFUND_ERROR
+      - name: PLAID_ERROR
+        description: Generic plaid error
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
+        description: Plaid error - ITEM_LOGIN_REQUIRED
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: PLAID_ERROR_RATE_LIMIT
+        description: Plaid error - RATE_LIMIT
+        error-category: EXTERNAL_VENDOR_ERROR
+      - name: CARD_DECLINED
+        description: The card was declined.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_CVV_FAILURE
+        description: The CVV could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: VERIFY_AVS_FAILURE
+        description: The AVS could not be verified.
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_CALL_ISSUER
+        description: 'The payment card was declined with a request
+
+          for the card holder to call the issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CARD_DECLINED_VERIFICATION_REQUIRED
+        description: 'The payment card was declined with a request
+
+          for additional verification.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: BAD_EXPIRATION
+        description: 'The card expiration date is either missing or
+
+          incorrectly formatted.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: CHIP_INSERTION_REQUIRED
+        description: 'The card issuer requires that the card be read
+
+          using a chip reader.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
+        description: 'The card has exhausted its available pin entry
+
+          retries set by the card issuer. Resolving the error typically requires the
+
+          card holder to contact the card issuer.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: RESERVATION_DECLINED
+        description: The card issuer declined the refund.
+        error-category: REFUND_ERROR
+      - name: UNKNOWN_BODY_PARAMETER
+        description: The body parameter is not recognized by the requested endpoint.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_FOUND
+        description: Not Found - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
+        description: Square could not find the associated Apple Pay certificate.
+        error-category: INVALID_REQUEST_ERROR
+      - name: METHOD_NOT_ALLOWED
+        description: Method Not Allowed - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: NOT_ACCEPTABLE
+        description: Not Acceptable - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_TIMEOUT
+        description: Request Timeout - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: CONFLICT
+        description: Conflict - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: GONE
+        description: 'The target resource is no longer available and this
+
+          condition is likely to be permanent.'
+        error-category: INVALID_REQUEST_ERROR
+      - name: REQUEST_ENTITY_TOO_LARGE
+        description: Request Entity Too Large - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNSUPPORTED_MEDIA_TYPE
+        description: Unsupported Media Type - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: UNPROCESSABLE_ENTITY
+        description: Unprocessable Entity - a general error occurred.
+        error-category: INVALID_REQUEST_ERROR
+      - name: RATE_LIMITED
+        description: Rate Limited - a general error occurred.
+        error-category: RATE_LIMIT_ERROR
+      - name: NOT_IMPLEMENTED
+        description: Not Implemented - a general error occurred.
+        error-category: API_ERROR
+      - name: BAD_GATEWAY
+        description: Bad Gateway - a general error occurred.
+        error-category: API_ERROR
+      - name: SERVICE_UNAVAILABLE
+        description: Service Unavailable - a general error occurred.
+        error-category: API_ERROR
+      - name: TEMPORARY_ERROR
+        description: 'A temporary internal error occurred. You can safely retry your call
+
+          using the same idempotency key.'
+        error-category: PAYMENT_METHOD_ERROR
+      - name: GATEWAY_TIMEOUT
+        description: Gateway Timeout - a general error occurred.
+        error-category: API_ERROR
+      description: 'Indicates the specific error that occurred during a request to a
+
+        Square API.'
+      x-release-status: PUBLIC
+    InvoiceAutomaticPaymentSource:
+      type: string
+      enum:
+      - NONE
+      - CARD_ON_FILE
+      - BANK_ON_FILE
+      x-enum-elements:
+      - name: NONE
+        description: An automatic payment is not configured for the payment request.
+      - name: CARD_ON_FILE
+        description: 'Use a card on file as the automatic payment method. On the due date, Square charges the card
+
+          for the amount of the payment request.
+
+
+          For `CARD_ON_FILE` payments, the invoice delivery method must be `EMAIL` and `card_id` must be
+
+          specified for the payment request before the invoice can be published.'
+      - name: BANK_ON_FILE
+        description: "Use a bank account on file as the automatic payment method. On the due date, Square charges the bank\naccount for the amount of the payment request if the buyer has approved the payment. The buyer receives a\nrequest to approve the payment when the invoice is sent or the invoice is updated.\n\nThis payment method applies only to invoices that sellers create in the Seller Dashboard or other\nSquare product. The bank account is provided by the customer during the payment flow. \n\nYou cannot set `BANK_ON_FILE` as a payment method using the Invoices API, but you can change a `BANK_ON_FILE`\npayment method to `NONE` or `CARD_ON_FILE`. For `BANK_ON_FILE` payments, the invoice delivery method must be `EMAIL`."
+      description: Indicates the automatic payment method for an [invoice payment request](entity:InvoicePaymentRequest).
+      x-release-status: PUBLIC
+    GetInvoiceResponse:
+      type: object
+      description: Describes a `GetInvoice` response.
       x-release-status: PUBLIC
       properties:
         invoice:
           $ref: '#/components/schemas/Invoice'
-          description: The canceled invoice.
+          description: The invoice requested.
         errors:
           type: array
           items:
@@ -944,20 +1796,53 @@ components:
             phone_number: 1-212-555-4240
           sale_or_service_date: '2030-01-24'
           scheduled_at: '2030-01-13T10:00:00Z'
-          status: CANCELED
+          status: DRAFT
           store_payment_method_enabled: false
           timezone: America/Los_Angeles
           title: Event Planning Services
-          updated_at: '2020-06-18T18:23:11Z'
-          version: 1
-    UpdateInvoiceResponse:
+          updated_at: '2020-06-18T17:45:13Z'
+          version: 0
+    InvoicePaymentReminderStatus:
+      type: string
+      enum:
+      - PENDING
+      - NOT_APPLICABLE
+      - SENT
+      x-enum-elements:
+      - name: PENDING
+        description: The reminder will be sent on the `relative_scheduled_date` (if the invoice is published).
+      - name: NOT_APPLICABLE
+        description: 'The reminder is not applicable and is not sent. The following are examples
+
+          of when reminders are not applicable and are not sent:
+
+          - You schedule a reminder to be sent before the invoice is published.
+
+          - The invoice is configured with multiple payment requests and a payment request reminder
+
+          is configured to be sent after the next payment request `due_date`.
+
+          - Two reminders (for different payment requests) are configured to be sent on the
+
+          same date. Therefore, only one reminder is sent.
+
+          - You configure a reminder to be sent on the date that the invoice is scheduled to be sent.
+
+          - The payment request is already paid.
+
+          - The invoice status is `CANCELED` or `FAILED`.'
+      - name: SENT
+        description: The reminder is sent.
+      description: The status of a payment request reminder.
+      x-release-status: PUBLIC
+    CreateInvoiceResponse:
       type: object
-      description: Describes a `UpdateInvoice` response.
+      description: The response returned by the `CreateInvoice` request.
       x-release-status: PUBLIC
       properties:
         invoice:
           $ref: '#/components/schemas/Invoice'
-          description: The updated invoice.
+          description: The newly created invoice.
         errors:
           type: array
           items:
@@ -984,9 +1869,6 @@ components:
           id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
           invoice_number: inv-100
           location_id: ES0RJRZYEC39A
-          next_payment_amount_money:
-            amount: 10000
-            currency: USD
           order_id: CAISENgvlJ6jLWAzERDzjyHVybY
           payment_requests:
           - automatic_payment_source: NONE
@@ -994,8 +1876,13 @@ components:
               amount: 10000
               currency: USD
             due_date: '2030-01-24'
+            reminders:
+            - message: Your invoice is due tomorrow
+              relative_scheduled_days: -1
+              status: PENDING
+              uid: beebd363-e47f-4075-8785-c235aaa7df11
             request_type: BALANCE
-            tipping_enabled: false
+            tipping_enabled: true
             total_completed_amount_money:
               amount: 0
               currency: USD
@@ -1008,12 +1895,425 @@ components:
             phone_number: 1-212-555-4240
           sale_or_service_date: '2030-01-24'
           scheduled_at: '2030-01-13T10:00:00Z'
-          status: UNPAID
+          status: DRAFT
           store_payment_method_enabled: false
           timezone: America/Los_Angeles
           title: Event Planning Services
-          updated_at: '2020-06-18T18:23:11Z'
-          version: 2
+          updated_at: '2020-06-18T17:45:13Z'
+          version: 0
+    InvoiceSort:
+      type: object
+      description: Identifies the sort field and sort order.
+      x-release-status: PUBLIC
+      required:
+      - field
+      properties:
+        field:
+          $ref: '#/components/schemas/InvoiceSortField'
+          description: 'The field to use for sorting.
+
+            See [InvoiceSortField](#type-invoicesortfield) for possible values'
+        order:
+          $ref: '#/components/schemas/SortOrder'
+          description: 'The order to use for sorting the results.
+
+            See [SortOrder](#type-sortorder) for possible values'
+    InvoiceQuery:
+      type: object
+      description: Describes query criteria for searching invoices.
+      x-release-status: PUBLIC
+      required:
+      - filter
+      properties:
+        filter:
+          $ref: '#/components/schemas/InvoiceFilter'
+          description: "Query filters to apply in searching invoices. \nFor more information, see [Search for invoices](https://developer.squareup.com/docs/invoices-api/retrieve-list-search-invoices#search-invoices)."
+        sort:
+          $ref: '#/components/schemas/InvoiceSort'
+          description: Describes the sort order for the search result.
+    SearchInvoicesRequest:
+      type: object
+      description: Describes a `SearchInvoices` request.
+      x-release-status: PUBLIC
+      required:
+      - query
+      properties:
+        query:
+          $ref: '#/components/schemas/InvoiceQuery'
+          description: Describes the query criteria for searching invoices.
+        limit:
+          type: integer
+          description: "The maximum number of invoices to return (200 is the maximum `limit`). \nIf not provided, the server uses a default limit of 100 invoices."
+        cursor:
+          type: string
+          description: "A pagination cursor returned by a previous call to this endpoint. \nProvide this cursor to retrieve the next set of results for your original query.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+      example:
+        query:
+          filter:
+            customer_ids:
+            - JDKYHBWT1D4F8MFH63DBMEN8Y4
+            location_ids:
+            - ES0RJRZYEC39A
+          limit: 100
+          sort:
+            field: INVOICE_SORT_DATE
+            order: DESC
+    InvoiceAcceptedPaymentMethods:
+      type: object
+      description: The payment methods that customers can use to pay an [invoice](entity:Invoice) on the Square-hosted invoice payment page.
+      x-release-status: PUBLIC
+      properties:
+        card:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether credit card or debit card payments are accepted. The default value is `false`.
+        square_gift_card:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether Square gift card payments are accepted. The default value is `false`.
+        bank_account:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether ACH bank transfer payments are accepted. The default value is `false`.
+        buy_now_pay_later:
+          type:
+          - boolean
+          - 'null'
+          description: 'Indicates whether Afterpay (also known as Clearpay) payments are accepted. The default value is `false`.
+
+
+            This option is allowed only for invoices that have a single payment request of the `BALANCE` type. This payment method is
+
+            supported if the seller account accepts Afterpay payments and the seller location is in a country where Afterpay
+
+            invoice payments are supported. As a best practice, consider enabling an additional payment method when allowing
+
+            `buy_now_pay_later` payments. For more information, including detailed requirements and processing limits, see
+
+            [Buy Now Pay Later payments with Afterpay](https://developer.squareup.com/docs/invoices-api/overview#buy-now-pay-later).'
+        cash_app_pay:
+          type:
+          - boolean
+          - 'null'
+          description: 'Indicates whether Cash App payments are accepted. The default value is `false`.
+
+
+            This payment method is supported only for seller [locations](entity:Location) in the United States.'
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+    InvoiceAttachment:
+      type: object
+      description: Represents a file attached to an [invoice](entity:Invoice).
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the attachment.
+          readOnly: true
+        filename:
+          type: string
+          description: The file name of the attachment, which is displayed on the invoice.
+          readOnly: true
+        description:
+          type: string
+          description: 'The description of the attachment, which is displayed on the invoice.
+
+            This field maps to the seller-defined **Message** field.'
+          readOnly: true
+        filesize:
+          type: integer
+          description: The file size of the attachment in bytes.
+          readOnly: true
+        hash:
+          type: string
+          description: The MD5 hash that was generated from the file contents.
+          readOnly: true
+        mime_type:
+          type: string
+          description: "The mime type of the attachment.\nThe following mime types are supported: \nimage/gif, image/jpeg, image/png, image/tiff, image/bmp, application/pdf."
+          readOnly: true
+        uploaded_at:
+          type: string
+          description: The timestamp when the attachment was uploaded, in RFC 3339 format.
+          readOnly: true
+    SearchInvoicesResponse:
+      type: object
+      description: Describes a `SearchInvoices` response.
+      x-release-status: PUBLIC
+      properties:
+        invoices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invoice'
+          description: The list of invoices returned by the search.
+        cursor:
+          type: string
+          description: "When a response is truncated, it includes a cursor that you can use in a \nsubsequent request to fetch the next set of invoices. If empty, this is the final \nresponse. \nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example:
+        cursor: ChoIDhIWVm54ZVRhLXhySFBOejBBM2xJb2daUQoFCI4IGAE
+        invoices:
+        - accepted_payment_methods:
+            bank_account: false
+            buy_now_pay_later: false
+            card: true
+            cash_app_pay: false
+            square_gift_card: false
+          created_at: '2020-06-18T17:45:13Z'
+          custom_fields:
+          - label: Event Reference Number
+            placement: ABOVE_LINE_ITEMS
+            value: 'Ref. #1234'
+          - label: Terms of Service
+            placement: BELOW_LINE_ITEMS
+            value: The terms of service are...
+          delivery_method: EMAIL
+          description: We appreciate your business!
+          id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          invoice_number: inv-100
+          location_id: ES0RJRZYEC39A
+          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
+          payment_requests:
+          - automatic_payment_source: NONE
+            computed_amount_money:
+              amount: 10000
+              currency: USD
+            due_date: '2030-01-24'
+            reminders:
+            - message: Your invoice is due tomorrow
+              relative_scheduled_days: -1
+              status: PENDING
+              uid: beebd363-e47f-4075-8785-c235aaa7df11
+            request_type: BALANCE
+            tipping_enabled: true
+            total_completed_amount_money:
+              amount: 0
+              currency: USD
+            uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
+          primary_recipient:
+            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+            email_address: Amelia.Earhart@example.com
+            family_name: Earhart
+            given_name: Amelia
+            phone_number: 1-212-555-4240
+          sale_or_service_date: '2030-01-24'
+          scheduled_at: '2030-01-13T10:00:00Z'
+          status: DRAFT
+          store_payment_method_enabled: false
+          timezone: America/Los_Angeles
+          title: Event Planning Services
+          updated_at: '2020-06-18T17:45:13Z'
+          version: 0
+        - accepted_payment_methods:
+            bank_account: false
+            buy_now_pay_later: false
+            card: true
+            cash_app_pay: false
+            square_gift_card: true
+          created_at: '2021-01-23T15:29:12Z'
+          delivery_method: EMAIL
+          id: inv:0-ChC366qAfskpGrBI_1bozs9mEA3
+          invoice_number: inv-455
+          location_id: ES0RJRZYEC39A
+          next_payment_amount_money:
+            amount: 3000
+            currency: USD
+          order_id: a65jnS8NXbfprvGJzY9F4fQTuaB
+          payment_requests:
+          - automatic_payment_source: CARD_ON_FILE
+            card_id: ccof:IkWfpLj4tNHMyFii3GB
+            computed_amount_money:
+              amount: 1000
+              currency: USD
+            due_date: '2021-01-23'
+            percentage_requested: '25'
+            request_type: DEPOSIT
+            tipping_enabled: false
+            total_completed_amount_money:
+              amount: 1000
+              currency: USD
+            uid: 66c3bdfd-5090-4ff9-a8a0-c1e1a2ffa176
+          - automatic_payment_source: CARD_ON_FILE
+            card_id: ccof:IkWfpLj4tNHMyFii3GB
+            computed_amount_money:
+              amount: 3000
+              currency: USD
+            due_date: '2021-06-15'
+            request_type: BALANCE
+            tipping_enabled: false
+            total_completed_amount_money:
+              amount: 0
+              currency: USD
+            uid: 120c5e18-4f80-4f6b-b159-774cb9bf8f99
+          primary_recipient:
+            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+            email_address: Amelia.Earhart@example.com
+            family_name: Earhart
+            given_name: Amelia
+            phone_number: 1-212-555-4240
+          public_url: https://squareup.com/pay-invoice/h9sfsfTGTSnYEhISUDBhEQ
+          sale_or_service_date: '2030-01-24'
+          status: PARTIALLY_PAID
+          store_payment_method_enabled: false
+          timezone: America/Los_Angeles
+          updated_at: '2021-01-23T15:29:56Z'
+          version: 3
+    InvoiceRequestType:
+      type: string
+      enum:
+      - BALANCE
+      - DEPOSIT
+      - INSTALLMENT
+      x-enum-elements:
+      - name: BALANCE
+        description: "A request for a balance payment. The balance amount is computed as follows: \n\n- If the invoice specifies only a balance payment request, the balance amount is the \ntotal amount of the associated order. \n- If the invoice also specifies a deposit request, the balance amount is the amount \nremaining after the deposit.\n\n`INSTALLMENT` and `BALANCE` payment requests are not allowed in the same invoice."
+      - name: DEPOSIT
+        description: "A request for a deposit payment. You have the option of specifying \nan exact amount or a percentage of the total order amount. If you request a deposit, \nit must be due before any other payment requests."
+      - name: INSTALLMENT
+        description: "A request for an installment payment. Installments allow buyers to pay the invoice over time. Installments can optionally be combined with a deposit. \n\nAdding `INSTALLMENT` payment requests to an invoice requires an \n[Invoices Plus subscription](https://developer.squareup.com/docs/invoices-api/overview#invoices-plus-subscription)."
+      description: "Indicates the type of the payment request. For more information, see \n[Configuring payment requests](https://developer.squareup.com/docs/invoices-api/create-publish-invoices#payment-requests)."
+      x-release-status: PUBLIC
+    InvoicePaymentRequest:
+      type: object
+      description: "Represents a payment request for an [invoice](entity:Invoice). Invoices can specify a maximum\nof 13 payment requests, with up to 12 `INSTALLMENT` request types. For more information, \nsee [Configuring payment requests](https://developer.squareup.com/docs/invoices-api/create-publish-invoices#payment-requests).\n\nAdding `INSTALLMENT` payment requests to an invoice requires an \n[Invoices Plus subscription](https://developer.squareup.com/docs/invoices-api/overview#invoices-plus-subscription)."
+      x-release-status: PUBLIC
+      properties:
+        uid:
+          type:
+          - string
+          - 'null'
+          description: The Square-generated ID of the payment request in an [invoice](entity:Invoice).
+          minLength: 1
+          maxLength: 255
+        request_method:
+          $ref: '#/components/schemas/InvoiceRequestMethod'
+          description: 'Indicates how Square processes the payment request. DEPRECATED at version 2021-01-21. Replaced by the
+
+            `Invoice.delivery_method` and `InvoicePaymentRequest.automatic_payment_source` fields.
+
+
+            One of the following is required when creating an invoice:
+
+            - (Recommended) The `delivery_method` field of the invoice. To configure an automatic payment, the
+
+            `automatic_payment_source` field of the payment request is also required.
+
+            - This `request_method` field. Note that `invoice` objects returned in responses do not include `request_method`.
+
+            See [InvoiceRequestMethod](#type-invoicerequestmethod) for possible values'
+          x-release-status: DEPRECATED
+        request_type:
+          $ref: '#/components/schemas/InvoiceRequestType'
+          description: "Identifies the payment request type. This type defines how the payment request amount is determined. \nThis field is required to create a payment request.\nSee [InvoiceRequestType](#type-invoicerequesttype) for possible values"
+        due_date:
+          type:
+          - string
+          - 'null'
+          description: 'The due date (in the invoice''s time zone) for the payment request, in `YYYY-MM-DD` format. This field
+
+            is required to create a payment request. If an `automatic_payment_source` is defined for the request, Square
+
+            charges the payment source on this date.
+
+
+            After this date, the invoice becomes overdue. For example, a payment `due_date` of 2021-03-09 with a `timezone`
+
+            of America/Los\_Angeles becomes overdue at midnight on March 9 in America/Los\_Angeles (which equals a UTC
+
+            timestamp of 2021-03-10T08:00:00Z).'
+        fixed_amount_requested_money:
+          $ref: '#/components/schemas/Money'
+          description: "If the payment request specifies `DEPOSIT` or `INSTALLMENT` as the `request_type`, \nthis indicates the request amount.\nYou cannot specify this when `request_type` is `BALANCE` or when the \npayment request includes the `percentage_requested` field."
+        percentage_requested:
+          type:
+          - string
+          - 'null'
+          description: "Specifies the amount for the payment request in percentage:\n\n- When the payment `request_type` is `DEPOSIT`, it is the percentage of the order's total amount.\n- When the payment `request_type` is `INSTALLMENT`, it is the percentage of the order's total less \nthe deposit, if requested. The sum of the `percentage_requested` in all installment \npayment requests must be equal to 100.\n\nYou cannot specify this when the payment `request_type` is `BALANCE` or when the \npayment request specifies the `fixed_amount_requested_money` field."
+        tipping_enabled:
+          type:
+          - boolean
+          - 'null'
+          description: "If set to true, the Square-hosted invoice page (the `public_url` field of the invoice) \nprovides a place for the customer to pay a tip. \n\nThis field is allowed only on the final payment request  \nand the payment `request_type` must be `BALANCE` or `INSTALLMENT`."
+        automatic_payment_source:
+          $ref: '#/components/schemas/InvoiceAutomaticPaymentSource'
+          description: 'The payment method for an automatic payment.
+
+
+            The default value is `NONE`.
+
+            See [InvoiceAutomaticPaymentSource](#type-invoiceautomaticpaymentsource) for possible values'
+        card_id:
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the credit or debit card on file to charge for the payment request. To get the cards on file for a customer,
+
+            call [ListCards](api-endpoint:Cards-ListCards) and include the `customer_id` of the invoice recipient.'
+          minLength: 1
+          maxLength: 255
+        reminders:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InvoicePaymentReminder'
+          description: A list of one or more reminders to send for the payment request.
+        computed_amount_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of the payment request, computed using the order amount and information from the various payment
+
+            request fields (`request_type`, `fixed_amount_requested_money`, and `percentage_requested`).'
+          readOnly: true
+        total_completed_amount_money:
+          $ref: '#/components/schemas/Money'
+          description: "The amount of money already paid for the specific payment request. \nThis amount might include a rounding adjustment if the most recent invoice payment \nwas in cash in a currency that rounds cash payments (such as, `CAD` or `AUD`)."
+          readOnly: true
+        rounding_adjustment_included_money:
+          $ref: '#/components/schemas/Money'
+          description: "If the most recent payment was a cash payment \nin a currency that rounds cash payments (such as, `CAD` or `AUD`) and the payment \nis rounded from `computed_amount_money` in the payment request, then this \nfield specifies the rounding adjustment applied. This amount \nmight be negative."
+          readOnly: true
     Currency:
       type: string
       enum:
@@ -1571,690 +2871,6 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
-    InvoiceStatus:
-      type: string
-      enum:
-      - DRAFT
-      - UNPAID
-      - SCHEDULED
-      - PARTIALLY_PAID
-      - PAID
-      - PARTIALLY_REFUNDED
-      - REFUNDED
-      - CANCELED
-      - FAILED
-      - PAYMENT_PENDING
-      x-enum-elements:
-      - name: DRAFT
-        description: 'The invoice is a draft. You must publish a draft invoice before Square can process it.
-
-          A draft invoice has no `public_url`, so it is not available to customers.'
-      - name: UNPAID
-        description: The invoice is published but not yet paid.
-      - name: SCHEDULED
-        description: 'The invoice is scheduled to be processed. On the scheduled date,
-
-          Square sends the invoice, initiates an automatic payment, or takes no action, depending on
-
-          the delivery method and payment request settings. Square also sets the invoice status to the
-
-          appropriate state: `UNPAID`, `PAID`, `PARTIALLY_PAID`, or `PAYMENT_PENDING`.'
-      - name: PARTIALLY_PAID
-        description: A partial payment is received for the invoice.
-      - name: PAID
-        description: The customer paid the invoice in full.
-      - name: PARTIALLY_REFUNDED
-        description: 'The invoice is paid (or partially paid) and some but not all the amount paid is
-
-          refunded.'
-      - name: REFUNDED
-        description: The full amount that the customer paid for the invoice is refunded.
-      - name: CANCELED
-        description: 'The invoice is canceled. Square no longer requests payments from the customer.
-
-          The `public_url` page remains and is accessible, but it displays the invoice
-
-          as canceled and does not accept payment.'
-      - name: FAILED
-        description: Square canceled the invoice due to suspicious activity.
-      - name: PAYMENT_PENDING
-        description: 'A payment on the invoice was initiated but has not yet been processed.
-
-
-          When in this state, invoices cannot be updated and other payments cannot be initiated.'
-      description: Indicates the status of an invoice.
-      x-release-status: PUBLIC
-    DeleteInvoiceResponse:
-      type: object
-      description: Describes a `DeleteInvoice` response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-      example: {}
-    DeleteInvoiceAttachmentResponse:
-      type: object
-      description: Represents a [DeleteInvoiceAttachment](api-endpoint:Invoices-DeleteInvoiceAttachment) response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-      example: {}
-    InvoiceRequestType:
-      type: string
-      enum:
-      - BALANCE
-      - DEPOSIT
-      - INSTALLMENT
-      x-enum-elements:
-      - name: BALANCE
-        description: "A request for a balance payment. The balance amount is computed as follows: \n\n- If the invoice specifies only a balance payment request, the balance amount is the \ntotal amount of the associated order. \n- If the invoice also specifies a deposit request, the balance amount is the amount \nremaining after the deposit.\n\n`INSTALLMENT` and `BALANCE` payment requests are not allowed in the same invoice."
-      - name: DEPOSIT
-        description: "A request for a deposit payment. You have the option of specifying \nan exact amount or a percentage of the total order amount. If you request a deposit, \nit must be due before any other payment requests."
-      - name: INSTALLMENT
-        description: "A request for an installment payment. Installments allow buyers to pay the invoice over time. Installments can optionally be combined with a deposit. \n\nAdding `INSTALLMENT` payment requests to an invoice requires an \n[Invoices Plus subscription](https://developer.squareup.com/docs/invoices-api/overview#invoices-plus-subscription)."
-      description: "Indicates the type of the payment request. For more information, see \n[Configuring payment requests](https://developer.squareup.com/docs/invoices-api/create-publish-invoices#payment-requests)."
-      x-release-status: PUBLIC
-    InvoicePaymentRequest:
-      type: object
-      description: "Represents a payment request for an [invoice](entity:Invoice). Invoices can specify a maximum\nof 13 payment requests, with up to 12 `INSTALLMENT` request types. For more information, \nsee [Configuring payment requests](https://developer.squareup.com/docs/invoices-api/create-publish-invoices#payment-requests).\n\nAdding `INSTALLMENT` payment requests to an invoice requires an \n[Invoices Plus subscription](https://developer.squareup.com/docs/invoices-api/overview#invoices-plus-subscription)."
-      x-release-status: PUBLIC
-      properties:
-        uid:
-          type:
-          - string
-          - 'null'
-          description: The Square-generated ID of the payment request in an [invoice](entity:Invoice).
-          minLength: 1
-          maxLength: 255
-        request_method:
-          $ref: '#/components/schemas/InvoiceRequestMethod'
-          description: 'Indicates how Square processes the payment request. DEPRECATED at version 2021-01-21. Replaced by the
-
-            `Invoice.delivery_method` and `InvoicePaymentRequest.automatic_payment_source` fields.
-
-
-            One of the following is required when creating an invoice:
-
-            - (Recommended) The `delivery_method` field of the invoice. To configure an automatic payment, the
-
-            `automatic_payment_source` field of the payment request is also required.
-
-            - This `request_method` field. Note that `invoice` objects returned in responses do not include `request_method`.
-
-            See [InvoiceRequestMethod](#type-invoicerequestmethod) for possible values'
-          x-release-status: DEPRECATED
-        request_type:
-          $ref: '#/components/schemas/InvoiceRequestType'
-          description: "Identifies the payment request type. This type defines how the payment request amount is determined. \nThis field is required to create a payment request.\nSee [InvoiceRequestType](#type-invoicerequesttype) for possible values"
-        due_date:
-          type:
-          - string
-          - 'null'
-          description: 'The due date (in the invoice''s time zone) for the payment request, in `YYYY-MM-DD` format. This field
-
-            is required to create a payment request. If an `automatic_payment_source` is defined for the request, Square
-
-            charges the payment source on this date.
-
-
-            After this date, the invoice becomes overdue. For example, a payment `due_date` of 2021-03-09 with a `timezone`
-
-            of America/Los\_Angeles becomes overdue at midnight on March 9 in America/Los\_Angeles (which equals a UTC
-
-            timestamp of 2021-03-10T08:00:00Z).'
-        fixed_amount_requested_money:
-          $ref: '#/components/schemas/Money'
-          description: "If the payment request specifies `DEPOSIT` or `INSTALLMENT` as the `request_type`, \nthis indicates the request amount.\nYou cannot specify this when `request_type` is `BALANCE` or when the \npayment request includes the `percentage_requested` field."
-        percentage_requested:
-          type:
-          - string
-          - 'null'
-          description: "Specifies the amount for the payment request in percentage:\n\n- When the payment `request_type` is `DEPOSIT`, it is the percentage of the order's total amount.\n- When the payment `request_type` is `INSTALLMENT`, it is the percentage of the order's total less \nthe deposit, if requested. The sum of the `percentage_requested` in all installment \npayment requests must be equal to 100.\n\nYou cannot specify this when the payment `request_type` is `BALANCE` or when the \npayment request specifies the `fixed_amount_requested_money` field."
-        tipping_enabled:
-          type:
-          - boolean
-          - 'null'
-          description: "If set to true, the Square-hosted invoice page (the `public_url` field of the invoice) \nprovides a place for the customer to pay a tip. \n\nThis field is allowed only on the final payment request  \nand the payment `request_type` must be `BALANCE` or `INSTALLMENT`."
-        automatic_payment_source:
-          $ref: '#/components/schemas/InvoiceAutomaticPaymentSource'
-          description: 'The payment method for an automatic payment.
-
-
-            The default value is `NONE`.
-
-            See [InvoiceAutomaticPaymentSource](#type-invoiceautomaticpaymentsource) for possible values'
-        card_id:
-          type:
-          - string
-          - 'null'
-          description: 'The ID of the credit or debit card on file to charge for the payment request. To get the cards on file for a customer,
-
-            call [ListCards](api-endpoint:Cards-ListCards) and include the `customer_id` of the invoice recipient.'
-          minLength: 1
-          maxLength: 255
-        reminders:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/InvoicePaymentReminder'
-          description: A list of one or more reminders to send for the payment request.
-        computed_amount_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of the payment request, computed using the order amount and information from the various payment
-
-            request fields (`request_type`, `fixed_amount_requested_money`, and `percentage_requested`).'
-          readOnly: true
-        total_completed_amount_money:
-          $ref: '#/components/schemas/Money'
-          description: "The amount of money already paid for the specific payment request. \nThis amount might include a rounding adjustment if the most recent invoice payment \nwas in cash in a currency that rounds cash payments (such as, `CAD` or `AUD`)."
-          readOnly: true
-        rounding_adjustment_included_money:
-          $ref: '#/components/schemas/Money'
-          description: "If the most recent payment was a cash payment \nin a currency that rounds cash payments (such as, `CAD` or `AUD`) and the payment \nis rounded from `computed_amount_money` in the payment request, then this \nfield specifies the rounding adjustment applied. This amount \nmight be negative."
-          readOnly: true
-    ListInvoicesResponse:
-      type: object
-      description: Describes a `ListInvoice` response.
-      x-release-status: PUBLIC
-      properties:
-        invoices:
-          type: array
-          items:
-            $ref: '#/components/schemas/Invoice'
-          description: The invoices retrieved.
-        cursor:
-          type: string
-          description: "When a response is truncated, it includes a cursor that you can use in a \nsubsequent request to retrieve the next set of invoices. If empty, this is the final \nresponse. \nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-      example:
-        cursor: ChoIDhIWVm54ZVRhLXhySFBOejBBM2xJb2daUQoFCI4IGAE
-        invoices:
-        - accepted_payment_methods:
-            bank_account: false
-            buy_now_pay_later: false
-            card: true
-            cash_app_pay: false
-            square_gift_card: false
-          attachments:
-          - description: Service contract
-            filename: file.jpg
-            filesize: 102705
-            hash: 273ee02cb6f5f8a3a8ca23604930dd53
-            id: inva:0-3bB9ZuDHiziThQhuC4fwWt
-            mime_type: image/jpeg
-            uploaded_at: '2030-01-13T21:24:10Z'
-          created_at: '2030-01-13T17:45:13Z'
-          custom_fields:
-          - label: Event Reference Number
-            placement: ABOVE_LINE_ITEMS
-            value: 'Ref. #1234'
-          - label: Terms of Service
-            placement: BELOW_LINE_ITEMS
-            value: The terms of service are...
-          delivery_method: EMAIL
-          description: We appreciate your business!
-          id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
-          invoice_number: inv-100
-          location_id: ES0RJRZYEC39A
-          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
-          payment_requests:
-          - automatic_payment_source: NONE
-            computed_amount_money:
-              amount: 10000
-              currency: USD
-            due_date: '2030-01-24'
-            reminders:
-            - message: Your invoice is due tomorrow
-              relative_scheduled_days: -1
-              status: PENDING
-              uid: beebd363-e47f-4075-8785-c235aaa7df11
-            request_type: BALANCE
-            tipping_enabled: true
-            total_completed_amount_money:
-              amount: 0
-              currency: USD
-            uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
-          primary_recipient:
-            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-            email_address: Amelia.Earhart@example.com
-            family_name: Earhart
-            given_name: Amelia
-            phone_number: 1-212-555-4240
-          sale_or_service_date: '2030-01-24'
-          scheduled_at: '2030-01-13T10:00:00Z'
-          status: DRAFT
-          store_payment_method_enabled: false
-          timezone: America/Los_Angeles
-          title: Event Planning Services
-          updated_at: '2030-01-13T21:24:10Z'
-          version: 1
-        - accepted_payment_methods:
-            bank_account: false
-            buy_now_pay_later: false
-            card: true
-            cash_app_pay: false
-            square_gift_card: true
-          created_at: '2021-01-23T15:29:12Z'
-          delivery_method: EMAIL
-          id: inv:0-ChC366qAfskpGrBI_1bozs9mEA3
-          invoice_number: inv-455
-          location_id: ES0RJRZYEC39A
-          next_payment_amount_money:
-            amount: 3000
-            currency: USD
-          order_id: a65jnS8NXbfprvGJzY9F4fQTuaB
-          payment_requests:
-          - automatic_payment_source: CARD_ON_FILE
-            card_id: ccof:IkWfpLj4tNHMyFii3GB
-            computed_amount_money:
-              amount: 1000
-              currency: USD
-            due_date: '2021-01-23'
-            percentage_requested: '25'
-            request_type: DEPOSIT
-            tipping_enabled: false
-            total_completed_amount_money:
-              amount: 1000
-              currency: USD
-            uid: 66c3bdfd-5090-4ff9-a8a0-c1e1a2ffa176
-          - automatic_payment_source: CARD_ON_FILE
-            card_id: ccof:IkWfpLj4tNHMyFii3GB
-            computed_amount_money:
-              amount: 3000
-              currency: USD
-            due_date: '2021-06-15'
-            request_type: BALANCE
-            tipping_enabled: false
-            total_completed_amount_money:
-              amount: 0
-              currency: USD
-            uid: 120c5e18-4f80-4f6b-b159-774cb9bf8f99
-          primary_recipient:
-            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-            email_address: Amelia.Earhart@example.com
-            family_name: Earhart
-            given_name: Amelia
-            phone_number: 1-212-555-4240
-          public_url: https://squareup.com/pay-invoice/h9sfsfTGTSnYEhISUDBhEQ
-          sale_or_service_date: '2030-01-24'
-          status: PARTIALLY_PAID
-          store_payment_method_enabled: false
-          timezone: America/Los_Angeles
-          updated_at: '2021-01-23T15:29:56Z'
-          version: 3
-    CreateInvoiceRequest:
-      type: object
-      description: Describes a `CreateInvoice` request.
-      x-release-status: PUBLIC
-      required:
-      - invoice
-      properties:
-        invoice:
-          $ref: '#/components/schemas/Invoice'
-          description: The invoice to create.
-        idempotency_key:
-          type: string
-          description: "A unique string that identifies the `CreateInvoice` request. If you do not \nprovide `idempotency_key` (or provide an empty string as the value), the endpoint \ntreats each request as independent.\n\nFor more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency)."
-          maxLength: 128
-      example:
-        idempotency_key: ce3748f9-5fc1-4762-aa12-aae5e843f1f4
-        invoice:
-          accepted_payment_methods:
-            bank_account: false
-            buy_now_pay_later: false
-            card: true
-            cash_app_pay: false
-            square_gift_card: false
-          custom_fields:
-          - label: Event Reference Number
-            placement: ABOVE_LINE_ITEMS
-            value: 'Ref. #1234'
-          - label: Terms of Service
-            placement: BELOW_LINE_ITEMS
-            value: The terms of service are...
-          delivery_method: EMAIL
-          description: We appreciate your business!
-          invoice_number: inv-100
-          location_id: ES0RJRZYEC39A
-          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
-          payment_requests:
-          - automatic_payment_source: NONE
-            due_date: '2030-01-24'
-            reminders:
-            - message: Your invoice is due tomorrow
-              relative_scheduled_days: -1
-            request_type: BALANCE
-            tipping_enabled: true
-          primary_recipient:
-            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-          sale_or_service_date: '2030-01-24'
-          scheduled_at: '2030-01-13T10:00:00Z'
-          store_payment_method_enabled: false
-          title: Event Planning Services
-    Money:
-      type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
-
-        Fields that do not explicitly define whether they are signed or unsigned are
-
-        considered unsigned and can only hold positive amounts. For signed fields, the
-
-        sign of the value indicates the purpose of the money transfer. See
-
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
-
-        for more information.'
-      x-release-status: PUBLIC
-      properties:
-        amount:
-          type:
-          - integer
-          - 'null'
-          description: 'The amount of money, in the smallest denomination of the currency
-
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
-
-            in cents. Monetary amounts can be positive or negative. See the specific
-
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
-
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
-    PublishInvoiceRequest:
-      type: object
-      description: Describes a `PublishInvoice` request.
-      x-release-status: PUBLIC
-      required:
-      - version
-      properties:
-        version:
-          type: integer
-          description: 'The version of the [invoice](entity:Invoice) to publish.
-
-            This must match the current version of the invoice; otherwise, the request is rejected.'
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: "A unique string that identifies the `PublishInvoice` request. If you do not \nprovide `idempotency_key` (or provide an empty string as the value), the endpoint \ntreats each request as independent.\n\nFor more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency)."
-          maxLength: 128
-      example:
-        idempotency_key: 32da42d0-1997-41b0-826b-f09464fc2c2e
-        version: 1
-    Address:
-      type: object
-      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
-      x-release-status: PUBLIC
-      properties:
-        address_line_1:
-          type:
-          - string
-          - 'null'
-          description: 'The first line of the address.
-
-
-            Fields that start with `address_line` provide the address''s most specific
-
-            details, like street number, street name, and building name. They do *not*
-
-            provide less specific details like city, state/province, or country (these
-
-            details are provided in other fields).'
-        address_line_2:
-          type:
-          - string
-          - 'null'
-          description: The second line of the address, if any.
-        address_line_3:
-          type:
-          - string
-          - 'null'
-          description: The third line of the address, if any.
-        locality:
-          type:
-          - string
-          - 'null'
-          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-        sublocality:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `locality`, if any.
-        sublocality_2:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `sublocality`, if any.
-        sublocality_3:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `sublocality_2`, if any.
-        administrative_district_level_1:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s country. In the US, this
-
-            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
-        administrative_district_level_2:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s `administrative_district_level_1`.
-
-            In the US, this is the county.'
-        administrative_district_level_3:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s `administrative_district_level_2`,
-
-            if any.'
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-        country:
-          $ref: '#/components/schemas/Country'
-          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
-
-            See [Country](#type-country) for possible values'
-        first_name:
-          type:
-          - string
-          - 'null'
-          description: Optional first name when it's representing recipient.
-        last_name:
-          type:
-          - string
-          - 'null'
-          description: Optional last name when it's representing recipient.
-    InvoiceQuery:
-      type: object
-      description: Describes query criteria for searching invoices.
-      x-release-status: PUBLIC
-      required:
-      - filter
-      properties:
-        filter:
-          $ref: '#/components/schemas/InvoiceFilter'
-          description: "Query filters to apply in searching invoices. \nFor more information, see [Search for invoices](https://developer.squareup.com/docs/invoices-api/retrieve-list-search-invoices#search-invoices)."
-        sort:
-          $ref: '#/components/schemas/InvoiceSort'
-          description: Describes the sort order for the search result.
-    InvoiceAttachment:
-      type: object
-      description: Represents a file attached to an [invoice](entity:Invoice).
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: The Square-assigned ID of the attachment.
-          readOnly: true
-        filename:
-          type: string
-          description: The file name of the attachment, which is displayed on the invoice.
-          readOnly: true
-        description:
-          type: string
-          description: 'The description of the attachment, which is displayed on the invoice.
-
-            This field maps to the seller-defined **Message** field.'
-          readOnly: true
-        filesize:
-          type: integer
-          description: The file size of the attachment in bytes.
-          readOnly: true
-        hash:
-          type: string
-          description: The MD5 hash that was generated from the file contents.
-          readOnly: true
-        mime_type:
-          type: string
-          description: "The mime type of the attachment.\nThe following mime types are supported: \nimage/gif, image/jpeg, image/png, image/tiff, image/bmp, application/pdf."
-          readOnly: true
-        uploaded_at:
-          type: string
-          description: The timestamp when the attachment was uploaded, in RFC 3339 format.
-          readOnly: true
-    InvoicePaymentReminder:
-      type: object
-      description: 'Describes a payment request reminder (automatic notification) that Square sends
-
-        to the customer. You configure a reminder relative to the payment request
-
-        `due_date`.'
-      x-release-status: PUBLIC
-      properties:
-        uid:
-          type: string
-          description: 'A Square-assigned ID that uniquely identifies the reminder within the
-
-            `InvoicePaymentRequest`.'
-          readOnly: true
-        relative_scheduled_days:
-          type:
-          - integer
-          - 'null'
-          description: 'The number of days before (a negative number) or after (a positive number)
-
-            the payment request `due_date` when the reminder is sent. For example, -3 indicates that
-
-            the reminder should be sent 3 days before the payment request `due_date`.'
-          minimum: -32767
-          maximum: 32767
-        message:
-          type:
-          - string
-          - 'null'
-          description: The reminder message.
-          minLength: 1
-          maxLength: 1000
-        status:
-          $ref: '#/components/schemas/InvoicePaymentReminderStatus'
-          description: 'The status of the reminder.
-
-            See [InvoicePaymentReminderStatus](#type-invoicepaymentreminderstatus) for possible values'
-          readOnly: true
-        sent_at:
-          type: string
-          description: If sent, the timestamp when the reminder was sent, in RFC 3339 format.
-          readOnly: true
-    InvoiceRequestMethod:
-      type: string
-      enum:
-      - EMAIL
-      - CHARGE_CARD_ON_FILE
-      - SHARE_MANUALLY
-      - CHARGE_BANK_ON_FILE
-      - SMS
-      - SMS_CHARGE_CARD_ON_FILE
-      - SMS_CHARGE_BANK_ON_FILE
-      x-enum-elements:
-      - name: EMAIL
-        description: 'Directs Square to send invoices, reminders, and receipts to the customer using email.
-
-          Square sends the invoice after it is published (either immediately or at the `scheduled_at`
-
-          time, if specified in the [invoice](entity:Invoice)).'
-      - name: CHARGE_CARD_ON_FILE
-        description: 'Directs Square to charge the card on file on the `due_date` specified in the payment request
-
-          and to use email to send invoices, reminders, and receipts.'
-      - name: SHARE_MANUALLY
-        description: "Directs Square to take no specific action on the invoice. In this case, the seller \n(or the application developer) follows up with the customer for payment. For example, \na seller might collect a payment in the Seller Dashboard or use the Point of Sale (POS) application. \nThe seller might also share the URL of the Square-hosted invoice page (`public_url`) with the customer requesting payment."
-      - name: CHARGE_BANK_ON_FILE
-        description: "Directs Square to charge the customer's bank account on file and to use email to send invoices, reminders, and receipts.\nThe customer must approve the payment.\n\nThe bank on file payment method applies only to invoices that sellers create in the Seller Dashboard or other\nSquare product. The bank account is provided by the customer during the payment flow. You \ncannot set `CHARGE_BANK_ON_FILE` as a request method using the Invoices API."
-      - name: SMS
-        description: "Directs Square to send invoices and receipts to the customer using SMS (text message). Square sends the invoice\nafter it is published (either immediately or at the `scheduled_at` time, if specified in the [invoice](entity:Invoice)). \n\nYou cannot set `SMS` as a request method using the Invoices API."
-      - name: SMS_CHARGE_CARD_ON_FILE
-        description: "Directs Square to charge the card on file on the `due_date` specified in the payment request and to\nuse SMS (text message) to send invoices and receipts. \n\nYou cannot set `SMS_CHARGE_CARD_ON_FILE` as a request method using the Invoices API."
-      - name: SMS_CHARGE_BANK_ON_FILE
-        description: "Directs Square to charge the customer's bank account on file and to use SMS (text message) to send invoices and receipts.\nThe customer must approve the payment.\n\nThe bank on file payment method applies only to invoices that sellers create in the Seller Dashboard\nor other Square product. The bank account is provided by the customer during the payment flow. \nYou cannot set `SMS_CHARGE_BANK_ON_FILE` as a request method using the Invoices API."
-      description: "Specifies the action for Square to take for processing the invoice. For example, \nemail the invoice, charge a customer's card on file, or do nothing. DEPRECATED at\nversion 2021-01-21. The corresponding `request_method` field is replaced by the\n`Invoice.delivery_method` and `InvoicePaymentRequest.automatic_payment_source` fields."
-      x-release-status: DEPRECATED
-    InvoiceRecipient:
-      type: object
-      description: "Represents a snapshot of customer data. This object stores customer data that is displayed on the invoice \nand that Square uses to deliver the invoice.\n\nWhen you provide a customer ID for a draft invoice, Square retrieves the associated customer profile and populates \nthe remaining `InvoiceRecipient` fields. You cannot update these fields after the invoice is published. \nSquare updates the customer ID in response to a merge operation, but does not update other fields."
-      x-release-status: PUBLIC
-      properties:
-        customer_id:
-          type:
-          - string
-          - 'null'
-          description: "The ID of the customer. This is the customer profile ID that \nyou provide when creating a draft invoice."
-          minLength: 1
-          maxLength: 255
-        given_name:
-          type: string
-          description: The recipient's given (that is, first) name.
-          readOnly: true
-        family_name:
-          type: string
-          description: The recipient's family (that is, last) name.
-          readOnly: true
-        email_address:
-          type: string
-          description: The recipient's email address.
-          readOnly: true
-        address:
-          $ref: '#/components/schemas/Address'
-          description: The recipient's physical address.
-          readOnly: true
-        phone_number:
-          type: string
-          description: The recipient's phone number.
-          readOnly: true
-        company_name:
-          type: string
-          description: The name of the recipient's company.
-          readOnly: true
-        tax_ids:
-          $ref: '#/components/schemas/InvoiceRecipientTaxIds'
-          description: "The recipient's tax IDs. The country of the seller account determines whether this field \nis available for the customer. For more information, see [Invoice recipient tax IDs](https://developer.squareup.com/docs/invoices-api/overview#recipient-tax-ids)."
-          readOnly: true
     CreateInvoiceAttachmentRequest:
       type: object
       description: Represents a [CreateInvoiceAttachment](api-endpoint:Invoices-CreateInvoiceAttachment) request.
@@ -2273,96 +2889,101 @@ components:
       example:
         description: Service contract
         idempotency_key: ae5e84f9-4742-4fc1-ba12-a3ce3748f1c3
-    InvoiceDeliveryMethod:
+    ErrorCategory:
       type: string
       enum:
-      - EMAIL
-      - SHARE_MANUALLY
-      - SMS
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
       x-enum-elements:
-      - name: EMAIL
-        description: Directs Square to send invoices, reminders, and receipts to the customer using email.
-      - name: SHARE_MANUALLY
-        description: 'Directs Square to take no action on the invoice. In this case, the seller
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
 
-          or application developer follows up with the customer for payment. For example,
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
 
-          a seller might collect a payment in the Seller Dashboard or Point of Sale (POS) application.
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
 
-          The seller might also share the URL of the Square-hosted invoice page (`public_url`) with the customer to request payment.'
-      - name: SMS
-        description: 'Directs Square to send invoices and receipts to the customer using SMS (text message).
+          to Square APIs in a short period of time.
 
 
-          You cannot set `SMS` as a delivery method using the Invoices API, but you can change an `SMS` delivery method to `EMAIL` or `SHARE_MANUALLY`.'
-      description: Indicates how Square delivers the [invoice](entity:Invoice) to the customer.
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
       x-release-status: PUBLIC
-    GetInvoiceResponse:
+    UpdateInvoiceRequest:
       type: object
-      description: Describes a `GetInvoice` response.
+      description: Describes a `UpdateInvoice` request.
       x-release-status: PUBLIC
+      required:
+      - invoice
       properties:
         invoice:
           $ref: '#/components/schemas/Invoice'
-          description: The invoice requested.
-        errors:
-          type: array
+          description: 'The invoice fields to add, change, or clear. Fields can be cleared using
+
+            null values or the `remove` field (for individual payment requests or reminders).
+
+            The current invoice `version` is also required. For more information, including requirements,
+
+            limitations, and more examples, see [Update an Invoice](https://developer.squareup.com/docs/invoices-api/update-invoices).'
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique string that identifies the `UpdateInvoice` request. If you do not
+
+            provide `idempotency_key` (or provide an empty string as the value), the endpoint
+
+            treats each request as independent.
+
+
+            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 128
+        fields_to_clear:
+          type:
+          - array
+          - 'null'
           items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
+            type: string
+          description: 'The list of fields to clear. Although this field is currently supported, we
+
+            recommend using null values or the `remove` field when possible. For examples, see
+
+            [Update an Invoice](https://developer.squareup.com/docs/invoices-api/update-invoices).'
       example:
+        idempotency_key: 4ee82288-0910-499e-ab4c-5d0071dad1be
         invoice:
-          accepted_payment_methods:
-            bank_account: false
-            buy_now_pay_later: false
-            card: true
-            cash_app_pay: false
-            square_gift_card: false
-          created_at: '2020-06-18T17:45:13Z'
-          custom_fields:
-          - label: Event Reference Number
-            placement: ABOVE_LINE_ITEMS
-            value: 'Ref. #1234'
-          - label: Terms of Service
-            placement: BELOW_LINE_ITEMS
-            value: The terms of service are...
-          delivery_method: EMAIL
-          description: We appreciate your business!
-          id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
-          invoice_number: inv-100
-          location_id: ES0RJRZYEC39A
-          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
           payment_requests:
-          - automatic_payment_source: NONE
-            computed_amount_money:
-              amount: 10000
-              currency: USD
-            due_date: '2030-01-24'
-            reminders:
-            - message: Your invoice is due tomorrow
-              relative_scheduled_days: -1
-              status: PENDING
-              uid: beebd363-e47f-4075-8785-c235aaa7df11
-            request_type: BALANCE
-            tipping_enabled: true
-            total_completed_amount_money:
-              amount: 0
-              currency: USD
+          - reminders: null
+            tipping_enabled: false
             uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
-          primary_recipient:
-            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-            email_address: Amelia.Earhart@example.com
-            family_name: Earhart
-            given_name: Amelia
-            phone_number: 1-212-555-4240
-          sale_or_service_date: '2030-01-24'
-          scheduled_at: '2030-01-13T10:00:00Z'
-          status: DRAFT
-          store_payment_method_enabled: false
-          timezone: America/Los_Angeles
-          title: Event Planning Services
-          updated_at: '2020-06-18T17:45:13Z'
-          version: 0
+          version: 1
     Country:
       type: string
       enum:
@@ -3121,1186 +3742,39 @@ components:
 
         Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
       x-release-status: PUBLIC
-    CreateInvoiceAttachmentResponse:
-      type: object
-      description: Represents a [CreateInvoiceAttachment](api-endpoint:Invoices-CreateInvoiceAttachment) response.
-      x-release-status: PUBLIC
-      properties:
-        attachment:
-          $ref: '#/components/schemas/InvoiceAttachment'
-          description: Metadata about the attachment that was added to the invoice.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-      example:
-        attachment:
-          description: Service contract
-          filename: file.jpg
-          filesize: 102705
-          hash: 273ee02cb6f5f8a3a8ca23604930dd53
-          id: inva:0-3bB9ZuDHiziThQhuC4fwWt
-          mime_type: image/jpeg
-          uploaded_at: '2023-02-03T20:28:14Z'
-    ErrorCategory:
+    InvoiceRequestMethod:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - EMAIL
+      - CHARGE_CARD_ON_FILE
+      - SHARE_MANUALLY
+      - CHARGE_BANK_ON_FILE
+      - SMS
+      - SMS_CHARGE_CARD_ON_FILE
+      - SMS_CHARGE_BANK_ON_FILE
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    SearchInvoicesResponse:
-      type: object
-      description: Describes a `SearchInvoices` response.
-      x-release-status: PUBLIC
-      properties:
-        invoices:
-          type: array
-          items:
-            $ref: '#/components/schemas/Invoice'
-          description: The list of invoices returned by the search.
-        cursor:
-          type: string
-          description: "When a response is truncated, it includes a cursor that you can use in a \nsubsequent request to fetch the next set of invoices. If empty, this is the final \nresponse. \nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-      example:
-        cursor: ChoIDhIWVm54ZVRhLXhySFBOejBBM2xJb2daUQoFCI4IGAE
-        invoices:
-        - accepted_payment_methods:
-            bank_account: false
-            buy_now_pay_later: false
-            card: true
-            cash_app_pay: false
-            square_gift_card: false
-          created_at: '2020-06-18T17:45:13Z'
-          custom_fields:
-          - label: Event Reference Number
-            placement: ABOVE_LINE_ITEMS
-            value: 'Ref. #1234'
-          - label: Terms of Service
-            placement: BELOW_LINE_ITEMS
-            value: The terms of service are...
-          delivery_method: EMAIL
-          description: We appreciate your business!
-          id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
-          invoice_number: inv-100
-          location_id: ES0RJRZYEC39A
-          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
-          payment_requests:
-          - automatic_payment_source: NONE
-            computed_amount_money:
-              amount: 10000
-              currency: USD
-            due_date: '2030-01-24'
-            reminders:
-            - message: Your invoice is due tomorrow
-              relative_scheduled_days: -1
-              status: PENDING
-              uid: beebd363-e47f-4075-8785-c235aaa7df11
-            request_type: BALANCE
-            tipping_enabled: true
-            total_completed_amount_money:
-              amount: 0
-              currency: USD
-            uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
-          primary_recipient:
-            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-            email_address: Amelia.Earhart@example.com
-            family_name: Earhart
-            given_name: Amelia
-            phone_number: 1-212-555-4240
-          sale_or_service_date: '2030-01-24'
-          scheduled_at: '2030-01-13T10:00:00Z'
-          status: DRAFT
-          store_payment_method_enabled: false
-          timezone: America/Los_Angeles
-          title: Event Planning Services
-          updated_at: '2020-06-18T17:45:13Z'
-          version: 0
-        - accepted_payment_methods:
-            bank_account: false
-            buy_now_pay_later: false
-            card: true
-            cash_app_pay: false
-            square_gift_card: true
-          created_at: '2021-01-23T15:29:12Z'
-          delivery_method: EMAIL
-          id: inv:0-ChC366qAfskpGrBI_1bozs9mEA3
-          invoice_number: inv-455
-          location_id: ES0RJRZYEC39A
-          next_payment_amount_money:
-            amount: 3000
-            currency: USD
-          order_id: a65jnS8NXbfprvGJzY9F4fQTuaB
-          payment_requests:
-          - automatic_payment_source: CARD_ON_FILE
-            card_id: ccof:IkWfpLj4tNHMyFii3GB
-            computed_amount_money:
-              amount: 1000
-              currency: USD
-            due_date: '2021-01-23'
-            percentage_requested: '25'
-            request_type: DEPOSIT
-            tipping_enabled: false
-            total_completed_amount_money:
-              amount: 1000
-              currency: USD
-            uid: 66c3bdfd-5090-4ff9-a8a0-c1e1a2ffa176
-          - automatic_payment_source: CARD_ON_FILE
-            card_id: ccof:IkWfpLj4tNHMyFii3GB
-            computed_amount_money:
-              amount: 3000
-              currency: USD
-            due_date: '2021-06-15'
-            request_type: BALANCE
-            tipping_enabled: false
-            total_completed_amount_money:
-              amount: 0
-              currency: USD
-            uid: 120c5e18-4f80-4f6b-b159-774cb9bf8f99
-          primary_recipient:
-            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
-            email_address: Amelia.Earhart@example.com
-            family_name: Earhart
-            given_name: Amelia
-            phone_number: 1-212-555-4240
-          public_url: https://squareup.com/pay-invoice/h9sfsfTGTSnYEhISUDBhEQ
-          sale_or_service_date: '2030-01-24'
-          status: PARTIALLY_PAID
-          store_payment_method_enabled: false
-          timezone: America/Los_Angeles
-          updated_at: '2021-01-23T15:29:56Z'
-          version: 3
-    SearchInvoicesRequest:
-      type: object
-      description: Describes a `SearchInvoices` request.
-      x-release-status: PUBLIC
-      required:
-      - query
-      properties:
-        query:
-          $ref: '#/components/schemas/InvoiceQuery'
-          description: Describes the query criteria for searching invoices.
-        limit:
-          type: integer
-          description: "The maximum number of invoices to return (200 is the maximum `limit`). \nIf not provided, the server uses a default limit of 100 invoices."
-        cursor:
-          type: string
-          description: "A pagination cursor returned by a previous call to this endpoint. \nProvide this cursor to retrieve the next set of results for your original query.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
-      example:
-        query:
-          filter:
-            customer_ids:
-            - JDKYHBWT1D4F8MFH63DBMEN8Y4
-            location_ids:
-            - ES0RJRZYEC39A
-          limit: 100
-          sort:
-            field: INVOICE_SORT_DATE
-            order: DESC
-    InvoiceCustomFieldPlacement:
-      type: string
-      enum:
-      - ABOVE_LINE_ITEMS
-      - BELOW_LINE_ITEMS
-      x-enum-elements:
-      - name: ABOVE_LINE_ITEMS
-        description: Render the custom field above the invoice line items.
-      - name: BELOW_LINE_ITEMS
-        description: Render the custom field below the invoice line items.
-      description: "Indicates where to render a custom field on the Square-hosted invoice page and in emailed or PDF \ncopies of the invoice."
-      x-release-status: PUBLIC
-    InvoiceSortField:
-      type: string
-      enum:
-      - INVOICE_SORT_DATE
-      x-enum-elements:
-      - name: INVOICE_SORT_DATE
-        description: 'The field works as follows:
-
-
-          - If the invoice is a draft, it uses the invoice `created_at` date.
-
-          - If the invoice is scheduled for publication, it uses the `scheduled_at` date.
-
-          - If the invoice is published, it uses the invoice publication date.'
-      description: The field to use for sorting.
-      x-release-status: PUBLIC
-    InvoiceSort:
-      type: object
-      description: Identifies the sort field and sort order.
-      x-release-status: PUBLIC
-      required:
-      - field
-      properties:
-        field:
-          $ref: '#/components/schemas/InvoiceSortField'
-          description: 'The field to use for sorting.
-
-            See [InvoiceSortField](#type-invoicesortfield) for possible values'
-        order:
-          $ref: '#/components/schemas/SortOrder'
-          description: 'The order to use for sorting the results.
-
-            See [SortOrder](#type-sortorder) for possible values'
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    ErrorCode:
-      type: string
-      enum:
-      - INTERNAL_SERVER_ERROR
-      - UNAUTHORIZED
-      - ACCESS_TOKEN_EXPIRED
-      - ACCESS_TOKEN_REVOKED
-      - CLIENT_DISABLED
-      - FORBIDDEN
-      - INSUFFICIENT_SCOPES
-      - APPLICATION_DISABLED
-      - V1_APPLICATION
-      - V1_ACCESS_TOKEN
-      - CARD_PROCESSING_NOT_ENABLED
-      - MERCHANT_SUBSCRIPTION_NOT_FOUND
-      - BAD_REQUEST
-      - MISSING_REQUIRED_PARAMETER
-      - INCORRECT_TYPE
-      - INVALID_TIME
-      - INVALID_TIME_RANGE
-      - INVALID_VALUE
-      - INVALID_CURSOR
-      - UNKNOWN_QUERY_PARAMETER
-      - CONFLICTING_PARAMETERS
-      - EXPECTED_JSON_BODY
-      - INVALID_SORT_ORDER
-      - VALUE_REGEX_MISMATCH
-      - VALUE_TOO_SHORT
-      - VALUE_TOO_LONG
-      - VALUE_TOO_LOW
-      - VALUE_TOO_HIGH
-      - VALUE_EMPTY
-      - ARRAY_LENGTH_TOO_LONG
-      - ARRAY_LENGTH_TOO_SHORT
-      - ARRAY_EMPTY
-      - EXPECTED_BOOLEAN
-      - EXPECTED_INTEGER
-      - EXPECTED_FLOAT
-      - EXPECTED_STRING
-      - EXPECTED_OBJECT
-      - EXPECTED_ARRAY
-      - EXPECTED_MAP
-      - EXPECTED_BASE64_ENCODED_BYTE_ARRAY
-      - INVALID_ARRAY_VALUE
-      - INVALID_ENUM_VALUE
-      - INVALID_CONTENT_TYPE
-      - INVALID_FORM_VALUE
-      - CUSTOMER_NOT_FOUND
-      - ONE_INSTRUMENT_EXPECTED
-      - NO_FIELDS_SET
-      - TOO_MANY_MAP_ENTRIES
-      - MAP_KEY_LENGTH_TOO_SHORT
-      - MAP_KEY_LENGTH_TOO_LONG
-      - CUSTOMER_MISSING_NAME
-      - CUSTOMER_MISSING_EMAIL
-      - INVALID_PAUSE_LENGTH
-      - INVALID_DATE
-      - UNSUPPORTED_COUNTRY
-      - UNSUPPORTED_CURRENCY
-      - APPLE_TTP_PIN_TOKEN
-      - CARD_EXPIRED
-      - INVALID_EXPIRATION
-      - INVALID_EXPIRATION_YEAR
-      - INVALID_EXPIRATION_DATE
-      - UNSUPPORTED_CARD_BRAND
-      - UNSUPPORTED_ENTRY_METHOD
-      - INVALID_ENCRYPTED_CARD
-      - INVALID_CARD
-      - PAYMENT_AMOUNT_MISMATCH
-      - GENERIC_DECLINE
-      - CVV_FAILURE
-      - ADDRESS_VERIFICATION_FAILURE
-      - INVALID_ACCOUNT
-      - CURRENCY_MISMATCH
-      - INSUFFICIENT_FUNDS
-      - INSUFFICIENT_PERMISSIONS
-      - CARDHOLDER_INSUFFICIENT_PERMISSIONS
-      - INVALID_LOCATION
-      - TRANSACTION_LIMIT
-      - VOICE_FAILURE
-      - PAN_FAILURE
-      - EXPIRATION_FAILURE
-      - CARD_NOT_SUPPORTED
-      - INVALID_PIN
-      - MISSING_PIN
-      - MISSING_ACCOUNT_TYPE
-      - INVALID_POSTAL_CODE
-      - INVALID_FEES
-      - MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
-      - PAYMENT_LIMIT_EXCEEDED
-      - GIFT_CARD_AVAILABLE_AMOUNT
-      - ACCOUNT_UNUSABLE
-      - BUYER_REFUSED_PAYMENT
-      - DELAYED_TRANSACTION_EXPIRED
-      - DELAYED_TRANSACTION_CANCELED
-      - DELAYED_TRANSACTION_CAPTURED
-      - DELAYED_TRANSACTION_FAILED
-      - CARD_TOKEN_EXPIRED
-      - CARD_TOKEN_USED
-      - AMOUNT_TOO_HIGH
-      - UNSUPPORTED_INSTRUMENT_TYPE
-      - REFUND_AMOUNT_INVALID
-      - REFUND_ALREADY_PENDING
-      - PAYMENT_NOT_REFUNDABLE
-      - PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
-      - REFUND_DECLINED
-      - INSUFFICIENT_PERMISSIONS_FOR_REFUND
-      - INVALID_CARD_DATA
-      - SOURCE_USED
-      - SOURCE_EXPIRED
-      - UNSUPPORTED_LOYALTY_REWARD_TIER
-      - LOCATION_MISMATCH
-      - IDEMPOTENCY_KEY_REUSED
-      - UNEXPECTED_VALUE
-      - SANDBOX_NOT_SUPPORTED
-      - INVALID_EMAIL_ADDRESS
-      - INVALID_PHONE_NUMBER
-      - CHECKOUT_EXPIRED
-      - BAD_CERTIFICATE
-      - INVALID_SQUARE_VERSION_FORMAT
-      - API_VERSION_INCOMPATIBLE
-      - CARD_PRESENCE_REQUIRED
-      - UNSUPPORTED_SOURCE_TYPE
-      - CARD_MISMATCH
-      - PLAID_ERROR
-      - PLAID_ERROR_ITEM_LOGIN_REQUIRED
-      - PLAID_ERROR_RATE_LIMIT
-      - CARD_DECLINED
-      - VERIFY_CVV_FAILURE
-      - VERIFY_AVS_FAILURE
-      - CARD_DECLINED_CALL_ISSUER
-      - CARD_DECLINED_VERIFICATION_REQUIRED
-      - BAD_EXPIRATION
-      - CHIP_INSERTION_REQUIRED
-      - ALLOWABLE_PIN_TRIES_EXCEEDED
-      - RESERVATION_DECLINED
-      - UNKNOWN_BODY_PARAMETER
-      - NOT_FOUND
-      - APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
-      - METHOD_NOT_ALLOWED
-      - NOT_ACCEPTABLE
-      - REQUEST_TIMEOUT
-      - CONFLICT
-      - GONE
-      - REQUEST_ENTITY_TOO_LARGE
-      - UNSUPPORTED_MEDIA_TYPE
-      - UNPROCESSABLE_ENTITY
-      - RATE_LIMITED
-      - NOT_IMPLEMENTED
-      - BAD_GATEWAY
-      - SERVICE_UNAVAILABLE
-      - TEMPORARY_ERROR
-      - GATEWAY_TIMEOUT
-      x-enum-elements:
-      - name: INTERNAL_SERVER_ERROR
-        description: A general server error occurred.
-        error-category: API_ERROR
-      - name: UNAUTHORIZED
-        description: A general authorization error occurred.
-        error-category: AUTHENTICATION_ERROR
-      - name: ACCESS_TOKEN_EXPIRED
-        description: The provided access token has expired.
-        error-category: AUTHENTICATION_ERROR
-      - name: ACCESS_TOKEN_REVOKED
-        description: The provided access token has been revoked.
-        error-category: AUTHENTICATION_ERROR
-      - name: CLIENT_DISABLED
-        description: The provided client has been disabled.
-        error-category: AUTHENTICATION_ERROR
-      - name: FORBIDDEN
-        description: A general access error occurred.
-        error-category: AUTHENTICATION_ERROR
-      - name: INSUFFICIENT_SCOPES
-        description: 'The provided access token does not have permission
-
-          to execute the requested action.'
-        error-category: AUTHENTICATION_ERROR
-      - name: APPLICATION_DISABLED
-        description: The calling application was disabled.
-        error-category: INVALID_REQUEST_ERROR
-      - name: V1_APPLICATION
-        description: 'The calling application was created prior to
-
-          2016-03-30 and is not compatible with v2 Square API calls.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: V1_ACCESS_TOKEN
-        description: 'The calling application is using an access token
-
-          created prior to 2016-03-30 and is not compatible with v2 Square API
-
-          calls.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_PROCESSING_NOT_ENABLED
-        description: 'The location provided in the API call is not
-
-          enabled for credit card processing.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: MERCHANT_SUBSCRIPTION_NOT_FOUND
-        description: A required subscription was not found for the merchant
-        error-category: MERCHANT_SUBSCRIPTION_ERROR
-      - name: BAD_REQUEST
-        description: A general error occurred with the request.
-        error-category: INVALID_REQUEST_ERROR
-      - name: MISSING_REQUIRED_PARAMETER
-        description: 'The request is missing a required path, query, or
-
-          body parameter.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INCORRECT_TYPE
-        description: 'The value provided in the request is the wrong
-
-          type. For example, a string instead of an integer.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_TIME
-        description: 'Formatting for the provided time value is
-
-          incorrect.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_TIME_RANGE
-        description: 'The time range provided in the request is invalid.
-
-          For example, the end time is before the start time.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_VALUE
-        description: 'The provided value is invalid. For example,
-
-          including `%` in a phone number.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_CURSOR
-        description: 'The pagination cursor included in the request is
-
-          invalid.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNKNOWN_QUERY_PARAMETER
-        description: 'The query parameters provided is invalid for the
-
-          requested endpoint.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: CONFLICTING_PARAMETERS
-        description: 'One or more of the request parameters conflict with
-
-          each other.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_JSON_BODY
-        description: The request body is not a JSON object.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_SORT_ORDER
-        description: 'The provided sort order is not a valid key.
-
-          Currently, sort order must be `ASC` or `DESC`.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_REGEX_MISMATCH
-        description: 'The provided value does not match an expected
-
-          regular expression.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_TOO_SHORT
-        description: 'The provided string value is shorter than the
-
-          minimum length allowed.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_TOO_LONG
-        description: 'The provided string value is longer than the
-
-          maximum length allowed.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_TOO_LOW
-        description: 'The provided value is less than the supported
-
-          minimum.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_TOO_HIGH
-        description: 'The provided value is greater than the supported
-
-          maximum.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: VALUE_EMPTY
-        description: 'The provided value has a default (empty) value
-
-          such as a blank string.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: ARRAY_LENGTH_TOO_LONG
-        description: The provided array has too many elements.
-        error-category: INVALID_REQUEST_ERROR
-      - name: ARRAY_LENGTH_TOO_SHORT
-        description: The provided array has too few elements.
-        error-category: INVALID_REQUEST_ERROR
-      - name: ARRAY_EMPTY
-        description: The provided array is empty.
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_BOOLEAN
-        description: 'The endpoint expected the provided value to be a
-
-          boolean.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_INTEGER
-        description: 'The endpoint expected the provided value to be an
-
-          integer.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_FLOAT
-        description: 'The endpoint expected the provided value to be a
-
-          float.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_STRING
-        description: 'The endpoint expected the provided value to be a
-
-          string.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_OBJECT
-        description: 'The endpoint expected the provided value to be a
-
-          JSON object.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_ARRAY
-        description: 'The endpoint expected the provided value to be an
-
-          array or list.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_MAP
-        description: 'The endpoint expected the provided value to be a
-
-          map or associative array.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: EXPECTED_BASE64_ENCODED_BYTE_ARRAY
-        description: 'The endpoint expected the provided value to be an
-
-          array encoded in base64.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_ARRAY_VALUE
-        description: 'One or more objects in the array does not match the
-
-          array type.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_ENUM_VALUE
-        description: 'The provided static string is not valid for the
-
-          field.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_CONTENT_TYPE
-        description: Invalid content type header.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_FORM_VALUE
-        description: 'Only relevant for applications created prior to
-
-          2016-03-30. Indicates there was an error while parsing form values.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: CUSTOMER_NOT_FOUND
-        description: The provided customer id can't be found in the merchant's customers list.
-        error-category: INVALID_REQUEST_ERROR
-      - name: ONE_INSTRUMENT_EXPECTED
-        description: A general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: NO_FIELDS_SET
-        description: A general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: TOO_MANY_MAP_ENTRIES
-        description: Too many entries in the map field.
-        error-category: INVALID_REQUEST_ERROR
-      - name: MAP_KEY_LENGTH_TOO_SHORT
-        description: The length of one of the provided keys in the map is too short.
-        error-category: INVALID_REQUEST_ERROR
-      - name: MAP_KEY_LENGTH_TOO_LONG
-        description: The length of one of the provided keys in the map is too long.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CUSTOMER_MISSING_NAME
-        description: The provided customer does not have a recorded name.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CUSTOMER_MISSING_EMAIL
-        description: The provided customer does not have a recorded email.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_PAUSE_LENGTH
-        description: The subscription cannot be paused longer than the duration of the current phase.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_DATE
-        description: The subscription cannot be paused/resumed on the given date.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_COUNTRY
-        description: The API request references an unsupported country.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_CURRENCY
-        description: The API request references an unsupported currency.
-        error-category: INVALID_REQUEST_ERROR
-      - name: APPLE_TTP_PIN_TOKEN
-        description: 'The payment was declined by the card issuer during an Apple Tap to Pay (TTP)
-
-          transaction with a request for the card''s PIN. This code will be returned alongside
-
-          `CARD_DECLINED_VERIFICATION_REQUIRED` as a supplemental error, and will include an
-
-          issuer-provided token in the `details` field that is needed to initiate the PIN
-
-          collection flow on the iOS device.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARD_EXPIRED
-        description: The card issuer declined the request because the card is expired.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_EXPIRATION
-        description: 'The expiration date for the payment card is invalid. For example,
-
-          it indicates a date in the past.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_EXPIRATION_YEAR
-        description: 'The expiration year for the payment card is invalid. For example,
-
-          it indicates a year in the past or contains invalid characters.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_EXPIRATION_DATE
-        description: 'The expiration date for the payment card is invalid. For example,
-
-          it contains invalid characters.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_CARD_BRAND
-        description: The credit card provided is not from a supported issuer.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: UNSUPPORTED_ENTRY_METHOD
-        description: The entry method for the credit card (swipe, dip, tap) is not supported.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_ENCRYPTED_CARD
-        description: The encrypted card information is invalid.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_CARD
-        description: The credit card cannot be validated based on the provided details.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: PAYMENT_AMOUNT_MISMATCH
-        description: 'The payment was declined because there was a payment amount mismatch.
-
-          The money amount Square was expecting does not match the amount provided.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: GENERIC_DECLINE
-        description: 'Square received a decline without any additional information.
-
-          If the payment information seems correct, the buyer can contact their
-
-          issuer to ask for more information.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CVV_FAILURE
-        description: The card issuer declined the request because the CVV value is invalid.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: ADDRESS_VERIFICATION_FAILURE
-        description: The card issuer declined the request because the postal code is invalid.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_ACCOUNT
-        description: The issuer was not able to locate the account on record.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CURRENCY_MISMATCH
-        description: 'The currency associated with the payment is not valid for the provided
-
-          funding source. For example, a gift card funded in USD cannot be used to process
-
-          payments in GBP.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INSUFFICIENT_FUNDS
-        description: The funding source has insufficient funds to cover the payment.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INSUFFICIENT_PERMISSIONS
-        description: 'The Square account does not have the permissions to accept
-
-          this payment. For example, Square may limit which merchants are
-
-          allowed to receive gift card payments.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARDHOLDER_INSUFFICIENT_PERMISSIONS
-        description: 'The card issuer has declined the transaction due to restrictions on where the card can be used.
-
-          For example, a gift card is limited to a single merchant.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_LOCATION
-        description: 'The Square account cannot take payments in the specified region.
-
-          A Square account can take payments only from the region where the account was created.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: TRANSACTION_LIMIT
-        description: 'The card issuer has determined the payment amount is either too high or too low.
-
-          The API returns the error code mostly for credit cards (for example, the card reached
-
-          the credit limit). However, sometimes the issuer bank can indicate the error for debit
-
-          or prepaid cards (for example, card has insufficient funds).'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: VOICE_FAILURE
-        description: The card issuer declined the request because the issuer requires voice authorization from the cardholder. The seller should ask the customer to contact the card issuing bank to authorize the payment.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: PAN_FAILURE
-        description: 'The specified card number is invalid. For example, it is of
-
-          incorrect length or is incorrectly formatted.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: EXPIRATION_FAILURE
-        description: 'The card expiration date is either invalid or indicates that the
-
-          card is expired.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARD_NOT_SUPPORTED
-        description: 'The card is not supported either in the geographic region or by
-
-          the [merchant category code](https://developer.squareup.com/docs/locations-api#initialize-a-merchant-category-code) (MCC).'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_PIN
-        description: The card issuer declined the request because the PIN is invalid.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: MISSING_PIN
-        description: The payment is missing a required PIN.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: MISSING_ACCOUNT_TYPE
-        description: The payment is missing a required ACCOUNT_TYPE parameter.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_POSTAL_CODE
-        description: The postal code is incorrectly formatted.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: INVALID_FEES
-        description: The app_fee_money on a payment is too high.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: MANUALLY_ENTERED_PAYMENT_NOT_SUPPORTED
-        description: The card must be swiped, tapped, or dipped. Payments attempted by manually entering the card number are declined.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: PAYMENT_LIMIT_EXCEEDED
-        description: Square declined the request because the payment amount exceeded the processing limit for this merchant.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: GIFT_CARD_AVAILABLE_AMOUNT
-        description: 'When a Gift Card is a payment source, you can allow taking a partial payment
-
-          by adding the `accept_partial_authorization` parameter in the request.
-
-          However, taking such a partial payment does not work if your request also includes
-
-          `tip_money`, `app_fee_money`, or both. Square declines such payments and returns
-
-          the `GIFT_CARD_AVAILABLE_AMOUNT` error.
-
-          For more information, see
-
-          [CreatePayment errors (additional information)](https://developer.squareup.com/docs/payments-api/error-codes#createpayment-errors-additional-information).'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: ACCOUNT_UNUSABLE
-        description: The account provided cannot carry out transactions.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: BUYER_REFUSED_PAYMENT
-        description: Bank account rejected or was not authorized for the payment.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: DELAYED_TRANSACTION_EXPIRED
-        description: The application tried to update a delayed-capture payment that has expired.
-        error-category: INVALID_REQUEST_ERROR
-      - name: DELAYED_TRANSACTION_CANCELED
-        description: The application tried to cancel a delayed-capture payment that was already cancelled.
-        error-category: INVALID_REQUEST_ERROR
-      - name: DELAYED_TRANSACTION_CAPTURED
-        description: The application tried to capture a delayed-capture payment that was already captured.
-        error-category: INVALID_REQUEST_ERROR
-      - name: DELAYED_TRANSACTION_FAILED
-        description: The application tried to update a delayed-capture payment that failed.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_TOKEN_EXPIRED
-        description: The provided card token (nonce) has expired.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_TOKEN_USED
-        description: The provided card token (nonce) was already used to process the payment or refund.
-        error-category: INVALID_REQUEST_ERROR
-      - name: AMOUNT_TOO_HIGH
-        description: The requested payment amount is too high for the provided payment source.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_INSTRUMENT_TYPE
-        description: The API request references an unsupported instrument type.
-        error-category: INVALID_REQUEST_ERROR
-      - name: REFUND_AMOUNT_INVALID
-        description: The requested refund amount exceeds the amount available to refund.
-        error-category: REFUND_ERROR
-      - name: REFUND_ALREADY_PENDING
-        description: The payment already has a pending refund.
-        error-category: REFUND_ERROR
-      - name: PAYMENT_NOT_REFUNDABLE
-        description: The payment is not refundable. For example, the payment is too old to be refunded.
-        error-category: REFUND_ERROR
-      - name: PAYMENT_NOT_REFUNDABLE_DUE_TO_DISPUTE
-        description: The payment is not refundable because it has been disputed.
-        error-category: REFUND_ERROR
-      - name: REFUND_DECLINED
-        description: Request failed - The card issuer declined the refund.
-        error-category: REFUND_ERROR
-      - name: INSUFFICIENT_PERMISSIONS_FOR_REFUND
-        description: The Square account does not have the permissions to process this refund.
-        error-category: REFUND_ERROR
-      - name: INVALID_CARD_DATA
-        description: Generic error - the provided card data is invalid.
-        error-category: INVALID_REQUEST_ERROR
-      - name: SOURCE_USED
-        description: The provided source id was already used to create a card.
-        error-category: INVALID_REQUEST_ERROR
-      - name: SOURCE_EXPIRED
-        description: The provided source id has expired.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_LOYALTY_REWARD_TIER
-        description: 'The referenced loyalty program reward tier is not supported.
-
-          This could happen if the reward tier created in a first party
-
-          application is incompatible with the Loyalty API.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: LOCATION_MISMATCH
-        description: Generic error - the given location does not matching what is expected.
-        error-category: INVALID_REQUEST_ERROR
-      - name: IDEMPOTENCY_KEY_REUSED
-        description: The provided idempotency key has already been used.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNEXPECTED_VALUE
-        description: General error - the value provided was unexpected.
-        error-category: INVALID_REQUEST_ERROR
-      - name: SANDBOX_NOT_SUPPORTED
-        description: The API request is not supported in sandbox.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_EMAIL_ADDRESS
-        description: The provided email address is invalid.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_PHONE_NUMBER
-        description: The provided phone number is invalid.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CHECKOUT_EXPIRED
-        description: The provided checkout URL has expired.
-        error-category: INVALID_REQUEST_ERROR
-      - name: BAD_CERTIFICATE
-        description: Bad certificate.
-        error-category: INVALID_REQUEST_ERROR
-      - name: INVALID_SQUARE_VERSION_FORMAT
-        description: The provided Square-Version is incorrectly formatted.
-        error-category: INVALID_REQUEST_ERROR
-      - name: API_VERSION_INCOMPATIBLE
-        description: The provided Square-Version is incompatible with the requested action.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_PRESENCE_REQUIRED
-        description: The transaction requires that a card be present.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_SOURCE_TYPE
-        description: The API request references an unsupported source type.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CARD_MISMATCH
-        description: The provided card does not match what is expected.
-        error-category: REFUND_ERROR
-      - name: PLAID_ERROR
-        description: Generic plaid error
-        error-category: EXTERNAL_VENDOR_ERROR
-      - name: PLAID_ERROR_ITEM_LOGIN_REQUIRED
-        description: Plaid error - ITEM_LOGIN_REQUIRED
-        error-category: EXTERNAL_VENDOR_ERROR
-      - name: PLAID_ERROR_RATE_LIMIT
-        description: Plaid error - RATE_LIMIT
-        error-category: EXTERNAL_VENDOR_ERROR
-      - name: CARD_DECLINED
-        description: The card was declined.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: VERIFY_CVV_FAILURE
-        description: The CVV could not be verified.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: VERIFY_AVS_FAILURE
-        description: The AVS could not be verified.
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARD_DECLINED_CALL_ISSUER
-        description: 'The payment card was declined with a request
-
-          for the card holder to call the issuer.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CARD_DECLINED_VERIFICATION_REQUIRED
-        description: 'The payment card was declined with a request
-
-          for additional verification.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: BAD_EXPIRATION
-        description: 'The card expiration date is either missing or
-
-          incorrectly formatted.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: CHIP_INSERTION_REQUIRED
-        description: 'The card issuer requires that the card be read
-
-          using a chip reader.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: ALLOWABLE_PIN_TRIES_EXCEEDED
-        description: 'The card has exhausted its available pin entry
-
-          retries set by the card issuer. Resolving the error typically requires the
-
-          card holder to contact the card issuer.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: RESERVATION_DECLINED
-        description: The card issuer declined the refund.
-        error-category: REFUND_ERROR
-      - name: UNKNOWN_BODY_PARAMETER
-        description: The body parameter is not recognized by the requested endpoint.
-        error-category: INVALID_REQUEST_ERROR
-      - name: NOT_FOUND
-        description: Not Found - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: APPLE_PAYMENT_PROCESSING_CERTIFICATE_HASH_NOT_FOUND
-        description: Square could not find the associated Apple Pay certificate.
-        error-category: INVALID_REQUEST_ERROR
-      - name: METHOD_NOT_ALLOWED
-        description: Method Not Allowed - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: NOT_ACCEPTABLE
-        description: Not Acceptable - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: REQUEST_TIMEOUT
-        description: Request Timeout - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: CONFLICT
-        description: Conflict - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: GONE
-        description: 'The target resource is no longer available and this
-
-          condition is likely to be permanent.'
-        error-category: INVALID_REQUEST_ERROR
-      - name: REQUEST_ENTITY_TOO_LARGE
-        description: Request Entity Too Large - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNSUPPORTED_MEDIA_TYPE
-        description: Unsupported Media Type - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: UNPROCESSABLE_ENTITY
-        description: Unprocessable Entity - a general error occurred.
-        error-category: INVALID_REQUEST_ERROR
-      - name: RATE_LIMITED
-        description: Rate Limited - a general error occurred.
-        error-category: RATE_LIMIT_ERROR
-      - name: NOT_IMPLEMENTED
-        description: Not Implemented - a general error occurred.
-        error-category: API_ERROR
-      - name: BAD_GATEWAY
-        description: Bad Gateway - a general error occurred.
-        error-category: API_ERROR
-      - name: SERVICE_UNAVAILABLE
-        description: Service Unavailable - a general error occurred.
-        error-category: API_ERROR
-      - name: TEMPORARY_ERROR
-        description: 'A temporary internal error occurred. You can safely retry your call
-
-          using the same idempotency key.'
-        error-category: PAYMENT_METHOD_ERROR
-      - name: GATEWAY_TIMEOUT
-        description: Gateway Timeout - a general error occurred.
-        error-category: API_ERROR
-      description: 'Indicates the specific error that occurred during a request to a
-
-        Square API.'
-      x-release-status: PUBLIC
-    CancelInvoiceRequest:
-      type: object
-      description: Describes a `CancelInvoice` request.
-      x-release-status: PUBLIC
-      required:
-      - version
-      properties:
-        version:
-          type: integer
-          description: "The version of the [invoice](entity:Invoice) to cancel.\nIf you do not know the version, you can call \n[GetInvoice](api-endpoint:Invoices-GetInvoice) or [ListInvoices](api-endpoint:Invoices-ListInvoices)."
-      example:
-        version: 0
-    InvoiceAcceptedPaymentMethods:
-      type: object
-      description: The payment methods that customers can use to pay an [invoice](entity:Invoice) on the Square-hosted invoice payment page.
-      x-release-status: PUBLIC
-      properties:
-        card:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether credit card or debit card payments are accepted. The default value is `false`.
-        square_gift_card:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether Square gift card payments are accepted. The default value is `false`.
-        bank_account:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether ACH bank transfer payments are accepted. The default value is `false`.
-        buy_now_pay_later:
-          type:
-          - boolean
-          - 'null'
-          description: 'Indicates whether Afterpay (also known as Clearpay) payments are accepted. The default value is `false`.
-
-
-            This option is allowed only for invoices that have a single payment request of the `BALANCE` type. This payment method is
-
-            supported if the seller account accepts Afterpay payments and the seller location is in a country where Afterpay
-
-            invoice payments are supported. As a best practice, consider enabling an additional payment method when allowing
-
-            `buy_now_pay_later` payments. For more information, including detailed requirements and processing limits, see
-
-            [Buy Now Pay Later payments with Afterpay](https://developer.squareup.com/docs/invoices-api/overview#buy-now-pay-later).'
-        cash_app_pay:
-          type:
-          - boolean
-          - 'null'
-          description: 'Indicates whether Cash App payments are accepted. The default value is `false`.
-
-
-            This payment method is supported only for seller [locations](entity:Location) in the United States.'
-    UpdateInvoiceRequest:
-      type: object
-      description: Describes a `UpdateInvoice` request.
-      x-release-status: PUBLIC
-      required:
-      - invoice
-      properties:
-        invoice:
-          $ref: '#/components/schemas/Invoice'
-          description: 'The invoice fields to add, change, or clear. Fields can be cleared using
-
-            null values or the `remove` field (for individual payment requests or reminders).
-
-            The current invoice `version` is also required. For more information, including requirements,
-
-            limitations, and more examples, see [Update an Invoice](https://developer.squareup.com/docs/invoices-api/update-invoices).'
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique string that identifies the `UpdateInvoice` request. If you do not
-
-            provide `idempotency_key` (or provide an empty string as the value), the endpoint
-
-            treats each request as independent.
-
-
-            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 128
-        fields_to_clear:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: 'The list of fields to clear. Although this field is currently supported, we
-
-            recommend using null values or the `remove` field when possible. For examples, see
-
-            [Update an Invoice](https://developer.squareup.com/docs/invoices-api/update-invoices).'
-      example:
-        idempotency_key: 4ee82288-0910-499e-ab4c-5d0071dad1be
-        invoice:
-          payment_requests:
-          - reminders: null
-            tipping_enabled: false
-            uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
-          version: 1
-    InvoiceAutomaticPaymentSource:
-      type: string
-      enum:
-      - NONE
-      - CARD_ON_FILE
-      - BANK_ON_FILE
-      x-enum-elements:
-      - name: NONE
-        description: An automatic payment is not configured for the payment request.
-      - name: CARD_ON_FILE
-        description: 'Use a card on file as the automatic payment method. On the due date, Square charges the card
-
-          for the amount of the payment request.
-
-
-          For `CARD_ON_FILE` payments, the invoice delivery method must be `EMAIL` and `card_id` must be
-
-          specified for the payment request before the invoice can be published.'
-      - name: BANK_ON_FILE
-        description: "Use a bank account on file as the automatic payment method. On the due date, Square charges the bank\naccount for the amount of the payment request if the buyer has approved the payment. The buyer receives a\nrequest to approve the payment when the invoice is sent or the invoice is updated.\n\nThis payment method applies only to invoices that sellers create in the Seller Dashboard or other\nSquare product. The bank account is provided by the customer during the payment flow. \n\nYou cannot set `BANK_ON_FILE` as a payment method using the Invoices API, but you can change a `BANK_ON_FILE`\npayment method to `NONE` or `CARD_ON_FILE`. For `BANK_ON_FILE` payments, the invoice delivery method must be `EMAIL`."
-      description: Indicates the automatic payment method for an [invoice payment request](entity:InvoicePaymentRequest).
-      x-release-status: PUBLIC
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
+      - name: EMAIL
+        description: 'Directs Square to send invoices, reminders, and receipts to the customer using email.
+
+          Square sends the invoice after it is published (either immediately or at the `scheduled_at`
+
+          time, if specified in the [invoice](entity:Invoice)).'
+      - name: CHARGE_CARD_ON_FILE
+        description: 'Directs Square to charge the card on file on the `due_date` specified in the payment request
+
+          and to use email to send invoices, reminders, and receipts.'
+      - name: SHARE_MANUALLY
+        description: "Directs Square to take no specific action on the invoice. In this case, the seller \n(or the application developer) follows up with the customer for payment. For example, \na seller might collect a payment in the Seller Dashboard or use the Point of Sale (POS) application. \nThe seller might also share the URL of the Square-hosted invoice page (`public_url`) with the customer requesting payment."
+      - name: CHARGE_BANK_ON_FILE
+        description: "Directs Square to charge the customer's bank account on file and to use email to send invoices, reminders, and receipts.\nThe customer must approve the payment.\n\nThe bank on file payment method applies only to invoices that sellers create in the Seller Dashboard or other\nSquare product. The bank account is provided by the customer during the payment flow. You \ncannot set `CHARGE_BANK_ON_FILE` as a request method using the Invoices API."
+      - name: SMS
+        description: "Directs Square to send invoices and receipts to the customer using SMS (text message). Square sends the invoice\nafter it is published (either immediately or at the `scheduled_at` time, if specified in the [invoice](entity:Invoice)). \n\nYou cannot set `SMS` as a request method using the Invoices API."
+      - name: SMS_CHARGE_CARD_ON_FILE
+        description: "Directs Square to charge the card on file on the `due_date` specified in the payment request and to\nuse SMS (text message) to send invoices and receipts. \n\nYou cannot set `SMS_CHARGE_CARD_ON_FILE` as a request method using the Invoices API."
+      - name: SMS_CHARGE_BANK_ON_FILE
+        description: "Directs Square to charge the customer's bank account on file and to use SMS (text message) to send invoices and receipts.\nThe customer must approve the payment.\n\nThe bank on file payment method applies only to invoices that sellers create in the Seller Dashboard\nor other Square product. The bank account is provided by the customer during the payment flow. \nYou cannot set `SMS_CHARGE_BANK_ON_FILE` as a request method using the Invoices API."
+      description: "Specifies the action for Square to take for processing the invoice. For example, \nemail the invoice, charge a customer's card on file, or do nothing. DEPRECATED at\nversion 2021-01-21. The corresponding `request_method` field is replaced by the\n`Invoice.delivery_method` and `InvoicePaymentRequest.automatic_payment_source` fields."
+      x-release-status: DEPRECATED
     PublishInvoiceResponse:
       type: object
       description: Describes a `PublishInvoice` response.
@@ -4368,6 +3842,290 @@ components:
           title: Event Planning Services
           updated_at: '2020-06-18T18:23:11Z'
           version: 1
+    DeleteInvoiceResponse:
+      type: object
+      description: Describes a `DeleteInvoice` response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example: {}
+    CancelInvoiceResponse:
+      type: object
+      description: The response returned by the `CancelInvoice` request.
+      x-release-status: PUBLIC
+      properties:
+        invoice:
+          $ref: '#/components/schemas/Invoice'
+          description: The canceled invoice.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example:
+        invoice:
+          accepted_payment_methods:
+            bank_account: false
+            buy_now_pay_later: false
+            card: true
+            cash_app_pay: false
+            square_gift_card: false
+          created_at: '2020-06-18T17:45:13Z'
+          custom_fields:
+          - label: Event Reference Number
+            placement: ABOVE_LINE_ITEMS
+            value: 'Ref. #1234'
+          - label: Terms of Service
+            placement: BELOW_LINE_ITEMS
+            value: The terms of service are...
+          delivery_method: EMAIL
+          description: We appreciate your business!
+          id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          invoice_number: inv-100
+          location_id: ES0RJRZYEC39A
+          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
+          payment_requests:
+          - automatic_payment_source: NONE
+            computed_amount_money:
+              amount: 10000
+              currency: USD
+            due_date: '2030-01-24'
+            reminders:
+            - message: Your invoice is due tomorrow
+              relative_scheduled_days: -1
+              status: PENDING
+              uid: beebd363-e47f-4075-8785-c235aaa7df11
+            request_type: BALANCE
+            tipping_enabled: true
+            total_completed_amount_money:
+              amount: 0
+              currency: USD
+            uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
+          primary_recipient:
+            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+            email_address: Amelia.Earhart@example.com
+            family_name: Earhart
+            given_name: Amelia
+            phone_number: 1-212-555-4240
+          sale_or_service_date: '2030-01-24'
+          scheduled_at: '2030-01-13T10:00:00Z'
+          status: CANCELED
+          store_payment_method_enabled: false
+          timezone: America/Los_Angeles
+          title: Event Planning Services
+          updated_at: '2020-06-18T18:23:11Z'
+          version: 1
+    ListInvoicesResponse:
+      type: object
+      description: Describes a `ListInvoice` response.
+      x-release-status: PUBLIC
+      properties:
+        invoices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invoice'
+          description: The invoices retrieved.
+        cursor:
+          type: string
+          description: "When a response is truncated, it includes a cursor that you can use in a \nsubsequent request to retrieve the next set of invoices. If empty, this is the final \nresponse. \nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example:
+        cursor: ChoIDhIWVm54ZVRhLXhySFBOejBBM2xJb2daUQoFCI4IGAE
+        invoices:
+        - accepted_payment_methods:
+            bank_account: false
+            buy_now_pay_later: false
+            card: true
+            cash_app_pay: false
+            square_gift_card: false
+          attachments:
+          - description: Service contract
+            filename: file.jpg
+            filesize: 102705
+            hash: 273ee02cb6f5f8a3a8ca23604930dd53
+            id: inva:0-3bB9ZuDHiziThQhuC4fwWt
+            mime_type: image/jpeg
+            uploaded_at: '2030-01-13T21:24:10Z'
+          created_at: '2030-01-13T17:45:13Z'
+          custom_fields:
+          - label: Event Reference Number
+            placement: ABOVE_LINE_ITEMS
+            value: 'Ref. #1234'
+          - label: Terms of Service
+            placement: BELOW_LINE_ITEMS
+            value: The terms of service are...
+          delivery_method: EMAIL
+          description: We appreciate your business!
+          id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          invoice_number: inv-100
+          location_id: ES0RJRZYEC39A
+          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
+          payment_requests:
+          - automatic_payment_source: NONE
+            computed_amount_money:
+              amount: 10000
+              currency: USD
+            due_date: '2030-01-24'
+            reminders:
+            - message: Your invoice is due tomorrow
+              relative_scheduled_days: -1
+              status: PENDING
+              uid: beebd363-e47f-4075-8785-c235aaa7df11
+            request_type: BALANCE
+            tipping_enabled: true
+            total_completed_amount_money:
+              amount: 0
+              currency: USD
+            uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
+          primary_recipient:
+            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+            email_address: Amelia.Earhart@example.com
+            family_name: Earhart
+            given_name: Amelia
+            phone_number: 1-212-555-4240
+          sale_or_service_date: '2030-01-24'
+          scheduled_at: '2030-01-13T10:00:00Z'
+          status: DRAFT
+          store_payment_method_enabled: false
+          timezone: America/Los_Angeles
+          title: Event Planning Services
+          updated_at: '2030-01-13T21:24:10Z'
+          version: 1
+        - accepted_payment_methods:
+            bank_account: false
+            buy_now_pay_later: false
+            card: true
+            cash_app_pay: false
+            square_gift_card: true
+          created_at: '2021-01-23T15:29:12Z'
+          delivery_method: EMAIL
+          id: inv:0-ChC366qAfskpGrBI_1bozs9mEA3
+          invoice_number: inv-455
+          location_id: ES0RJRZYEC39A
+          next_payment_amount_money:
+            amount: 3000
+            currency: USD
+          order_id: a65jnS8NXbfprvGJzY9F4fQTuaB
+          payment_requests:
+          - automatic_payment_source: CARD_ON_FILE
+            card_id: ccof:IkWfpLj4tNHMyFii3GB
+            computed_amount_money:
+              amount: 1000
+              currency: USD
+            due_date: '2021-01-23'
+            percentage_requested: '25'
+            request_type: DEPOSIT
+            tipping_enabled: false
+            total_completed_amount_money:
+              amount: 1000
+              currency: USD
+            uid: 66c3bdfd-5090-4ff9-a8a0-c1e1a2ffa176
+          - automatic_payment_source: CARD_ON_FILE
+            card_id: ccof:IkWfpLj4tNHMyFii3GB
+            computed_amount_money:
+              amount: 3000
+              currency: USD
+            due_date: '2021-06-15'
+            request_type: BALANCE
+            tipping_enabled: false
+            total_completed_amount_money:
+              amount: 0
+              currency: USD
+            uid: 120c5e18-4f80-4f6b-b159-774cb9bf8f99
+          primary_recipient:
+            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+            email_address: Amelia.Earhart@example.com
+            family_name: Earhart
+            given_name: Amelia
+            phone_number: 1-212-555-4240
+          public_url: https://squareup.com/pay-invoice/h9sfsfTGTSnYEhISUDBhEQ
+          sale_or_service_date: '2030-01-24'
+          status: PARTIALLY_PAID
+          store_payment_method_enabled: false
+          timezone: America/Los_Angeles
+          updated_at: '2021-01-23T15:29:56Z'
+          version: 3
+    InvoiceRecipientTaxIds:
+      type: object
+      description: "Represents the tax IDs for an invoice recipient. The country of the seller account determines \nwhether the corresponding `tax_ids` field is available for the customer. For more information, \nsee [Invoice recipient tax IDs](https://developer.squareup.com/docs/invoices-api/overview#recipient-tax-ids)."
+      x-release-status: PUBLIC
+      properties:
+        eu_vat:
+          type: string
+          description: The EU VAT identification number for the invoice recipient. For example, `IE3426675K`.
+          readOnly: true
+    UpdateInvoiceResponse:
+      type: object
+      description: Describes a `UpdateInvoice` response.
+      x-release-status: PUBLIC
+      properties:
+        invoice:
+          $ref: '#/components/schemas/Invoice'
+          description: The updated invoice.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example:
+        invoice:
+          accepted_payment_methods:
+            bank_account: false
+            buy_now_pay_later: false
+            card: true
+            cash_app_pay: false
+            square_gift_card: false
+          created_at: '2020-06-18T17:45:13Z'
+          custom_fields:
+          - label: Event Reference Number
+            placement: ABOVE_LINE_ITEMS
+            value: 'Ref. #1234'
+          - label: Terms of Service
+            placement: BELOW_LINE_ITEMS
+            value: The terms of service are...
+          delivery_method: EMAIL
+          description: We appreciate your business!
+          id: inv:0-ChCHu2mZEabLeeHahQnXDjZQECY
+          invoice_number: inv-100
+          location_id: ES0RJRZYEC39A
+          next_payment_amount_money:
+            amount: 10000
+            currency: USD
+          order_id: CAISENgvlJ6jLWAzERDzjyHVybY
+          payment_requests:
+          - automatic_payment_source: NONE
+            computed_amount_money:
+              amount: 10000
+              currency: USD
+            due_date: '2030-01-24'
+            request_type: BALANCE
+            tipping_enabled: false
+            total_completed_amount_money:
+              amount: 0
+              currency: USD
+            uid: 2da7964f-f3d2-4f43-81e8-5aa220bf3355
+          primary_recipient:
+            customer_id: JDKYHBWT1D4F8MFH63DBMEN8Y4
+            email_address: Amelia.Earhart@example.com
+            family_name: Earhart
+            given_name: Amelia
+            phone_number: 1-212-555-4240
+          sale_or_service_date: '2030-01-24'
+          scheduled_at: '2030-01-13T10:00:00Z'
+          status: UNPAID
+          store_payment_method_enabled: false
+          timezone: America/Los_Angeles
+          title: Event Planning Services
+          updated_at: '2020-06-18T18:23:11Z'
+          version: 2
     InvoiceCustomField:
       type: object
       description: "An additional seller-defined and customer-facing field to include on the invoice. For more information, \nsee [Custom fields](https://developer.squareup.com/docs/invoices-api/overview#custom-fields).\n\nAdding custom fields to an invoice requires an \n[Invoices Plus subscription](https://developer.squareup.com/docs/invoices-api/overview#invoices-plus-subscription)."
@@ -4390,6 +4148,248 @@ components:
           description: 'The location of the custom field on the invoice. This field is required for a custom field.
 
             See [InvoiceCustomFieldPlacement](#type-invoicecustomfieldplacement) for possible values'
+    InvoiceCustomFieldPlacement:
+      type: string
+      enum:
+      - ABOVE_LINE_ITEMS
+      - BELOW_LINE_ITEMS
+      x-enum-elements:
+      - name: ABOVE_LINE_ITEMS
+        description: Render the custom field above the invoice line items.
+      - name: BELOW_LINE_ITEMS
+        description: Render the custom field below the invoice line items.
+      description: "Indicates where to render a custom field on the Square-hosted invoice page and in emailed or PDF \ncopies of the invoice."
+      x-release-status: PUBLIC
+    InvoiceSortField:
+      type: string
+      enum:
+      - INVOICE_SORT_DATE
+      x-enum-elements:
+      - name: INVOICE_SORT_DATE
+        description: 'The field works as follows:
+
+
+          - If the invoice is a draft, it uses the invoice `created_at` date.
+
+          - If the invoice is scheduled for publication, it uses the `scheduled_at` date.
+
+          - If the invoice is published, it uses the invoice publication date.'
+      description: The field to use for sorting.
+      x-release-status: PUBLIC
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    CancelInvoiceRequest:
+      type: object
+      description: Describes a `CancelInvoice` request.
+      x-release-status: PUBLIC
+      required:
+      - version
+      properties:
+        version:
+          type: integer
+          description: "The version of the [invoice](entity:Invoice) to cancel.\nIf you do not know the version, you can call \n[GetInvoice](api-endpoint:Invoices-GetInvoice) or [ListInvoices](api-endpoint:Invoices-ListInvoices)."
+      example:
+        version: 0
+    PublishInvoiceRequest:
+      type: object
+      description: Describes a `PublishInvoice` request.
+      x-release-status: PUBLIC
+      required:
+      - version
+      properties:
+        version:
+          type: integer
+          description: 'The version of the [invoice](entity:Invoice) to publish.
+
+            This must match the current version of the invoice; otherwise, the request is rejected.'
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: "A unique string that identifies the `PublishInvoice` request. If you do not \nprovide `idempotency_key` (or provide an empty string as the value), the endpoint \ntreats each request as independent.\n\nFor more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency)."
+          maxLength: 128
+      example:
+        idempotency_key: 32da42d0-1997-41b0-826b-f09464fc2c2e
+        version: 1
+    CreateInvoiceAttachmentResponse:
+      type: object
+      description: Represents a [CreateInvoiceAttachment](api-endpoint:Invoices-CreateInvoiceAttachment) response.
+      x-release-status: PUBLIC
+      properties:
+        attachment:
+          $ref: '#/components/schemas/InvoiceAttachment'
+          description: Metadata about the attachment that was added to the invoice.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example:
+        attachment:
+          description: Service contract
+          filename: file.jpg
+          filesize: 102705
+          hash: 273ee02cb6f5f8a3a8ca23604930dd53
+          id: inva:0-3bB9ZuDHiziThQhuC4fwWt
+          mime_type: image/jpeg
+          uploaded_at: '2023-02-03T20:28:14Z'
+    InvoiceRecipient:
+      type: object
+      description: "Represents a snapshot of customer data. This object stores customer data that is displayed on the invoice \nand that Square uses to deliver the invoice.\n\nWhen you provide a customer ID for a draft invoice, Square retrieves the associated customer profile and populates \nthe remaining `InvoiceRecipient` fields. You cannot update these fields after the invoice is published. \nSquare updates the customer ID in response to a merge operation, but does not update other fields."
+      x-release-status: PUBLIC
+      properties:
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: "The ID of the customer. This is the customer profile ID that \nyou provide when creating a draft invoice."
+          minLength: 1
+          maxLength: 255
+        given_name:
+          type: string
+          description: The recipient's given (that is, first) name.
+          readOnly: true
+        family_name:
+          type: string
+          description: The recipient's family (that is, last) name.
+          readOnly: true
+        email_address:
+          type: string
+          description: The recipient's email address.
+          readOnly: true
+        address:
+          $ref: '#/components/schemas/Address'
+          description: The recipient's physical address.
+          readOnly: true
+        phone_number:
+          type: string
+          description: The recipient's phone number.
+          readOnly: true
+        company_name:
+          type: string
+          description: The name of the recipient's company.
+          readOnly: true
+        tax_ids:
+          $ref: '#/components/schemas/InvoiceRecipientTaxIds'
+          description: "The recipient's tax IDs. The country of the seller account determines whether this field \nis available for the customer. For more information, see [Invoice recipient tax IDs](https://developer.squareup.com/docs/invoices-api/overview#recipient-tax-ids)."
+          readOnly: true
+    Address:
+      type: object
+      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
+      x-release-status: PUBLIC
+      properties:
+        address_line_1:
+          type:
+          - string
+          - 'null'
+          description: 'The first line of the address.
+
+
+            Fields that start with `address_line` provide the address''s most specific
+
+            details, like street number, street name, and building name. They do *not*
+
+            provide less specific details like city, state/province, or country (these
+
+            details are provided in other fields).'
+        address_line_2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the address, if any.
+        address_line_3:
+          type:
+          - string
+          - 'null'
+          description: The third line of the address, if any.
+        locality:
+          type:
+          - string
+          - 'null'
+          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        sublocality:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `locality`, if any.
+        sublocality_2:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality`, if any.
+        sublocality_3:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality_2`, if any.
+        administrative_district_level_1:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s country. In the US, this
+
+            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
+        administrative_district_level_2:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_1`.
+
+            In the US, this is the county.'
+        administrative_district_level_3:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_2`,
+
+            if any.'
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        country:
+          $ref: '#/components/schemas/Country'
+          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
+
+            See [Country](#type-country) for possible values'
+        first_name:
+          type:
+          - string
+          - 'null'
+          description: Optional first name when it's representing recipient.
+        last_name:
+          type:
+          - string
+          - 'null'
+          description: Optional last name when it's representing recipient.
   securitySchemes:
     oauth2:
       type: oauth2

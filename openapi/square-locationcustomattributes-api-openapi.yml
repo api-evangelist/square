@@ -660,495 +660,55 @@ paths:
                 $ref: '#/components/schemas/UpsertLocationCustomAttributeResponse'
 components:
   schemas:
-    CreateLocationCustomAttributeDefinitionRequest:
+    ListLocationCustomAttributeDefinitionsResponse:
       type: object
-      description: Represents a [CreateLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-CreateLocationCustomAttributeDefinition) request.
-      x-release-status: BETA
-      required:
-      - custom_attribute_definition
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'The custom attribute definition to create. Note the following:
+      description: 'Represents a [ListLocationCustomAttributeDefinitions](api-endpoint:LocationCustomAttributes-ListLocationCustomAttributeDefinitions) response.
 
-            - With the exception of the `Selection` data type, the `schema` is specified as a simple URL to the JSON schema
+        Either `custom_attribute_definitions`, an empty object, or `errors` is present in the response.
 
-            definition hosted on the Square CDN. For more information, including supported values and constraints, see
-
-            [Supported data types](https://developer.squareup.com/docs/devtools/customattributes/overview#supported-data-types).
-
-            - `name` is required unless `visibility` is set to `VISIBILITY_HIDDEN`.'
-        idempotency_key:
-          type: string
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-      example:
-        custom_attribute_definition:
-          description: Bestselling item at location
-          key: bestseller
-          name: Bestseller
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          visibility: VISIBILITY_READ_WRITE_VALUES
-    UpsertLocationCustomAttributeResponse:
-      type: object
-      description: 'Represents an [UpsertLocationCustomAttribute](api-endpoint:LocationCustomAttributes-UpsertLocationCustomAttribute) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
+        If additional results are available, the `cursor` field is also present along with `custom_attribute_definitions`.'
       x-release-status: BETA
       properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: The new or updated custom attribute.
-        errors:
+        custom_attribute_definitions:
           type: array
           items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute:
-          created_at: '2023-01-09T19:02:58.647Z'
-          key: bestseller
-          updated_at: '2023-01-09T19:21:04.551Z'
-          value: hot cocoa
-          version: 2
-          visibility: VISIBILITY_READ_WRITE_VALUES
-    CustomAttributeDefinitionVisibility:
-      type: string
-      enum:
-      - VISIBILITY_HIDDEN
-      - VISIBILITY_READ_ONLY
-      - VISIBILITY_READ_WRITE_VALUES
-      x-enum-elements:
-      - name: VISIBILITY_HIDDEN
-        description: 'The custom attribute definition and values are hidden from the seller (except on export
+            $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: 'The retrieved custom attribute definitions. If no custom attribute definitions are found,
 
-          of all seller data) and other developers.'
-      - name: VISIBILITY_READ_ONLY
-        description: 'The seller and other developers can read the custom attribute definition and values
-
-          on resources.'
-      - name: VISIBILITY_READ_WRITE_VALUES
-        description: 'The seller and other developers can read the custom attribute definition,
-
-          and can read and write values on resources. A custom attribute definition
-
-          can only be edited or deleted by the application that created it.'
-      description: 'The level of permission that a seller or other applications requires to
-
-        view this custom attribute definition.
-
-        The `Visibility` field controls who can read and write the custom attribute values
-
-        and custom attribute definition.'
-      x-release-status: PUBLIC
-    RetrieveLocationCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents a [RetrieveLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-RetrieveLocationCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: BETA
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The retrieved custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-12-02T19:06:36.559Z'
-          description: Bestselling item at location
-          key: bestseller
-          name: Bestseller
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-12-02T19:06:36.559Z'
-          version: 1
-          visibility: VISIBILITY_READ_WRITE_VALUES
-    DeleteLocationCustomAttributeDefinitionResponse:
-      type: object
-      description: Represents a response from a delete request containing error messages if there are any.
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
-    BulkUpsertLocationCustomAttributesResponseLocationCustomAttributeUpsertResponse:
-      type: object
-      description: Represents a response for an individual upsert request in a [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes) operation.
-      x-release-status: BETA
-      properties:
-        location_id:
-          type: string
-          description: The ID of the location associated with the custom attribute.
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: The new or updated custom attribute.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred while processing the individual request.
-      example:
-        custom_attribute:
-          created_at: '2023-01-09T19:02:58.647Z'
-          key: bestseller
-          updated_at: '2023-01-09T19:21:04.551Z'
-          value: hot cocoa
-          version: 2
-          visibility: VISIBILITY_READ_WRITE_VALUES
-        location_id: L0TBCBTB7P8RQ
-    ListLocationCustomAttributesResponse:
-      type: object
-      description: 'Represents a [ListLocationCustomAttributes](api-endpoint:LocationCustomAttributes-ListLocationCustomAttributes) response.
-
-        Either `custom_attributes`, an empty object, or `errors` is present in the response. If additional
-
-        results are available, the `cursor` field is also present along with `custom_attributes`.'
-      x-release-status: BETA
-      properties:
-        custom_attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomAttribute'
-          description: 'The retrieved custom attributes. If `with_definitions` was set to `true` in the request,
-
-            the custom attribute definition is returned in the `definition` field of each custom attribute.
-
-            If no custom attributes are found, Square returns an empty object (`{}`).'
+            Square returns an empty object (`{}`).'
         cursor:
           type: string
-          description: 'The cursor to use in your next call to this endpoint to retrieve the next page of results
+          description: 'The cursor to provide in your next call to this endpoint to retrieve the next page of
 
-            for your original request. This field is present only if the request succeeded and additional
+            results for your original request. This field is present only if the request succeeded and
 
-            results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+            additional results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
       example:
-        custom_attributes:
-        - created_at: '2022-12-12T18:13:03.745Z'
+        cursor: ImfNzWVSiAYyiAR4gEcxDJ75KZAOSjX8H2BVHUTR0ofCtp4SdYvrUKbwYY2aCH2WqZ2FsfAuylEVUlTfaINg3ecIlFpP9Y5Ie66w9NSg9nqdI5fCJ6qdH2s0za5m2plFonsjIuFaoN89j78ROUwuSOzD6mFZPcJHhJ0CxEKc0SBH
+        custom_attribute_definitions:
+        - created_at: '2022-12-02T19:50:21.832Z'
+          description: Location's phone number
           key: phone-number
-          updated_at: '2022-12-12T18:13:03.745Z'
-          value: '+12223334444'
+          name: phone number
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.PhoneNumber
+          updated_at: '2022-12-02T19:50:21.832Z'
           version: 1
-          visibility: VISIBILITY_READ_WRITE_VALUES
-        - created_at: '2022-12-12T19:27:57.975Z'
-          key: bestseller
-          updated_at: '2022-12-12T19:27:57.975Z'
-          value: hot cocoa
-          version: 1
-          visibility: VISIBILITY_READ_WRITE_VALUES
-    BulkDeleteLocationCustomAttributesResponse:
-      type: object
-      description: 'Represents a [BulkDeleteLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkDeleteLocationCustomAttributes) response,
-
-        which contains a map of responses that each corresponds to an individual delete request.'
-      x-release-status: BETA
-      required:
-      - values
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BulkDeleteLocationCustomAttributesResponseLocationCustomAttributeDeleteResponse'
-          description: 'A map of responses that correspond to individual delete requests. Each response has the
-
-            same key as the corresponding request.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        values:
-          id1:
-            errors: []
-            location_id: L0TBCBTB7P8RQ
-          id2:
-            errors: []
-            location_id: L9XMD04V3STJX
-          id3:
-            errors: []
-            location_id: L0TBCBTB7P8RQ
-    CreateLocationCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents a [CreateLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-CreateLocationCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: BETA
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The new custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-12-02T19:06:36.559Z'
+          visibility: VISIBILITY_READ_ONLY
+        - created_at: '2022-12-02T19:06:36.559Z'
           description: Bestselling item at location
           key: bestseller
           name: Bestseller
           schema:
             $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-12-02T19:06:36.559Z'
-          version: 1
+          updated_at: '2022-12-03T10:17:52.341Z'
+          version: 4
           visibility: VISIBILITY_READ_WRITE_VALUES
-    CustomAttribute:
-      type: object
-      description: 'A custom attribute value. Each custom attribute value has a corresponding
-
-        `CustomAttributeDefinition` object.'
-      x-release-status: PUBLIC
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-          description: 'The identifier
-
-            of the custom attribute definition and its corresponding custom attributes. This value
-
-            can be a simple key, which is the key that is provided when the custom attribute definition
-
-            is created, or a qualified key, if the requesting
-
-            application is not the definition owner. The qualified key consists of the application ID
-
-            of the custom attribute definition owner
-
-            followed by the simple key that was provided when the definition was created. It has the
-
-            format application_id:simple key.
-
-
-            The value for a simple key can contain up to 60 alphanumeric characters, periods (.),
-
-            underscores (_), and hyphens (-).'
-          minLength: 1
-          pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
-        value:
-          description: 'The value assigned to the custom attribute. It is validated against the custom
-
-            attribute definition''s schema on write operations. For more information about custom
-
-            attribute values,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-        version:
-          type: integer
-          description: 'Read only. The current version of the custom attribute. This field is incremented when the custom attribute is changed.
-
-            When updating an existing custom attribute value, you can provide this field
-
-            and specify the current version of the custom attribute to enable
-
-            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency).
-
-            This field can also be used to enforce strong consistency for reads. For more information about strong consistency for reads,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-        visibility:
-          $ref: '#/components/schemas/CustomAttributeDefinitionVisibility'
-          description: 'A copy of the `visibility` field value for the associated custom attribute definition.
-
-            See [CustomAttributeDefinitionVisibility](#type-customattributedefinitionvisibility) for possible values'
-          readOnly: true
-        definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'A copy of the associated custom attribute definition object. This field is only set when
-
-            the optional field is specified on the request.'
-          readOnly: true
-        updated_at:
-          type: string
-          description: 'The timestamp that indicates when the custom attribute was created or was most recently
-
-            updated, in RFC 3339 format.'
-          readOnly: true
-        created_at:
-          type: string
-          description: The timestamp that indicates when the custom attribute was created, in RFC 3339 format.
-          readOnly: true
-    VisibilityFilter:
-      type: string
-      enum:
-      - ALL
-      - READ
-      - READ_WRITE
-      x-enum-elements:
-      - name: ALL
-        description: All custom attributes or custom attribute definitions.
-      - name: READ
-        description: All custom attributes or custom attribute definitions with the `visibility` field set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
-      - name: READ_WRITE
-        description: All custom attributes or custom attribute definitions with the `visibility` field set to `VISIBILITY_READ_WRITE_VALUES`.
-      description: Enumeration of visibility-filter values used to set the ability to view custom attributes or custom attribute definitions.
-      x-release-status: PUBLIC
-    BulkDeleteLocationCustomAttributesRequest:
-      type: object
-      description: Represents a [BulkDeleteLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkDeleteLocationCustomAttributes) request.
-      x-release-status: BETA
-      required:
-      - values
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequest'
-          description: 'The data used to update the `CustomAttribute` objects.
-
-            The keys must be unique and are used to map to the corresponding response.'
-      example:
-        values:
-          id1:
-            key: bestseller
-            location_id: L0TBCBTB7P8RQ
-          id2:
-            key: bestseller
-            location_id: L9XMD04V3STJX
-          id3:
-            key: phone-number
-            location_id: L0TBCBTB7P8RQ
-    BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequest:
-      type: object
-      description: 'Represents an individual upsert request in a [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes)
-
-        request. An individual request contains a location ID, the custom attribute to create or update,
-
-        and an optional idempotency key.'
-      x-release-status: BETA
-      required:
-      - location_id
-      - custom_attribute
-      properties:
-        location_id:
-          type: string
-          description: The ID of the target [location](entity:Location).
-          minLength: 1
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: "The custom attribute to create or update, with following fields:\n- `key`. This key must match the `key` of a custom attribute definition in the Square seller\naccount. If the requesting application is not the definition owner, you must provide the qualified key.\n- `value`. This value must conform to the `schema` specified by the definition.\nFor more information, see [Supported data types](https://developer.squareup.com/docs/devtools/customattributes/overview#supported-data-types)..\n- `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol, specify the current version of the custom attribute. \nIf this is not important for your application, `version` can be set to -1."
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique identifier for this individual upsert request, used to ensure idempotency.
-
-            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-    BulkUpsertLocationCustomAttributesResponse:
-      type: object
-      description: 'Represents a [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes) response,
-
-        which contains a map of responses that each corresponds to an individual upsert request.'
-      x-release-status: BETA
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BulkUpsertLocationCustomAttributesResponseLocationCustomAttributeUpsertResponse'
-          description: 'A map of responses that correspond to individual upsert requests. Each response has the
-
-            same ID as the corresponding request and contains either a `location_id` and `custom_attribute` or an `errors` field.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        values:
-          id1:
-            custom_attribute:
-              created_at: '2023-01-09T19:02:58.647Z'
-              key: bestseller
-              updated_at: '2023-01-09T19:21:04.551Z'
-              value: hot cocoa
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            location_id: L0TBCBTB7P8RQ
-          id2:
-            custom_attribute:
-              created_at: '2023-01-09T19:02:58.647Z'
-              key: bestseller
-              updated_at: '2023-01-09T19:21:04.551Z'
-              value: berry smoothie
-              version: 1
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            location_id: L9XMD04V3STJX
-          id3:
-            custom_attribute:
-              created_at: '2023-01-09T19:04:57.985Z'
-              key: phone-number
-              updated_at: '2023-01-09T19:21:04.563Z'
-              value: '+12239903892'
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            location_id: L0TBCBTB7P8RQ
-    UpsertLocationCustomAttributeRequest:
-      type: object
-      description: Represents an [UpsertLocationCustomAttribute](api-endpoint:LocationCustomAttributes-UpsertLocationCustomAttribute) request.
-      x-release-status: BETA
-      x-params-example: ?location_id=L0TBCBTB7P8RQ&key=bestseller
-      required:
-      - custom_attribute
-      properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: 'The custom attribute to create or update, with the following fields:
-
-            - `value`. This value must conform to the `schema` specified by the definition.
-
-            For more information, see [Supported data types](https://developer.squareup.com/docs/devtools/customattributes/overview#supported-data-types).
-
-            - `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
-
-            control for an update operation, include the current version of the custom attribute.
-
-            If this is not important for your application, version can be set to -1.'
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-      example:
-        custom_attribute:
-          value: hot cocoa
-    BulkDeleteLocationCustomAttributesResponseLocationCustomAttributeDeleteResponse:
-      type: object
-      description: 'Represents an individual delete response in a [BulkDeleteLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkDeleteLocationCustomAttributes)
-
-        request.'
-      x-release-status: BETA
-      properties:
-        location_id:
-          type: string
-          description: The ID of the location associated with the custom attribute.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred while processing the individual LocationCustomAttributeDeleteRequest request
-      example:
-        errors: []
-        location_id: L0TBCBTB7P8RQ
     CustomAttributeDefinition:
       type: object
       description: 'Represents a definition for custom attribute values. A custom attribute definition
@@ -1252,143 +812,9 @@ components:
           type: string
           description: The timestamp that indicates when the custom attribute definition was created, in RFC 3339 format.
           readOnly: true
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    UpdateLocationCustomAttributeDefinitionRequest:
+    BulkDeleteLocationCustomAttributesRequest:
       type: object
-      description: Represents an [UpdateLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-UpdateLocationCustomAttributeDefinition) request.
-      x-release-status: BETA
-      x-params-example: ?key=bestseller
-      required:
-      - custom_attribute_definition
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: "The custom attribute definition that contains the fields to update. This endpoint\nsupports sparse updates, so only new or changed fields need to be included in the request.\nOnly the following fields can be updated:\n- `name`\n- `description`\n- `visibility`\n- `schema` for a `Selection` data type. Only changes to the named options or the maximum number of allowed\nselections are supported.\n\nFor more information, see\n[Update a location custom attribute definition](https://developer.squareup.com/docs/location-custom-attributes-api/custom-attribute-definitions#update-custom-attribute-definition).\nTo enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol, specify the current version of the custom attribute definition. \nIf this is not important for your application, `version` can be set to -1."
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-      example:
-        custom_attribute_definition:
-          description: Update the description as desired.
-          visibility: VISIBILITY_READ_ONLY
-    UpdateLocationCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents an [UpdateLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-UpdateLocationCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: BETA
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The updated custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-12-02T19:06:36.559Z'
-          description: Update the description as desired.
-          key: bestseller
-          name: Bestseller
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-12-02T19:34:10.181Z'
-          version: 2
-          visibility: VISIBILITY_READ_ONLY
-    RetrieveLocationCustomAttributeResponse:
-      type: object
-      description: 'Represents a [RetrieveLocationCustomAttribute](api-endpoint:LocationCustomAttributes-RetrieveLocationCustomAttribute) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: BETA
-      properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: 'The retrieved custom attribute. If `with_definition` was set to `true` in the request,
-
-            the custom attribute definition is returned in the `definition` field.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute:
-          created_at: '2023-01-09T19:02:58.647Z'
-          key: bestseller
-          updated_at: '2023-01-09T19:21:04.551Z'
-          value: hot cocoa
-          version: 2
-          visibility: VISIBILITY_READ_WRITE_VALUES
-    DeleteLocationCustomAttributeResponse:
-      type: object
-      description: 'Represents a [DeleteLocationCustomAttribute](api-endpoint:LocationCustomAttributes-DeleteLocationCustomAttribute) response.
-
-        Either an empty object `{}` (for a successful deletion) or `errors` is present in the response.'
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
-    BulkUpsertLocationCustomAttributesRequest:
-      type: object
-      description: Represents a [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes) request.
+      description: Represents a [BulkDeleteLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkDeleteLocationCustomAttributes) request.
       x-release-status: BETA
       required:
       - values
@@ -1396,29 +822,65 @@ components:
         values:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequest'
-          description: 'A map containing 1 to 25 individual upsert requests. For each request, provide an
+            $ref: '#/components/schemas/BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequest'
+          description: 'The data used to update the `CustomAttribute` objects.
 
-            arbitrary ID that is unique for this `BulkUpsertLocationCustomAttributes` request and the
-
-            information needed to create or update a custom attribute.'
+            The keys must be unique and are used to map to the corresponding response.'
       example:
         values:
           id1:
-            custom_attribute:
-              key: bestseller
-              value: hot cocoa
+            key: bestseller
             location_id: L0TBCBTB7P8RQ
           id2:
-            custom_attribute:
-              key: bestseller
-              value: berry smoothie
+            key: bestseller
             location_id: L9XMD04V3STJX
           id3:
-            custom_attribute:
-              key: phone-number
-              value: '+12223334444'
+            key: phone-number
             location_id: L0TBCBTB7P8RQ
+    ListLocationCustomAttributesResponse:
+      type: object
+      description: 'Represents a [ListLocationCustomAttributes](api-endpoint:LocationCustomAttributes-ListLocationCustomAttributes) response.
+
+        Either `custom_attributes`, an empty object, or `errors` is present in the response. If additional
+
+        results are available, the `cursor` field is also present along with `custom_attributes`.'
+      x-release-status: BETA
+      properties:
+        custom_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttribute'
+          description: 'The retrieved custom attributes. If `with_definitions` was set to `true` in the request,
+
+            the custom attribute definition is returned in the `definition` field of each custom attribute.
+
+            If no custom attributes are found, Square returns an empty object (`{}`).'
+        cursor:
+          type: string
+          description: 'The cursor to use in your next call to this endpoint to retrieve the next page of results
+
+            for your original request. This field is present only if the request succeeded and additional
+
+            results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attributes:
+        - created_at: '2022-12-12T18:13:03.745Z'
+          key: phone-number
+          updated_at: '2022-12-12T18:13:03.745Z'
+          value: '+12223334444'
+          version: 1
+          visibility: VISIBILITY_READ_WRITE_VALUES
+        - created_at: '2022-12-12T19:27:57.975Z'
+          key: bestseller
+          updated_at: '2022-12-12T19:27:57.975Z'
+          value: hot cocoa
+          version: 1
+          visibility: VISIBILITY_READ_WRITE_VALUES
     ErrorCode:
       type: string
       enum:
@@ -2165,6 +1627,474 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    CustomAttributeDefinitionVisibility:
+      type: string
+      enum:
+      - VISIBILITY_HIDDEN
+      - VISIBILITY_READ_ONLY
+      - VISIBILITY_READ_WRITE_VALUES
+      x-enum-elements:
+      - name: VISIBILITY_HIDDEN
+        description: 'The custom attribute definition and values are hidden from the seller (except on export
+
+          of all seller data) and other developers.'
+      - name: VISIBILITY_READ_ONLY
+        description: 'The seller and other developers can read the custom attribute definition and values
+
+          on resources.'
+      - name: VISIBILITY_READ_WRITE_VALUES
+        description: 'The seller and other developers can read the custom attribute definition,
+
+          and can read and write values on resources. A custom attribute definition
+
+          can only be edited or deleted by the application that created it.'
+      description: 'The level of permission that a seller or other applications requires to
+
+        view this custom attribute definition.
+
+        The `Visibility` field controls who can read and write the custom attribute values
+
+        and custom attribute definition.'
+      x-release-status: PUBLIC
+    BulkUpsertLocationCustomAttributesRequest:
+      type: object
+      description: Represents a [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes) request.
+      x-release-status: BETA
+      required:
+      - values
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequest'
+          description: 'A map containing 1 to 25 individual upsert requests. For each request, provide an
+
+            arbitrary ID that is unique for this `BulkUpsertLocationCustomAttributes` request and the
+
+            information needed to create or update a custom attribute.'
+      example:
+        values:
+          id1:
+            custom_attribute:
+              key: bestseller
+              value: hot cocoa
+            location_id: L0TBCBTB7P8RQ
+          id2:
+            custom_attribute:
+              key: bestseller
+              value: berry smoothie
+            location_id: L9XMD04V3STJX
+          id3:
+            custom_attribute:
+              key: phone-number
+              value: '+12223334444'
+            location_id: L0TBCBTB7P8RQ
+    BulkUpsertLocationCustomAttributesResponse:
+      type: object
+      description: 'Represents a [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes) response,
+
+        which contains a map of responses that each corresponds to an individual upsert request.'
+      x-release-status: BETA
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BulkUpsertLocationCustomAttributesResponseLocationCustomAttributeUpsertResponse'
+          description: 'A map of responses that correspond to individual upsert requests. Each response has the
+
+            same ID as the corresponding request and contains either a `location_id` and `custom_attribute` or an `errors` field.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        values:
+          id1:
+            custom_attribute:
+              created_at: '2023-01-09T19:02:58.647Z'
+              key: bestseller
+              updated_at: '2023-01-09T19:21:04.551Z'
+              value: hot cocoa
+              version: 2
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            location_id: L0TBCBTB7P8RQ
+          id2:
+            custom_attribute:
+              created_at: '2023-01-09T19:02:58.647Z'
+              key: bestseller
+              updated_at: '2023-01-09T19:21:04.551Z'
+              value: berry smoothie
+              version: 1
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            location_id: L9XMD04V3STJX
+          id3:
+            custom_attribute:
+              created_at: '2023-01-09T19:04:57.985Z'
+              key: phone-number
+              updated_at: '2023-01-09T19:21:04.563Z'
+              value: '+12239903892'
+              version: 2
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            location_id: L0TBCBTB7P8RQ
+    BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequest:
+      type: object
+      description: 'Represents an individual upsert request in a [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes)
+
+        request. An individual request contains a location ID, the custom attribute to create or update,
+
+        and an optional idempotency key.'
+      x-release-status: BETA
+      required:
+      - location_id
+      - custom_attribute
+      properties:
+        location_id:
+          type: string
+          description: The ID of the target [location](entity:Location).
+          minLength: 1
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: "The custom attribute to create or update, with following fields:\n- `key`. This key must match the `key` of a custom attribute definition in the Square seller\naccount. If the requesting application is not the definition owner, you must provide the qualified key.\n- `value`. This value must conform to the `schema` specified by the definition.\nFor more information, see [Supported data types](https://developer.squareup.com/docs/devtools/customattributes/overview#supported-data-types)..\n- `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol, specify the current version of the custom attribute. \nIf this is not important for your application, `version` can be set to -1."
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this individual upsert request, used to ensure idempotency.
+
+            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
+    UpdateLocationCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents an [UpdateLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-UpdateLocationCustomAttributeDefinition) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: BETA
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: The updated custom attribute definition.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute_definition:
+          created_at: '2022-12-02T19:06:36.559Z'
+          description: Update the description as desired.
+          key: bestseller
+          name: Bestseller
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          updated_at: '2022-12-02T19:34:10.181Z'
+          version: 2
+          visibility: VISIBILITY_READ_ONLY
+    CreateLocationCustomAttributeDefinitionRequest:
+      type: object
+      description: Represents a [CreateLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-CreateLocationCustomAttributeDefinition) request.
+      x-release-status: BETA
+      required:
+      - custom_attribute_definition
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: 'The custom attribute definition to create. Note the following:
+
+            - With the exception of the `Selection` data type, the `schema` is specified as a simple URL to the JSON schema
+
+            definition hosted on the Square CDN. For more information, including supported values and constraints, see
+
+            [Supported data types](https://developer.squareup.com/docs/devtools/customattributes/overview#supported-data-types).
+
+            - `name` is required unless `visibility` is set to `VISIBILITY_HIDDEN`.'
+        idempotency_key:
+          type: string
+          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
+
+            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
+      example:
+        custom_attribute_definition:
+          description: Bestselling item at location
+          key: bestseller
+          name: Bestseller
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          visibility: VISIBILITY_READ_WRITE_VALUES
+    UpsertLocationCustomAttributeRequest:
+      type: object
+      description: Represents an [UpsertLocationCustomAttribute](api-endpoint:LocationCustomAttributes-UpsertLocationCustomAttribute) request.
+      x-release-status: BETA
+      x-params-example: ?location_id=L0TBCBTB7P8RQ&key=bestseller
+      required:
+      - custom_attribute
+      properties:
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: 'The custom attribute to create or update, with the following fields:
+
+            - `value`. This value must conform to the `schema` specified by the definition.
+
+            For more information, see [Supported data types](https://developer.squareup.com/docs/devtools/customattributes/overview#supported-data-types).
+
+            - `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)
+
+            control for an update operation, include the current version of the custom attribute.
+
+            If this is not important for your application, version can be set to -1.'
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
+
+            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
+      example:
+        custom_attribute:
+          value: hot cocoa
+    UpdateLocationCustomAttributeDefinitionRequest:
+      type: object
+      description: Represents an [UpdateLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-UpdateLocationCustomAttributeDefinition) request.
+      x-release-status: BETA
+      x-params-example: ?key=bestseller
+      required:
+      - custom_attribute_definition
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: "The custom attribute definition that contains the fields to update. This endpoint\nsupports sparse updates, so only new or changed fields need to be included in the request.\nOnly the following fields can be updated:\n- `name`\n- `description`\n- `visibility`\n- `schema` for a `Selection` data type. Only changes to the named options or the maximum number of allowed\nselections are supported.\n\nFor more information, see\n[Update a location custom attribute definition](https://developer.squareup.com/docs/location-custom-attributes-api/custom-attribute-definitions#update-custom-attribute-definition).\nTo enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol, specify the current version of the custom attribute definition. \nIf this is not important for your application, `version` can be set to -1."
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
+
+            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
+      example:
+        custom_attribute_definition:
+          description: Update the description as desired.
+          visibility: VISIBILITY_READ_ONLY
+    DeleteLocationCustomAttributeResponse:
+      type: object
+      description: 'Represents a [DeleteLocationCustomAttribute](api-endpoint:LocationCustomAttributes-DeleteLocationCustomAttribute) response.
+
+        Either an empty object `{}` (for a successful deletion) or `errors` is present in the response.'
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    BulkUpsertLocationCustomAttributesResponseLocationCustomAttributeUpsertResponse:
+      type: object
+      description: Represents a response for an individual upsert request in a [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes) operation.
+      x-release-status: BETA
+      properties:
+        location_id:
+          type: string
+          description: The ID of the location associated with the custom attribute.
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: The new or updated custom attribute.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred while processing the individual request.
+      example:
+        custom_attribute:
+          created_at: '2023-01-09T19:02:58.647Z'
+          key: bestseller
+          updated_at: '2023-01-09T19:21:04.551Z'
+          value: hot cocoa
+          version: 2
+          visibility: VISIBILITY_READ_WRITE_VALUES
+        location_id: L0TBCBTB7P8RQ
+    BulkDeleteLocationCustomAttributesResponse:
+      type: object
+      description: 'Represents a [BulkDeleteLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkDeleteLocationCustomAttributes) response,
+
+        which contains a map of responses that each corresponds to an individual delete request.'
+      x-release-status: BETA
+      required:
+      - values
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BulkDeleteLocationCustomAttributesResponseLocationCustomAttributeDeleteResponse'
+          description: 'A map of responses that correspond to individual delete requests. Each response has the
+
+            same key as the corresponding request.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        values:
+          id1:
+            errors: []
+            location_id: L0TBCBTB7P8RQ
+          id2:
+            errors: []
+            location_id: L9XMD04V3STJX
+          id3:
+            errors: []
+            location_id: L0TBCBTB7P8RQ
+    CustomAttribute:
+      type: object
+      description: 'A custom attribute value. Each custom attribute value has a corresponding
+
+        `CustomAttributeDefinition` object.'
+      x-release-status: PUBLIC
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: 'The identifier
+
+            of the custom attribute definition and its corresponding custom attributes. This value
+
+            can be a simple key, which is the key that is provided when the custom attribute definition
+
+            is created, or a qualified key, if the requesting
+
+            application is not the definition owner. The qualified key consists of the application ID
+
+            of the custom attribute definition owner
+
+            followed by the simple key that was provided when the definition was created. It has the
+
+            format application_id:simple key.
+
+
+            The value for a simple key can contain up to 60 alphanumeric characters, periods (.),
+
+            underscores (_), and hyphens (-).'
+          minLength: 1
+          pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
+        value:
+          description: 'The value assigned to the custom attribute. It is validated against the custom
+
+            attribute definition''s schema on write operations. For more information about custom
+
+            attribute values,
+
+            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
+        version:
+          type: integer
+          description: 'Read only. The current version of the custom attribute. This field is incremented when the custom attribute is changed.
+
+            When updating an existing custom attribute value, you can provide this field
+
+            and specify the current version of the custom attribute to enable
+
+            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency).
+
+            This field can also be used to enforce strong consistency for reads. For more information about strong consistency for reads,
+
+            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
+        visibility:
+          $ref: '#/components/schemas/CustomAttributeDefinitionVisibility'
+          description: 'A copy of the `visibility` field value for the associated custom attribute definition.
+
+            See [CustomAttributeDefinitionVisibility](#type-customattributedefinitionvisibility) for possible values'
+          readOnly: true
+        definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: 'A copy of the associated custom attribute definition object. This field is only set when
+
+            the optional field is specified on the request.'
+          readOnly: true
+        updated_at:
+          type: string
+          description: 'The timestamp that indicates when the custom attribute was created or was most recently
+
+            updated, in RFC 3339 format.'
+          readOnly: true
+        created_at:
+          type: string
+          description: The timestamp that indicates when the custom attribute was created, in RFC 3339 format.
+          readOnly: true
+    RetrieveLocationCustomAttributeResponse:
+      type: object
+      description: 'Represents a [RetrieveLocationCustomAttribute](api-endpoint:LocationCustomAttributes-RetrieveLocationCustomAttribute) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: BETA
+      properties:
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: 'The retrieved custom attribute. If `with_definition` was set to `true` in the request,
+
+            the custom attribute definition is returned in the `definition` field.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute:
+          created_at: '2023-01-09T19:02:58.647Z'
+          key: bestseller
+          updated_at: '2023-01-09T19:21:04.551Z'
+          value: hot cocoa
+          version: 2
+          visibility: VISIBILITY_READ_WRITE_VALUES
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -2210,55 +2140,125 @@ components:
             Represented as a qualified key if the requesting app is not the definition owner.'
           pattern: ^([a-zA-Z0-9_-]+:)?[a-zA-Z0-9_-]{1,60}$
           readOnly: true
-    ListLocationCustomAttributeDefinitionsResponse:
+    UpsertLocationCustomAttributeResponse:
       type: object
-      description: 'Represents a [ListLocationCustomAttributeDefinitions](api-endpoint:LocationCustomAttributes-ListLocationCustomAttributeDefinitions) response.
+      description: 'Represents an [UpsertLocationCustomAttribute](api-endpoint:LocationCustomAttributes-UpsertLocationCustomAttribute) response.
 
-        Either `custom_attribute_definitions`, an empty object, or `errors` is present in the response.
-
-        If additional results are available, the `cursor` field is also present along with `custom_attribute_definitions`.'
+        Either `custom_attribute_definition` or `errors` is present in the response.'
       x-release-status: BETA
       properties:
-        custom_attribute_definitions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'The retrieved custom attribute definitions. If no custom attribute definitions are found,
-
-            Square returns an empty object (`{}`).'
-        cursor:
-          type: string
-          description: 'The cursor to provide in your next call to this endpoint to retrieve the next page of
-
-            results for your original request. This field is present only if the request succeeded and
-
-            additional results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: The new or updated custom attribute.
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
       example:
-        cursor: ImfNzWVSiAYyiAR4gEcxDJ75KZAOSjX8H2BVHUTR0ofCtp4SdYvrUKbwYY2aCH2WqZ2FsfAuylEVUlTfaINg3ecIlFpP9Y5Ie66w9NSg9nqdI5fCJ6qdH2s0za5m2plFonsjIuFaoN89j78ROUwuSOzD6mFZPcJHhJ0CxEKc0SBH
-        custom_attribute_definitions:
-        - created_at: '2022-12-02T19:50:21.832Z'
-          description: Location's phone number
-          key: phone-number
-          name: phone number
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.PhoneNumber
-          updated_at: '2022-12-02T19:50:21.832Z'
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
-        - created_at: '2022-12-02T19:06:36.559Z'
+        custom_attribute:
+          created_at: '2023-01-09T19:02:58.647Z'
+          key: bestseller
+          updated_at: '2023-01-09T19:21:04.551Z'
+          value: hot cocoa
+          version: 2
+          visibility: VISIBILITY_READ_WRITE_VALUES
+    DeleteLocationCustomAttributeDefinitionResponse:
+      type: object
+      description: Represents a response from a delete request containing error messages if there are any.
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    RetrieveLocationCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents a [RetrieveLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-RetrieveLocationCustomAttributeDefinition) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: BETA
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: The retrieved custom attribute definition.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute_definition:
+          created_at: '2022-12-02T19:06:36.559Z'
           description: Bestselling item at location
           key: bestseller
           name: Bestseller
           schema:
             $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-12-03T10:17:52.341Z'
-          version: 4
+          updated_at: '2022-12-02T19:06:36.559Z'
+          version: 1
           visibility: VISIBILITY_READ_WRITE_VALUES
+    VisibilityFilter:
+      type: string
+      enum:
+      - ALL
+      - READ
+      - READ_WRITE
+      x-enum-elements:
+      - name: ALL
+        description: All custom attributes or custom attribute definitions.
+      - name: READ
+        description: All custom attributes or custom attribute definitions with the `visibility` field set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
+      - name: READ_WRITE
+        description: All custom attributes or custom attribute definitions with the `visibility` field set to `VISIBILITY_READ_WRITE_VALUES`.
+      description: Enumeration of visibility-filter values used to set the ability to view custom attributes or custom attribute definitions.
+      x-release-status: PUBLIC
+    CreateLocationCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents a [CreateLocationCustomAttributeDefinition](api-endpoint:LocationCustomAttributes-CreateLocationCustomAttributeDefinition) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: BETA
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: The new custom attribute definition.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute_definition:
+          created_at: '2022-12-02T19:06:36.559Z'
+          description: Bestselling item at location
+          key: bestseller
+          name: Bestseller
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          updated_at: '2022-12-02T19:06:36.559Z'
+          version: 1
+          visibility: VISIBILITY_READ_WRITE_VALUES
+    BulkDeleteLocationCustomAttributesResponseLocationCustomAttributeDeleteResponse:
+      type: object
+      description: 'Represents an individual delete response in a [BulkDeleteLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkDeleteLocationCustomAttributes)
+
+        request.'
+      x-release-status: BETA
+      properties:
+        location_id:
+          type: string
+          description: The ID of the location associated with the custom attribute.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred while processing the individual LocationCustomAttributeDeleteRequest request
+      example:
+        errors: []
+        location_id: L0TBCBTB7P8RQ
   securitySchemes:
     oauth2:
       type: oauth2

@@ -279,253 +279,54 @@ paths:
       - error-code: NOT_FOUND
 components:
   schemas:
-    DisableCardResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [DisableCard](api-endpoint:Cards-DisableCard) endpoint.
-
-
-        Note: if there are errors processing the request, the card field will not be
-
-        present.'
+    CardBrand:
+      type: string
+      enum:
+      - OTHER_BRAND
+      - VISA
+      - MASTERCARD
+      - AMERICAN_EXPRESS
+      - DISCOVER
+      - DISCOVER_DINERS
+      - JCB
+      - CHINA_UNIONPAY
+      - SQUARE_GIFT_CARD
+      - SQUARE_CAPITAL_CARD
+      - INTERAC
+      - EFTPOS
+      - FELICA
+      - EBT
+      x-enum-elements:
+      - name: OTHER_BRAND
+        description: ''
+      - name: VISA
+        description: ''
+      - name: MASTERCARD
+        description: ''
+      - name: AMERICAN_EXPRESS
+        description: ''
+      - name: DISCOVER
+        description: ''
+      - name: DISCOVER_DINERS
+        description: ''
+      - name: JCB
+        description: ''
+      - name: CHINA_UNIONPAY
+        description: ''
+      - name: SQUARE_GIFT_CARD
+        description: ''
+      - name: SQUARE_CAPITAL_CARD
+        description: ''
+      - name: INTERAC
+        description: ''
+      - name: EFTPOS
+        description: ''
+      - name: FELICA
+        description: ''
+      - name: EBT
+        description: ''
+      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
       x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        card:
-          $ref: '#/components/schemas/Card'
-          description: The retrieved card.
-      example:
-        card:
-          billing_address:
-            address_line_1: 500 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          bin: '411111'
-          card_brand: VISA
-          card_type: CREDIT
-          cardholder_name: Amelia Earhart
-          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
-          enabled: false
-          exp_month: 11
-          exp_year: 2022
-          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
-          id: ccof:uIbfJXhXETSP197M3GB
-          last_4: '1111'
-          merchant_id: 6SSW7HV8K2ST5
-          prepaid_type: NOT_PREPAID
-          reference_id: user-id-1
-          version: 2
-    RetrieveCardResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [RetrieveCard](api-endpoint:Cards-RetrieveCard) endpoint.
-
-
-        Note: if there are errors processing the request, the card field will not be
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        card:
-          $ref: '#/components/schemas/Card'
-          description: The retrieved card.
-      example:
-        card:
-          billing_address:
-            address_line_1: 500 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          bin: '411111'
-          card_brand: VISA
-          card_type: CREDIT
-          cardholder_name: Amelia Earhart
-          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
-          enabled: true
-          exp_month: 11
-          exp_year: 2022
-          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
-          id: ccof:uIbfJXhXETSP197M3GB
-          last_4: '1111'
-          merchant_id: 6SSW7HV8K2ST5
-          prepaid_type: NOT_PREPAID
-          reference_id: user-id-1
-          version: 1
-    CreateCardResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [CreateCard](api-endpoint:Cards-CreateCard) endpoint.
-
-
-        Note: if there are errors processing the request, the card field will not be
-
-        present.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors resulting from the request.
-        card:
-          $ref: '#/components/schemas/Card'
-          description: The card created by the request.
-      example:
-        card:
-          billing_address:
-            address_line_1: 500 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          bin: '411111'
-          card_brand: VISA
-          card_type: CREDIT
-          cardholder_name: Amelia Earhart
-          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
-          enabled: true
-          exp_month: 11
-          exp_year: 2022
-          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
-          id: ccof:uIbfJXhXETSP197M3GB
-          last_4: '1111'
-          merchant_id: 6SSW7HV8K2ST5
-          prepaid_type: NOT_PREPAID
-          reference_id: user-id-1
-          version: 1
-    Card:
-      type: object
-      description: 'Represents the payment details of a card to be used for payments. These
-
-        details are determined by the payment token generated by Web Payments SDK.'
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: Unique ID for this card. Generated by Square.
-          maxLength: 64
-          readOnly: true
-        card_brand:
-          $ref: '#/components/schemas/CardBrand'
-          description: 'The card''s brand.
-
-            See [CardBrand](#type-cardbrand) for possible values'
-          readOnly: true
-        last_4:
-          type: string
-          description: The last 4 digits of the card number.
-          maxLength: 4
-          readOnly: true
-        exp_month:
-          type:
-          - integer
-          - 'null'
-          description: The expiration month of the associated card as an integer between 1 and 12.
-          format: int64
-        exp_year:
-          type:
-          - integer
-          - 'null'
-          description: The four-digit year of the card's expiration date.
-          format: int64
-        cardholder_name:
-          type:
-          - string
-          - 'null'
-          description: The name of the cardholder.
-          maxLength: 96
-        billing_address:
-          $ref: '#/components/schemas/Address'
-          description: The billing address for this card.
-        fingerprint:
-          type: string
-          description: 'Intended as a Square-assigned identifier, based
-
-            on the card number, to identify the card across multiple locations within a
-
-            single application.'
-          maxLength: 255
-          readOnly: true
-        customer_id:
-          type:
-          - string
-          - 'null'
-          description: '**Required** The ID of a customer created using the Customers API to be associated with the card.'
-        merchant_id:
-          type: string
-          description: The ID of the merchant associated with the card.
-          readOnly: true
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: 'An optional user-defined reference ID that associates this card with
-
-            another entity in an external system. For example, a customer ID from an
-
-            external customer management system.'
-          maxLength: 128
-        enabled:
-          type: boolean
-          description: Indicates whether or not a card can be used for payments.
-          readOnly: true
-        card_type:
-          $ref: '#/components/schemas/CardType'
-          description: 'The type of the card.
-
-            The Card object includes this field only in response to Payments API calls.
-
-            See [CardType](#type-cardtype) for possible values'
-          readOnly: true
-        prepaid_type:
-          $ref: '#/components/schemas/CardPrepaidType'
-          description: 'Indicates whether the Card is prepaid or not.
-
-            The Card object includes this field only in response to Payments API calls.
-
-            See [CardPrepaidType](#type-cardprepaidtype) for possible values'
-          readOnly: true
-        bin:
-          type: string
-          description: 'The first six digits of the card number, known as the Bank Identification Number (BIN). Only the Payments API
-
-            returns this field.'
-          maxLength: 6
-          readOnly: true
-        version:
-          type: integer
-          description: 'Current version number of the card. Increments with each card update. Requests to update an
-
-            existing Card object will be rejected unless the version in the request matches the current
-
-            version for the Card.'
-          format: int64
-        card_co_brand:
-          $ref: '#/components/schemas/CardCoBrand'
-          description: 'The card''s co-brand if available. For example, an Afterpay virtual card would have a
-
-            co-brand of AFTERPAY.
-
-            See [CardCoBrand](#type-cardcobrand) for possible values'
-          readOnly: true
     SortOrder:
       type: string
       enum:
@@ -538,6 +339,964 @@ components:
         description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
       description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
       x-release-status: PUBLIC
+    CreateCardRequest:
+      type: object
+      description: 'Creates a card from the source (payment token or payment id). Accessible via
+
+        HTTP requests at POST https://connect.squareup.com/v2/cards'
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      - source_id
+      - card
+      properties:
+        idempotency_key:
+          type: string
+          description: 'A unique string that identifies this CreateCard request. Keys can be
+
+            any valid string and must be unique for every request.
+
+
+            Max: 45 characters
+
+
+            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
+          minLength: 1
+        source_id:
+          type: string
+          description: The ID of the source which represents the card information to be stored. This can be a card nonce or a payment id.
+          minLength: 1
+          maxLength: 16384
+        verification_token:
+          type: string
+          description: 'An identifying token generated by [Payments.verifyBuyer()](https://developer.squareup.com/reference/sdks/web/payments/objects/Payments#Payments.verifyBuyer).
+
+            Verification tokens encapsulate customer device information and 3-D Secure
+
+            challenge results to indicate that Square has verified the buyer identity.
+
+
+            See the [SCA Overview](https://developer.squareup.com/docs/sca-overview).'
+        card:
+          $ref: '#/components/schemas/Card'
+          description: Payment details associated with the card to be stored.
+      example:
+        card:
+          billing_address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          cardholder_name: Amelia Earhart
+          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
+          reference_id: user-id-1
+        idempotency_key: 4935a656-a929-4792-b97c-8848be85c27c
+        source_id: cnon:uIbfJXhXETSP197M3GB
+    CardPrepaidType:
+      type: string
+      enum:
+      - UNKNOWN_PREPAID_TYPE
+      - NOT_PREPAID
+      - PREPAID
+      x-enum-elements:
+      - name: UNKNOWN_PREPAID_TYPE
+        description: ''
+      - name: NOT_PREPAID
+        description: ''
+      - name: PREPAID
+        description: ''
+      description: Indicates a card's prepaid type, such as `NOT_PREPAID` or `PREPAID`.
+      x-release-status: PUBLIC
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    Country:
+      type: string
+      enum:
+      - ZZ
+      - AD
+      - AE
+      - AF
+      - AG
+      - AI
+      - AL
+      - AM
+      - AO
+      - AQ
+      - AR
+      - AS
+      - AT
+      - AU
+      - AW
+      - AX
+      - AZ
+      - BA
+      - BB
+      - BD
+      - BE
+      - BF
+      - BG
+      - BH
+      - BI
+      - BJ
+      - BL
+      - BM
+      - BN
+      - BO
+      - BQ
+      - BR
+      - BS
+      - BT
+      - BV
+      - BW
+      - BY
+      - BZ
+      - CA
+      - CC
+      - CD
+      - CF
+      - CG
+      - CH
+      - CI
+      - CK
+      - CL
+      - CM
+      - CN
+      - CO
+      - CR
+      - CU
+      - CV
+      - CW
+      - CX
+      - CY
+      - CZ
+      - DE
+      - DJ
+      - DK
+      - DM
+      - DO
+      - DZ
+      - EC
+      - EE
+      - EG
+      - EH
+      - ER
+      - ES
+      - ET
+      - FI
+      - FJ
+      - FK
+      - FM
+      - FO
+      - FR
+      - GA
+      - GB
+      - GD
+      - GE
+      - GF
+      - GG
+      - GH
+      - GI
+      - GL
+      - GM
+      - GN
+      - GP
+      - GQ
+      - GR
+      - GS
+      - GT
+      - GU
+      - GW
+      - GY
+      - HK
+      - HM
+      - HN
+      - HR
+      - HT
+      - HU
+      - ID
+      - IE
+      - IL
+      - IM
+      - IN
+      - IO
+      - IQ
+      - IR
+      - IS
+      - IT
+      - JE
+      - JM
+      - JO
+      - JP
+      - KE
+      - KG
+      - KH
+      - KI
+      - KM
+      - KN
+      - KP
+      - KR
+      - KW
+      - KY
+      - KZ
+      - LA
+      - LB
+      - LC
+      - LI
+      - LK
+      - LR
+      - LS
+      - LT
+      - LU
+      - LV
+      - LY
+      - MA
+      - MC
+      - MD
+      - ME
+      - MF
+      - MG
+      - MH
+      - MK
+      - ML
+      - MM
+      - MN
+      - MO
+      - MP
+      - MQ
+      - MR
+      - MS
+      - MT
+      - MU
+      - MV
+      - MW
+      - MX
+      - MY
+      - MZ
+      - NA
+      - NC
+      - NE
+      - NF
+      - NG
+      - NI
+      - NL
+      - 'NO'
+      - NP
+      - NR
+      - NU
+      - NZ
+      - OM
+      - PA
+      - PE
+      - PF
+      - PG
+      - PH
+      - PK
+      - PL
+      - PM
+      - PN
+      - PR
+      - PS
+      - PT
+      - PW
+      - PY
+      - QA
+      - RE
+      - RO
+      - RS
+      - RU
+      - RW
+      - SA
+      - SB
+      - SC
+      - SD
+      - SE
+      - SG
+      - SH
+      - SI
+      - SJ
+      - SK
+      - SL
+      - SM
+      - SN
+      - SO
+      - SR
+      - SS
+      - ST
+      - SV
+      - SX
+      - SY
+      - SZ
+      - TC
+      - TD
+      - TF
+      - TG
+      - TH
+      - TJ
+      - TK
+      - TL
+      - TM
+      - TN
+      - TO
+      - TR
+      - TT
+      - TV
+      - TW
+      - TZ
+      - UA
+      - UG
+      - UM
+      - US
+      - UY
+      - UZ
+      - VA
+      - VC
+      - VE
+      - VG
+      - VI
+      - VN
+      - VU
+      - WF
+      - WS
+      - YE
+      - YT
+      - ZA
+      - ZM
+      - ZW
+      x-enum-elements:
+      - name: ZZ
+        description: Unknown
+      - name: AD
+        description: Andorra
+      - name: AE
+        description: United Arab Emirates
+      - name: AF
+        description: Afghanistan
+      - name: AG
+        description: Antigua and Barbuda
+      - name: AI
+        description: Anguilla
+      - name: AL
+        description: Albania
+      - name: AM
+        description: Armenia
+      - name: AO
+        description: Angola
+      - name: AQ
+        description: Antartica
+      - name: AR
+        description: Argentina
+      - name: AS
+        description: American Samoa
+      - name: AT
+        description: Austria
+      - name: AU
+        description: Australia
+      - name: AW
+        description: Aruba
+      - name: AX
+        description: Åland Islands
+      - name: AZ
+        description: Azerbaijan
+      - name: BA
+        description: Bosnia and Herzegovina
+      - name: BB
+        description: Barbados
+      - name: BD
+        description: Bangladesh
+      - name: BE
+        description: Belgium
+      - name: BF
+        description: Burkina Faso
+      - name: BG
+        description: Bulgaria
+      - name: BH
+        description: Bahrain
+      - name: BI
+        description: Burundi
+      - name: BJ
+        description: Benin
+      - name: BL
+        description: Saint Barthélemy
+      - name: BM
+        description: Bermuda
+      - name: BN
+        description: Brunei
+      - name: BO
+        description: Bolivia
+      - name: BQ
+        description: Bonaire
+      - name: BR
+        description: Brazil
+      - name: BS
+        description: Bahamas
+      - name: BT
+        description: Bhutan
+      - name: BV
+        description: Bouvet Island
+      - name: BW
+        description: Botswana
+      - name: BY
+        description: Belarus
+      - name: BZ
+        description: Belize
+      - name: CA
+        description: Canada
+      - name: CC
+        description: Cocos Islands
+      - name: CD
+        description: Democratic Republic of the Congo
+      - name: CF
+        description: Central African Republic
+      - name: CG
+        description: Congo
+      - name: CH
+        description: Switzerland
+      - name: CI
+        description: Ivory Coast
+      - name: CK
+        description: Cook Islands
+      - name: CL
+        description: Chile
+      - name: CM
+        description: Cameroon
+      - name: CN
+        description: China
+      - name: CO
+        description: Colombia
+      - name: CR
+        description: Costa Rica
+      - name: CU
+        description: Cuba
+      - name: CV
+        description: Cabo Verde
+      - name: CW
+        description: Curaçao
+      - name: CX
+        description: Christmas Island
+      - name: CY
+        description: Cyprus
+      - name: CZ
+        description: Czechia
+      - name: DE
+        description: Germany
+      - name: DJ
+        description: Djibouti
+      - name: DK
+        description: Denmark
+      - name: DM
+        description: Dominica
+      - name: DO
+        description: Dominican Republic
+      - name: DZ
+        description: Algeria
+      - name: EC
+        description: Ecuador
+      - name: EE
+        description: Estonia
+      - name: EG
+        description: Egypt
+      - name: EH
+        description: Western Sahara
+      - name: ER
+        description: Eritrea
+      - name: ES
+        description: Spain
+      - name: ET
+        description: Ethiopia
+      - name: FI
+        description: Finland
+      - name: FJ
+        description: Fiji
+      - name: FK
+        description: Falkland Islands
+      - name: FM
+        description: Federated States of Micronesia
+      - name: FO
+        description: Faroe Islands
+      - name: FR
+        description: France
+      - name: GA
+        description: Gabon
+      - name: GB
+        description: United Kingdom
+      - name: GD
+        description: Grenada
+      - name: GE
+        description: Georgia
+      - name: GF
+        description: French Guiana
+      - name: GG
+        description: Guernsey
+      - name: GH
+        description: Ghana
+      - name: GI
+        description: Gibraltar
+      - name: GL
+        description: Greenland
+      - name: GM
+        description: Gambia
+      - name: GN
+        description: Guinea
+      - name: GP
+        description: Guadeloupe
+      - name: GQ
+        description: Equatorial Guinea
+      - name: GR
+        description: Greece
+      - name: GS
+        description: South Georgia and the South Sandwich Islands
+      - name: GT
+        description: Guatemala
+      - name: GU
+        description: Guam
+      - name: GW
+        description: Guinea-Bissau
+      - name: GY
+        description: Guyana
+      - name: HK
+        description: Hong Kong
+      - name: HM
+        description: Heard Island and McDonald Islands
+      - name: HN
+        description: Honduras
+      - name: HR
+        description: Croatia
+      - name: HT
+        description: Haiti
+      - name: HU
+        description: Hungary
+      - name: ID
+        description: Indonesia
+      - name: IE
+        description: Ireland
+      - name: IL
+        description: Israel
+      - name: IM
+        description: Isle of Man
+      - name: IN
+        description: India
+      - name: IO
+        description: British Indian Ocean Territory
+      - name: IQ
+        description: Iraq
+      - name: IR
+        description: Iran
+      - name: IS
+        description: Iceland
+      - name: IT
+        description: Italy
+      - name: JE
+        description: Jersey
+      - name: JM
+        description: Jamaica
+      - name: JO
+        description: Jordan
+      - name: JP
+        description: Japan
+      - name: KE
+        description: Kenya
+      - name: KG
+        description: Kyrgyzstan
+      - name: KH
+        description: Cambodia
+      - name: KI
+        description: Kiribati
+      - name: KM
+        description: Comoros
+      - name: KN
+        description: Saint Kitts and Nevis
+      - name: KP
+        description: Democratic People's Republic of Korea
+      - name: KR
+        description: Republic of Korea
+      - name: KW
+        description: Kuwait
+      - name: KY
+        description: Cayman Islands
+      - name: KZ
+        description: Kazakhstan
+      - name: LA
+        description: Lao People's Democratic Republic
+      - name: LB
+        description: Lebanon
+      - name: LC
+        description: Saint Lucia
+      - name: LI
+        description: Liechtenstein
+      - name: LK
+        description: Sri Lanka
+      - name: LR
+        description: Liberia
+      - name: LS
+        description: Lesotho
+      - name: LT
+        description: Lithuania
+      - name: LU
+        description: Luxembourg
+      - name: LV
+        description: Latvia
+      - name: LY
+        description: Libya
+      - name: MA
+        description: Morocco
+      - name: MC
+        description: Monaco
+      - name: MD
+        description: Moldova
+      - name: ME
+        description: Montenegro
+      - name: MF
+        description: Saint Martin
+      - name: MG
+        description: Madagascar
+      - name: MH
+        description: Marshall Islands
+      - name: MK
+        description: North Macedonia
+      - name: ML
+        description: Mali
+      - name: MM
+        description: Myanmar
+      - name: MN
+        description: Mongolia
+      - name: MO
+        description: Macao
+      - name: MP
+        description: Northern Mariana Islands
+      - name: MQ
+        description: Martinique
+      - name: MR
+        description: Mauritania
+      - name: MS
+        description: Montserrat
+      - name: MT
+        description: Malta
+      - name: MU
+        description: Mauritius
+      - name: MV
+        description: Maldives
+      - name: MW
+        description: Malawi
+      - name: MX
+        description: Mexico
+      - name: MY
+        description: Malaysia
+      - name: MZ
+        description: Mozambique
+      - name: NA
+        description: Namibia
+      - name: NC
+        description: New Caledonia
+      - name: NE
+        description: Niger
+      - name: NF
+        description: Norfolk Island
+      - name: NG
+        description: Nigeria
+      - name: NI
+        description: Nicaragua
+      - name: NL
+        description: Netherlands
+      - name: 'NO'
+        description: Norway
+      - name: NP
+        description: Nepal
+      - name: NR
+        description: Nauru
+      - name: NU
+        description: Niue
+      - name: NZ
+        description: New Zealand
+      - name: OM
+        description: Oman
+      - name: PA
+        description: Panama
+      - name: PE
+        description: Peru
+      - name: PF
+        description: French Polynesia
+      - name: PG
+        description: Papua New Guinea
+      - name: PH
+        description: Philippines
+      - name: PK
+        description: Pakistan
+      - name: PL
+        description: Poland
+      - name: PM
+        description: Saint Pierre and Miquelon
+      - name: PN
+        description: Pitcairn
+      - name: PR
+        description: Puerto Rico
+      - name: PS
+        description: Palestine
+      - name: PT
+        description: Portugal
+      - name: PW
+        description: Palau
+      - name: PY
+        description: Paraguay
+      - name: QA
+        description: Qatar
+      - name: RE
+        description: Réunion
+      - name: RO
+        description: Romania
+      - name: RS
+        description: Serbia
+      - name: RU
+        description: Russia
+      - name: RW
+        description: Rwanda
+      - name: SA
+        description: Saudi Arabia
+      - name: SB
+        description: Solomon Islands
+      - name: SC
+        description: Seychelles
+      - name: SD
+        description: Sudan
+      - name: SE
+        description: Sweden
+      - name: SG
+        description: Singapore
+      - name: SH
+        description: Saint Helena, Ascension and Tristan da Cunha
+      - name: SI
+        description: Slovenia
+      - name: SJ
+        description: Svalbard and Jan Mayen
+      - name: SK
+        description: Slovakia
+      - name: SL
+        description: Sierra Leone
+      - name: SM
+        description: San Marino
+      - name: SN
+        description: Senegal
+      - name: SO
+        description: Somalia
+      - name: SR
+        description: Suriname
+      - name: SS
+        description: South Sudan
+      - name: ST
+        description: Sao Tome and Principe
+      - name: SV
+        description: El Salvador
+      - name: SX
+        description: Sint Maarten
+      - name: SY
+        description: Syrian Arab Republic
+      - name: SZ
+        description: Eswatini
+      - name: TC
+        description: Turks and Caicos Islands
+      - name: TD
+        description: Chad
+      - name: TF
+        description: French Southern Territories
+      - name: TG
+        description: Togo
+      - name: TH
+        description: Thailand
+      - name: TJ
+        description: Tajikistan
+      - name: TK
+        description: Tokelau
+      - name: TL
+        description: Timor-Leste
+      - name: TM
+        description: Turkmenistan
+      - name: TN
+        description: Tunisia
+      - name: TO
+        description: Tonga
+      - name: TR
+        description: Turkey
+      - name: TT
+        description: Trinidad and Tobago
+      - name: TV
+        description: Tuvalu
+      - name: TW
+        description: Taiwan
+      - name: TZ
+        description: Tanzania
+      - name: UA
+        description: Ukraine
+      - name: UG
+        description: Uganda
+      - name: UM
+        description: United States Minor Outlying Islands
+      - name: US
+        description: United States of America
+      - name: UY
+        description: Uruguay
+      - name: UZ
+        description: Uzbekistan
+      - name: VA
+        description: Vatican City
+      - name: VC
+        description: Saint Vincent and the Grenadines
+      - name: VE
+        description: Venezuela
+      - name: VG
+        description: British Virgin Islands
+      - name: VI
+        description: U.S. Virgin Islands
+      - name: VN
+        description: Vietnam
+      - name: VU
+        description: Vanuatu
+      - name: WF
+        description: Wallis and Futuna
+      - name: WS
+        description: Samoa
+      - name: YE
+        description: Yemen
+      - name: YT
+        description: Mayotte
+      - name: ZA
+        description: South Africa
+      - name: ZM
+        description: Zambia
+      - name: ZW
+        description: Zimbabwe
+      description: 'Indicates the country associated with another entity, such as a business.
+
+        Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
+      x-release-status: PUBLIC
+    ListCardsResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [ListCards](api-endpoint:Cards-ListCards) endpoint.
+
+
+        Note: if there are errors processing the request, the card field will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+          description: The requested list of `Card`s.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If empty,
+
+            this is the final response.
+
+
+            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
+      example:
+        cards:
+        - billing_address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          bin: '411111'
+          card_brand: VISA
+          card_type: CREDIT
+          cardholder_name: Amelia Earhart
+          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
+          enabled: true
+          exp_month: 11
+          exp_year: 2022
+          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
+          id: ccof:uIbfJXhXETSP197M3GB
+          last_4: '1111'
+          merchant_id: 6SSW7HV8K2ST5
+          prepaid_type: NOT_PREPAID
+          reference_id: user-id-1
+          version: 1
     ErrorCode:
       type: string
       enum:
@@ -1374,847 +2133,11 @@ components:
           - string
           - 'null'
           description: Optional last name when it's representing recipient.
-    CardBrand:
-      type: string
-      enum:
-      - OTHER_BRAND
-      - VISA
-      - MASTERCARD
-      - AMERICAN_EXPRESS
-      - DISCOVER
-      - DISCOVER_DINERS
-      - JCB
-      - CHINA_UNIONPAY
-      - SQUARE_GIFT_CARD
-      - SQUARE_CAPITAL_CARD
-      - INTERAC
-      - EFTPOS
-      - FELICA
-      - EBT
-      x-enum-elements:
-      - name: OTHER_BRAND
-        description: ''
-      - name: VISA
-        description: ''
-      - name: MASTERCARD
-        description: ''
-      - name: AMERICAN_EXPRESS
-        description: ''
-      - name: DISCOVER
-        description: ''
-      - name: DISCOVER_DINERS
-        description: ''
-      - name: JCB
-        description: ''
-      - name: CHINA_UNIONPAY
-        description: ''
-      - name: SQUARE_GIFT_CARD
-        description: ''
-      - name: SQUARE_CAPITAL_CARD
-        description: ''
-      - name: INTERAC
-        description: ''
-      - name: EFTPOS
-        description: ''
-      - name: FELICA
-        description: ''
-      - name: EBT
-        description: ''
-      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
-      x-release-status: PUBLIC
-    CardPrepaidType:
-      type: string
-      enum:
-      - UNKNOWN_PREPAID_TYPE
-      - NOT_PREPAID
-      - PREPAID
-      x-enum-elements:
-      - name: UNKNOWN_PREPAID_TYPE
-        description: ''
-      - name: NOT_PREPAID
-        description: ''
-      - name: PREPAID
-        description: ''
-      description: Indicates a card's prepaid type, such as `NOT_PREPAID` or `PREPAID`.
-      x-release-status: PUBLIC
-    CardType:
-      type: string
-      enum:
-      - UNKNOWN_CARD_TYPE
-      - CREDIT
-      - DEBIT
-      x-enum-elements:
-      - name: UNKNOWN_CARD_TYPE
-        description: ''
-      - name: CREDIT
-        description: ''
-      - name: DEBIT
-        description: ''
-      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
-      x-release-status: PUBLIC
-    Country:
-      type: string
-      enum:
-      - ZZ
-      - AD
-      - AE
-      - AF
-      - AG
-      - AI
-      - AL
-      - AM
-      - AO
-      - AQ
-      - AR
-      - AS
-      - AT
-      - AU
-      - AW
-      - AX
-      - AZ
-      - BA
-      - BB
-      - BD
-      - BE
-      - BF
-      - BG
-      - BH
-      - BI
-      - BJ
-      - BL
-      - BM
-      - BN
-      - BO
-      - BQ
-      - BR
-      - BS
-      - BT
-      - BV
-      - BW
-      - BY
-      - BZ
-      - CA
-      - CC
-      - CD
-      - CF
-      - CG
-      - CH
-      - CI
-      - CK
-      - CL
-      - CM
-      - CN
-      - CO
-      - CR
-      - CU
-      - CV
-      - CW
-      - CX
-      - CY
-      - CZ
-      - DE
-      - DJ
-      - DK
-      - DM
-      - DO
-      - DZ
-      - EC
-      - EE
-      - EG
-      - EH
-      - ER
-      - ES
-      - ET
-      - FI
-      - FJ
-      - FK
-      - FM
-      - FO
-      - FR
-      - GA
-      - GB
-      - GD
-      - GE
-      - GF
-      - GG
-      - GH
-      - GI
-      - GL
-      - GM
-      - GN
-      - GP
-      - GQ
-      - GR
-      - GS
-      - GT
-      - GU
-      - GW
-      - GY
-      - HK
-      - HM
-      - HN
-      - HR
-      - HT
-      - HU
-      - ID
-      - IE
-      - IL
-      - IM
-      - IN
-      - IO
-      - IQ
-      - IR
-      - IS
-      - IT
-      - JE
-      - JM
-      - JO
-      - JP
-      - KE
-      - KG
-      - KH
-      - KI
-      - KM
-      - KN
-      - KP
-      - KR
-      - KW
-      - KY
-      - KZ
-      - LA
-      - LB
-      - LC
-      - LI
-      - LK
-      - LR
-      - LS
-      - LT
-      - LU
-      - LV
-      - LY
-      - MA
-      - MC
-      - MD
-      - ME
-      - MF
-      - MG
-      - MH
-      - MK
-      - ML
-      - MM
-      - MN
-      - MO
-      - MP
-      - MQ
-      - MR
-      - MS
-      - MT
-      - MU
-      - MV
-      - MW
-      - MX
-      - MY
-      - MZ
-      - NA
-      - NC
-      - NE
-      - NF
-      - NG
-      - NI
-      - NL
-      - 'NO'
-      - NP
-      - NR
-      - NU
-      - NZ
-      - OM
-      - PA
-      - PE
-      - PF
-      - PG
-      - PH
-      - PK
-      - PL
-      - PM
-      - PN
-      - PR
-      - PS
-      - PT
-      - PW
-      - PY
-      - QA
-      - RE
-      - RO
-      - RS
-      - RU
-      - RW
-      - SA
-      - SB
-      - SC
-      - SD
-      - SE
-      - SG
-      - SH
-      - SI
-      - SJ
-      - SK
-      - SL
-      - SM
-      - SN
-      - SO
-      - SR
-      - SS
-      - ST
-      - SV
-      - SX
-      - SY
-      - SZ
-      - TC
-      - TD
-      - TF
-      - TG
-      - TH
-      - TJ
-      - TK
-      - TL
-      - TM
-      - TN
-      - TO
-      - TR
-      - TT
-      - TV
-      - TW
-      - TZ
-      - UA
-      - UG
-      - UM
-      - US
-      - UY
-      - UZ
-      - VA
-      - VC
-      - VE
-      - VG
-      - VI
-      - VN
-      - VU
-      - WF
-      - WS
-      - YE
-      - YT
-      - ZA
-      - ZM
-      - ZW
-      x-enum-elements:
-      - name: ZZ
-        description: Unknown
-      - name: AD
-        description: Andorra
-      - name: AE
-        description: United Arab Emirates
-      - name: AF
-        description: Afghanistan
-      - name: AG
-        description: Antigua and Barbuda
-      - name: AI
-        description: Anguilla
-      - name: AL
-        description: Albania
-      - name: AM
-        description: Armenia
-      - name: AO
-        description: Angola
-      - name: AQ
-        description: Antartica
-      - name: AR
-        description: Argentina
-      - name: AS
-        description: American Samoa
-      - name: AT
-        description: Austria
-      - name: AU
-        description: Australia
-      - name: AW
-        description: Aruba
-      - name: AX
-        description: Åland Islands
-      - name: AZ
-        description: Azerbaijan
-      - name: BA
-        description: Bosnia and Herzegovina
-      - name: BB
-        description: Barbados
-      - name: BD
-        description: Bangladesh
-      - name: BE
-        description: Belgium
-      - name: BF
-        description: Burkina Faso
-      - name: BG
-        description: Bulgaria
-      - name: BH
-        description: Bahrain
-      - name: BI
-        description: Burundi
-      - name: BJ
-        description: Benin
-      - name: BL
-        description: Saint Barthélemy
-      - name: BM
-        description: Bermuda
-      - name: BN
-        description: Brunei
-      - name: BO
-        description: Bolivia
-      - name: BQ
-        description: Bonaire
-      - name: BR
-        description: Brazil
-      - name: BS
-        description: Bahamas
-      - name: BT
-        description: Bhutan
-      - name: BV
-        description: Bouvet Island
-      - name: BW
-        description: Botswana
-      - name: BY
-        description: Belarus
-      - name: BZ
-        description: Belize
-      - name: CA
-        description: Canada
-      - name: CC
-        description: Cocos Islands
-      - name: CD
-        description: Democratic Republic of the Congo
-      - name: CF
-        description: Central African Republic
-      - name: CG
-        description: Congo
-      - name: CH
-        description: Switzerland
-      - name: CI
-        description: Ivory Coast
-      - name: CK
-        description: Cook Islands
-      - name: CL
-        description: Chile
-      - name: CM
-        description: Cameroon
-      - name: CN
-        description: China
-      - name: CO
-        description: Colombia
-      - name: CR
-        description: Costa Rica
-      - name: CU
-        description: Cuba
-      - name: CV
-        description: Cabo Verde
-      - name: CW
-        description: Curaçao
-      - name: CX
-        description: Christmas Island
-      - name: CY
-        description: Cyprus
-      - name: CZ
-        description: Czechia
-      - name: DE
-        description: Germany
-      - name: DJ
-        description: Djibouti
-      - name: DK
-        description: Denmark
-      - name: DM
-        description: Dominica
-      - name: DO
-        description: Dominican Republic
-      - name: DZ
-        description: Algeria
-      - name: EC
-        description: Ecuador
-      - name: EE
-        description: Estonia
-      - name: EG
-        description: Egypt
-      - name: EH
-        description: Western Sahara
-      - name: ER
-        description: Eritrea
-      - name: ES
-        description: Spain
-      - name: ET
-        description: Ethiopia
-      - name: FI
-        description: Finland
-      - name: FJ
-        description: Fiji
-      - name: FK
-        description: Falkland Islands
-      - name: FM
-        description: Federated States of Micronesia
-      - name: FO
-        description: Faroe Islands
-      - name: FR
-        description: France
-      - name: GA
-        description: Gabon
-      - name: GB
-        description: United Kingdom
-      - name: GD
-        description: Grenada
-      - name: GE
-        description: Georgia
-      - name: GF
-        description: French Guiana
-      - name: GG
-        description: Guernsey
-      - name: GH
-        description: Ghana
-      - name: GI
-        description: Gibraltar
-      - name: GL
-        description: Greenland
-      - name: GM
-        description: Gambia
-      - name: GN
-        description: Guinea
-      - name: GP
-        description: Guadeloupe
-      - name: GQ
-        description: Equatorial Guinea
-      - name: GR
-        description: Greece
-      - name: GS
-        description: South Georgia and the South Sandwich Islands
-      - name: GT
-        description: Guatemala
-      - name: GU
-        description: Guam
-      - name: GW
-        description: Guinea-Bissau
-      - name: GY
-        description: Guyana
-      - name: HK
-        description: Hong Kong
-      - name: HM
-        description: Heard Island and McDonald Islands
-      - name: HN
-        description: Honduras
-      - name: HR
-        description: Croatia
-      - name: HT
-        description: Haiti
-      - name: HU
-        description: Hungary
-      - name: ID
-        description: Indonesia
-      - name: IE
-        description: Ireland
-      - name: IL
-        description: Israel
-      - name: IM
-        description: Isle of Man
-      - name: IN
-        description: India
-      - name: IO
-        description: British Indian Ocean Territory
-      - name: IQ
-        description: Iraq
-      - name: IR
-        description: Iran
-      - name: IS
-        description: Iceland
-      - name: IT
-        description: Italy
-      - name: JE
-        description: Jersey
-      - name: JM
-        description: Jamaica
-      - name: JO
-        description: Jordan
-      - name: JP
-        description: Japan
-      - name: KE
-        description: Kenya
-      - name: KG
-        description: Kyrgyzstan
-      - name: KH
-        description: Cambodia
-      - name: KI
-        description: Kiribati
-      - name: KM
-        description: Comoros
-      - name: KN
-        description: Saint Kitts and Nevis
-      - name: KP
-        description: Democratic People's Republic of Korea
-      - name: KR
-        description: Republic of Korea
-      - name: KW
-        description: Kuwait
-      - name: KY
-        description: Cayman Islands
-      - name: KZ
-        description: Kazakhstan
-      - name: LA
-        description: Lao People's Democratic Republic
-      - name: LB
-        description: Lebanon
-      - name: LC
-        description: Saint Lucia
-      - name: LI
-        description: Liechtenstein
-      - name: LK
-        description: Sri Lanka
-      - name: LR
-        description: Liberia
-      - name: LS
-        description: Lesotho
-      - name: LT
-        description: Lithuania
-      - name: LU
-        description: Luxembourg
-      - name: LV
-        description: Latvia
-      - name: LY
-        description: Libya
-      - name: MA
-        description: Morocco
-      - name: MC
-        description: Monaco
-      - name: MD
-        description: Moldova
-      - name: ME
-        description: Montenegro
-      - name: MF
-        description: Saint Martin
-      - name: MG
-        description: Madagascar
-      - name: MH
-        description: Marshall Islands
-      - name: MK
-        description: North Macedonia
-      - name: ML
-        description: Mali
-      - name: MM
-        description: Myanmar
-      - name: MN
-        description: Mongolia
-      - name: MO
-        description: Macao
-      - name: MP
-        description: Northern Mariana Islands
-      - name: MQ
-        description: Martinique
-      - name: MR
-        description: Mauritania
-      - name: MS
-        description: Montserrat
-      - name: MT
-        description: Malta
-      - name: MU
-        description: Mauritius
-      - name: MV
-        description: Maldives
-      - name: MW
-        description: Malawi
-      - name: MX
-        description: Mexico
-      - name: MY
-        description: Malaysia
-      - name: MZ
-        description: Mozambique
-      - name: NA
-        description: Namibia
-      - name: NC
-        description: New Caledonia
-      - name: NE
-        description: Niger
-      - name: NF
-        description: Norfolk Island
-      - name: NG
-        description: Nigeria
-      - name: NI
-        description: Nicaragua
-      - name: NL
-        description: Netherlands
-      - name: 'NO'
-        description: Norway
-      - name: NP
-        description: Nepal
-      - name: NR
-        description: Nauru
-      - name: NU
-        description: Niue
-      - name: NZ
-        description: New Zealand
-      - name: OM
-        description: Oman
-      - name: PA
-        description: Panama
-      - name: PE
-        description: Peru
-      - name: PF
-        description: French Polynesia
-      - name: PG
-        description: Papua New Guinea
-      - name: PH
-        description: Philippines
-      - name: PK
-        description: Pakistan
-      - name: PL
-        description: Poland
-      - name: PM
-        description: Saint Pierre and Miquelon
-      - name: PN
-        description: Pitcairn
-      - name: PR
-        description: Puerto Rico
-      - name: PS
-        description: Palestine
-      - name: PT
-        description: Portugal
-      - name: PW
-        description: Palau
-      - name: PY
-        description: Paraguay
-      - name: QA
-        description: Qatar
-      - name: RE
-        description: Réunion
-      - name: RO
-        description: Romania
-      - name: RS
-        description: Serbia
-      - name: RU
-        description: Russia
-      - name: RW
-        description: Rwanda
-      - name: SA
-        description: Saudi Arabia
-      - name: SB
-        description: Solomon Islands
-      - name: SC
-        description: Seychelles
-      - name: SD
-        description: Sudan
-      - name: SE
-        description: Sweden
-      - name: SG
-        description: Singapore
-      - name: SH
-        description: Saint Helena, Ascension and Tristan da Cunha
-      - name: SI
-        description: Slovenia
-      - name: SJ
-        description: Svalbard and Jan Mayen
-      - name: SK
-        description: Slovakia
-      - name: SL
-        description: Sierra Leone
-      - name: SM
-        description: San Marino
-      - name: SN
-        description: Senegal
-      - name: SO
-        description: Somalia
-      - name: SR
-        description: Suriname
-      - name: SS
-        description: South Sudan
-      - name: ST
-        description: Sao Tome and Principe
-      - name: SV
-        description: El Salvador
-      - name: SX
-        description: Sint Maarten
-      - name: SY
-        description: Syrian Arab Republic
-      - name: SZ
-        description: Eswatini
-      - name: TC
-        description: Turks and Caicos Islands
-      - name: TD
-        description: Chad
-      - name: TF
-        description: French Southern Territories
-      - name: TG
-        description: Togo
-      - name: TH
-        description: Thailand
-      - name: TJ
-        description: Tajikistan
-      - name: TK
-        description: Tokelau
-      - name: TL
-        description: Timor-Leste
-      - name: TM
-        description: Turkmenistan
-      - name: TN
-        description: Tunisia
-      - name: TO
-        description: Tonga
-      - name: TR
-        description: Turkey
-      - name: TT
-        description: Trinidad and Tobago
-      - name: TV
-        description: Tuvalu
-      - name: TW
-        description: Taiwan
-      - name: TZ
-        description: Tanzania
-      - name: UA
-        description: Ukraine
-      - name: UG
-        description: Uganda
-      - name: UM
-        description: United States Minor Outlying Islands
-      - name: US
-        description: United States of America
-      - name: UY
-        description: Uruguay
-      - name: UZ
-        description: Uzbekistan
-      - name: VA
-        description: Vatican City
-      - name: VC
-        description: Saint Vincent and the Grenadines
-      - name: VE
-        description: Venezuela
-      - name: VG
-        description: British Virgin Islands
-      - name: VI
-        description: U.S. Virgin Islands
-      - name: VN
-        description: Vietnam
-      - name: VU
-        description: Vanuatu
-      - name: WF
-        description: Wallis and Futuna
-      - name: WS
-        description: Samoa
-      - name: YE
-        description: Yemen
-      - name: YT
-        description: Mayotte
-      - name: ZA
-        description: South Africa
-      - name: ZM
-        description: Zambia
-      - name: ZW
-        description: Zimbabwe
-      description: 'Indicates the country associated with another entity, such as a business.
-
-        Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
-      x-release-status: PUBLIC
-    ListCardsResponse:
+    CreateCardResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
 
-        a request to the [ListCards](api-endpoint:Cards-ListCards) endpoint.
+        a request to the [CreateCard](api-endpoint:Cards-CreateCard) endpoint.
 
 
         Note: if there are errors processing the request, the card field will not be
@@ -2226,23 +2149,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        cards:
-          type: array
-          items:
-            $ref: '#/components/schemas/Card'
-          description: The requested list of `Card`s.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If empty,
-
-            this is the final response.
-
-
-            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
+          description: Errors resulting from the request.
+        card:
+          $ref: '#/components/schemas/Card'
+          description: The card created by the request.
       example:
-        cards:
-        - billing_address:
+        card:
+          billing_address:
             address_line_1: 500 Electric Ave
             address_line_2: Suite 600
             administrative_district_level_1: NY
@@ -2264,35 +2177,94 @@ components:
           prepaid_type: NOT_PREPAID
           reference_id: user-id-1
           version: 1
-    Error:
+    DisableCardResponse:
       type: object
-      description: 'Represents an error encountered during a request to the Connect API.
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [DisableCard](api-endpoint:Cards-DisableCard) endpoint.
 
 
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+        Note: if there are errors processing the request, the card field will not be
+
+        present.'
       x-release-status: PUBLIC
-      required:
-      - category
-      - code
       properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        card:
+          $ref: '#/components/schemas/Card'
+          description: The retrieved card.
+      example:
+        card:
+          billing_address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          bin: '411111'
+          card_brand: VISA
+          card_type: CREDIT
+          cardholder_name: Amelia Earhart
+          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
+          enabled: false
+          exp_month: 11
+          exp_year: 2022
+          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
+          id: ccof:uIbfJXhXETSP197M3GB
+          last_4: '1111'
+          merchant_id: 6SSW7HV8K2ST5
+          prepaid_type: NOT_PREPAID
+          reference_id: user-id-1
+          version: 2
+    RetrieveCardResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
 
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
+        a request to the [RetrieveCard](api-endpoint:Cards-RetrieveCard) endpoint.
 
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
 
-            the error pertains to.'
+        Note: if there are errors processing the request, the card field will not be
+
+        present.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        card:
+          $ref: '#/components/schemas/Card'
+          description: The retrieved card.
+      example:
+        card:
+          billing_address:
+            address_line_1: 500 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          bin: '411111'
+          card_brand: VISA
+          card_type: CREDIT
+          cardholder_name: Amelia Earhart
+          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
+          enabled: true
+          exp_month: 11
+          exp_year: 2022
+          fingerprint: ex-p-cs80EK9Flz7LsCMv-szbptQ_ssAGrhemzSTsPFgt9nzyE6t7okiLIQc-qw_quqKX4Q
+          id: ccof:uIbfJXhXETSP197M3GB
+          last_4: '1111'
+          merchant_id: 6SSW7HV8K2ST5
+          prepaid_type: NOT_PREPAID
+          reference_id: user-id-1
+          version: 1
     CardCoBrand:
       type: string
       enum:
@@ -2308,108 +2280,136 @@ components:
         description: ''
       description: Indicates the brand for a co-branded card.
       x-release-status: PUBLIC
-    ErrorCategory:
+    Card:
+      type: object
+      description: 'Represents the payment details of a card to be used for payments. These
+
+        details are determined by the payment token generated by Web Payments SDK.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: Unique ID for this card. Generated by Square.
+          maxLength: 64
+          readOnly: true
+        card_brand:
+          $ref: '#/components/schemas/CardBrand'
+          description: 'The card''s brand.
+
+            See [CardBrand](#type-cardbrand) for possible values'
+          readOnly: true
+        last_4:
+          type: string
+          description: The last 4 digits of the card number.
+          maxLength: 4
+          readOnly: true
+        exp_month:
+          type:
+          - integer
+          - 'null'
+          description: The expiration month of the associated card as an integer between 1 and 12.
+          format: int64
+        exp_year:
+          type:
+          - integer
+          - 'null'
+          description: The four-digit year of the card's expiration date.
+          format: int64
+        cardholder_name:
+          type:
+          - string
+          - 'null'
+          description: The name of the cardholder.
+          maxLength: 96
+        billing_address:
+          $ref: '#/components/schemas/Address'
+          description: The billing address for this card.
+        fingerprint:
+          type: string
+          description: 'Intended as a Square-assigned identifier, based
+
+            on the card number, to identify the card across multiple locations within a
+
+            single application.'
+          maxLength: 255
+          readOnly: true
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: '**Required** The ID of a customer created using the Customers API to be associated with the card.'
+        merchant_id:
+          type: string
+          description: The ID of the merchant associated with the card.
+          readOnly: true
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: 'An optional user-defined reference ID that associates this card with
+
+            another entity in an external system. For example, a customer ID from an
+
+            external customer management system.'
+          maxLength: 128
+        enabled:
+          type: boolean
+          description: Indicates whether or not a card can be used for payments.
+          readOnly: true
+        card_type:
+          $ref: '#/components/schemas/CardType'
+          description: 'The type of the card.
+
+            The Card object includes this field only in response to Payments API calls.
+
+            See [CardType](#type-cardtype) for possible values'
+          readOnly: true
+        prepaid_type:
+          $ref: '#/components/schemas/CardPrepaidType'
+          description: 'Indicates whether the Card is prepaid or not.
+
+            The Card object includes this field only in response to Payments API calls.
+
+            See [CardPrepaidType](#type-cardprepaidtype) for possible values'
+          readOnly: true
+        bin:
+          type: string
+          description: 'The first six digits of the card number, known as the Bank Identification Number (BIN). Only the Payments API
+
+            returns this field.'
+          maxLength: 6
+          readOnly: true
+        version:
+          type: integer
+          description: 'Current version number of the card. Increments with each card update. Requests to update an
+
+            existing Card object will be rejected unless the version in the request matches the current
+
+            version for the Card.'
+          format: int64
+        card_co_brand:
+          $ref: '#/components/schemas/CardCoBrand'
+          description: 'The card''s co-brand if available. For example, an Afterpay virtual card would have a
+
+            co-brand of AFTERPAY.
+
+            See [CardCoBrand](#type-cardcobrand) for possible values'
+          readOnly: true
+    CardType:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - UNKNOWN_CARD_TYPE
+      - CREDIT
+      - DEBIT
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+      - name: UNKNOWN_CARD_TYPE
+        description: ''
+      - name: CREDIT
+        description: ''
+      - name: DEBIT
+        description: ''
+      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
       x-release-status: PUBLIC
-    CreateCardRequest:
-      type: object
-      description: 'Creates a card from the source (payment token or payment id). Accessible via
-
-        HTTP requests at POST https://connect.squareup.com/v2/cards'
-      x-release-status: PUBLIC
-      required:
-      - idempotency_key
-      - source_id
-      - card
-      properties:
-        idempotency_key:
-          type: string
-          description: 'A unique string that identifies this CreateCard request. Keys can be
-
-            any valid string and must be unique for every request.
-
-
-            Max: 45 characters
-
-
-            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
-          minLength: 1
-        source_id:
-          type: string
-          description: The ID of the source which represents the card information to be stored. This can be a card nonce or a payment id.
-          minLength: 1
-          maxLength: 16384
-        verification_token:
-          type: string
-          description: 'An identifying token generated by [Payments.verifyBuyer()](https://developer.squareup.com/reference/sdks/web/payments/objects/Payments#Payments.verifyBuyer).
-
-            Verification tokens encapsulate customer device information and 3-D Secure
-
-            challenge results to indicate that Square has verified the buyer identity.
-
-
-            See the [SCA Overview](https://developer.squareup.com/docs/sca-overview).'
-        card:
-          $ref: '#/components/schemas/Card'
-          description: Payment details associated with the card to be stored.
-      example:
-        card:
-          billing_address:
-            address_line_1: 500 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          cardholder_name: Amelia Earhart
-          customer_id: VDKXEEKPJN48QDG3BGGFAK05P8
-          reference_id: user-id-1
-        idempotency_key: 4935a656-a929-4792-b97c-8848be85c27c
-        source_id: cnon:uIbfJXhXETSP197M3GB
   securitySchemes:
     oauth2:
       type: oauth2

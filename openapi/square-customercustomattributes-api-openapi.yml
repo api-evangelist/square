@@ -648,325 +648,6 @@ paths:
                 $ref: '#/components/schemas/UpsertCustomerCustomAttributeResponse'
 components:
   schemas:
-    RetrieveCustomerCustomAttributeResponse:
-      type: object
-      description: 'Represents a [RetrieveCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-RetrieveCustomerCustomAttribute) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: 'The retrieved custom attribute. If `with_definition` was set to `true` in the request,
-
-            the custom attribute definition is returned in the `definition` field.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute:
-          created_at: '2022-04-26T15:50:27Z'
-          key: favoritemovie
-          updated_at: '2022-04-26T15:50:27Z'
-          value: Dune
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
-    RetrieveCustomerCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents a [RetrieveCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-RetrieveCustomerCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The retrieved custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-04-26T15:27:30Z'
-          description: The favorite movie of the customer.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-04-26T15:27:30Z'
-          version: 1
-          visibility: VISIBILITY_READ_WRITE_VALUES
-    BulkUpsertCustomerCustomAttributesRequest:
-      type: object
-      description: Represents a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes) request.
-      x-release-status: PUBLIC
-      required:
-      - values
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequest'
-          description: 'A map containing 1 to 25 individual upsert requests. For each request, provide an
-
-            arbitrary ID that is unique for this `BulkUpsertCustomerCustomAttributes` request and the
-
-            information needed to create or update a custom attribute.'
-      example:
-        values:
-          id1:
-            custom_attribute:
-              key: favoritemovie
-              value: Dune
-            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-          id2:
-            custom_attribute:
-              key: ownsmovie
-              value: false
-            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-          id3:
-            custom_attribute:
-              key: favoritemovie
-              value: Star Wars
-            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-          id4:
-            custom_attribute:
-              key: square:a0f1505a-2aa1-490d-91a8-8d31ff181808
-              value: '10.5'
-            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-          id5:
-            custom_attribute:
-              key: sq0ids-0evKIskIGaY45fCyNL66aw:backupemail
-              value: fake-email@squareup.com
-            customer_id: 70548QG1HN43B05G0KCZ4MMC1G
-    CustomAttributeDefinitionVisibility:
-      type: string
-      enum:
-      - VISIBILITY_HIDDEN
-      - VISIBILITY_READ_ONLY
-      - VISIBILITY_READ_WRITE_VALUES
-      x-enum-elements:
-      - name: VISIBILITY_HIDDEN
-        description: 'The custom attribute definition and values are hidden from the seller (except on export
-
-          of all seller data) and other developers.'
-      - name: VISIBILITY_READ_ONLY
-        description: 'The seller and other developers can read the custom attribute definition and values
-
-          on resources.'
-      - name: VISIBILITY_READ_WRITE_VALUES
-        description: 'The seller and other developers can read the custom attribute definition,
-
-          and can read and write values on resources. A custom attribute definition
-
-          can only be edited or deleted by the application that created it.'
-      description: 'The level of permission that a seller or other applications requires to
-
-        view this custom attribute definition.
-
-        The `Visibility` field controls who can read and write the custom attribute values
-
-        and custom attribute definition.'
-      x-release-status: PUBLIC
-    UpdateCustomerCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents an [UpdateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-UpdateCustomerCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The updated custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-04-26T15:27:30Z'
-          description: Update the description as desired.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-04-26T15:39:38Z'
-          version: 2
-          visibility: VISIBILITY_READ_ONLY
-    ListCustomerCustomAttributeDefinitionsResponse:
-      type: object
-      description: 'Represents a [ListCustomerCustomAttributeDefinitions](api-endpoint:CustomerCustomAttributes-ListCustomerCustomAttributeDefinitions) response.
-
-        Either `custom_attribute_definitions`, an empty object, or `errors` is present in the response.
-
-        If additional results are available, the `cursor` field is also present along with `custom_attribute_definitions`.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definitions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'The retrieved custom attribute definitions. If no custom attribute definitions are found,
-
-            Square returns an empty object (`{}`).'
-        cursor:
-          type: string
-          description: 'The cursor to provide in your next call to this endpoint to retrieve the next page of
-
-            results for your original request. This field is present only if the request succeeded and
-
-            additional results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        cursor: YEk4UPbUEsu8MUV0xouO5hCiFcD9T5ztB6UWEJq5vZnqBFmoBEi0j1j6HWYTFGMRre4p7T5wAQBj3Th1NX3XgBFcQVEVsIxUQ2NsbwjRitfoEZDml9uxxQXepowyRvCuSThHPbJSn7M7wInl3x8XypQF9ahVVQXegJ0CxEKc0SBH
-        custom_attribute_definitions:
-        - created_at: '2022-04-26T15:27:30Z'
-          description: Update the description as desired.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-04-26T15:39:38Z'
-          version: 3
-          visibility: VISIBILITY_READ_ONLY
-        - created_at: '2022-04-26T15:49:05Z'
-          description: Customer owns movie.
-          key: ownsmovie
-          name: Owns Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.Boolean
-          updated_at: '2022-04-26T15:49:05Z'
-          version: 1
-          visibility: VISIBILITY_HIDDEN
-    UpdateCustomerCustomAttributeDefinitionRequest:
-      type: object
-      description: Represents an [UpdateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-UpdateCustomerCustomAttributeDefinition) request.
-      x-release-status: PUBLIC
-      x-params-example: ?key=favoritemovie
-      required:
-      - custom_attribute_definition
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: "The custom attribute definition that contains the fields to update. This endpoint\nsupports sparse updates, so only new or changed fields need to be included in the request.\nOnly the following fields can be updated:\n\n- `name`\n- `description`\n- `visibility`\n- `schema` for a `Selection` data type. Only changes to the named options or the maximum number of allowed\nselections are supported.\n\nFor more information, see\n[Updatable definition fields](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attribute-definitions#updatable-definition-fields).\n\nTo enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency) \ncontrol, include the optional `version` field and specify the current version of the custom attribute definition."
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-      example:
-        custom_attribute_definition:
-          description: Update the description as desired.
-          visibility: VISIBILITY_READ_ONLY
-    CustomAttribute:
-      type: object
-      description: 'A custom attribute value. Each custom attribute value has a corresponding
-
-        `CustomAttributeDefinition` object.'
-      x-release-status: PUBLIC
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-          description: 'The identifier
-
-            of the custom attribute definition and its corresponding custom attributes. This value
-
-            can be a simple key, which is the key that is provided when the custom attribute definition
-
-            is created, or a qualified key, if the requesting
-
-            application is not the definition owner. The qualified key consists of the application ID
-
-            of the custom attribute definition owner
-
-            followed by the simple key that was provided when the definition was created. It has the
-
-            format application_id:simple key.
-
-
-            The value for a simple key can contain up to 60 alphanumeric characters, periods (.),
-
-            underscores (_), and hyphens (-).'
-          minLength: 1
-          pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
-        value:
-          description: 'The value assigned to the custom attribute. It is validated against the custom
-
-            attribute definition''s schema on write operations. For more information about custom
-
-            attribute values,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-        version:
-          type: integer
-          description: 'Read only. The current version of the custom attribute. This field is incremented when the custom attribute is changed.
-
-            When updating an existing custom attribute value, you can provide this field
-
-            and specify the current version of the custom attribute to enable
-
-            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency).
-
-            This field can also be used to enforce strong consistency for reads. For more information about strong consistency for reads,
-
-            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
-        visibility:
-          $ref: '#/components/schemas/CustomAttributeDefinitionVisibility'
-          description: 'A copy of the `visibility` field value for the associated custom attribute definition.
-
-            See [CustomAttributeDefinitionVisibility](#type-customattributedefinitionvisibility) for possible values'
-          readOnly: true
-        definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: 'A copy of the associated custom attribute definition object. This field is only set when
-
-            the optional field is specified on the request.'
-          readOnly: true
-        updated_at:
-          type: string
-          description: 'The timestamp that indicates when the custom attribute was created or was most recently
-
-            updated, in RFC 3339 format.'
-          readOnly: true
-        created_at:
-          type: string
-          description: The timestamp that indicates when the custom attribute was created, in RFC 3339 format.
-          readOnly: true
-    UpsertCustomerCustomAttributeRequest:
-      type: object
-      description: Represents an [UpsertCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-UpsertCustomerCustomAttribute) request.
-      x-release-status: PUBLIC
-      x-params-example: ?customer_id=Z57QXKM2FGXEQDV42W8RBZY7BR&key=favoritemovie
-      required:
-      - custom_attribute
-      properties:
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: "The custom attribute to create or update, with the following fields:\n\n- `value`. This value must conform to the `schema` specified by the definition. \nFor more information, see [Value data types](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attributes#value-data-types).\n\n- `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol for an update operation, include this optional field and specify the current version\nof the custom attribute."
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
-
-            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-      example:
-        custom_attribute:
-          value: Dune
     BulkUpsertCustomerCustomAttributesResponseCustomerCustomAttributeUpsertResponse:
       type: object
       description: Represents a response for an individual upsert request in a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes) operation.
@@ -992,99 +673,6 @@ components:
           version: 1
           visibility: VISIBILITY_READ_WRITE_VALUES
         customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-    BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequest:
-      type: object
-      description: 'Represents an individual upsert request in a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes)
-
-        request. An individual request contains a customer ID, the custom attribute to create or update,
-
-        and an optional idempotency key.'
-      x-release-status: PUBLIC
-      required:
-      - customer_id
-      - custom_attribute
-      properties:
-        customer_id:
-          type: string
-          description: The ID of the target [customer profile](entity:Customer).
-          minLength: 1
-        custom_attribute:
-          $ref: '#/components/schemas/CustomAttribute'
-          description: "The custom attribute to create or update, with following fields:\n\n- `key`. This key must match the `key` of a custom attribute definition in the Square seller \naccount. If the requesting application is not the definition owner, you must provide the qualified key.\n\n- `value`. This value must conform to the `schema` specified by the definition. \nFor more information, see [Value data types](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attributes#value-data-types).\n\n- `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol for update operations, include this optional field in the request and set the\nvalue to the current version of the custom attribute."
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A unique identifier for this individual upsert request, used to ensure idempotency.
-
-            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          maxLength: 45
-    BulkUpsertCustomerCustomAttributesResponse:
-      type: object
-      description: 'Represents a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes) response,
-
-        which contains a map of responses that each corresponds to an individual upsert request.'
-      x-release-status: PUBLIC
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/BulkUpsertCustomerCustomAttributesResponseCustomerCustomAttributeUpsertResponse'
-          description: 'A map of responses that correspond to individual upsert requests. Each response has the
-
-            same ID as the corresponding request and contains either a `customer_id` and `custom_attribute` or an `errors` field.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        values:
-          id1:
-            custom_attribute:
-              created_at: '2021-12-08T23:14:47Z'
-              key: favoritemovie
-              updated_at: '2021-12-09T00:16:23Z'
-              value: Dune
-              version: 1
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-          id2:
-            custom_attribute:
-              created_at: '2021-12-09T00:16:20Z'
-              key: ownsmovie
-              updated_at: '2021-12-09T00:16:23Z'
-              value: false
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-          id3:
-            custom_attribute:
-              created_at: '2021-12-09T00:16:20Z'
-              key: favoritemovie
-              updated_at: '2021-12-09T00:16:23Z'
-              value: Star Wars
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
-          id4:
-            custom_attribute:
-              created_at: '2021-12-08T23:14:47Z'
-              key: square:a0f1505a-2aa1-490d-91a8-8d31ff181808
-              updated_at: '2021-12-09T00:16:23Z'
-              value: '10.5'
-              version: 1
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
-          id5:
-            custom_attribute:
-              created_at: '2021-12-09T00:16:20Z'
-              key: sq0ids-0evKIskIGaY45fCyNL66aw:backupemail
-              updated_at: '2021-12-09T00:16:23Z'
-              value: fake-email@squareup.com
-              version: 2
-              visibility: VISIBILITY_READ_WRITE_VALUES
-            customer_id: 70548QG1HN43B05G0KCZ4MMC1G
     CustomAttributeDefinition:
       type: object
       description: 'Represents a definition for custom attribute values. A custom attribute definition
@@ -1188,89 +776,71 @@ components:
           type: string
           description: The timestamp that indicates when the custom attribute definition was created, in RFC 3339 format.
           readOnly: true
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    DeleteCustomerCustomAttributeResponse:
+    BulkUpsertCustomerCustomAttributesRequest:
       type: object
-      description: 'Represents a [DeleteCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-DeleteCustomerCustomAttribute) response.
-
-        Either an empty object `{}` (for a successful deletion) or `errors` is present in the response.'
+      description: Represents a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes) request.
       x-release-status: PUBLIC
+      required:
+      - values
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
-    UpsertCustomerCustomAttributeResponse:
-      type: object
-      description: 'Represents an [UpsertCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-UpsertCustomerCustomAttribute) response.
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequest'
+          description: 'A map containing 1 to 25 individual upsert requests. For each request, provide an
 
-        Either `custom_attribute_definition` or `errors` is present in the response.'
+            arbitrary ID that is unique for this `BulkUpsertCustomerCustomAttributes` request and the
+
+            information needed to create or update a custom attribute.'
+      example:
+        values:
+          id1:
+            custom_attribute:
+              key: favoritemovie
+              value: Dune
+            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
+          id2:
+            custom_attribute:
+              key: ownsmovie
+              value: false
+            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
+          id3:
+            custom_attribute:
+              key: favoritemovie
+              value: Star Wars
+            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
+          id4:
+            custom_attribute:
+              key: square:a0f1505a-2aa1-490d-91a8-8d31ff181808
+              value: '10.5'
+            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
+          id5:
+            custom_attribute:
+              key: sq0ids-0evKIskIGaY45fCyNL66aw:backupemail
+              value: fake-email@squareup.com
+            customer_id: 70548QG1HN43B05G0KCZ4MMC1G
+    UpsertCustomerCustomAttributeRequest:
+      type: object
+      description: Represents an [UpsertCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-UpsertCustomerCustomAttribute) request.
       x-release-status: PUBLIC
+      x-params-example: ?customer_id=Z57QXKM2FGXEQDV42W8RBZY7BR&key=favoritemovie
+      required:
+      - custom_attribute
       properties:
         custom_attribute:
           $ref: '#/components/schemas/CustomAttribute'
-          description: The new or updated custom attribute.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
+          description: "The custom attribute to create or update, with the following fields:\n\n- `value`. This value must conform to the `schema` specified by the definition. \nFor more information, see [Value data types](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attributes#value-data-types).\n\n- `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol for an update operation, include this optional field and specify the current version\nof the custom attribute."
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
+
+            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
       example:
         custom_attribute:
-          created_at: '2022-04-26T15:50:27Z'
-          key: favoritemovie
-          updated_at: '2022-04-26T15:50:27Z'
           value: Dune
-          version: 1
-          visibility: VISIBILITY_READ_ONLY
     ErrorCode:
       type: string
       enum:
@@ -2017,6 +1587,101 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    CustomAttributeDefinitionVisibility:
+      type: string
+      enum:
+      - VISIBILITY_HIDDEN
+      - VISIBILITY_READ_ONLY
+      - VISIBILITY_READ_WRITE_VALUES
+      x-enum-elements:
+      - name: VISIBILITY_HIDDEN
+        description: 'The custom attribute definition and values are hidden from the seller (except on export
+
+          of all seller data) and other developers.'
+      - name: VISIBILITY_READ_ONLY
+        description: 'The seller and other developers can read the custom attribute definition and values
+
+          on resources.'
+      - name: VISIBILITY_READ_WRITE_VALUES
+        description: 'The seller and other developers can read the custom attribute definition,
+
+          and can read and write values on resources. A custom attribute definition
+
+          can only be edited or deleted by the application that created it.'
+      description: 'The level of permission that a seller or other applications requires to
+
+        view this custom attribute definition.
+
+        The `Visibility` field controls who can read and write the custom attribute values
+
+        and custom attribute definition.'
+      x-release-status: PUBLIC
+    BulkUpsertCustomerCustomAttributesResponse:
+      type: object
+      description: 'Represents a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes) response,
+
+        which contains a map of responses that each corresponds to an individual upsert request.'
+      x-release-status: PUBLIC
+      properties:
+        values:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BulkUpsertCustomerCustomAttributesResponseCustomerCustomAttributeUpsertResponse'
+          description: 'A map of responses that correspond to individual upsert requests. Each response has the
+
+            same ID as the corresponding request and contains either a `customer_id` and `custom_attribute` or an `errors` field.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        values:
+          id1:
+            custom_attribute:
+              created_at: '2021-12-08T23:14:47Z'
+              key: favoritemovie
+              updated_at: '2021-12-09T00:16:23Z'
+              value: Dune
+              version: 1
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
+          id2:
+            custom_attribute:
+              created_at: '2021-12-09T00:16:20Z'
+              key: ownsmovie
+              updated_at: '2021-12-09T00:16:23Z'
+              value: false
+              version: 2
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
+          id3:
+            custom_attribute:
+              created_at: '2021-12-09T00:16:20Z'
+              key: favoritemovie
+              updated_at: '2021-12-09T00:16:23Z'
+              value: Star Wars
+              version: 2
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            customer_id: SY8EMWRNDN3TQDP2H4KS1QWMMM
+          id4:
+            custom_attribute:
+              created_at: '2021-12-08T23:14:47Z'
+              key: square:a0f1505a-2aa1-490d-91a8-8d31ff181808
+              updated_at: '2021-12-09T00:16:23Z'
+              value: '10.5'
+              version: 1
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            customer_id: N3NCVYY3WS27HF0HKANA3R9FP8
+          id5:
+            custom_attribute:
+              created_at: '2021-12-09T00:16:20Z'
+              key: sq0ids-0evKIskIGaY45fCyNL66aw:backupemail
+              updated_at: '2021-12-09T00:16:23Z'
+              value: fake-email@squareup.com
+              version: 2
+              visibility: VISIBILITY_READ_WRITE_VALUES
+            customer_id: 70548QG1HN43B05G0KCZ4MMC1G
     CreateCustomerCustomAttributeDefinitionRequest:
       type: object
       description: Represents a [CreateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-CreateCustomerCustomAttributeDefinition) request.
@@ -2051,6 +1716,145 @@ components:
           schema:
             $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
           visibility: VISIBILITY_HIDDEN
+    CreateCustomerCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents a [CreateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-CreateCustomerCustomAttributeDefinition) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: The new custom attribute definition.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute_definition:
+          created_at: '2022-04-26T15:27:30Z'
+          description: The favorite movie of the customer.
+          key: favoritemovie
+          name: Favorite Movie
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          updated_at: '2022-04-26T15:27:30Z'
+          version: 1
+          visibility: VISIBILITY_HIDDEN
+    DeleteCustomerCustomAttributeDefinitionResponse:
+      type: object
+      description: Represents a response from a delete request containing error messages if there are any.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    ListCustomerCustomAttributeDefinitionsResponse:
+      type: object
+      description: 'Represents a [ListCustomerCustomAttributeDefinitions](api-endpoint:CustomerCustomAttributes-ListCustomerCustomAttributeDefinitions) response.
+
+        Either `custom_attribute_definitions`, an empty object, or `errors` is present in the response.
+
+        If additional results are available, the `cursor` field is also present along with `custom_attribute_definitions`.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute_definitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: 'The retrieved custom attribute definitions. If no custom attribute definitions are found,
+
+            Square returns an empty object (`{}`).'
+        cursor:
+          type: string
+          description: 'The cursor to provide in your next call to this endpoint to retrieve the next page of
+
+            results for your original request. This field is present only if the request succeeded and
+
+            additional results are available. For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        cursor: YEk4UPbUEsu8MUV0xouO5hCiFcD9T5ztB6UWEJq5vZnqBFmoBEi0j1j6HWYTFGMRre4p7T5wAQBj3Th1NX3XgBFcQVEVsIxUQ2NsbwjRitfoEZDml9uxxQXepowyRvCuSThHPbJSn7M7wInl3x8XypQF9ahVVQXegJ0CxEKc0SBH
+        custom_attribute_definitions:
+        - created_at: '2022-04-26T15:27:30Z'
+          description: Update the description as desired.
+          key: favoritemovie
+          name: Favorite Movie
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          updated_at: '2022-04-26T15:39:38Z'
+          version: 3
+          visibility: VISIBILITY_READ_ONLY
+        - created_at: '2022-04-26T15:49:05Z'
+          description: Customer owns movie.
+          key: ownsmovie
+          name: Owns Movie
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.Boolean
+          updated_at: '2022-04-26T15:49:05Z'
+          version: 1
+          visibility: VISIBILITY_HIDDEN
+    UpdateCustomerCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents an [UpdateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-UpdateCustomerCustomAttributeDefinition) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: The updated custom attribute definition.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute_definition:
+          created_at: '2022-04-26T15:27:30Z'
+          description: Update the description as desired.
+          key: favoritemovie
+          name: Favorite Movie
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          updated_at: '2022-04-26T15:39:38Z'
+          version: 2
+          visibility: VISIBILITY_READ_ONLY
+    BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequest:
+      type: object
+      description: 'Represents an individual upsert request in a [BulkUpsertCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-BulkUpsertCustomerCustomAttributes)
+
+        request. An individual request contains a customer ID, the custom attribute to create or update,
+
+        and an optional idempotency key.'
+      x-release-status: PUBLIC
+      required:
+      - customer_id
+      - custom_attribute
+      properties:
+        customer_id:
+          type: string
+          description: The ID of the target [customer profile](entity:Customer).
+          minLength: 1
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: "The custom attribute to create or update, with following fields:\n\n- `key`. This key must match the `key` of a custom attribute definition in the Square seller \naccount. If the requesting application is not the definition owner, you must provide the qualified key.\n\n- `value`. This value must conform to the `schema` specified by the definition. \nFor more information, see [Value data types](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attributes#value-data-types).\n\n- `version`. To enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency)\ncontrol for update operations, include this optional field in the request and set the\nvalue to the current version of the custom attribute."
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this individual upsert request, used to ensure idempotency.
+
+            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
     ListCustomerCustomAttributesResponse:
       type: object
       description: 'Represents a [ListCustomerCustomAttributes](api-endpoint:CustomerCustomAttributes-ListCustomerCustomAttributes) response.
@@ -2096,6 +1900,226 @@ components:
           value: false
           version: 1
           visibility: VISIBILITY_HIDDEN
+    RetrieveCustomerCustomAttributeResponse:
+      type: object
+      description: 'Represents a [RetrieveCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-RetrieveCustomerCustomAttribute) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: 'The retrieved custom attribute. If `with_definition` was set to `true` in the request,
+
+            the custom attribute definition is returned in the `definition` field.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute:
+          created_at: '2022-04-26T15:50:27Z'
+          key: favoritemovie
+          updated_at: '2022-04-26T15:50:27Z'
+          value: Dune
+          version: 1
+          visibility: VISIBILITY_READ_ONLY
+    UpsertCustomerCustomAttributeResponse:
+      type: object
+      description: 'Represents an [UpsertCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-UpsertCustomerCustomAttribute) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute:
+          $ref: '#/components/schemas/CustomAttribute'
+          description: The new or updated custom attribute.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute:
+          created_at: '2022-04-26T15:50:27Z'
+          key: favoritemovie
+          updated_at: '2022-04-26T15:50:27Z'
+          value: Dune
+          version: 1
+          visibility: VISIBILITY_READ_ONLY
+    UpdateCustomerCustomAttributeDefinitionRequest:
+      type: object
+      description: Represents an [UpdateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-UpdateCustomerCustomAttributeDefinition) request.
+      x-release-status: PUBLIC
+      x-params-example: ?key=favoritemovie
+      required:
+      - custom_attribute_definition
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: "The custom attribute definition that contains the fields to update. This endpoint\nsupports sparse updates, so only new or changed fields need to be included in the request.\nOnly the following fields can be updated:\n\n- `name`\n- `description`\n- `visibility`\n- `schema` for a `Selection` data type. Only changes to the named options or the maximum number of allowed\nselections are supported.\n\nFor more information, see\n[Updatable definition fields](https://developer.squareup.com/docs/customer-custom-attributes-api/custom-attribute-definitions#updatable-definition-fields).\n\nTo enable [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency) \ncontrol, include the optional `version` field and specify the current version of the custom attribute definition."
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A unique identifier for this request, used to ensure idempotency. For more information,
+
+            see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          maxLength: 45
+      example:
+        custom_attribute_definition:
+          description: Update the description as desired.
+          visibility: VISIBILITY_READ_ONLY
+    RetrieveCustomerCustomAttributeDefinitionResponse:
+      type: object
+      description: 'Represents a [RetrieveCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-RetrieveCustomerCustomAttributeDefinition) response.
+
+        Either `custom_attribute_definition` or `errors` is present in the response.'
+      x-release-status: PUBLIC
+      properties:
+        custom_attribute_definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: The retrieved custom attribute definition.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        custom_attribute_definition:
+          created_at: '2022-04-26T15:27:30Z'
+          description: The favorite movie of the customer.
+          key: favoritemovie
+          name: Favorite Movie
+          schema:
+            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
+          updated_at: '2022-04-26T15:27:30Z'
+          version: 1
+          visibility: VISIBILITY_READ_WRITE_VALUES
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    CustomAttribute:
+      type: object
+      description: 'A custom attribute value. Each custom attribute value has a corresponding
+
+        `CustomAttributeDefinition` object.'
+      x-release-status: PUBLIC
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: 'The identifier
+
+            of the custom attribute definition and its corresponding custom attributes. This value
+
+            can be a simple key, which is the key that is provided when the custom attribute definition
+
+            is created, or a qualified key, if the requesting
+
+            application is not the definition owner. The qualified key consists of the application ID
+
+            of the custom attribute definition owner
+
+            followed by the simple key that was provided when the definition was created. It has the
+
+            format application_id:simple key.
+
+
+            The value for a simple key can contain up to 60 alphanumeric characters, periods (.),
+
+            underscores (_), and hyphens (-).'
+          minLength: 1
+          pattern: ^([a-zA-Z0-9\._-]+:)?[a-zA-Z0-9\._-]{1,60}$
+        value:
+          description: 'The value assigned to the custom attribute. It is validated against the custom
+
+            attribute definition''s schema on write operations. For more information about custom
+
+            attribute values,
+
+            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
+        version:
+          type: integer
+          description: 'Read only. The current version of the custom attribute. This field is incremented when the custom attribute is changed.
+
+            When updating an existing custom attribute value, you can provide this field
+
+            and specify the current version of the custom attribute to enable
+
+            [optimistic concurrency](https://developer.squareup.com/docs/build-basics/common-api-patterns/optimistic-concurrency).
+
+            This field can also be used to enforce strong consistency for reads. For more information about strong consistency for reads,
+
+            see [Custom Attributes Overview](https://developer.squareup.com/docs/devtools/customattributes/overview).'
+        visibility:
+          $ref: '#/components/schemas/CustomAttributeDefinitionVisibility'
+          description: 'A copy of the `visibility` field value for the associated custom attribute definition.
+
+            See [CustomAttributeDefinitionVisibility](#type-customattributedefinitionvisibility) for possible values'
+          readOnly: true
+        definition:
+          $ref: '#/components/schemas/CustomAttributeDefinition'
+          description: 'A copy of the associated custom attribute definition object. This field is only set when
+
+            the optional field is specified on the request.'
+          readOnly: true
+        updated_at:
+          type: string
+          description: 'The timestamp that indicates when the custom attribute was created or was most recently
+
+            updated, in RFC 3339 format.'
+          readOnly: true
+        created_at:
+          type: string
+          description: The timestamp that indicates when the custom attribute was created, in RFC 3339 format.
+          readOnly: true
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -2125,9 +2149,11 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
-    DeleteCustomerCustomAttributeDefinitionResponse:
+    DeleteCustomerCustomAttributeResponse:
       type: object
-      description: Represents a response from a delete request containing error messages if there are any.
+      description: 'Represents a [DeleteCustomerCustomAttribute](api-endpoint:CustomerCustomAttributes-DeleteCustomerCustomAttribute) response.
+
+        Either an empty object `{}` (for a successful deletion) or `errors` is present in the response.'
       x-release-status: PUBLIC
       properties:
         errors:
@@ -2136,32 +2162,6 @@ components:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
       example: {}
-    CreateCustomerCustomAttributeDefinitionResponse:
-      type: object
-      description: 'Represents a [CreateCustomerCustomAttributeDefinition](api-endpoint:CustomerCustomAttributes-CreateCustomerCustomAttributeDefinition) response.
-
-        Either `custom_attribute_definition` or `errors` is present in the response.'
-      x-release-status: PUBLIC
-      properties:
-        custom_attribute_definition:
-          $ref: '#/components/schemas/CustomAttributeDefinition'
-          description: The new custom attribute definition.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        custom_attribute_definition:
-          created_at: '2022-04-26T15:27:30Z'
-          description: The favorite movie of the customer.
-          key: favoritemovie
-          name: Favorite Movie
-          schema:
-            $ref: https://developer-production-s.squarecdn.com/schemas/v1/common.json#squareup.common.String
-          updated_at: '2022-04-26T15:27:30Z'
-          version: 1
-          visibility: VISIBILITY_HIDDEN
   securitySchemes:
     oauth2:
       type: oauth2

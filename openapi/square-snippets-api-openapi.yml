@@ -258,35 +258,93 @@ components:
           id: snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7
           site_id: site_278075276488921835
           updated_at: '2021-03-11T25:40:09.000000Z'
-    Snippet:
+    DeleteSnippetResponse:
       type: object
-      description: Represents the snippet that is added to a Square Online site. The snippet code is injected into the `head` element of all pages on the site, except for checkout pages.
+      description: Represents a `DeleteSnippet` response.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
       x-release-status: PUBLIC
       required:
-      - content
+      - category
+      - code
       properties:
-        id:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
           type: string
-          description: The Square-assigned ID for the snippet.
-          maxLength: 48
-          readOnly: true
-        site_id:
+          description: A human-readable description of the error for debugging purposes.
+        field:
           type: string
-          description: The ID of the site that contains the snippet.
-          readOnly: true
-        content:
-          type: string
-          description: The snippet code, which can contain valid HTML, JavaScript, or both.
-          minLength: 1
-          maxLength: 65535
-        created_at:
-          type: string
-          description: The timestamp of when the snippet was initially added to the site, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp of when the snippet was last updated on the site, in RFC 3339 format.
-          readOnly: true
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
     ErrorCode:
       type: string
       enum:
@@ -1033,6 +1091,35 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    Snippet:
+      type: object
+      description: Represents the snippet that is added to a Square Online site. The snippet code is injected into the `head` element of all pages on the site, except for checkout pages.
+      x-release-status: PUBLIC
+      required:
+      - content
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID for the snippet.
+          maxLength: 48
+          readOnly: true
+        site_id:
+          type: string
+          description: The ID of the site that contains the snippet.
+          readOnly: true
+        content:
+          type: string
+          description: The snippet code, which can contain valid HTML, JavaScript, or both.
+          minLength: 1
+          maxLength: 65535
+        created_at:
+          type: string
+          description: The timestamp of when the snippet was initially added to the site, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp of when the snippet was last updated on the site, in RFC 3339 format.
+          readOnly: true
     UpsertSnippetResponse:
       type: object
       description: Represents an `UpsertSnippet` response. The response can include either `snippet` or `errors`.
@@ -1053,93 +1140,6 @@ components:
           id: snippet_5d178150-a6c0-11eb-a9f1-437e6a2881e7
           site_id: site_278075276488921835
           updated_at: '2021-03-11T25:40:09.000000Z'
-    DeleteSnippetResponse:
-      type: object
-      description: Represents a `DeleteSnippet` response.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2
