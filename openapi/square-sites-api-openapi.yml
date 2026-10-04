@@ -138,115 +138,6 @@ paths:
                 $ref: '#/components/schemas/ListSitesResponse'
 components:
   schemas:
-    Site:
-      type: object
-      description: Represents a Square Online site, which is an online store for a Square seller.
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: The Square-assigned ID of the site.
-          maxLength: 32
-          readOnly: true
-        site_title:
-          type:
-          - string
-          - 'null'
-          description: The title of the site.
-        domain:
-          type:
-          - string
-          - 'null'
-          description: The domain of the site (without the protocol). For example, `mysite1.square.site`.
-        is_published:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether the site is published.
-        created_at:
-          type: string
-          description: The timestamp of when the site was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp of when the site was last updated, in RFC 3339 format.
-          readOnly: true
-    ListSitesResponse:
-      type: object
-      description: Represents a `ListSites` response. The response can include either `sites` or `errors`.
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        sites:
-          type: array
-          items:
-            $ref: '#/components/schemas/Site'
-          description: The sites that belong to the seller.
-      example:
-        sites:
-        - created_at: '2020-10-28T13:22:51.000000Z'
-          domain: mysite2.square.site
-          id: site_278075276488921835
-          is_published: false
-          site_title: My Second Site
-          updated_at: '2020-10-28T13:22:51.000000Z'
-        - created_at: '2020-06-18T17:45:13.000000Z'
-          domain: mysite1.square.site
-          id: site_102725345836253849
-          is_published: true
-          site_title: My First Site
-          updated_at: '2020-11-23T02:19:10.000000Z'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -1022,6 +913,115 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    Site:
+      type: object
+      description: Represents a Square Online site, which is an online store for a Square seller.
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the site.
+          maxLength: 32
+          readOnly: true
+        site_title:
+          type:
+          - string
+          - 'null'
+          description: The title of the site.
+        domain:
+          type:
+          - string
+          - 'null'
+          description: The domain of the site (without the protocol). For example, `mysite1.square.site`.
+        is_published:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether the site is published.
+        created_at:
+          type: string
+          description: The timestamp of when the site was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp of when the site was last updated, in RFC 3339 format.
+          readOnly: true
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    ListSitesResponse:
+      type: object
+      description: Represents a `ListSites` response. The response can include either `sites` or `errors`.
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        sites:
+          type: array
+          items:
+            $ref: '#/components/schemas/Site'
+          description: The sites that belong to the seller.
+      example:
+        sites:
+        - created_at: '2020-10-28T13:22:51.000000Z'
+          domain: mysite2.square.site
+          id: site_278075276488921835
+          is_published: false
+          site_title: My Second Site
+          updated_at: '2020-10-28T13:22:51.000000Z'
+        - created_at: '2020-06-18T17:45:13.000000Z'
+          domain: mysite1.square.site
+          id: site_102725345836253849
+          is_published: true
+          site_title: My First Site
+          updated_at: '2020-11-23T02:19:10.000000Z'
   securitySchemes:
     oauth2:
       type: oauth2

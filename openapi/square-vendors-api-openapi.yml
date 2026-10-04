@@ -346,181 +346,35 @@ components:
 
         whether a [Vendor](entity:Vendor) is active or inactive.'
       x-release-status: BETA
-    UpdateVendorRequest:
+    Error:
       type: object
-      description: Represents an input to a call to [UpdateVendor](api-endpoint:Vendors-UpdateVendor).
-      x-release-status: BETA
-      required:
-      - vendor
-      properties:
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: 'A client-supplied, universally unique identifier (UUID) for the
-
-            request.
+      description: 'Represents an error encountered during a request to the Connect API.
 
 
-            See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the
-
-            [API Development 101](https://developer.squareup.com/docs/buildbasics) section for more
-
-            information.'
-          maxLength: 128
-        vendor:
-          $ref: '#/components/schemas/Vendor'
-          description: The specified [Vendor](entity:Vendor) to be updated.
-      example:
-        idempotency_key: 8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe
-        vendor:
-          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-          name: Jack's Chicken Shack
-          status: ACTIVE
-          version: 1
-    SearchVendorsResponse:
-      type: object
-      description: Represents an output from a call to [SearchVendors](api-endpoint:Vendors-SearchVendors).
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered when the request fails.
-        vendors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Vendor'
-          description: The [Vendor](entity:Vendor) objects matching the specified search filter.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If unset,
-
-            this is the final response.
-
-
-            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
-      example:
-        vendors:
-        - account_number: '4025391'
-          address:
-            address_line_1: 505 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          contacts:
-          - email_address: joe@joesfreshseafood.com
-            id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
-            name: Joe Burrow
-            phone_number: 1-212-555-4250
-          created_at: '2022-03-16T10:21:54.859Z'
-          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-          name: Joe's Fresh Seafood
-          note: a vendor
-          status: ACTIVE
-          updated_at: '2022-03-16T10:21:54.859Z'
-          version: 1
-    SearchVendorsRequestSortField:
-      type: string
-      enum:
-      - NAME
-      - CREATED_AT
-      x-enum-elements:
-      - name: NAME
-        description: To sort the result by the name of the [Vendor](entity:Vendor) objects.
-      - name: CREATED_AT
-        description: To sort the result by the creation time of the [Vendor](entity:Vendor) objects.
-      description: The field to sort the returned [Vendor](entity:Vendor) objects by.
-      x-release-status: BETA
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
       x-release-status: PUBLIC
-    CreateVendorRequest:
-      type: object
-      description: Represents an input to a call to [CreateVendor](api-endpoint:Vendors-CreateVendor).
-      x-release-status: BETA
       required:
-      - idempotency_key
+      - category
+      - code
       properties:
-        idempotency_key:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
           type: string
-          description: 'A client-supplied, universally unique identifier (UUID) to make this [CreateVendor](api-endpoint:Vendors-CreateVendor) call idempotent.
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
 
-
-            See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the
-
-            [API Development 101](https://developer.squareup.com/docs/buildbasics) section for more
-
-            information.'
-          minLength: 1
-          maxLength: 128
-        vendor:
-          $ref: '#/components/schemas/Vendor'
-          description: The requested [Vendor](entity:Vendor) to be created.
-      example:
-        idempotency_key: 8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe
-        vendor:
-          account_number: '4025391'
-          address:
-            address_line_1: 505 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          contacts:
-          - email_address: joe@joesfreshseafood.com
-            name: Joe Burrow
-            phone_number: 1-212-555-4250
-          name: Joe's Fresh Seafood
-          note: a vendor
-    BulkCreateVendorsRequest:
-      type: object
-      description: Represents an input to a call to [BulkCreateVendors](api-endpoint:Vendors-BulkCreateVendors).
-      x-release-status: BETA
-      required:
-      - vendors
-      properties:
-        vendors:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Vendor'
-          description: Specifies a set of new [Vendor](entity:Vendor) objects as represented by a collection of idempotency-key/`Vendor`-object pairs.
-      example:
-        47bb76a8-c9fb-4f33-9df8-25ce02ca4505:
-          contacts:
-          - email_address: annie@annieshotsauce.com
-            name: Annie Thomas
-            phone_number: 1-212-555-4250
-          name: Annie’s Hot Sauce
-        vendors:
-          8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe:
-            account_number: '4025391'
-            address:
-              address_line_1: 505 Electric Ave
-              address_line_2: Suite 600
-              administrative_district_level_1: NY
-              country: US
-              locality: New York
-              postal_code: '10003'
-            contacts:
-            - email_address: joe@joesfreshseafood.com
-              name: Joe Burrow
-              phone_number: 1-212-555-4250
-            name: Joe's Fresh Seafood
-            note: a vendor
+            the error pertains to.'
     ErrorCode:
       type: string
       enum:
@@ -1267,169 +1121,6 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    BulkUpdateVendorsRequest:
-      type: object
-      description: Represents an input to a call to [BulkUpdateVendors](api-endpoint:Vendors-BulkUpdateVendors).
-      x-release-status: BETA
-      required:
-      - vendors
-      properties:
-        vendors:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UpdateVendorRequest'
-          description: 'A set of [UpdateVendorRequest](entity:UpdateVendorRequest) objects encapsulating to-be-updated [Vendor](entity:Vendor)
-
-            objects. The set is represented by  a collection of `Vendor`-ID/`UpdateVendorRequest`-object pairs.'
-      example:
-        vendors:
-          FMCYHBWT1TPL8MFH52PBMEN92A:
-            address:
-              address_line_1: 202 Mill St
-              administrative_district_level_1: NJ
-              country: US
-              locality: Moorestown
-              postal_code: 08057
-            status: ACTIVE
-            version: 10
-          INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4:
-            note: favorite vendor
-            status: ACTIVE
-            version: 30
-    BulkUpdateVendorsResponse:
-      type: object
-      description: Represents an output from a call to [BulkUpdateVendors](api-endpoint:Vendors-BulkUpdateVendors).
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered when the request fails.
-        responses:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UpdateVendorResponse'
-          description: "A set of [UpdateVendorResponse](entity:UpdateVendorResponse) objects encapsulating successfully created [Vendor](entity:Vendor)\nobjects or error responses for failed attempts. The set is represented by a collection of `Vendor`-ID/`UpdateVendorResponse`-object or \n`Vendor`-ID/error-object pairs."
-      example:
-        responses:
-          INV_V_FMCYHBWT1TPL8MFH52PBMEN92A:
-            vendor:
-              address:
-                address_line_1: 202 Mill St
-                administrative_district_level_1: NJ
-                country: US
-                locality: Moorestown
-                postal_code: 08057
-              contacts:
-              - email_address: annie@annieshotsauce.com
-                id: INV_VC_ABYYHBWT1TPL8MFH52PBMENPJ4
-                name: Annie Thomas
-                ordinal: 0
-                phone_number: 1-212-555-4250
-              created_at: '2022-03-16T10:21:54.859Z'
-              id: INV_V_FMCYHBWT1TPL8MFH52PBMEN92A
-              name: Annie’s Hot Sauce
-              status: ACTIVE
-              updated_at: '2022-03-16T20:21:54.859Z'
-              version: 11
-          INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4:
-            vendor:
-              account_number: '4025391'
-              address:
-                address_line_1: 505 Electric Ave
-                address_line_2: Suite 600
-                administrative_district_level_1: NY
-                country: US
-                locality: New York
-                postal_code: '10003'
-              contacts:
-              - email_address: joe@joesfreshseafood.com
-                id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
-                name: Joe Burrow
-                ordinal: 0
-                phone_number: 1-212-555-4250
-              created_at: '2022-03-16T10:10:54.859Z'
-              id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-              name: Joe's Fresh Seafood
-              note: favorite vendor
-              status: ACTIVE
-              updated_at: '2022-03-16T20:21:54.859Z'
-              version: 31
-    CreateVendorResponse:
-      type: object
-      description: Represents an output from a call to [CreateVendor](api-endpoint:Vendors-CreateVendor).
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered when the request fails.
-        vendor:
-          $ref: '#/components/schemas/Vendor'
-          description: The successfully created [Vendor](entity:Vendor) object.
-      example:
-        vendor:
-          account_number: '4025391'
-          address:
-            address_line_1: 505 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          contacts:
-          - email_address: joe@joesfreshseafood.com
-            id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
-            name: Joe Burrow
-            phone_number: 1-212-555-4250
-          created_at: '2022-03-16T10:21:54.859Z'
-          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-          name: Joe's Fresh Seafood
-          note: a vendor
-          status: ACTIVE
-          updated_at: '2022-03-16T10:21:54.859Z'
-          version: 1
-    BulkRetrieveVendorsResponse:
-      type: object
-      description: Represents an output from a call to [BulkRetrieveVendors](api-endpoint:Vendors-BulkRetrieveVendors).
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        responses:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/RetrieveVendorResponse'
-          description: "The set of [RetrieveVendorResponse](entity:RetrieveVendorResponse) objects encapsulating successfully retrieved [Vendor](entity:Vendor)\nobjects or error responses for failed attempts. The set is represented by \na collection of `Vendor`-ID/`Vendor`-object or `Vendor`-ID/error-object pairs."
-      example:
-        responses:
-          INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4:
-            vendor:
-              account_number: '4025391'
-              address:
-                address_line_1: 505 Electric Ave
-                address_line_2: Suite 600
-                administrative_district_level_1: NY
-                country: US
-                locality: New York
-                postal_code: '10003'
-              contacts:
-              - email_address: joe@joesfreshseafood.com
-                id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
-                name: Joe Burrow
-                phone_number: 1-212-555-4250
-              created_at: '2022-03-16T10:21:54.859Z'
-              id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-              name: Joe's Fresh Seafood
-              note: a vendor
-              status: ACTIVE
-              updated_at: '2022-03-16T10:21:54.859Z'
-              version: 1
     SearchVendorsRequestFilter:
       type: object
       description: Defines supported query expressions to search for vendors by.
@@ -1451,170 +1142,18 @@ components:
           description: 'The statuses of the [Vendor](entity:Vendor) objects to retrieve.
 
             See [VendorStatus](#type-vendorstatus) for possible values'
-    SearchVendorsRequest:
-      type: object
-      description: Represents an input into a call to [SearchVendors](api-endpoint:Vendors-SearchVendors).
-      x-release-status: BETA
-      properties:
-        filter:
-          $ref: '#/components/schemas/SearchVendorsRequestFilter'
-          description: Specifies a filter used to search for vendors.
-        sort:
-          $ref: '#/components/schemas/SearchVendorsRequestSort'
-          description: Specifies a sorter used to sort the returned vendors.
-        cursor:
-          type: string
-          description: 'A pagination cursor returned by a previous call to this endpoint.
-
-            Provide this to retrieve the next set of results for the original query.
-
-
-            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
-      example:
-        query:
-          filter:
-            name:
-            - Joe's Fresh Seafood
-            - Hannah's Bakery
-            status:
-            - ACTIVE
-          sort:
-            field: CREATED_AT
-            order: ASC
-    BulkCreateVendorsResponse:
-      type: object
-      description: Represents an output from a call to [BulkCreateVendors](api-endpoint:Vendors-BulkCreateVendors).
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        responses:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CreateVendorResponse'
-          description: "A set of [CreateVendorResponse](entity:CreateVendorResponse) objects encapsulating successfully created [Vendor](entity:Vendor)\nobjects or error responses for failed attempts. The set is represented by \na collection of idempotency-key/`Vendor`-object or idempotency-key/error-object pairs. The idempotency keys correspond to those specified\nin the input."
-      example:
-        47bb76a8-c9fb-4f33-9df8-25ce02ca4505:
-          vendor:
-            contacts:
-            - email_address: annie@annieshotsauce.com
-              id: INV_VC_ABYYHBWT1TPL8MFH52PBMENPJ4
-              name: Annie Thomas
-              phone_number: 1-212-555-4250
-            created_at: '2022-03-16T10:21:54.859Z'
-            id: INV_V_FMCYHBWT1TPL8MFH52PBMEN92A
-            name: Annie’s Hot Sauce
-            status: ACTIVE
-            updated_at: '2022-03-16T10:21:54.859Z'
-            version: 1
-        responses:
-          8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe:
-            vendor:
-              account_number: '4025391'
-              address:
-                address_line_1: 505 Electric Ave
-                address_line_2: Suite 600
-                administrative_district_level_1: NY
-                country: US
-                locality: New York
-                postal_code: '10003'
-              contacts:
-              - email_address: joe@joesfreshseafood.com
-                id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
-                name: Joe Burrow
-                phone_number: 1-212-555-4250
-              created_at: '2022-03-16T10:21:54.859Z'
-              id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-              name: Joe's Fresh Seafood
-              note: a vendor
-              status: ACTIVE
-              updated_at: '2022-03-16T10:21:54.859Z'
-              version: 0
-    RetrieveVendorResponse:
-      type: object
-      description: Represents an output from a call to [RetrieveVendor](api-endpoint:Vendors-RetrieveVendor).
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors encountered when the request fails.
-        vendor:
-          $ref: '#/components/schemas/Vendor'
-          description: The successfully retrieved [Vendor](entity:Vendor) object.
-      example:
-        vendor:
-          account_number: '4025391'
-          address:
-            address_line_1: 505 Electric Ave
-            address_line_2: Suite 600
-            administrative_district_level_1: NY
-            country: US
-            locality: New York
-            postal_code: '10003'
-          contacts:
-          - email_address: joe@joesfreshseafood.com
-            id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
-            name: Joe Burrow
-            phone_number: 1-212-555-4250
-          created_at: '2022-03-16T10:21:54.859Z'
-          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-          name: Joe's Fresh Seafood
-          note: a vendor
-          status: ACTIVE
-          updated_at: '2022-03-16T10:21:54.859Z'
-          version: 1
-    ErrorCategory:
+    SearchVendorsRequestSortField:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - NAME
+      - CREATED_AT
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
+      - name: NAME
+        description: To sort the result by the name of the [Vendor](entity:Vendor) objects.
+      - name: CREATED_AT
+        description: To sort the result by the creation time of the [Vendor](entity:Vendor) objects.
+      description: The field to sort the returned [Vendor](entity:Vendor) objects by.
+      x-release-status: BETA
     Country:
       type: string
       enum:
@@ -2373,35 +1912,30 @@ components:
 
         Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
       x-release-status: PUBLIC
-    BulkRetrieveVendorsRequest:
+    CreateVendorRequest:
       type: object
-      description: Represents an input to a call to [BulkRetrieveVendors](api-endpoint:Vendors-BulkRetrieveVendors).
+      description: Represents an input to a call to [CreateVendor](api-endpoint:Vendors-CreateVendor).
       x-release-status: BETA
+      required:
+      - idempotency_key
       properties:
-        vendor_ids:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: IDs of the [Vendor](entity:Vendor) objects to retrieve.
-      example:
-        vendor_ids:
-        - INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-    UpdateVendorResponse:
-      type: object
-      description: Represents an output from a call to [UpdateVendor](api-endpoint:Vendors-UpdateVendor).
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors occurred when the request fails.
+        idempotency_key:
+          type: string
+          description: 'A client-supplied, universally unique identifier (UUID) to make this [CreateVendor](api-endpoint:Vendors-CreateVendor) call idempotent.
+
+
+            See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the
+
+            [API Development 101](https://developer.squareup.com/docs/buildbasics) section for more
+
+            information.'
+          minLength: 1
+          maxLength: 128
         vendor:
           $ref: '#/components/schemas/Vendor'
-          description: The [Vendor](entity:Vendor) that has been updated.
+          description: The requested [Vendor](entity:Vendor) to be created.
       example:
+        idempotency_key: 8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe
         vendor:
           account_number: '4025391'
           address:
@@ -2413,164 +1947,10 @@ components:
             postal_code: '10003'
           contacts:
           - email_address: joe@joesfreshseafood.com
-            id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
             name: Joe Burrow
-            ordinal: 0
             phone_number: 1-212-555-4250
-          created_at: '2022-03-16T10:21:54.859Z'
-          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
-          name: Jack's Chicken Shack
-          status: ACTIVE
-          updated_at: '2022-03-16T20:21:54.859Z'
-          version: 2
-    VendorContact:
-      type: object
-      description: Represents a contact of a [Vendor](entity:Vendor).
-      x-release-status: BETA
-      required:
-      - ordinal
-      properties:
-        id:
-          type: string
-          description: 'A unique Square-generated ID for the [VendorContact](entity:VendorContact).
-
-            This field is required when attempting to update a [VendorContact](entity:VendorContact).'
-          maxLength: 100
-        name:
-          type:
-          - string
-          - 'null'
-          description: 'The name of the [VendorContact](entity:VendorContact).
-
-            This field is required when attempting to create a [Vendor](entity:Vendor).'
-          maxLength: 255
-        email_address:
-          type:
-          - string
-          - 'null'
-          description: The email address of the [VendorContact](entity:VendorContact).
-          maxLength: 255
-        phone_number:
-          type:
-          - string
-          - 'null'
-          description: The phone number of the [VendorContact](entity:VendorContact).
-          maxLength: 255
-        removed:
-          type:
-          - boolean
-          - 'null'
-          description: The state of the [VendorContact](entity:VendorContact).
-        ordinal:
-          type: integer
-          description: The ordinal of the [VendorContact](entity:VendorContact).
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    Vendor:
-      type: object
-      description: Represents a supplier to a seller.
-      x-release-status: BETA
-      properties:
-        id:
-          type: string
-          description: 'A unique Square-generated ID for the [Vendor](entity:Vendor).
-
-            This field is required when attempting to update a [Vendor](entity:Vendor).'
-          maxLength: 100
-        created_at:
-          type: string
-          description: 'An RFC 3339-formatted timestamp that indicates when the
-
-            [Vendor](entity:Vendor) was created.'
-          maxLength: 34
-          readOnly: true
-        updated_at:
-          type: string
-          description: 'An RFC 3339-formatted timestamp that indicates when the
-
-            [Vendor](entity:Vendor) was last updated.'
-          maxLength: 34
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-          description: 'The name of the [Vendor](entity:Vendor).
-
-            This field is required when attempting to create or update a [Vendor](entity:Vendor).'
-          maxLength: 100
-        address:
-          $ref: '#/components/schemas/Address'
-          description: The address of the [Vendor](entity:Vendor).
-        contacts:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VendorContact'
-          description: The contacts of the [Vendor](entity:Vendor).
-        account_number:
-          type:
-          - string
-          - 'null'
-          description: The account number of the [Vendor](entity:Vendor).
-          maxLength: 100
-        note:
-          type:
-          - string
-          - 'null'
-          description: A note detailing information about the [Vendor](entity:Vendor).
-          maxLength: 4096
-        version:
-          type: integer
-          description: The version of the [Vendor](entity:Vendor).
-        status:
-          $ref: '#/components/schemas/VendorStatus'
-          description: 'The status of the [Vendor](entity:Vendor).
-
-            See [Status](#type-status) for possible values'
-    SearchVendorsRequestSort:
-      type: object
-      description: Defines a sorter used to sort results from [SearchVendors](api-endpoint:Vendors-SearchVendors).
-      x-release-status: BETA
-      properties:
-        field:
-          $ref: '#/components/schemas/SearchVendorsRequestSortField'
-          description: 'Specifies the sort key to sort the returned vendors.
-
-            See [Field](#type-field) for possible values'
-        order:
-          $ref: '#/components/schemas/SortOrder'
-          description: 'Specifies the sort order for the returned vendors.
-
-            See [SortOrder](#type-sortorder) for possible values'
+          name: Joe's Fresh Seafood
+          note: a vendor
     Address:
       type: object
       description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
@@ -2661,6 +2041,626 @@ components:
           - string
           - 'null'
           description: Optional last name when it's representing recipient.
+    BulkRetrieveVendorsResponse:
+      type: object
+      description: Represents an output from a call to [BulkRetrieveVendors](api-endpoint:Vendors-BulkRetrieveVendors).
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        responses:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RetrieveVendorResponse'
+          description: "The set of [RetrieveVendorResponse](entity:RetrieveVendorResponse) objects encapsulating successfully retrieved [Vendor](entity:Vendor)\nobjects or error responses for failed attempts. The set is represented by \na collection of `Vendor`-ID/`Vendor`-object or `Vendor`-ID/error-object pairs."
+      example:
+        responses:
+          INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4:
+            vendor:
+              account_number: '4025391'
+              address:
+                address_line_1: 505 Electric Ave
+                address_line_2: Suite 600
+                administrative_district_level_1: NY
+                country: US
+                locality: New York
+                postal_code: '10003'
+              contacts:
+              - email_address: joe@joesfreshseafood.com
+                id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
+                name: Joe Burrow
+                phone_number: 1-212-555-4250
+              created_at: '2022-03-16T10:21:54.859Z'
+              id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+              name: Joe's Fresh Seafood
+              note: a vendor
+              status: ACTIVE
+              updated_at: '2022-03-16T10:21:54.859Z'
+              version: 1
+    SearchVendorsResponse:
+      type: object
+      description: Represents an output from a call to [SearchVendors](api-endpoint:Vendors-SearchVendors).
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered when the request fails.
+        vendors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vendor'
+          description: The [Vendor](entity:Vendor) objects matching the specified search filter.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If unset,
+
+            this is the final response.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+      example:
+        vendors:
+        - account_number: '4025391'
+          address:
+            address_line_1: 505 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          contacts:
+          - email_address: joe@joesfreshseafood.com
+            id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
+            name: Joe Burrow
+            phone_number: 1-212-555-4250
+          created_at: '2022-03-16T10:21:54.859Z'
+          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+          name: Joe's Fresh Seafood
+          note: a vendor
+          status: ACTIVE
+          updated_at: '2022-03-16T10:21:54.859Z'
+          version: 1
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    RetrieveVendorResponse:
+      type: object
+      description: Represents an output from a call to [RetrieveVendor](api-endpoint:Vendors-RetrieveVendor).
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered when the request fails.
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+          description: The successfully retrieved [Vendor](entity:Vendor) object.
+      example:
+        vendor:
+          account_number: '4025391'
+          address:
+            address_line_1: 505 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          contacts:
+          - email_address: joe@joesfreshseafood.com
+            id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
+            name: Joe Burrow
+            phone_number: 1-212-555-4250
+          created_at: '2022-03-16T10:21:54.859Z'
+          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+          name: Joe's Fresh Seafood
+          note: a vendor
+          status: ACTIVE
+          updated_at: '2022-03-16T10:21:54.859Z'
+          version: 1
+    BulkRetrieveVendorsRequest:
+      type: object
+      description: Represents an input to a call to [BulkRetrieveVendors](api-endpoint:Vendors-BulkRetrieveVendors).
+      x-release-status: BETA
+      properties:
+        vendor_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: IDs of the [Vendor](entity:Vendor) objects to retrieve.
+      example:
+        vendor_ids:
+        - INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+    UpdateVendorResponse:
+      type: object
+      description: Represents an output from a call to [UpdateVendor](api-endpoint:Vendors-UpdateVendor).
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors occurred when the request fails.
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+          description: The [Vendor](entity:Vendor) that has been updated.
+      example:
+        vendor:
+          account_number: '4025391'
+          address:
+            address_line_1: 505 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          contacts:
+          - email_address: joe@joesfreshseafood.com
+            id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
+            name: Joe Burrow
+            ordinal: 0
+            phone_number: 1-212-555-4250
+          created_at: '2022-03-16T10:21:54.859Z'
+          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+          name: Jack's Chicken Shack
+          status: ACTIVE
+          updated_at: '2022-03-16T20:21:54.859Z'
+          version: 2
+    SearchVendorsRequestSort:
+      type: object
+      description: Defines a sorter used to sort results from [SearchVendors](api-endpoint:Vendors-SearchVendors).
+      x-release-status: BETA
+      properties:
+        field:
+          $ref: '#/components/schemas/SearchVendorsRequestSortField'
+          description: 'Specifies the sort key to sort the returned vendors.
+
+            See [Field](#type-field) for possible values'
+        order:
+          $ref: '#/components/schemas/SortOrder'
+          description: 'Specifies the sort order for the returned vendors.
+
+            See [SortOrder](#type-sortorder) for possible values'
+    CreateVendorResponse:
+      type: object
+      description: Represents an output from a call to [CreateVendor](api-endpoint:Vendors-CreateVendor).
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered when the request fails.
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+          description: The successfully created [Vendor](entity:Vendor) object.
+      example:
+        vendor:
+          account_number: '4025391'
+          address:
+            address_line_1: 505 Electric Ave
+            address_line_2: Suite 600
+            administrative_district_level_1: NY
+            country: US
+            locality: New York
+            postal_code: '10003'
+          contacts:
+          - email_address: joe@joesfreshseafood.com
+            id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
+            name: Joe Burrow
+            phone_number: 1-212-555-4250
+          created_at: '2022-03-16T10:21:54.859Z'
+          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+          name: Joe's Fresh Seafood
+          note: a vendor
+          status: ACTIVE
+          updated_at: '2022-03-16T10:21:54.859Z'
+          version: 1
+    SearchVendorsRequest:
+      type: object
+      description: Represents an input into a call to [SearchVendors](api-endpoint:Vendors-SearchVendors).
+      x-release-status: BETA
+      properties:
+        filter:
+          $ref: '#/components/schemas/SearchVendorsRequestFilter'
+          description: Specifies a filter used to search for vendors.
+        sort:
+          $ref: '#/components/schemas/SearchVendorsRequestSort'
+          description: Specifies a sorter used to sort the returned vendors.
+        cursor:
+          type: string
+          description: 'A pagination cursor returned by a previous call to this endpoint.
+
+            Provide this to retrieve the next set of results for the original query.
+
+
+            See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.'
+      example:
+        query:
+          filter:
+            name:
+            - Joe's Fresh Seafood
+            - Hannah's Bakery
+            status:
+            - ACTIVE
+          sort:
+            field: CREATED_AT
+            order: ASC
+    UpdateVendorRequest:
+      type: object
+      description: Represents an input to a call to [UpdateVendor](api-endpoint:Vendors-UpdateVendor).
+      x-release-status: BETA
+      required:
+      - vendor
+      properties:
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: 'A client-supplied, universally unique identifier (UUID) for the
+
+            request.
+
+
+            See [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) in the
+
+            [API Development 101](https://developer.squareup.com/docs/buildbasics) section for more
+
+            information.'
+          maxLength: 128
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+          description: The specified [Vendor](entity:Vendor) to be updated.
+      example:
+        idempotency_key: 8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe
+        vendor:
+          id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+          name: Jack's Chicken Shack
+          status: ACTIVE
+          version: 1
+    BulkCreateVendorsResponse:
+      type: object
+      description: Represents an output from a call to [BulkCreateVendors](api-endpoint:Vendors-BulkCreateVendors).
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        responses:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CreateVendorResponse'
+          description: "A set of [CreateVendorResponse](entity:CreateVendorResponse) objects encapsulating successfully created [Vendor](entity:Vendor)\nobjects or error responses for failed attempts. The set is represented by \na collection of idempotency-key/`Vendor`-object or idempotency-key/error-object pairs. The idempotency keys correspond to those specified\nin the input."
+      example:
+        47bb76a8-c9fb-4f33-9df8-25ce02ca4505:
+          vendor:
+            contacts:
+            - email_address: annie@annieshotsauce.com
+              id: INV_VC_ABYYHBWT1TPL8MFH52PBMENPJ4
+              name: Annie Thomas
+              phone_number: 1-212-555-4250
+            created_at: '2022-03-16T10:21:54.859Z'
+            id: INV_V_FMCYHBWT1TPL8MFH52PBMEN92A
+            name: Annie’s Hot Sauce
+            status: ACTIVE
+            updated_at: '2022-03-16T10:21:54.859Z'
+            version: 1
+        responses:
+          8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe:
+            vendor:
+              account_number: '4025391'
+              address:
+                address_line_1: 505 Electric Ave
+                address_line_2: Suite 600
+                administrative_district_level_1: NY
+                country: US
+                locality: New York
+                postal_code: '10003'
+              contacts:
+              - email_address: joe@joesfreshseafood.com
+                id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
+                name: Joe Burrow
+                phone_number: 1-212-555-4250
+              created_at: '2022-03-16T10:21:54.859Z'
+              id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+              name: Joe's Fresh Seafood
+              note: a vendor
+              status: ACTIVE
+              updated_at: '2022-03-16T10:21:54.859Z'
+              version: 0
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
+    BulkCreateVendorsRequest:
+      type: object
+      description: Represents an input to a call to [BulkCreateVendors](api-endpoint:Vendors-BulkCreateVendors).
+      x-release-status: BETA
+      required:
+      - vendors
+      properties:
+        vendors:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Vendor'
+          description: Specifies a set of new [Vendor](entity:Vendor) objects as represented by a collection of idempotency-key/`Vendor`-object pairs.
+      example:
+        47bb76a8-c9fb-4f33-9df8-25ce02ca4505:
+          contacts:
+          - email_address: annie@annieshotsauce.com
+            name: Annie Thomas
+            phone_number: 1-212-555-4250
+          name: Annie’s Hot Sauce
+        vendors:
+          8fc6a5b0-9fe8-4b46-b46b-2ef95793abbe:
+            account_number: '4025391'
+            address:
+              address_line_1: 505 Electric Ave
+              address_line_2: Suite 600
+              administrative_district_level_1: NY
+              country: US
+              locality: New York
+              postal_code: '10003'
+            contacts:
+            - email_address: joe@joesfreshseafood.com
+              name: Joe Burrow
+              phone_number: 1-212-555-4250
+            name: Joe's Fresh Seafood
+            note: a vendor
+    VendorContact:
+      type: object
+      description: Represents a contact of a [Vendor](entity:Vendor).
+      x-release-status: BETA
+      required:
+      - ordinal
+      properties:
+        id:
+          type: string
+          description: 'A unique Square-generated ID for the [VendorContact](entity:VendorContact).
+
+            This field is required when attempting to update a [VendorContact](entity:VendorContact).'
+          maxLength: 100
+        name:
+          type:
+          - string
+          - 'null'
+          description: 'The name of the [VendorContact](entity:VendorContact).
+
+            This field is required when attempting to create a [Vendor](entity:Vendor).'
+          maxLength: 255
+        email_address:
+          type:
+          - string
+          - 'null'
+          description: The email address of the [VendorContact](entity:VendorContact).
+          maxLength: 255
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: The phone number of the [VendorContact](entity:VendorContact).
+          maxLength: 255
+        removed:
+          type:
+          - boolean
+          - 'null'
+          description: The state of the [VendorContact](entity:VendorContact).
+        ordinal:
+          type: integer
+          description: The ordinal of the [VendorContact](entity:VendorContact).
+    BulkUpdateVendorsRequest:
+      type: object
+      description: Represents an input to a call to [BulkUpdateVendors](api-endpoint:Vendors-BulkUpdateVendors).
+      x-release-status: BETA
+      required:
+      - vendors
+      properties:
+        vendors:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UpdateVendorRequest'
+          description: 'A set of [UpdateVendorRequest](entity:UpdateVendorRequest) objects encapsulating to-be-updated [Vendor](entity:Vendor)
+
+            objects. The set is represented by  a collection of `Vendor`-ID/`UpdateVendorRequest`-object pairs.'
+      example:
+        vendors:
+          FMCYHBWT1TPL8MFH52PBMEN92A:
+            address:
+              address_line_1: 202 Mill St
+              administrative_district_level_1: NJ
+              country: US
+              locality: Moorestown
+              postal_code: 08057
+            status: ACTIVE
+            version: 10
+          INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4:
+            note: favorite vendor
+            status: ACTIVE
+            version: 30
+    Vendor:
+      type: object
+      description: Represents a supplier to a seller.
+      x-release-status: BETA
+      properties:
+        id:
+          type: string
+          description: 'A unique Square-generated ID for the [Vendor](entity:Vendor).
+
+            This field is required when attempting to update a [Vendor](entity:Vendor).'
+          maxLength: 100
+        created_at:
+          type: string
+          description: 'An RFC 3339-formatted timestamp that indicates when the
+
+            [Vendor](entity:Vendor) was created.'
+          maxLength: 34
+          readOnly: true
+        updated_at:
+          type: string
+          description: 'An RFC 3339-formatted timestamp that indicates when the
+
+            [Vendor](entity:Vendor) was last updated.'
+          maxLength: 34
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: 'The name of the [Vendor](entity:Vendor).
+
+            This field is required when attempting to create or update a [Vendor](entity:Vendor).'
+          maxLength: 100
+        address:
+          $ref: '#/components/schemas/Address'
+          description: The address of the [Vendor](entity:Vendor).
+        contacts:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VendorContact'
+          description: The contacts of the [Vendor](entity:Vendor).
+        account_number:
+          type:
+          - string
+          - 'null'
+          description: The account number of the [Vendor](entity:Vendor).
+          maxLength: 100
+        note:
+          type:
+          - string
+          - 'null'
+          description: A note detailing information about the [Vendor](entity:Vendor).
+          maxLength: 4096
+        version:
+          type: integer
+          description: The version of the [Vendor](entity:Vendor).
+        status:
+          $ref: '#/components/schemas/VendorStatus'
+          description: 'The status of the [Vendor](entity:Vendor).
+
+            See [Status](#type-status) for possible values'
+    BulkUpdateVendorsResponse:
+      type: object
+      description: Represents an output from a call to [BulkUpdateVendors](api-endpoint:Vendors-BulkUpdateVendors).
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors encountered when the request fails.
+        responses:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UpdateVendorResponse'
+          description: "A set of [UpdateVendorResponse](entity:UpdateVendorResponse) objects encapsulating successfully created [Vendor](entity:Vendor)\nobjects or error responses for failed attempts. The set is represented by a collection of `Vendor`-ID/`UpdateVendorResponse`-object or \n`Vendor`-ID/error-object pairs."
+      example:
+        responses:
+          INV_V_FMCYHBWT1TPL8MFH52PBMEN92A:
+            vendor:
+              address:
+                address_line_1: 202 Mill St
+                administrative_district_level_1: NJ
+                country: US
+                locality: Moorestown
+                postal_code: 08057
+              contacts:
+              - email_address: annie@annieshotsauce.com
+                id: INV_VC_ABYYHBWT1TPL8MFH52PBMENPJ4
+                name: Annie Thomas
+                ordinal: 0
+                phone_number: 1-212-555-4250
+              created_at: '2022-03-16T10:21:54.859Z'
+              id: INV_V_FMCYHBWT1TPL8MFH52PBMEN92A
+              name: Annie’s Hot Sauce
+              status: ACTIVE
+              updated_at: '2022-03-16T20:21:54.859Z'
+              version: 11
+          INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4:
+            vendor:
+              account_number: '4025391'
+              address:
+                address_line_1: 505 Electric Ave
+                address_line_2: Suite 600
+                administrative_district_level_1: NY
+                country: US
+                locality: New York
+                postal_code: '10003'
+              contacts:
+              - email_address: joe@joesfreshseafood.com
+                id: INV_VC_FMCYHBWT1TPL8MFH52PBMEN92A
+                name: Joe Burrow
+                ordinal: 0
+                phone_number: 1-212-555-4250
+              created_at: '2022-03-16T10:10:54.859Z'
+              id: INV_V_JDKYHBWT1D4F8MFH63DBMEN8Y4
+              name: Joe's Fresh Seafood
+              note: favorite vendor
+              status: ACTIVE
+              updated_at: '2022-03-16T20:21:54.859Z'
+              version: 31
   securitySchemes:
     oauth2:
       type: oauth2

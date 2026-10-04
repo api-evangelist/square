@@ -575,128 +575,146 @@ paths:
                 $ref: '#/components/schemas/UpdateWageSettingResponse'
 components:
   schemas:
-    BulkCreateTeamMembersRequest:
+    ListJobsResponse:
       type: object
-      description: Represents a bulk create request for `TeamMember` objects.
-      x-release-status: PUBLIC
-      required:
-      - team_members
-      properties:
-        team_members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CreateTeamMemberRequest'
-          description: 'The data used to create the `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`.
+      description: 'Represents a [ListJobs](api-endpoint:Team-ListJobs) response. Either `jobs` or `errors`
 
-            The maximum number of create objects is 25.
-
-
-            If you include a team member''s `wage_setting`, you must provide `job_id` for each job assignment. To get job IDs,
-
-            call [ListJobs](api-endpoint:Team-ListJobs).'
-      example:
-        team_members:
-          idempotency-key-1:
-            team_member:
-              assigned_locations:
-                assignment_type: EXPLICIT_LOCATIONS
-                location_ids:
-                - YSGH2WBKG94QZ
-                - GA2Y9HSJ8KRYT
-              email_address: joe_doe@gmail.com
-              family_name: Doe
-              given_name: Joe
-              phone_number: '+14159283333'
-              reference_id: reference_id_1
-          idempotency-key-2:
-            team_member:
-              assigned_locations:
-                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-              email_address: jane_smith@gmail.com
-              family_name: Smith
-              given_name: Jane
-              phone_number: '+14159223334'
-              reference_id: reference_id_2
-    WageSetting:
-      type: object
-      description: 'Represents information about the overtime exemption status, job assignments, and compensation
-
-        for a [team member](entity:TeamMember).'
-      x-release-status: PUBLIC
-      properties:
-        team_member_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the team member associated with the wage setting.
-        job_assignments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/JobAssignment'
-          description: '**Required** The ordered list of jobs that the team member is assigned to.
-
-            The first job assignment is considered the team member''s primary job.'
-        is_overtime_exempt:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the team member is exempt from the overtime rules of the seller's country.
-        version:
-          type: integer
-          description: '**Read only** Used for resolving concurrency issues. The request fails if the version
-
-            provided does not match the server version at the time of the request. If not provided,
-
-            Square executes a blind write, potentially overwriting data from another write. For more information,
-
-            see [optimistic concurrency](https://developer.squareup.com/docs/working-with-apis/optimistic-concurrency).'
-        created_at:
-          type: string
-          description: The timestamp when the wage setting was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp when the wage setting was last updated, in RFC 3339 format.
-          readOnly: true
-    UpdateJobResponse:
-      type: object
-      description: 'Represents an [UpdateJob](api-endpoint:Team-UpdateJob) response. Either `job` or `errors`
-
-        is present in the response.'
+        is present in the response. If additional results are available, the `cursor` field is also present.'
       x-release-status: BETA
       properties:
-        job:
-          $ref: '#/components/schemas/Job'
-          description: The updated job.
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+          description: The retrieved jobs. A single paged response contains up to 100 jobs.
+        cursor:
+          type: string
+          description: 'An opaque cursor used to retrieve the next page of results. This field is present only
+
+            if the request succeeded and additional results are available. For more information, see
+
+            [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: The errors that occurred during the request.
       example:
+        jobs:
+        - created_at: '2021-06-11T22:55:45Z'
+          id: VDNpRv8da51NU8qZFC5zDWpF
+          is_tip_eligible: true
+          title: Cashier
+          updated_at: '2021-06-11T22:55:45Z'
+          version: 2
+        - created_at: '2021-06-11T22:55:45Z'
+          id: FjS8x95cqHiMenw4f1NAUH4P
+          is_tip_eligible: false
+          title: Chef
+          updated_at: '2021-06-11T22:55:45Z'
+          version: 1
+    UpdateJobRequest:
+      type: object
+      description: Represents an [UpdateJob](api-endpoint:Team-UpdateJob) request.
+      x-release-status: BETA
+      required:
+      - job
+      properties:
         job:
-          created_at: '2021-06-11T22:55:45Z'
-          id: 1yJlHapkseYnNPETIU1B
+          $ref: '#/components/schemas/Job'
+          description: 'The job with the updated fields, either `title`, `is_tip_eligible`, or both. Only changed fields need
+
+            to be included in the request. Optionally include `version` to enable optimistic concurrency control.'
+      example:
+        job:
           is_tip_eligible: true
           title: Cashier 1
-          updated_at: '2021-06-13T12:55:45Z'
-          version: 2
-    TeamMemberStatus:
-      type: string
-      enum:
-      - ACTIVE
-      - INACTIVE
-      x-enum-elements:
-      - name: ACTIVE
-        description: The team member can sign in to Point of Sale and the Seller Dashboard.
-      - name: INACTIVE
-        description: 'The team member can no longer sign in to Point of Sale or the Seller Dashboard,
+    JobAssignment:
+      type: object
+      description: 'Represents a job assigned to a [team member](entity:TeamMember), including the compensation the team
 
-          but the team member''s sales reports remain available.'
-      description: Enumerates the possible statuses the team member can have within a business.
+        member earns for the job. Job assignments are listed in the team member''s [wage setting](entity:WageSetting).'
       x-release-status: PUBLIC
+      required:
+      - pay_type
+      properties:
+        job_title:
+          type:
+          - string
+          - 'null'
+          description: The title of the job.
+        pay_type:
+          $ref: '#/components/schemas/JobAssignmentPayType'
+          description: 'The current pay type for the job assignment used to
+
+            calculate the pay amount in a pay period.
+
+            See [JobAssignmentPayType](#type-jobassignmentpaytype) for possible values'
+        hourly_rate:
+          $ref: '#/components/schemas/Money'
+          description: 'The hourly pay rate of the job. For `SALARY` pay types, Square calculates the hourly rate based on
+
+            `annual_rate` and `weekly_hours`.'
+        annual_rate:
+          $ref: '#/components/schemas/Money'
+          description: The total pay amount for a 12-month period on the job. Set if the job `PayType` is `SALARY`.
+        weekly_hours:
+          type:
+          - integer
+          - 'null'
+          description: The planned hours per week for the job. Set if the job `PayType` is `SALARY`.
+        job_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the [job](entity:Job).
+          x-release-status: BETA
+    TeamMemberAssignedLocations:
+      type: object
+      description: An object that represents a team member's assignment to locations.
+      x-release-status: PUBLIC
+      properties:
+        assignment_type:
+          $ref: '#/components/schemas/TeamMemberAssignedLocationsAssignmentType'
+          description: 'The current assignment type of the team member.
+
+            See [TeamMemberAssignedLocationsAssignmentType](#type-teammemberassignedlocationsassignmenttype) for possible values'
+        location_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The explicit locations that the team member is assigned to.
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     ErrorCode:
       type: string
       enum:
@@ -1443,6 +1461,21 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    JobAssignmentPayType:
+      type: string
+      enum:
+      - NONE
+      - HOURLY
+      - SALARY
+      x-enum-elements:
+      - name: NONE
+        description: The job does not have a defined pay type.
+      - name: HOURLY
+        description: The job pays an hourly rate.
+      - name: SALARY
+        description: The job pays an annual salary.
+      description: Enumerates the possible pay types that a job can be assigned.
+      x-release-status: PUBLIC
     SearchTeamMembersQuery:
       type: object
       description: Represents the parameters in a search for `TeamMember` objects.
@@ -1451,137 +1484,86 @@ components:
         filter:
           $ref: '#/components/schemas/SearchTeamMembersFilter'
           description: The options to filter by.
-    RetrieveTeamMemberResponse:
+    UpdateWageSettingResponse:
       type: object
-      description: Represents a response from a retrieve request containing a `TeamMember` object or error messages.
+      description: 'Represents a response from an update request containing the updated `WageSetting` object
+
+        or error messages.'
       x-release-status: PUBLIC
       properties:
-        team_member:
-          $ref: '#/components/schemas/TeamMember'
-          description: The successfully retrieved `TeamMember` object.
+        wage_setting:
+          $ref: '#/components/schemas/WageSetting'
+          description: The successfully updated `WageSetting` object.
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: The errors that occurred during the request.
       example:
-        team_member:
-          assigned_locations:
-            assignment_type: EXPLICIT_LOCATIONS
-            location_ids:
-            - GA2Y9HSJ8KRYT
-            - YSGH2WBKG94QZ
-          created_at: '2021-06-11T22:55:45Z'
-          email_address: joe_doe@example.com
-          family_name: Doe
-          given_name: Joe
-          id: 1yJlHapkseYnNPETIU1B
-          is_owner: false
-          phone_number: '+14159283333'
-          reference_id: reference_id_1
-          status: ACTIVE
-          updated_at: '2021-06-15T17:38:05Z'
-          wage_setting:
-            created_at: '2021-06-11T22:55:45Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - annual_rate:
-                amount: 3000000
-                currency: USD
-              hourly_rate:
-                amount: 1443
-                currency: USD
-              job_id: FjS8x95cqHiMenw4f1NAUH4P
-              job_title: Manager
-              pay_type: SALARY
-              weekly_hours: 40
-            - hourly_rate:
-                amount: 2000
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 1yJlHapkseYnNPETIU1B
-            updated_at: '2021-06-11T22:55:45Z'
-            version: 1
-    UpdateTeamMemberResponse:
+        wage_setting:
+          created_at: '2019-07-10T17:26:48+00:00'
+          is_overtime_exempt: true
+          job_assignments:
+          - annual_rate:
+              amount: 3000000
+              currency: USD
+            hourly_rate:
+              amount: 1443
+              currency: USD
+            job_title: Manager
+            pay_type: SALARY
+            weekly_hours: 40
+          - hourly_rate:
+              amount: 2000
+              currency: USD
+            job_title: Cashier
+            pay_type: HOURLY
+          team_member_id: -3oZQKPKVk6gUXU_V5Qa
+          updated_at: '2020-06-11T23:12:04+00:00'
+          version: 1
+    WageSetting:
       type: object
-      description: Represents a response from an update request containing the updated `TeamMember` object or error messages.
+      description: 'Represents information about the overtime exemption status, job assignments, and compensation
+
+        for a [team member](entity:TeamMember).'
       x-release-status: PUBLIC
       properties:
-        team_member:
-          $ref: '#/components/schemas/TeamMember'
-          description: The successfully updated `TeamMember` object.
-        errors:
-          type: array
+        team_member_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the team member associated with the wage setting.
+        job_assignments:
+          type:
+          - array
+          - 'null'
           items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        team_member:
-          assigned_locations:
-            assignment_type: EXPLICIT_LOCATIONS
-            location_ids:
-            - GA2Y9HSJ8KRYT
-            - YSGH2WBKG94QZ
-          created_at: '2021-06-11T22:55:45Z'
-          email_address: joe_doe@example.com
-          family_name: Doe
-          given_name: Joe
-          id: 1yJlHapkseYnNPETIU1B
-          is_owner: false
-          phone_number: '+14159283333'
-          reference_id: reference_id_1
-          status: ACTIVE
-          updated_at: '2021-06-15T17:38:05Z'
-          wage_setting:
-            created_at: '2021-06-11T22:55:45Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - annual_rate:
-                amount: 3000000
-                currency: USD
-              hourly_rate:
-                amount: 1443
-                currency: USD
-              job_id: FjS8x95cqHiMenw4f1NAUH4P
-              job_title: Manager
-              pay_type: SALARY
-              weekly_hours: 40
-            - hourly_rate:
-                amount: 1200
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 1yJlHapkseYnNPETIU1B
-            updated_at: '2021-06-11T22:55:45Z'
-            version: 1
-    CreateJobRequest:
-      type: object
-      description: Represents a [CreateJob](api-endpoint:Team-CreateJob) request.
-      x-release-status: BETA
-      required:
-      - job
-      - idempotency_key
-      properties:
-        job:
-          $ref: '#/components/schemas/Job'
-          description: The job to create. The `title` field is required and `is_tip_eligible` defaults to true.
-        idempotency_key:
+            $ref: '#/components/schemas/JobAssignment'
+          description: '**Required** The ordered list of jobs that the team member is assigned to.
+
+            The first job assignment is considered the team member''s primary job.'
+        is_overtime_exempt:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the team member is exempt from the overtime rules of the seller's country.
+        version:
+          type: integer
+          description: '**Read only** Used for resolving concurrency issues. The request fails if the version
+
+            provided does not match the server version at the time of the request. If not provided,
+
+            Square executes a blind write, potentially overwriting data from another write. For more information,
+
+            see [optimistic concurrency](https://developer.squareup.com/docs/working-with-apis/optimistic-concurrency).'
+        created_at:
           type: string
-          description: 'A unique identifier for the `CreateJob` request. Keys can be any valid string,
-
-            but must be unique for each request. For more information, see
-
-            [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
-          minLength: 1
-          maxLength: 45
-      example:
-        idempotency_key: idempotency-key-0
-        job:
-          is_tip_eligible: true
-          title: Cashier
+          description: The timestamp when the wage setting was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the wage setting was last updated, in RFC 3339 format.
+          readOnly: true
     SearchTeamMembersRequest:
       type: object
       description: Represents a search request for a filtered list of `TeamMember` objects.
@@ -1607,6 +1589,206 @@ components:
             location_ids:
             - 0G5P3VGACMMQZ
             status: ACTIVE
+    RetrieveJobResponse:
+      type: object
+      description: 'Represents a [RetrieveJob](api-endpoint:Team-RetrieveJob) response. Either `job` or `errors`
+
+        is present in the response.'
+      x-release-status: BETA
+      properties:
+        job:
+          $ref: '#/components/schemas/Job'
+          description: The retrieved job.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        job:
+          created_at: '2021-06-11T22:55:45Z'
+          id: 1yJlHapkseYnNPETIU1B
+          is_tip_eligible: true
+          title: Cashier 1
+          updated_at: '2021-06-11T22:55:45Z'
+          version: 2
+    UpdateTeamMemberRequest:
+      type: object
+      description: Represents an update request for a `TeamMember` object.
+      x-release-status: PUBLIC
+      properties:
+        team_member:
+          $ref: '#/components/schemas/TeamMember'
+          description: 'The team member fields to add, change, or clear. Fields can be cleared using a null value. To update
+
+            `wage_setting.job_assignments`, you must provide the complete list of job assignments. If needed, call
+
+            [ListJobs](api-endpoint:Team-ListJobs) to get the required `job_id` values.'
+      example:
+        team_member:
+          assigned_locations:
+            assignment_type: EXPLICIT_LOCATIONS
+            location_ids:
+            - YSGH2WBKG94QZ
+            - GA2Y9HSJ8KRYT
+            wage_setting:
+              is_overtime_exempt: true
+              job_assignments:
+              - annual_rate:
+                  amount: 3000000
+                  currency: USD
+                job_id: FjS8x95cqHiMenw4f1NAUH4P
+                pay_type: SALARY
+                weekly_hours: 40
+              - hourly_rate:
+                  amount: 1200
+                  currency: USD
+                job_id: VDNpRv8da51NU8qZFC5zDWpF
+                pay_type: HOURLY
+          email_address: joe_doe@gmail.com
+          family_name: Doe
+          given_name: Joe
+          phone_number: '+14159283333'
+          reference_id: reference_id_1
+          status: ACTIVE
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    CreateTeamMemberResponse:
+      type: object
+      description: Represents a response from a create request containing the created `TeamMember` object or error messages.
+      x-release-status: PUBLIC
+      properties:
+        team_member:
+          $ref: '#/components/schemas/TeamMember'
+          description: The successfully created `TeamMember` object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        team_member:
+          assigned_locations:
+            assignment_type: EXPLICIT_LOCATIONS
+            location_ids:
+            - GA2Y9HSJ8KRYT
+            - YSGH2WBKG94QZ
+          created_at: '2021-06-11T22:55:45Z'
+          email_address: joe_doe@example.com
+          family_name: Doe
+          given_name: Joe
+          id: 1yJlHapkseYnNPETIU1B
+          is_owner: false
+          phone_number: '+14159283333'
+          reference_id: reference_id_1
+          status: ACTIVE
+          updated_at: '2021-06-11T22:55:45Z'
+          wage_setting:
+            created_at: '2021-06-11T22:55:45Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - annual_rate:
+                amount: 3000000
+                currency: USD
+              hourly_rate:
+                amount: 1443
+                currency: USD
+              job_id: FjS8x95cqHiMenw4f1NAUH4P
+              job_title: Manager
+              pay_type: SALARY
+              weekly_hours: 40
+            - hourly_rate:
+                amount: 2000
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: 1yJlHapkseYnNPETIU1B
+            updated_at: '2021-06-11T22:55:45Z'
+            version: 1
+    SearchTeamMembersFilter:
+      type: object
+      description: 'Represents a filter used in a search for `TeamMember` objects. `AND` logic is applied
+
+        between the individual fields, and `OR` logic is applied within list-based fields.
+
+        For example, setting this filter value:
+
+        ```
+
+        filter = (locations_ids = ["A", "B"], status = ACTIVE)
+
+        ```
+
+        returns only active team members assigned to either location "A" or "B".'
+      x-release-status: PUBLIC
+      properties:
+        location_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'When present, filters by team members assigned to the specified locations.
+
+            When empty, includes team members assigned to any location.'
+        status:
+          $ref: '#/components/schemas/TeamMemberStatus'
+          description: 'When present, filters by team members who match the given status.
+
+            When empty, includes team members of all statuses.
+
+            See [TeamMemberStatus](#type-teammemberstatus) for possible values'
+        is_owner:
+          type:
+          - boolean
+          - 'null'
+          description: When present and set to true, returns the team member who is the owner of the Square account.
     Money:
       type: object
       description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
@@ -1644,157 +1826,52 @@ components:
             See [Currency](entity:Currency) for possible values.
 
             See [Currency](#type-currency) for possible values'
-    Job:
-      type: object
-      description: 'Represents a job that can be assigned to [team members](entity:TeamMember). This object defines the
-
-        job''s title and tip eligibility. Compensation is defined in a [job assignment](entity:JobAssignment)
-
-        in a team member''s wage setting.'
-      x-release-status: BETA
-      properties:
-        id:
-          type: string
-          description: '**Read only** The unique Square-assigned ID of the job. If you need a job ID for an API request,
-
-            call [ListJobs](api-endpoint:Team-ListJobs) or use the ID returned when you created the job.
-
-            You can also get job IDs from a team member''s wage setting.'
-        title:
-          type:
-          - string
-          - 'null'
-          description: The title of the job.
-          maxLength: 150
-        is_tip_eligible:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether team members can earn tips for the job.
-        created_at:
-          type: string
-          description: The timestamp when the job was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp when the job was last updated, in RFC 3339 format.
-          readOnly: true
-        version:
-          type: integer
-          description: '**Read only** The current version of the job. Include this field in `UpdateJob` requests to enable
-
-            [optimistic concurrency](https://developer.squareup.com/docs/working-with-apis/optimistic-concurrency)
-
-            control and avoid overwrites from concurrent requests. Requests fail if the provided version doesn''t
-
-            match the server version at the time of the request.'
-    JobAssignmentPayType:
+    TeamMemberAssignedLocationsAssignmentType:
       type: string
       enum:
-      - NONE
-      - HOURLY
-      - SALARY
+      - ALL_CURRENT_AND_FUTURE_LOCATIONS
+      - EXPLICIT_LOCATIONS
       x-enum-elements:
-      - name: NONE
-        description: The job does not have a defined pay type.
-      - name: HOURLY
-        description: The job pays an hourly rate.
-      - name: SALARY
-        description: The job pays an annual salary.
-      description: Enumerates the possible pay types that a job can be assigned.
+      - name: ALL_CURRENT_AND_FUTURE_LOCATIONS
+        description: 'The team member is assigned to all current and future locations. The `location_ids` field
+
+          is empty if the team member has this assignment type.'
+      - name: EXPLICIT_LOCATIONS
+        description: 'The team member is assigned to an explicit subset of locations. The `location_ids` field
+
+          is the list of locations that the team member is assigned to.'
+      description: Enumerates the possible assignment types that the team member can have.
       x-release-status: PUBLIC
-    BulkCreateTeamMembersResponse:
+    RetrieveWageSettingResponse:
       type: object
-      description: Represents a response from a bulk create request containing the created `TeamMember` objects or error messages.
+      description: Represents a response from a retrieve request containing the specified `WageSetting` object or error messages.
       x-release-status: PUBLIC
       properties:
-        team_members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CreateTeamMemberResponse'
-          description: The successfully created `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`.
+        wage_setting:
+          $ref: '#/components/schemas/WageSetting'
+          description: The successfully retrieved `WageSetting` object.
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: The errors that occurred during the request.
       example:
-        team_members:
-          idempotency-key-1:
-            team_member:
-              assigned_locations:
-                assignment_type: EXPLICIT_LOCATIONS
-                location_ids:
-                - GA2Y9HSJ8KRYT
-                - YSGH2WBKG94QZ
-              email_address: joe_doe@gmail.com
-              family_name: Doe
-              given_name: Joe
-              id: ywhG1qfIOoqsHfVRubFV
-              is_owner: false
-              phone_number: '+14159283333'
-              reference_id: reference_id_1
-              status: ACTIVE
-          idempotency-key-2:
-            team_member:
-              assigned_locations:
-                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
-              email_address: jane_smith@gmail.com
-              family_name: Smith
-              given_name: Jane
-              id: IF_Ncrg7fHhCqxVI9T6R
-              is_owner: false
-              phone_number: '+14159223334'
-              reference_id: reference_id_2
-              status: ACTIVE
-    CreateTeamMemberRequest:
-      type: object
-      description: Represents a create request for a `TeamMember` object.
-      x-release-status: PUBLIC
-      properties:
-        idempotency_key:
-          type: string
-          description: 'A unique string that identifies this `CreateTeamMember` request.
-
-            Keys can be any valid string, but must be unique for every request.
-
-            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).
-
-
-            The minimum length is 1 and the maximum length is 45.'
-        team_member:
-          $ref: '#/components/schemas/TeamMember'
-          description: '**Required** The data used to create the `TeamMember` object. If you include `wage_setting`, you must provide
-
-            `job_id` for each job assignment. To get job IDs, call [ListJobs](api-endpoint:Team-ListJobs).'
-      example:
-        idempotency_key: idempotency-key-0
-        team_member:
-          assigned_locations:
-            assignment_type: EXPLICIT_LOCATIONS
-            location_ids:
-            - YSGH2WBKG94QZ
-            - GA2Y9HSJ8KRYT
-          email_address: joe_doe@gmail.com
-          family_name: Doe
-          given_name: Joe
-          phone_number: '+14159283333'
-          reference_id: reference_id_1
-          status: ACTIVE
-          wage_setting:
-            is_overtime_exempt: true
-            job_assignments:
-            - annual_rate:
-                amount: 3000000
-                currency: USD
-              job_id: FjS8x95cqHiMenw4f1NAUH4P
-              pay_type: SALARY
-              weekly_hours: 40
-            - hourly_rate:
-                amount: 2000
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              pay_type: HOURLY
+        wage_setting:
+          created_at: '2020-06-11T23:01:21+00:00'
+          is_overtime_exempt: false
+          job_assignments:
+          - annual_rate:
+              amount: 4500000
+              currency: USD
+            hourly_rate:
+              amount: 2164
+              currency: USD
+            job_title: Manager
+            pay_type: SALARY
+            weekly_hours: 40
+          team_member_id: 1yJlHapkseYnNPETIU1B
+          updated_at: '2020-06-11T23:01:21+00:00'
+          version: 1
     Currency:
       type: string
       enum:
@@ -2352,431 +2429,6 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
-    TeamMemberAssignedLocationsAssignmentType:
-      type: string
-      enum:
-      - ALL_CURRENT_AND_FUTURE_LOCATIONS
-      - EXPLICIT_LOCATIONS
-      x-enum-elements:
-      - name: ALL_CURRENT_AND_FUTURE_LOCATIONS
-        description: 'The team member is assigned to all current and future locations. The `location_ids` field
-
-          is empty if the team member has this assignment type.'
-      - name: EXPLICIT_LOCATIONS
-        description: 'The team member is assigned to an explicit subset of locations. The `location_ids` field
-
-          is the list of locations that the team member is assigned to.'
-      description: Enumerates the possible assignment types that the team member can have.
-      x-release-status: PUBLIC
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    TeamMemberAssignedLocations:
-      type: object
-      description: An object that represents a team member's assignment to locations.
-      x-release-status: PUBLIC
-      properties:
-        assignment_type:
-          $ref: '#/components/schemas/TeamMemberAssignedLocationsAssignmentType'
-          description: 'The current assignment type of the team member.
-
-            See [TeamMemberAssignedLocationsAssignmentType](#type-teammemberassignedlocationsassignmenttype) for possible values'
-        location_ids:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: The explicit locations that the team member is assigned to.
-    SearchTeamMembersFilter:
-      type: object
-      description: 'Represents a filter used in a search for `TeamMember` objects. `AND` logic is applied
-
-        between the individual fields, and `OR` logic is applied within list-based fields.
-
-        For example, setting this filter value:
-
-        ```
-
-        filter = (locations_ids = ["A", "B"], status = ACTIVE)
-
-        ```
-
-        returns only active team members assigned to either location "A" or "B".'
-      x-release-status: PUBLIC
-      properties:
-        location_ids:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: 'When present, filters by team members assigned to the specified locations.
-
-            When empty, includes team members assigned to any location.'
-        status:
-          $ref: '#/components/schemas/TeamMemberStatus'
-          description: 'When present, filters by team members who match the given status.
-
-            When empty, includes team members of all statuses.
-
-            See [TeamMemberStatus](#type-teammemberstatus) for possible values'
-        is_owner:
-          type:
-          - boolean
-          - 'null'
-          description: When present and set to true, returns the team member who is the owner of the Square account.
-    JobAssignment:
-      type: object
-      description: 'Represents a job assigned to a [team member](entity:TeamMember), including the compensation the team
-
-        member earns for the job. Job assignments are listed in the team member''s [wage setting](entity:WageSetting).'
-      x-release-status: PUBLIC
-      required:
-      - pay_type
-      properties:
-        job_title:
-          type:
-          - string
-          - 'null'
-          description: The title of the job.
-        pay_type:
-          $ref: '#/components/schemas/JobAssignmentPayType'
-          description: 'The current pay type for the job assignment used to
-
-            calculate the pay amount in a pay period.
-
-            See [JobAssignmentPayType](#type-jobassignmentpaytype) for possible values'
-        hourly_rate:
-          $ref: '#/components/schemas/Money'
-          description: 'The hourly pay rate of the job. For `SALARY` pay types, Square calculates the hourly rate based on
-
-            `annual_rate` and `weekly_hours`.'
-        annual_rate:
-          $ref: '#/components/schemas/Money'
-          description: The total pay amount for a 12-month period on the job. Set if the job `PayType` is `SALARY`.
-        weekly_hours:
-          type:
-          - integer
-          - 'null'
-          description: The planned hours per week for the job. Set if the job `PayType` is `SALARY`.
-        job_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the [job](entity:Job).
-          x-release-status: BETA
-    TeamMember:
-      type: object
-      description: A record representing an individual team member for a business.
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: The unique ID for the team member.
-          readOnly: true
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: A second ID used to associate the team member with an entity in another system.
-        is_owner:
-          type: boolean
-          description: Whether the team member is the owner of the Square account.
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/TeamMemberStatus'
-          description: 'Describes the status of the team member.
-
-            See [TeamMemberStatus](#type-teammemberstatus) for possible values'
-        given_name:
-          type:
-          - string
-          - 'null'
-          description: The given name (that is, the first name) associated with the team member.
-        family_name:
-          type:
-          - string
-          - 'null'
-          description: The family name (that is, the last name) associated with the team member.
-        email_address:
-          type:
-          - string
-          - 'null'
-          description: 'The email address associated with the team member. After accepting the invitation
-
-            from Square, only the team member can change this value.'
-        phone_number:
-          type:
-          - string
-          - 'null'
-          description: 'The team member''s phone number, in E.164 format. For example:
-
-            +14155552671 - the country code is 1 for US
-
-            +551155256325 - the country code is 55 for BR'
-        created_at:
-          type: string
-          description: The timestamp when the team member was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp when the team member was last updated, in RFC 3339 format.
-          readOnly: true
-        assigned_locations:
-          $ref: '#/components/schemas/TeamMemberAssignedLocations'
-          description: Describes the team member's assigned locations.
-        wage_setting:
-          $ref: '#/components/schemas/WageSetting'
-          description: Information about the team member's overtime exemption status, job assignments, and compensation.
-          x-release-status: BETA
-    RetrieveWageSettingResponse:
-      type: object
-      description: Represents a response from a retrieve request containing the specified `WageSetting` object or error messages.
-      x-release-status: PUBLIC
-      properties:
-        wage_setting:
-          $ref: '#/components/schemas/WageSetting'
-          description: The successfully retrieved `WageSetting` object.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        wage_setting:
-          created_at: '2020-06-11T23:01:21+00:00'
-          is_overtime_exempt: false
-          job_assignments:
-          - annual_rate:
-              amount: 4500000
-              currency: USD
-            hourly_rate:
-              amount: 2164
-              currency: USD
-            job_title: Manager
-            pay_type: SALARY
-            weekly_hours: 40
-          team_member_id: 1yJlHapkseYnNPETIU1B
-          updated_at: '2020-06-11T23:01:21+00:00'
-          version: 1
-    ListJobsResponse:
-      type: object
-      description: 'Represents a [ListJobs](api-endpoint:Team-ListJobs) response. Either `jobs` or `errors`
-
-        is present in the response. If additional results are available, the `cursor` field is also present.'
-      x-release-status: BETA
-      properties:
-        jobs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Job'
-          description: The retrieved jobs. A single paged response contains up to 100 jobs.
-        cursor:
-          type: string
-          description: 'An opaque cursor used to retrieve the next page of results. This field is present only
-
-            if the request succeeded and additional results are available. For more information, see
-
-            [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        jobs:
-        - created_at: '2021-06-11T22:55:45Z'
-          id: VDNpRv8da51NU8qZFC5zDWpF
-          is_tip_eligible: true
-          title: Cashier
-          updated_at: '2021-06-11T22:55:45Z'
-          version: 2
-        - created_at: '2021-06-11T22:55:45Z'
-          id: FjS8x95cqHiMenw4f1NAUH4P
-          is_tip_eligible: false
-          title: Chef
-          updated_at: '2021-06-11T22:55:45Z'
-          version: 1
-    UpdateWageSettingResponse:
-      type: object
-      description: 'Represents a response from an update request containing the updated `WageSetting` object
-
-        or error messages.'
-      x-release-status: PUBLIC
-      properties:
-        wage_setting:
-          $ref: '#/components/schemas/WageSetting'
-          description: The successfully updated `WageSetting` object.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        wage_setting:
-          created_at: '2019-07-10T17:26:48+00:00'
-          is_overtime_exempt: true
-          job_assignments:
-          - annual_rate:
-              amount: 3000000
-              currency: USD
-            hourly_rate:
-              amount: 1443
-              currency: USD
-            job_title: Manager
-            pay_type: SALARY
-            weekly_hours: 40
-          - hourly_rate:
-              amount: 2000
-              currency: USD
-            job_title: Cashier
-            pay_type: HOURLY
-          team_member_id: -3oZQKPKVk6gUXU_V5Qa
-          updated_at: '2020-06-11T23:12:04+00:00'
-          version: 1
-    CreateTeamMemberResponse:
-      type: object
-      description: Represents a response from a create request containing the created `TeamMember` object or error messages.
-      x-release-status: PUBLIC
-      properties:
-        team_member:
-          $ref: '#/components/schemas/TeamMember'
-          description: The successfully created `TeamMember` object.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: The errors that occurred during the request.
-      example:
-        team_member:
-          assigned_locations:
-            assignment_type: EXPLICIT_LOCATIONS
-            location_ids:
-            - GA2Y9HSJ8KRYT
-            - YSGH2WBKG94QZ
-          created_at: '2021-06-11T22:55:45Z'
-          email_address: joe_doe@example.com
-          family_name: Doe
-          given_name: Joe
-          id: 1yJlHapkseYnNPETIU1B
-          is_owner: false
-          phone_number: '+14159283333'
-          reference_id: reference_id_1
-          status: ACTIVE
-          updated_at: '2021-06-11T22:55:45Z'
-          wage_setting:
-            created_at: '2021-06-11T22:55:45Z'
-            is_overtime_exempt: true
-            job_assignments:
-            - annual_rate:
-                amount: 3000000
-                currency: USD
-              hourly_rate:
-                amount: 1443
-                currency: USD
-              job_id: FjS8x95cqHiMenw4f1NAUH4P
-              job_title: Manager
-              pay_type: SALARY
-              weekly_hours: 40
-            - hourly_rate:
-                amount: 2000
-                currency: USD
-              job_id: VDNpRv8da51NU8qZFC5zDWpF
-              job_title: Cashier
-              pay_type: HOURLY
-            team_member_id: 1yJlHapkseYnNPETIU1B
-            updated_at: '2021-06-11T22:55:45Z'
-            version: 1
-    UpdateJobRequest:
-      type: object
-      description: Represents an [UpdateJob](api-endpoint:Team-UpdateJob) request.
-      x-release-status: BETA
-      required:
-      - job
-      properties:
-        job:
-          $ref: '#/components/schemas/Job'
-          description: 'The job with the updated fields, either `title`, `is_tip_eligible`, or both. Only changed fields need
-
-            to be included in the request. Optionally include `version` to enable optimistic concurrency control.'
-      example:
-        job:
-          is_tip_eligible: true
-          title: Cashier 1
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
     SearchTeamMembersResponse:
       type: object
       description: Represents a response from a search request containing a filtered list of `TeamMember` objects.
@@ -2976,62 +2628,59 @@ components:
             team_member_id: 9UglUjOXQ13-hMFypCft
             updated_at: '2020-03-24T18:14:03Z'
             version: 1
-    UpdateWageSettingRequest:
+    RetrieveTeamMemberResponse:
       type: object
-      description: Represents an update request for the `WageSetting` object describing a `TeamMember`.
+      description: Represents a response from a retrieve request containing a `TeamMember` object or error messages.
       x-release-status: PUBLIC
-      required:
-      - wage_setting
       properties:
-        wage_setting:
-          $ref: '#/components/schemas/WageSetting'
-          description: 'The complete `WageSetting` object. For all job assignments, specify one of the following:
-
-            - `job_id` (recommended) - If needed, call [ListJobs](api-endpoint:Team-ListJobs) to get a list of all jobs.
-
-            Requires Square API version 2024-12-18 or later.
-
-            - `job_title` - Use the exact, case-sensitive spelling of an existing title unless you want to create a new job.
-
-            This value is ignored if `job_id` is also provided.'
-      example:
-        wage_setting:
-          is_overtime_exempt: true
-          job_assignments:
-          - annual_rate:
-              amount: 3000000
-              currency: USD
-            job_title: Manager
-            pay_type: SALARY
-            weekly_hours: 40
-          - hourly_rate:
-              amount: 2000
-              currency: USD
-            job_title: Cashier
-            pay_type: HOURLY
-    RetrieveJobResponse:
-      type: object
-      description: 'Represents a [RetrieveJob](api-endpoint:Team-RetrieveJob) response. Either `job` or `errors`
-
-        is present in the response.'
-      x-release-status: BETA
-      properties:
-        job:
-          $ref: '#/components/schemas/Job'
-          description: The retrieved job.
+        team_member:
+          $ref: '#/components/schemas/TeamMember'
+          description: The successfully retrieved `TeamMember` object.
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: The errors that occurred during the request.
       example:
-        job:
+        team_member:
+          assigned_locations:
+            assignment_type: EXPLICIT_LOCATIONS
+            location_ids:
+            - GA2Y9HSJ8KRYT
+            - YSGH2WBKG94QZ
           created_at: '2021-06-11T22:55:45Z'
+          email_address: joe_doe@example.com
+          family_name: Doe
+          given_name: Joe
           id: 1yJlHapkseYnNPETIU1B
-          is_tip_eligible: true
-          title: Cashier 1
-          updated_at: '2021-06-11T22:55:45Z'
-          version: 2
+          is_owner: false
+          phone_number: '+14159283333'
+          reference_id: reference_id_1
+          status: ACTIVE
+          updated_at: '2021-06-15T17:38:05Z'
+          wage_setting:
+            created_at: '2021-06-11T22:55:45Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - annual_rate:
+                amount: 3000000
+                currency: USD
+              hourly_rate:
+                amount: 1443
+                currency: USD
+              job_id: FjS8x95cqHiMenw4f1NAUH4P
+              job_title: Manager
+              pay_type: SALARY
+              weekly_hours: 40
+            - hourly_rate:
+                amount: 2000
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: 1yJlHapkseYnNPETIU1B
+            updated_at: '2021-06-11T22:55:45Z'
+            version: 1
     BulkUpdateTeamMembersRequest:
       type: object
       description: Represents a bulk update request for `TeamMember` objects.
@@ -3080,55 +2729,94 @@ components:
               phone_number: '+14159283333'
               reference_id: reference_id_1
               status: ACTIVE
-    UpdateTeamMemberRequest:
+    TeamMember:
       type: object
-      description: Represents an update request for a `TeamMember` object.
+      description: A record representing an individual team member for a business.
       x-release-status: PUBLIC
       properties:
-        team_member:
-          $ref: '#/components/schemas/TeamMember'
-          description: 'The team member fields to add, change, or clear. Fields can be cleared using a null value. To update
+        id:
+          type: string
+          description: The unique ID for the team member.
+          readOnly: true
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: A second ID used to associate the team member with an entity in another system.
+        is_owner:
+          type: boolean
+          description: Whether the team member is the owner of the Square account.
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/TeamMemberStatus'
+          description: 'Describes the status of the team member.
 
-            `wage_setting.job_assignments`, you must provide the complete list of job assignments. If needed, call
+            See [TeamMemberStatus](#type-teammemberstatus) for possible values'
+        given_name:
+          type:
+          - string
+          - 'null'
+          description: The given name (that is, the first name) associated with the team member.
+        family_name:
+          type:
+          - string
+          - 'null'
+          description: The family name (that is, the last name) associated with the team member.
+        email_address:
+          type:
+          - string
+          - 'null'
+          description: 'The email address associated with the team member. After accepting the invitation
 
-            [ListJobs](api-endpoint:Team-ListJobs) to get the required `job_id` values.'
-      example:
-        team_member:
-          assigned_locations:
-            assignment_type: EXPLICIT_LOCATIONS
-            location_ids:
-            - YSGH2WBKG94QZ
-            - GA2Y9HSJ8KRYT
-            wage_setting:
-              is_overtime_exempt: true
-              job_assignments:
-              - annual_rate:
-                  amount: 3000000
-                  currency: USD
-                job_id: FjS8x95cqHiMenw4f1NAUH4P
-                pay_type: SALARY
-                weekly_hours: 40
-              - hourly_rate:
-                  amount: 1200
-                  currency: USD
-                job_id: VDNpRv8da51NU8qZFC5zDWpF
-                pay_type: HOURLY
-          email_address: joe_doe@gmail.com
-          family_name: Doe
-          given_name: Joe
-          phone_number: '+14159283333'
-          reference_id: reference_id_1
-          status: ACTIVE
-    CreateJobResponse:
+            from Square, only the team member can change this value.'
+        phone_number:
+          type:
+          - string
+          - 'null'
+          description: 'The team member''s phone number, in E.164 format. For example:
+
+            +14155552671 - the country code is 1 for US
+
+            +551155256325 - the country code is 55 for BR'
+        created_at:
+          type: string
+          description: The timestamp when the team member was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the team member was last updated, in RFC 3339 format.
+          readOnly: true
+        assigned_locations:
+          $ref: '#/components/schemas/TeamMemberAssignedLocations'
+          description: Describes the team member's assigned locations.
+        wage_setting:
+          $ref: '#/components/schemas/WageSetting'
+          description: Information about the team member's overtime exemption status, job assignments, and compensation.
+          x-release-status: BETA
+    TeamMemberStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - INACTIVE
+      x-enum-elements:
+      - name: ACTIVE
+        description: The team member can sign in to Point of Sale and the Seller Dashboard.
+      - name: INACTIVE
+        description: 'The team member can no longer sign in to Point of Sale or the Seller Dashboard,
+
+          but the team member''s sales reports remain available.'
+      description: Enumerates the possible statuses the team member can have within a business.
+      x-release-status: PUBLIC
+    UpdateJobResponse:
       type: object
-      description: 'Represents a [CreateJob](api-endpoint:Team-CreateJob) response. Either `job` or `errors`
+      description: 'Represents an [UpdateJob](api-endpoint:Team-UpdateJob) response. Either `job` or `errors`
 
         is present in the response.'
       x-release-status: BETA
       properties:
         job:
           $ref: '#/components/schemas/Job'
-          description: The new job.
+          description: The updated job.
         errors:
           type: array
           items:
@@ -3139,9 +2827,78 @@ components:
           created_at: '2021-06-11T22:55:45Z'
           id: 1yJlHapkseYnNPETIU1B
           is_tip_eligible: true
+          title: Cashier 1
+          updated_at: '2021-06-13T12:55:45Z'
+          version: 2
+    CreateJobRequest:
+      type: object
+      description: Represents a [CreateJob](api-endpoint:Team-CreateJob) request.
+      x-release-status: BETA
+      required:
+      - job
+      - idempotency_key
+      properties:
+        job:
+          $ref: '#/components/schemas/Job'
+          description: The job to create. The `title` field is required and `is_tip_eligible` defaults to true.
+        idempotency_key:
+          type: string
+          description: 'A unique identifier for the `CreateJob` request. Keys can be any valid string,
+
+            but must be unique for each request. For more information, see
+
+            [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).'
+          minLength: 1
+          maxLength: 45
+      example:
+        idempotency_key: idempotency-key-0
+        job:
+          is_tip_eligible: true
           title: Cashier
-          updated_at: '2021-06-11T22:55:45Z'
-          version: 1
+    BulkCreateTeamMembersResponse:
+      type: object
+      description: Represents a response from a bulk create request containing the created `TeamMember` objects or error messages.
+      x-release-status: PUBLIC
+      properties:
+        team_members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CreateTeamMemberResponse'
+          description: The successfully created `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        team_members:
+          idempotency-key-1:
+            team_member:
+              assigned_locations:
+                assignment_type: EXPLICIT_LOCATIONS
+                location_ids:
+                - GA2Y9HSJ8KRYT
+                - YSGH2WBKG94QZ
+              email_address: joe_doe@gmail.com
+              family_name: Doe
+              given_name: Joe
+              id: ywhG1qfIOoqsHfVRubFV
+              is_owner: false
+              phone_number: '+14159283333'
+              reference_id: reference_id_1
+              status: ACTIVE
+          idempotency-key-2:
+            team_member:
+              assigned_locations:
+                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+              email_address: jane_smith@gmail.com
+              family_name: Smith
+              given_name: Jane
+              id: IF_Ncrg7fHhCqxVI9T6R
+              is_owner: false
+              phone_number: '+14159223334'
+              reference_id: reference_id_2
+              status: ACTIVE
     BulkUpdateTeamMembersResponse:
       type: object
       description: Represents a response from a bulk update request containing the updated `TeamMember` objects or error messages.
@@ -3190,6 +2947,249 @@ components:
               reference_id: reference_id_1
               status: ACTIVE
               updated_at: '2020-03-24T18:18:00Z'
+    Job:
+      type: object
+      description: 'Represents a job that can be assigned to [team members](entity:TeamMember). This object defines the
+
+        job''s title and tip eligibility. Compensation is defined in a [job assignment](entity:JobAssignment)
+
+        in a team member''s wage setting.'
+      x-release-status: BETA
+      properties:
+        id:
+          type: string
+          description: '**Read only** The unique Square-assigned ID of the job. If you need a job ID for an API request,
+
+            call [ListJobs](api-endpoint:Team-ListJobs) or use the ID returned when you created the job.
+
+            You can also get job IDs from a team member''s wage setting.'
+        title:
+          type:
+          - string
+          - 'null'
+          description: The title of the job.
+          maxLength: 150
+        is_tip_eligible:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether team members can earn tips for the job.
+        created_at:
+          type: string
+          description: The timestamp when the job was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the job was last updated, in RFC 3339 format.
+          readOnly: true
+        version:
+          type: integer
+          description: '**Read only** The current version of the job. Include this field in `UpdateJob` requests to enable
+
+            [optimistic concurrency](https://developer.squareup.com/docs/working-with-apis/optimistic-concurrency)
+
+            control and avoid overwrites from concurrent requests. Requests fail if the provided version doesn''t
+
+            match the server version at the time of the request.'
+    UpdateWageSettingRequest:
+      type: object
+      description: Represents an update request for the `WageSetting` object describing a `TeamMember`.
+      x-release-status: PUBLIC
+      required:
+      - wage_setting
+      properties:
+        wage_setting:
+          $ref: '#/components/schemas/WageSetting'
+          description: 'The complete `WageSetting` object. For all job assignments, specify one of the following:
+
+            - `job_id` (recommended) - If needed, call [ListJobs](api-endpoint:Team-ListJobs) to get a list of all jobs.
+
+            Requires Square API version 2024-12-18 or later.
+
+            - `job_title` - Use the exact, case-sensitive spelling of an existing title unless you want to create a new job.
+
+            This value is ignored if `job_id` is also provided.'
+      example:
+        wage_setting:
+          is_overtime_exempt: true
+          job_assignments:
+          - annual_rate:
+              amount: 3000000
+              currency: USD
+            job_title: Manager
+            pay_type: SALARY
+            weekly_hours: 40
+          - hourly_rate:
+              amount: 2000
+              currency: USD
+            job_title: Cashier
+            pay_type: HOURLY
+    BulkCreateTeamMembersRequest:
+      type: object
+      description: Represents a bulk create request for `TeamMember` objects.
+      x-release-status: PUBLIC
+      required:
+      - team_members
+      properties:
+        team_members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CreateTeamMemberRequest'
+          description: 'The data used to create the `TeamMember` objects. Each key is the `idempotency_key` that maps to the `CreateTeamMemberRequest`.
+
+            The maximum number of create objects is 25.
+
+
+            If you include a team member''s `wage_setting`, you must provide `job_id` for each job assignment. To get job IDs,
+
+            call [ListJobs](api-endpoint:Team-ListJobs).'
+      example:
+        team_members:
+          idempotency-key-1:
+            team_member:
+              assigned_locations:
+                assignment_type: EXPLICIT_LOCATIONS
+                location_ids:
+                - YSGH2WBKG94QZ
+                - GA2Y9HSJ8KRYT
+              email_address: joe_doe@gmail.com
+              family_name: Doe
+              given_name: Joe
+              phone_number: '+14159283333'
+              reference_id: reference_id_1
+          idempotency-key-2:
+            team_member:
+              assigned_locations:
+                assignment_type: ALL_CURRENT_AND_FUTURE_LOCATIONS
+              email_address: jane_smith@gmail.com
+              family_name: Smith
+              given_name: Jane
+              phone_number: '+14159223334'
+              reference_id: reference_id_2
+    UpdateTeamMemberResponse:
+      type: object
+      description: Represents a response from an update request containing the updated `TeamMember` object or error messages.
+      x-release-status: PUBLIC
+      properties:
+        team_member:
+          $ref: '#/components/schemas/TeamMember'
+          description: The successfully updated `TeamMember` object.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        team_member:
+          assigned_locations:
+            assignment_type: EXPLICIT_LOCATIONS
+            location_ids:
+            - GA2Y9HSJ8KRYT
+            - YSGH2WBKG94QZ
+          created_at: '2021-06-11T22:55:45Z'
+          email_address: joe_doe@example.com
+          family_name: Doe
+          given_name: Joe
+          id: 1yJlHapkseYnNPETIU1B
+          is_owner: false
+          phone_number: '+14159283333'
+          reference_id: reference_id_1
+          status: ACTIVE
+          updated_at: '2021-06-15T17:38:05Z'
+          wage_setting:
+            created_at: '2021-06-11T22:55:45Z'
+            is_overtime_exempt: true
+            job_assignments:
+            - annual_rate:
+                amount: 3000000
+                currency: USD
+              hourly_rate:
+                amount: 1443
+                currency: USD
+              job_id: FjS8x95cqHiMenw4f1NAUH4P
+              job_title: Manager
+              pay_type: SALARY
+              weekly_hours: 40
+            - hourly_rate:
+                amount: 1200
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              job_title: Cashier
+              pay_type: HOURLY
+            team_member_id: 1yJlHapkseYnNPETIU1B
+            updated_at: '2021-06-11T22:55:45Z'
+            version: 1
+    CreateTeamMemberRequest:
+      type: object
+      description: Represents a create request for a `TeamMember` object.
+      x-release-status: PUBLIC
+      properties:
+        idempotency_key:
+          type: string
+          description: 'A unique string that identifies this `CreateTeamMember` request.
+
+            Keys can be any valid string, but must be unique for every request.
+
+            For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).
+
+
+            The minimum length is 1 and the maximum length is 45.'
+        team_member:
+          $ref: '#/components/schemas/TeamMember'
+          description: '**Required** The data used to create the `TeamMember` object. If you include `wage_setting`, you must provide
+
+            `job_id` for each job assignment. To get job IDs, call [ListJobs](api-endpoint:Team-ListJobs).'
+      example:
+        idempotency_key: idempotency-key-0
+        team_member:
+          assigned_locations:
+            assignment_type: EXPLICIT_LOCATIONS
+            location_ids:
+            - YSGH2WBKG94QZ
+            - GA2Y9HSJ8KRYT
+          email_address: joe_doe@gmail.com
+          family_name: Doe
+          given_name: Joe
+          phone_number: '+14159283333'
+          reference_id: reference_id_1
+          status: ACTIVE
+          wage_setting:
+            is_overtime_exempt: true
+            job_assignments:
+            - annual_rate:
+                amount: 3000000
+                currency: USD
+              job_id: FjS8x95cqHiMenw4f1NAUH4P
+              pay_type: SALARY
+              weekly_hours: 40
+            - hourly_rate:
+                amount: 2000
+                currency: USD
+              job_id: VDNpRv8da51NU8qZFC5zDWpF
+              pay_type: HOURLY
+    CreateJobResponse:
+      type: object
+      description: 'Represents a [CreateJob](api-endpoint:Team-CreateJob) response. Either `job` or `errors`
+
+        is present in the response.'
+      x-release-status: BETA
+      properties:
+        job:
+          $ref: '#/components/schemas/Job'
+          description: The new job.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: The errors that occurred during the request.
+      example:
+        job:
+          created_at: '2021-06-11T22:55:45Z'
+          id: 1yJlHapkseYnNPETIU1B
+          is_tip_eligible: true
+          title: Cashier
+          updated_at: '2021-06-11T22:55:45Z'
+          version: 1
   securitySchemes:
     oauth2:
       type: oauth2

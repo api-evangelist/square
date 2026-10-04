@@ -283,11 +283,11 @@ paths:
                 $ref: '#/components/schemas/UpdateCustomerGroupResponse'
 components:
   schemas:
-    UpdateCustomerGroupResponse:
+    CreateCustomerGroupResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
 
-        a request to the [UpdateCustomerGroup](api-endpoint:CustomerGroups-UpdateCustomerGroup) endpoint.
+        a request to the [CreateCustomerGroup](api-endpoint:CustomerGroups-CreateCustomerGroup) endpoint.
 
 
         Either `errors` or `group` is present in a given response (never both).'
@@ -300,31 +300,53 @@ components:
           description: Any errors that occurred during the request.
         group:
           $ref: '#/components/schemas/CustomerGroup'
-          description: The successfully updated customer group.
+          description: The successfully created customer group.
       example:
         group:
           created_at: '2020-04-13T21:54:57.863Z'
           id: 2TAT3CMH4Q0A9M87XJZED0WMR3
           name: Loyal Customers
           updated_at: '2020-04-13T21:54:58Z'
-    CreateCustomerGroupRequest:
+    ListCustomerGroupsResponse:
       type: object
-      description: 'Defines the body parameters that can be included in a request to the
+      description: 'Defines the fields that are included in the response body of
 
-        [CreateCustomerGroup](api-endpoint:CustomerGroups-CreateCustomerGroup) endpoint.'
+        a request to the [ListCustomerGroups](api-endpoint:CustomerGroups-ListCustomerGroups) endpoint.
+
+
+        Either `errors` or `groups` is present in a given response (never both).'
       x-release-status: PUBLIC
-      required:
-      - group
       properties:
-        idempotency_key:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerGroup'
+          description: A list of customer groups belonging to the current seller.
+        cursor:
           type: string
-          description: The idempotency key for the request. For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).
-        group:
-          $ref: '#/components/schemas/CustomerGroup'
-          description: The customer group to create.
+          description: 'A pagination cursor to retrieve the next set of results for your
+
+            original query to the endpoint. This value is present only if the request
+
+            succeeded and additional results are available.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
       example:
-        group:
+        groups:
+        - created_at: '2020-04-13T21:54:57.863Z'
+          id: 2TAT3CMH4Q0A9M87XJZED0WMR3
           name: Loyal Customers
+          updated_at: '2020-04-13T21:54:58Z'
+        - created_at: '2020-04-13T21:55:18.795Z'
+          id: 4XMEHESXJBNE9S9JAKZD2FGB14
+          name: Super Loyal Customers
+          updated_at: '2020-04-13T21:55:19Z'
     CustomerGroup:
       type: object
       description: "Represents a group of customer profiles. \n\nCustomer groups can be created, be modified, and have their membership defined using \nthe Customers API or within the Customer Directory in the Square Seller Dashboard or Point of Sale."
@@ -372,53 +394,30 @@ components:
           id: 2TAT3CMH4Q0A9M87XJZED0WMR3
           name: Loyal Customers
           updated_at: '2020-04-13T21:54:58Z'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
+    UpdateCustomerGroupResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
 
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
+        a request to the [UpdateCustomerGroup](api-endpoint:CustomerGroups-UpdateCustomerGroup) endpoint.
 
 
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+        Either `errors` or `group` is present in a given response (never both).'
       x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        group:
+          $ref: '#/components/schemas/CustomerGroup'
+          description: The successfully updated customer group.
+      example:
+        group:
+          created_at: '2020-04-13T21:54:57.863Z'
+          id: 2TAT3CMH4Q0A9M87XJZED0WMR3
+          name: Loyal Customers
+          updated_at: '2020-04-13T21:54:58Z'
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -1194,43 +1193,6 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    CreateCustomerGroupResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [CreateCustomerGroup](api-endpoint:CustomerGroups-CreateCustomerGroup) endpoint.
-
-
-        Either `errors` or `group` is present in a given response (never both).'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        group:
-          $ref: '#/components/schemas/CustomerGroup'
-          description: The successfully created customer group.
-      example:
-        group:
-          created_at: '2020-04-13T21:54:57.863Z'
-          id: 2TAT3CMH4Q0A9M87XJZED0WMR3
-          name: Loyal Customers
-          updated_at: '2020-04-13T21:54:58Z'
-    DeleteCustomerGroupResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [DeleteCustomerGroup](api-endpoint:CustomerGroups-DeleteCustomerGroup) endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
     UpdateCustomerGroupRequest:
       type: object
       description: 'Defines the body parameters that can be included in a request to the
@@ -1246,14 +1208,76 @@ components:
       example:
         group:
           name: Loyal Customers
-    ListCustomerGroupsResponse:
+    CreateCustomerGroupRequest:
+      type: object
+      description: 'Defines the body parameters that can be included in a request to the
+
+        [CreateCustomerGroup](api-endpoint:CustomerGroups-CreateCustomerGroup) endpoint.'
+      x-release-status: PUBLIC
+      required:
+      - group
+      properties:
+        idempotency_key:
+          type: string
+          description: The idempotency key for the request. For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).
+        group:
+          $ref: '#/components/schemas/CustomerGroup'
+          description: The customer group to create.
+      example:
+        group:
+          name: Loyal Customers
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    DeleteCustomerGroupResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
 
-        a request to the [ListCustomerGroups](api-endpoint:CustomerGroups-ListCustomerGroups) endpoint.
-
-
-        Either `errors` or `groups` is present in a given response (never both).'
+        a request to the [DeleteCustomerGroup](api-endpoint:CustomerGroups-DeleteCustomerGroup) endpoint.'
       x-release-status: PUBLIC
       properties:
         errors:
@@ -1261,31 +1285,7 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomerGroup'
-          description: A list of customer groups belonging to the current seller.
-        cursor:
-          type: string
-          description: 'A pagination cursor to retrieve the next set of results for your
-
-            original query to the endpoint. This value is present only if the request
-
-            succeeded and additional results are available.
-
-
-            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-      example:
-        groups:
-        - created_at: '2020-04-13T21:54:57.863Z'
-          id: 2TAT3CMH4Q0A9M87XJZED0WMR3
-          name: Loyal Customers
-          updated_at: '2020-04-13T21:54:58Z'
-        - created_at: '2020-04-13T21:55:18.795Z'
-          id: 4XMEHESXJBNE9S9JAKZD2FGB14
-          name: Super Loyal Customers
-          updated_at: '2020-04-13T21:55:19Z'
+      example: {}
   securitySchemes:
     oauth2:
       type: oauth2

@@ -261,6 +261,143 @@ paths:
                 $ref: '#/components/schemas/ListCashDrawerShiftEventsResponse'
 components:
   schemas:
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
+      x-release-status: PUBLIC
+    CashDrawerEventType:
+      type: string
+      enum:
+      - NO_SALE
+      - CASH_TENDER_PAYMENT
+      - OTHER_TENDER_PAYMENT
+      - CASH_TENDER_CANCELLED_PAYMENT
+      - OTHER_TENDER_CANCELLED_PAYMENT
+      - CASH_TENDER_REFUND
+      - OTHER_TENDER_REFUND
+      - PAID_IN
+      - PAID_OUT
+      x-enum-elements:
+      - name: NO_SALE
+        description: 'Triggered when a no sale occurs on a cash drawer.
+
+          A CashDrawerEvent of this type must have a zero money amount.'
+      - name: CASH_TENDER_PAYMENT
+        description: 'Triggered when a cash tender payment occurs on a cash drawer.
+
+          A CashDrawerEvent of this type can must not have a negative amount.'
+      - name: OTHER_TENDER_PAYMENT
+        description: 'Triggered when a check, gift card, or other non-cash payment occurs
+
+          on a cash drawer.
+
+          A CashDrawerEvent of this type must have a zero money amount.'
+      - name: CASH_TENDER_CANCELLED_PAYMENT
+        description: 'Triggered when a split tender bill is cancelled after cash has been
+
+          tendered.
+
+          A CASH_TENDER_CANCELLED_PAYMENT should have a corresponding CASH_TENDER_PAYMENT.
+
+          A CashDrawerEvent of this type must not have a negative amount.'
+      - name: OTHER_TENDER_CANCELLED_PAYMENT
+        description: 'Triggered when a split tender bill is cancelled after a non-cash tender
+
+          has been tendered. An OTHER_TENDER_CANCELLED_PAYMENT should have a corresponding
+
+          OTHER_TENDER_PAYMENT. A CashDrawerEvent of this type must have a zero money
+
+          amount.'
+      - name: CASH_TENDER_REFUND
+        description: 'Triggered when a cash tender refund occurs.
+
+          A CashDrawerEvent of this type must not have a negative amount.'
+      - name: OTHER_TENDER_REFUND
+        description: 'Triggered when an other tender refund occurs.
+
+          A CashDrawerEvent of this type must have a zero money amount.'
+      - name: PAID_IN
+        description: 'Triggered when money unrelated to a payment is added to the cash drawer.
+
+          For example, an employee adds coins to the drawer.
+
+          A CashDrawerEvent of this type must not have a negative amount.'
+      - name: PAID_OUT
+        description: 'Triggered when money is removed from the drawer for other reasons
+
+          than making change.
+
+          For example, an employee pays a delivery person with cash from the cash drawer.
+
+          A CashDrawerEvent of this type must not have a negative amount.'
+      description: 'The types of events on a CashDrawerShift.
+
+        Each event type represents an employee action on the actual cash drawer
+
+        represented by a CashDrawerShift.'
+      x-release-status: PUBLIC
+    CashDrawerShiftState:
+      type: string
+      enum:
+      - OPEN
+      - ENDED
+      - CLOSED
+      x-enum-elements:
+      - name: OPEN
+        description: An open cash drawer shift.
+      - name: ENDED
+        description: A cash drawer shift that is ended but has not yet had an employee content audit.
+      - name: CLOSED
+        description: 'An ended cash drawer shift that is closed with a completed employee
+
+          content audit and recorded result.'
+      description: The current state of a cash drawer shift.
+      x-release-status: PUBLIC
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
     CashDrawerShiftSummary:
       type: object
       description: 'The summary of a closed cash drawer shift.
@@ -379,77 +516,204 @@ components:
             currency: USD
           opening_team_member_id: ''
           state: CLOSED
-    CashDrawerEventType:
-      type: string
-      enum:
-      - NO_SALE
-      - CASH_TENDER_PAYMENT
-      - OTHER_TENDER_PAYMENT
-      - CASH_TENDER_CANCELLED_PAYMENT
-      - OTHER_TENDER_CANCELLED_PAYMENT
-      - CASH_TENDER_REFUND
-      - OTHER_TENDER_REFUND
-      - PAID_IN
-      - PAID_OUT
-      x-enum-elements:
-      - name: NO_SALE
-        description: 'Triggered when a no sale occurs on a cash drawer.
-
-          A CashDrawerEvent of this type must have a zero money amount.'
-      - name: CASH_TENDER_PAYMENT
-        description: 'Triggered when a cash tender payment occurs on a cash drawer.
-
-          A CashDrawerEvent of this type can must not have a negative amount.'
-      - name: OTHER_TENDER_PAYMENT
-        description: 'Triggered when a check, gift card, or other non-cash payment occurs
-
-          on a cash drawer.
-
-          A CashDrawerEvent of this type must have a zero money amount.'
-      - name: CASH_TENDER_CANCELLED_PAYMENT
-        description: 'Triggered when a split tender bill is cancelled after cash has been
-
-          tendered.
-
-          A CASH_TENDER_CANCELLED_PAYMENT should have a corresponding CASH_TENDER_PAYMENT.
-
-          A CashDrawerEvent of this type must not have a negative amount.'
-      - name: OTHER_TENDER_CANCELLED_PAYMENT
-        description: 'Triggered when a split tender bill is cancelled after a non-cash tender
-
-          has been tendered. An OTHER_TENDER_CANCELLED_PAYMENT should have a corresponding
-
-          OTHER_TENDER_PAYMENT. A CashDrawerEvent of this type must have a zero money
-
-          amount.'
-      - name: CASH_TENDER_REFUND
-        description: 'Triggered when a cash tender refund occurs.
-
-          A CashDrawerEvent of this type must not have a negative amount.'
-      - name: OTHER_TENDER_REFUND
-        description: 'Triggered when an other tender refund occurs.
-
-          A CashDrawerEvent of this type must have a zero money amount.'
-      - name: PAID_IN
-        description: 'Triggered when money unrelated to a payment is added to the cash drawer.
-
-          For example, an employee adds coins to the drawer.
-
-          A CashDrawerEvent of this type must not have a negative amount.'
-      - name: PAID_OUT
-        description: 'Triggered when money is removed from the drawer for other reasons
-
-          than making change.
-
-          For example, an employee pays a delivery person with cash from the cash drawer.
-
-          A CashDrawerEvent of this type must not have a negative amount.'
-      description: 'The types of events on a CashDrawerShift.
-
-        Each event type represents an employee action on the actual cash drawer
-
-        represented by a CashDrawerShift.'
+    ListCashDrawerShiftsResponse:
+      type: object
       x-release-status: PUBLIC
+      properties:
+        cursor:
+          type: string
+          description: 'Opaque cursor for fetching the next page of results. Cursor is not
+
+            present in the last page of results.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        cash_drawer_shifts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CashDrawerShiftSummary'
+          description: 'A collection of CashDrawerShiftSummary objects for shifts that match
+
+            the query.'
+      example:
+        cash_drawer_shifts:
+        - closed_at: '2019-11-22T00:44:49.000Z'
+          closed_cash_money:
+            amount: 9970
+            currency: USD
+          description: Misplaced some change
+          ended_at: '2019-11-22T00:44:49.000Z'
+          expected_cash_money:
+            amount: 10000
+            currency: USD
+          id: DCC99978-09A6-4926-849F-300BE9C5793A
+          opened_at: '2019-11-22T00:42:54.000Z'
+          opened_cash_money:
+            amount: 10000
+            currency: USD
+          state: CLOSED
+    CashDrawerShift:
+      type: object
+      description: 'This model gives the details of a cash drawer shift.
+
+        The cash_payment_money, cash_refund_money, cash_paid_in_money,
+
+        and cash_paid_out_money fields are all computed by summing their respective
+
+        event types.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: The shift unique ID.
+        state:
+          $ref: '#/components/schemas/CashDrawerShiftState'
+          description: 'The shift current state.
+
+            See [CashDrawerShiftState](#type-cashdrawershiftstate) for possible values'
+        opened_at:
+          type:
+          - string
+          - 'null'
+          description: The time when the shift began, in ISO 8601 format.
+        ended_at:
+          type:
+          - string
+          - 'null'
+          description: The time when the shift ended, in ISO 8601 format.
+        closed_at:
+          type:
+          - string
+          - 'null'
+          description: The time when the shift was closed, in ISO 8601 format.
+        description:
+          type:
+          - string
+          - 'null'
+          description: The free-form text description of a cash drawer by an employee.
+        opened_cash_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money in the cash drawer at the start of the shift.
+
+            The amount must be greater than or equal to zero.'
+        cash_payment_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money added to the cash drawer from cash payments.
+
+            This is computed by summing all events with the types CASH_TENDER_PAYMENT and
+
+            CASH_TENDER_CANCELED_PAYMENT. The amount is always greater than or equal to
+
+            zero.'
+        cash_refunds_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money removed from the cash drawer from cash refunds.
+
+            It is computed by summing the events of type CASH_TENDER_REFUND. The amount
+
+            is always greater than or equal to zero.'
+        cash_paid_in_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money added to the cash drawer for reasons other than cash
+
+            payments. It is computed by summing the events of type PAID_IN. The amount is
+
+            always greater than or equal to zero.'
+        cash_paid_out_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money removed from the cash drawer for reasons other than
+
+            cash refunds. It is computed by summing the events of type PAID_OUT. The amount
+
+            is always greater than or equal to zero.'
+        expected_cash_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money that should be in the cash drawer at the end of the
+
+            shift, based on the shift''s other money amounts.
+
+            This can be negative if employees have not correctly recorded all the events
+
+            on the cash drawer.
+
+            cash_paid_out_money is a summation of amounts from cash_payment_money (zero
+
+            or positive), cash_refunds_money (zero or negative), cash_paid_in_money (zero
+
+            or positive), and cash_paid_out_money (zero or negative) event types.'
+        closed_cash_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money found in the cash drawer at the end of the shift
+
+            by an auditing employee. The amount should be positive.'
+        device:
+          $ref: '#/components/schemas/CashDrawerDevice'
+          description: The device running Square Point of Sale that was connected to the cash drawer.
+        created_at:
+          type: string
+          description: The shift start time in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The shift updated at time in RFC 3339 format.
+          readOnly: true
+        location_id:
+          type: string
+          description: The ID of the location the cash drawer shift belongs to.
+          readOnly: true
+        team_member_ids:
+          type: array
+          items:
+            type: string
+          description: 'The IDs of all team members that were logged into Square Point of Sale at any
+
+            point while the cash drawer shift was open.'
+          readOnly: true
+        opening_team_member_id:
+          type: string
+          description: The ID of the team member that started the cash drawer shift.
+          readOnly: true
+        ending_team_member_id:
+          type: string
+          description: The ID of the team member that ended the cash drawer shift.
+          readOnly: true
+        closing_team_member_id:
+          type: string
+          description: 'The ID of the team member that closed the cash drawer shift by auditing
+
+            the cash drawer contents.'
+          readOnly: true
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     Currency:
       type: string
       enum:
@@ -1006,201 +1270,6 @@ components:
       description: 'Indicates the associated currency for an amount of money. Values correspond
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
-      x-release-status: PUBLIC
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    ListCashDrawerShiftEventsResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        cursor:
-          type: string
-          description: 'Opaque cursor for fetching the next page. Cursor is not present in
-
-            the last page of results.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        cash_drawer_shift_events:
-          type: array
-          items:
-            $ref: '#/components/schemas/CashDrawerShiftEvent'
-          description: 'All of the events (payments, refunds, etc.) for a cash drawer during
-
-            the shift.'
-      example:
-        cash_drawer_shift_events:
-        - created_at: '2019-11-22T00:43:02.000Z'
-          description: ''
-          event_money:
-            amount: 100
-            currency: USD
-          event_type: CASH_TENDER_PAYMENT
-          id: 9F07DB01-D85A-4B77-88C3-D5C64CEB5155
-          team_member_id: ''
-        - created_at: '2019-11-22T00:43:12.000Z'
-          description: ''
-          event_money:
-            amount: 250
-            currency: USD
-          event_type: CASH_TENDER_PAYMENT
-          id: B2854CEA-A781-49B3-8F31-C64558231F48
-          team_member_id: ''
-        - created_at: '2019-11-22T00:43:23.000Z'
-          description: ''
-          event_money:
-            amount: 250
-            currency: USD
-          event_type: CASH_TENDER_CANCELLED_PAYMENT
-          id: B5FB7F72-95CD-44A3-974D-26C41064D042
-          team_member_id: ''
-        - created_at: '2019-11-22T00:43:46.000Z'
-          description: ''
-          event_money:
-            amount: 100
-            currency: USD
-          event_type: CASH_TENDER_REFUND
-          id: 0B425480-8504-40B4-A867-37B23543931B
-          team_member_id: ''
-        - created_at: '2019-11-22T00:44:18.000Z'
-          description: Transfer from another drawer
-          event_money:
-            amount: 10000
-            currency: USD
-          event_type: PAID_IN
-          id: 8C66E60E-FDCF-4EEF-A98D-3B14B7ED5CBE
-          team_member_id: ''
-        - created_at: '2019-11-22T00:44:29.000Z'
-          description: Transfer out to another drawer
-          event_money:
-            amount: 10000
-            currency: USD
-          event_type: PAID_OUT
-          id: D5ACA7FE-C64D-4ADA-8BC8-82118A2DAE4F
-          team_member_id: ''
-    CashDrawerShiftEvent:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: The unique ID of the event.
-        event_type:
-          $ref: '#/components/schemas/CashDrawerEventType'
-          description: 'The type of cash drawer shift event.
-
-            See [CashDrawerEventType](#type-cashdrawereventtype) for possible values'
-        event_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money that was added to or removed from the cash drawer
-
-            in the event. The amount can be positive (for added money)
-
-            or zero (for other tender type payments). The addition or removal of money can be determined by
-
-            by the event type.'
-        created_at:
-          type: string
-          description: The event time in RFC 3339 format.
-          readOnly: true
-        description:
-          type:
-          - string
-          - 'null'
-          description: 'An optional description of the event, entered by the employee that
-
-            created the event.'
-        team_member_id:
-          type: string
-          description: The ID of the team member that created the event.
-          readOnly: true
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
       x-release-status: PUBLIC
     ErrorCode:
       type: string
@@ -1948,60 +2017,77 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    CashDrawerShiftState:
-      type: string
-      enum:
-      - OPEN
-      - ENDED
-      - CLOSED
-      x-enum-elements:
-      - name: OPEN
-        description: An open cash drawer shift.
-      - name: ENDED
-        description: A cash drawer shift that is ended but has not yet had an employee content audit.
-      - name: CLOSED
-        description: 'An ended cash drawer shift that is closed with a completed employee
-
-          content audit and recorded result.'
-      description: The current state of a cash drawer shift.
-      x-release-status: PUBLIC
-    Money:
+    ListCashDrawerShiftEventsResponse:
       type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
-
-        Fields that do not explicitly define whether they are signed or unsigned are
-
-        considered unsigned and can only hold positive amounts. For signed fields, the
-
-        sign of the value indicates the purpose of the money transfer. See
-
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
-
-        for more information.'
       x-release-status: PUBLIC
       properties:
-        amount:
-          type:
-          - integer
-          - 'null'
-          description: 'The amount of money, in the smallest denomination of the currency
+        cursor:
+          type: string
+          description: 'Opaque cursor for fetching the next page. Cursor is not present in
 
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+            the last page of results.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        cash_drawer_shift_events:
+          type: array
+          items:
+            $ref: '#/components/schemas/CashDrawerShiftEvent'
+          description: 'All of the events (payments, refunds, etc.) for a cash drawer during
 
-            in cents. Monetary amounts can be positive or negative. See the specific
-
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
-
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
+            the shift.'
+      example:
+        cash_drawer_shift_events:
+        - created_at: '2019-11-22T00:43:02.000Z'
+          description: ''
+          event_money:
+            amount: 100
+            currency: USD
+          event_type: CASH_TENDER_PAYMENT
+          id: 9F07DB01-D85A-4B77-88C3-D5C64CEB5155
+          team_member_id: ''
+        - created_at: '2019-11-22T00:43:12.000Z'
+          description: ''
+          event_money:
+            amount: 250
+            currency: USD
+          event_type: CASH_TENDER_PAYMENT
+          id: B2854CEA-A781-49B3-8F31-C64558231F48
+          team_member_id: ''
+        - created_at: '2019-11-22T00:43:23.000Z'
+          description: ''
+          event_money:
+            amount: 250
+            currency: USD
+          event_type: CASH_TENDER_CANCELLED_PAYMENT
+          id: B5FB7F72-95CD-44A3-974D-26C41064D042
+          team_member_id: ''
+        - created_at: '2019-11-22T00:43:46.000Z'
+          description: ''
+          event_money:
+            amount: 100
+            currency: USD
+          event_type: CASH_TENDER_REFUND
+          id: 0B425480-8504-40B4-A867-37B23543931B
+          team_member_id: ''
+        - created_at: '2019-11-22T00:44:18.000Z'
+          description: Transfer from another drawer
+          event_money:
+            amount: 10000
+            currency: USD
+          event_type: PAID_IN
+          id: 8C66E60E-FDCF-4EEF-A98D-3B14B7ED5CBE
+          team_member_id: ''
+        - created_at: '2019-11-22T00:44:29.000Z'
+          description: Transfer out to another drawer
+          event_money:
+            amount: 10000
+            currency: USD
+          event_type: PAID_OUT
+          id: D5ACA7FE-C64D-4ADA-8BC8-82118A2DAE4F
+          team_member_id: ''
     CashDrawerDevice:
       type: object
       x-release-status: PUBLIC
@@ -2014,174 +2100,88 @@ components:
           - string
           - 'null'
           description: The device merchant-specified name.
-    ListCashDrawerShiftsResponse:
-      type: object
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
       x-release-status: PUBLIC
-      properties:
-        cursor:
-          type: string
-          description: 'Opaque cursor for fetching the next page of results. Cursor is not
-
-            present in the last page of results.'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        cash_drawer_shifts:
-          type: array
-          items:
-            $ref: '#/components/schemas/CashDrawerShiftSummary'
-          description: 'A collection of CashDrawerShiftSummary objects for shifts that match
-
-            the query.'
-      example:
-        cash_drawer_shifts:
-        - closed_at: '2019-11-22T00:44:49.000Z'
-          closed_cash_money:
-            amount: 9970
-            currency: USD
-          description: Misplaced some change
-          ended_at: '2019-11-22T00:44:49.000Z'
-          expected_cash_money:
-            amount: 10000
-            currency: USD
-          id: DCC99978-09A6-4926-849F-300BE9C5793A
-          opened_at: '2019-11-22T00:42:54.000Z'
-          opened_cash_money:
-            amount: 10000
-            currency: USD
-          state: CLOSED
-    CashDrawerShift:
+    CashDrawerShiftEvent:
       type: object
-      description: 'This model gives the details of a cash drawer shift.
-
-        The cash_payment_money, cash_refund_money, cash_paid_in_money,
-
-        and cash_paid_out_money fields are all computed by summing their respective
-
-        event types.'
       x-release-status: PUBLIC
       properties:
         id:
           type: string
-          description: The shift unique ID.
-        state:
-          $ref: '#/components/schemas/CashDrawerShiftState'
-          description: 'The shift current state.
+          description: The unique ID of the event.
+        event_type:
+          $ref: '#/components/schemas/CashDrawerEventType'
+          description: 'The type of cash drawer shift event.
 
-            See [CashDrawerShiftState](#type-cashdrawershiftstate) for possible values'
-        opened_at:
-          type:
-          - string
-          - 'null'
-          description: The time when the shift began, in ISO 8601 format.
-        ended_at:
-          type:
-          - string
-          - 'null'
-          description: The time when the shift ended, in ISO 8601 format.
-        closed_at:
-          type:
-          - string
-          - 'null'
-          description: The time when the shift was closed, in ISO 8601 format.
+            See [CashDrawerEventType](#type-cashdrawereventtype) for possible values'
+        event_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money that was added to or removed from the cash drawer
+
+            in the event. The amount can be positive (for added money)
+
+            or zero (for other tender type payments). The addition or removal of money can be determined by
+
+            by the event type.'
+        created_at:
+          type: string
+          description: The event time in RFC 3339 format.
+          readOnly: true
         description:
           type:
           - string
           - 'null'
-          description: The free-form text description of a cash drawer by an employee.
-        opened_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money in the cash drawer at the start of the shift.
+          description: 'An optional description of the event, entered by the employee that
 
-            The amount must be greater than or equal to zero.'
-        cash_payment_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money added to the cash drawer from cash payments.
-
-            This is computed by summing all events with the types CASH_TENDER_PAYMENT and
-
-            CASH_TENDER_CANCELED_PAYMENT. The amount is always greater than or equal to
-
-            zero.'
-        cash_refunds_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money removed from the cash drawer from cash refunds.
-
-            It is computed by summing the events of type CASH_TENDER_REFUND. The amount
-
-            is always greater than or equal to zero.'
-        cash_paid_in_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money added to the cash drawer for reasons other than cash
-
-            payments. It is computed by summing the events of type PAID_IN. The amount is
-
-            always greater than or equal to zero.'
-        cash_paid_out_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money removed from the cash drawer for reasons other than
-
-            cash refunds. It is computed by summing the events of type PAID_OUT. The amount
-
-            is always greater than or equal to zero.'
-        expected_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money that should be in the cash drawer at the end of the
-
-            shift, based on the shift''s other money amounts.
-
-            This can be negative if employees have not correctly recorded all the events
-
-            on the cash drawer.
-
-            cash_paid_out_money is a summation of amounts from cash_payment_money (zero
-
-            or positive), cash_refunds_money (zero or negative), cash_paid_in_money (zero
-
-            or positive), and cash_paid_out_money (zero or negative) event types.'
-        closed_cash_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money found in the cash drawer at the end of the shift
-
-            by an auditing employee. The amount should be positive.'
-        device:
-          $ref: '#/components/schemas/CashDrawerDevice'
-          description: The device running Square Point of Sale that was connected to the cash drawer.
-        created_at:
+            created the event.'
+        team_member_id:
           type: string
-          description: The shift start time in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The shift updated at time in RFC 3339 format.
-          readOnly: true
-        location_id:
-          type: string
-          description: The ID of the location the cash drawer shift belongs to.
-          readOnly: true
-        team_member_ids:
-          type: array
-          items:
-            type: string
-          description: 'The IDs of all team members that were logged into Square Point of Sale at any
-
-            point while the cash drawer shift was open.'
-          readOnly: true
-        opening_team_member_id:
-          type: string
-          description: The ID of the team member that started the cash drawer shift.
-          readOnly: true
-        ending_team_member_id:
-          type: string
-          description: The ID of the team member that ended the cash drawer shift.
-          readOnly: true
-        closing_team_member_id:
-          type: string
-          description: 'The ID of the team member that closed the cash drawer shift by auditing
-
-            the cash drawer contents.'
+          description: The ID of the team member that created the event.
           readOnly: true
   securitySchemes:
     oauth2:

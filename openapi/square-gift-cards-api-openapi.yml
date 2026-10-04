@@ -387,75 +387,6 @@ paths:
                 $ref: '#/components/schemas/RetrieveGiftCardResponse'
 components:
   schemas:
-    ListGiftCardsResponse:
-      type: object
-      description: "A response that contains a list of `GiftCard` objects. If the request resulted in errors, \nthe response contains a set of `Error` objects."
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        gift_cards:
-          type: array
-          items:
-            $ref: '#/components/schemas/GiftCard'
-          description: The requested gift cards or an empty object if none are found.
-        cursor:
-          type: string
-          description: 'When a response is truncated, it includes a cursor that you can use in a
-
-            subsequent request to retrieve the next set of gift cards. If a cursor is not present, this is
-
-            the final response.
-
-            For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
-      example:
-        cursor: JbFmyvUpaNKsfC1hoLSA4WlqkgkZXTWeKuStajR5BkP7OE0ETAbeWSi6U6u7sH
-        gift_cards:
-        - balance_money:
-            amount: 3900
-            currency: USD
-          created_at: '2021-06-09T22:26:54.000Z'
-          gan: '7783320008524605'
-          gan_source: SQUARE
-          id: gftc:00113070ba5745f0b2377c1b9570cb03
-          state: ACTIVE
-          type: DIGITAL
-        - balance_money:
-            amount: 2000
-            currency: USD
-          created_at: '2021-05-20T22:26:54.000Z'
-          gan: '7783320002692465'
-          gan_source: SQUARE
-          id: gftc:00128a12725b41e58e0de1d20497a9dd
-          state: ACTIVE
-          type: DIGITAL
-    UnlinkCustomerFromGiftCardResponse:
-      type: object
-      description: "A response that contains the unlinked `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        gift_card:
-          $ref: '#/components/schemas/GiftCard'
-          description: "The gift card with the ID of the unlinked customer removed from the `customer_ids` field. \nIf no other customers are linked, the `customer_ids` field is also removed."
-      example:
-        gift_card:
-          balance_money:
-            amount: 2500
-            currency: USD
-          created_at: '2021-03-25T05:13:01Z'
-          gan: '7783320005440920'
-          gan_source: SQUARE
-          id: gftc:71ea002277a34f8a945e284b04822edb
-          state: ACTIVE
-          type: DIGITAL
     RetrieveGiftCardFromNonceResponse:
       type: object
       description: "A response that contains a `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
@@ -480,32 +411,65 @@ components:
           id: gftc:6944163553804e439d89adb47caf806a
           state: ACTIVE
           type: DIGITAL
-    CreateGiftCardResponse:
+    RetrieveGiftCardFromGANRequest:
       type: object
-      description: 'A response that contains a `GiftCard`. The response might contain a set of `Error` objects if the request
-
-        resulted in errors.'
+      description: A request to retrieve gift cards by their GANs.
       x-release-status: PUBLIC
+      required:
+      - gan
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        gift_card:
-          $ref: '#/components/schemas/GiftCard'
-          description: The new gift card.
+        gan:
+          type: string
+          description: 'The gift card account number (GAN) of the gift card to retrieve.
+
+            The maximum length of a GAN is 255 digits to account for third-party GANs that have been imported.
+
+            Square-issued gift cards have 16-digit GANs.'
+          minLength: 1
+          maxLength: 255
       example:
-        gift_card:
-          balance_money:
-            amount: 0
-            currency: USD
-          created_at: '2021-05-20T22:26:54.000Z'
-          gan: '7783320006753271'
-          gan_source: SQUARE
-          id: gftc:6cbacbb64cf54e2ca9f573d619038059
-          state: PENDING
-          type: DIGITAL
+        gan: '7783320001001635'
+    GiftCardType:
+      type: string
+      enum:
+      - PHYSICAL
+      - DIGITAL
+      x-enum-elements:
+      - name: PHYSICAL
+        description: A plastic gift card.
+      - name: DIGITAL
+        description: A digital gift card.
+      description: Indicates the gift card type.
+      x-release-status: PUBLIC
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     ErrorCode:
       type: string
       enum:
@@ -1252,6 +1216,201 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    RetrieveGiftCardFromGANResponse:
+      type: object
+      description: 'A response that contains a `GiftCard`. This response might contain a set of `Error` objects
+
+        if the request resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: A gift card that was fetched, if present. It returns empty if an error occurred.
+      example:
+        gift_card:
+          balance_money:
+            amount: 5000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320001001635'
+          gan_source: SQUARE
+          id: gftc:6944163553804e439d89adb47caf806a
+          state: ACTIVE
+          type: DIGITAL
+    GiftCardStatus:
+      type: string
+      enum:
+      - ACTIVE
+      - DEACTIVATED
+      - BLOCKED
+      - PENDING
+      x-enum-elements:
+      - name: ACTIVE
+        description: The gift card is active and can be used as a payment source.
+      - name: DEACTIVATED
+        description: Any activity that changes the gift card balance is permanently forbidden.
+      - name: BLOCKED
+        description: Any activity that changes the gift card balance is temporarily forbidden.
+      - name: PENDING
+        description: 'The gift card is pending activation.
+
+          This is the initial state when a gift card is created. Typically, you''ll call
+
+          [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) to create an
+
+          `ACTIVATE` activity that activates the gift card with an initial balance before first use.'
+      description: Indicates the gift card state.
+      x-release-status: PUBLIC
+    GiftCard:
+      type: object
+      description: Represents a Square gift card.
+      x-release-status: PUBLIC
+      required:
+      - type
+      properties:
+        id:
+          type: string
+          description: The Square-assigned ID of the gift card.
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/GiftCardType'
+          description: 'The gift card type.
+
+            See [Type](#type-type) for possible values'
+        gan_source:
+          $ref: '#/components/schemas/GiftCardGANSource'
+          description: 'The source that generated the gift card account number (GAN). The default value is `SQUARE`.
+
+            See [GANSource](#type-gansource) for possible values'
+        state:
+          $ref: '#/components/schemas/GiftCardStatus'
+          description: 'The current gift card state.
+
+            See [Status](#type-status) for possible values'
+          readOnly: true
+        balance_money:
+          $ref: '#/components/schemas/Money'
+          description: The current gift card balance. This balance is always greater than or equal to zero.
+          readOnly: true
+        gan:
+          type:
+          - string
+          - 'null'
+          description: "The gift card account number (GAN). Buyers can use the GAN to make purchases or check \nthe gift card balance."
+        created_at:
+          type: string
+          description: "The timestamp when the gift card was created, in RFC 3339 format. \nIn the case of a digital gift card, it is the time when you create a card \n(using the Square Point of Sale application, Seller Dashboard, or Gift Cards API).  \nIn the case of a plastic gift card, it is the time when Square associates the card with the \nseller at the time of activation."
+          readOnly: true
+        customer_ids:
+          type: array
+          items:
+            type: string
+          description: The IDs of the [customer profiles](entity:Customer) to whom this gift card is linked.
+          readOnly: true
+    CreateGiftCardResponse:
+      type: object
+      description: 'A response that contains a `GiftCard`. The response might contain a set of `Error` objects if the request
+
+        resulted in errors.'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The new gift card.
+      example:
+        gift_card:
+          balance_money:
+            amount: 0
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320006753271'
+          gan_source: SQUARE
+          id: gftc:6cbacbb64cf54e2ca9f573d619038059
+          state: PENDING
+          type: DIGITAL
+    LinkCustomerToGiftCardResponse:
+      type: object
+      description: "A response that contains the linked `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_card:
+          $ref: '#/components/schemas/GiftCard'
+          description: The gift card with the ID of the linked customer listed in the `customer_ids` field.
+      example:
+        gift_card:
+          balance_money:
+            amount: 2500
+            currency: USD
+          created_at: '2021-03-25T05:13:01Z'
+          customer_ids:
+          - GKY0FZ3V717AH8Q2D821PNT2ZW
+          gan: '7783320005440920'
+          gan_source: SQUARE
+          id: gftc:71ea002277a34f8a945e284b04822edb
+          state: ACTIVE
+          type: DIGITAL
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
     CreateGiftCardRequest:
       type: object
       description: Represents a [CreateGiftCard](api-endpoint:GiftCards-CreateGiftCard) request.
@@ -1278,27 +1437,9 @@ components:
           type: DIGITAL
         idempotency_key: NC9Tm69EjbjtConu
         location_id: 81FN9BNFZTKS4
-    RetrieveGiftCardFromGANRequest:
+    UnlinkCustomerFromGiftCardResponse:
       type: object
-      description: A request to retrieve gift cards by their GANs.
-      x-release-status: PUBLIC
-      required:
-      - gan
-      properties:
-        gan:
-          type: string
-          description: 'The gift card account number (GAN) of the gift card to retrieve.
-
-            The maximum length of a GAN is 255 digits to account for third-party GANs that have been imported.
-
-            Square-issued gift cards have 16-digit GANs.'
-          minLength: 1
-          maxLength: 255
-      example:
-        gan: '7783320001001635'
-    LinkCustomerToGiftCardResponse:
-      type: object
-      description: "A response that contains the linked `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+      description: "A response that contains the unlinked `GiftCard` object. If the request resulted in errors, \nthe response contains a set of `Error` objects."
       x-release-status: PUBLIC
       properties:
         errors:
@@ -1308,15 +1449,13 @@ components:
           description: Any errors that occurred during the request.
         gift_card:
           $ref: '#/components/schemas/GiftCard'
-          description: The gift card with the ID of the linked customer listed in the `customer_ids` field.
+          description: "The gift card with the ID of the unlinked customer removed from the `customer_ids` field. \nIf no other customers are linked, the `customer_ids` field is also removed."
       example:
         gift_card:
           balance_money:
             amount: 2500
             currency: USD
           created_at: '2021-03-25T05:13:01Z'
-          customer_ids:
-          - GKY0FZ3V717AH8Q2D821PNT2ZW
           gan: '7783320005440920'
           gan_source: SQUARE
           id: gftc:71ea002277a34f8a945e284b04822edb
@@ -1359,33 +1498,51 @@ components:
             See [Currency](entity:Currency) for possible values.
 
             See [Currency](#type-currency) for possible values'
-    LinkCustomerToGiftCardRequest:
+    ListGiftCardsResponse:
       type: object
-      description: A request to link a customer to a gift card.
+      description: "A response that contains a list of `GiftCard` objects. If the request resulted in errors, \nthe response contains a set of `Error` objects."
       x-release-status: PUBLIC
-      x-params-example: ?gift_card_id=gftc:71ea002277a34f8a945e284b04822edb
-      required:
-      - customer_id
       properties:
-        customer_id:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        gift_cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/GiftCard'
+          description: The requested gift cards or an empty object if none are found.
+        cursor:
           type: string
-          description: The ID of the customer to link to the gift card.
-          minLength: 1
-          maxLength: 191
+          description: 'When a response is truncated, it includes a cursor that you can use in a
+
+            subsequent request to retrieve the next set of gift cards. If a cursor is not present, this is
+
+            the final response.
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
       example:
-        customer_id: GKY0FZ3V717AH8Q2D821PNT2ZW
-    GiftCardType:
-      type: string
-      enum:
-      - PHYSICAL
-      - DIGITAL
-      x-enum-elements:
-      - name: PHYSICAL
-        description: A plastic gift card.
-      - name: DIGITAL
-        description: A digital gift card.
-      description: Indicates the gift card type.
-      x-release-status: PUBLIC
+        cursor: JbFmyvUpaNKsfC1hoLSA4WlqkgkZXTWeKuStajR5BkP7OE0ETAbeWSi6U6u7sH
+        gift_cards:
+        - balance_money:
+            amount: 3900
+            currency: USD
+          created_at: '2021-06-09T22:26:54.000Z'
+          gan: '7783320008524605'
+          gan_source: SQUARE
+          id: gftc:00113070ba5745f0b2377c1b9570cb03
+          state: ACTIVE
+          type: DIGITAL
+        - balance_money:
+            amount: 2000
+            currency: USD
+          created_at: '2021-05-20T22:26:54.000Z'
+          gan: '7783320002692465'
+          gan_source: SQUARE
+          id: gftc:00128a12725b41e58e0de1d20497a9dd
+          state: ACTIVE
+          type: DIGITAL
     Currency:
       type: string
       enum:
@@ -1943,123 +2100,6 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
-    GiftCard:
-      type: object
-      description: Represents a Square gift card.
-      x-release-status: PUBLIC
-      required:
-      - type
-      properties:
-        id:
-          type: string
-          description: The Square-assigned ID of the gift card.
-          readOnly: true
-        type:
-          $ref: '#/components/schemas/GiftCardType'
-          description: 'The gift card type.
-
-            See [Type](#type-type) for possible values'
-        gan_source:
-          $ref: '#/components/schemas/GiftCardGANSource'
-          description: 'The source that generated the gift card account number (GAN). The default value is `SQUARE`.
-
-            See [GANSource](#type-gansource) for possible values'
-        state:
-          $ref: '#/components/schemas/GiftCardStatus'
-          description: 'The current gift card state.
-
-            See [Status](#type-status) for possible values'
-          readOnly: true
-        balance_money:
-          $ref: '#/components/schemas/Money'
-          description: The current gift card balance. This balance is always greater than or equal to zero.
-          readOnly: true
-        gan:
-          type:
-          - string
-          - 'null'
-          description: "The gift card account number (GAN). Buyers can use the GAN to make purchases or check \nthe gift card balance."
-        created_at:
-          type: string
-          description: "The timestamp when the gift card was created, in RFC 3339 format. \nIn the case of a digital gift card, it is the time when you create a card \n(using the Square Point of Sale application, Seller Dashboard, or Gift Cards API).  \nIn the case of a plastic gift card, it is the time when Square associates the card with the \nseller at the time of activation."
-          readOnly: true
-        customer_ids:
-          type: array
-          items:
-            type: string
-          description: The IDs of the [customer profiles](entity:Customer) to whom this gift card is linked.
-          readOnly: true
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    GiftCardStatus:
-      type: string
-      enum:
-      - ACTIVE
-      - DEACTIVATED
-      - BLOCKED
-      - PENDING
-      x-enum-elements:
-      - name: ACTIVE
-        description: The gift card is active and can be used as a payment source.
-      - name: DEACTIVATED
-        description: Any activity that changes the gift card balance is permanently forbidden.
-      - name: BLOCKED
-        description: Any activity that changes the gift card balance is temporarily forbidden.
-      - name: PENDING
-        description: 'The gift card is pending activation.
-
-          This is the initial state when a gift card is created. Typically, you''ll call
-
-          [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) to create an
-
-          `ACTIVATE` activity that activates the gift card with an initial balance before first use.'
-      description: Indicates the gift card state.
-      x-release-status: PUBLIC
     RetrieveGiftCardResponse:
       type: object
       description: 'A response that contains a `GiftCard`. The response might contain a set of `Error` objects
@@ -2086,61 +2126,6 @@ components:
           id: gftc:00113070ba5745f0b2377c1b9570cb03
           state: ACTIVE
           type: DIGITAL
-    RetrieveGiftCardFromGANResponse:
-      type: object
-      description: 'A response that contains a `GiftCard`. This response might contain a set of `Error` objects
-
-        if the request resulted in errors.'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        gift_card:
-          $ref: '#/components/schemas/GiftCard'
-          description: A gift card that was fetched, if present. It returns empty if an error occurred.
-      example:
-        gift_card:
-          balance_money:
-            amount: 5000
-            currency: USD
-          created_at: '2021-05-20T22:26:54.000Z'
-          gan: '7783320001001635'
-          gan_source: SQUARE
-          id: gftc:6944163553804e439d89adb47caf806a
-          state: ACTIVE
-          type: DIGITAL
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
     GiftCardGANSource:
       type: string
       enum:
@@ -2166,6 +2151,21 @@ components:
           minLength: 1
       example:
         nonce: cnon:7783322135245171
+    LinkCustomerToGiftCardRequest:
+      type: object
+      description: A request to link a customer to a gift card.
+      x-release-status: PUBLIC
+      x-params-example: ?gift_card_id=gftc:71ea002277a34f8a945e284b04822edb
+      required:
+      - customer_id
+      properties:
+        customer_id:
+          type: string
+          description: The ID of the customer to link to the gift card.
+          minLength: 1
+          maxLength: 191
+      example:
+        customer_id: GKY0FZ3V717AH8Q2D821PNT2ZW
     UnlinkCustomerFromGiftCardRequest:
       type: object
       description: A request to unlink a customer from a gift card.

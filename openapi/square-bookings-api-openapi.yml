@@ -629,6 +629,142 @@ paths:
                 $ref: '#/components/schemas/CancelBookingResponse'
 components:
   schemas:
+    BulkRetrieveBookingsResponse:
+      type: object
+      description: Response payload for bulk retrieval of bookings.
+      x-release-status: PUBLIC
+      properties:
+        bookings:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RetrieveBookingResponse'
+          description: Requested bookings returned as a map containing `booking_id` as the key and `RetrieveBookingResponse` as the value.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        bookings:
+          sc3p3m7dvctfr1:
+            booking:
+              all_day: false
+              appointment_segments:
+              - any_team_member: false
+                duration_minutes: 60
+                service_variation_id: VG4FYBKK3UL6UITOEYQ6MFLS
+                service_variation_version: 1641341724039
+                team_member_id: TMjiqI3PxyLMKr4k
+              created_at: '2023-04-26T18:19:21Z'
+              customer_id: 4TDWKN9E8165X8Z77MRS0VFMJM
+              id: sc3p3m7dvctfr1
+              location_id: LY6WNBPVM6VGV
+              start_at: '2023-05-01T14:00:00Z'
+              status: ACCEPTED
+              updated_at: '2023-04-26T18:19:21Z'
+              version: 0
+            errors: []
+          tdegug1dvctdef:
+            errors:
+            - category: INVALID_REQUEST_ERROR
+              code: NOT_FOUND
+              detail: Specified booking was not found.
+              field: booking_id
+          tdegug1fqni3wh:
+            booking:
+              all_day: false
+              appointment_segments:
+              - any_team_member: false
+                duration_minutes: 60
+                service_variation_id: VG4FYBKK3UL6UITOEYQ6MFLS
+                service_variation_version: 1641341724039
+                team_member_id: TMjiqI3PxyLMKr4k
+              created_at: '2023-04-26T18:19:30Z'
+              customer_id: 4TDWKN9E8165X8Z77MRS0VFMJM
+              id: tdegug1fqni3wh
+              location_id: LY6WNBPVM6VGV
+              start_at: '2023-05-02T14:00:00Z'
+              status: ACCEPTED
+              updated_at: '2023-04-26T18:19:30Z'
+              version: 0
+            errors: []
+        errors: []
+    ListLocationBookingProfilesResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        location_booking_profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationBookingProfile'
+          description: The list of a seller's location booking profiles.
+        cursor:
+          type: string
+          description: The pagination cursor to be used in the subsequent request to get the next page of the results. Stop retrieving the next page of the results when the cursor is not set.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        location_booking_profiles:
+        - booking_site_url: https://squareup.com/book/LY6WNBPVM6VGV/testbusiness
+          location_id: LY6WNBPVM6VGV
+          online_booking_enabled: true
+        - location_id: PYTRNBPVMJUPV
+          online_booking_enabled: false
+    BookingBookingSource:
+      type: string
+      enum:
+      - FIRST_PARTY_MERCHANT
+      - FIRST_PARTY_BUYER
+      - THIRD_PARTY_BUYER
+      - API
+      x-enum-elements:
+      - name: FIRST_PARTY_MERCHANT
+        description: The booking was created by a seller from a Square Appointments application, such as the Square Appointments Dashboard or a Square Appointments mobile app.
+      - name: FIRST_PARTY_BUYER
+        description: The booking was created by a buyer from a Square Appointments application, such as Square Online Booking Site.
+      - name: THIRD_PARTY_BUYER
+        description: The booking was created by a buyer created from a third-party application.
+      - name: API
+        description: The booking was created by a seller or a buyer from the Square Bookings API.
+      description: Supported sources a booking was created from.
+      x-release-status: PUBLIC
+    RetrieveBusinessBookingProfileResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        business_booking_profile:
+          $ref: '#/components/schemas/BusinessBookingProfile'
+          description: The seller's booking profile.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        business_booking_profile:
+          allow_user_cancel: true
+          booking_enabled: true
+          booking_policy: ACCEPT_ALL
+          business_appointment_settings:
+            alignment_time: HALF_HOURLY
+            any_team_member_booking_enabled: true
+            cancellation_fee_money:
+              currency: USD
+            cancellation_policy: CUSTOM_POLICY
+            location_types:
+            - BUSINESS_LOCATION
+            max_booking_lead_time_seconds: 31536000
+            min_booking_lead_time_seconds: 0
+            multiple_service_booking_enabled: true
+            skip_booking_flow_staff_selection: false
+          created_at: '2020-09-10T21:40:38Z'
+          customer_timezone_choice: CUSTOMER_CHOICE
+          seller_id: MLJQYZZRM0D3Y
+        errors: []
     BookingCreatorDetailsCreatorType:
       type: string
       enum:
@@ -641,183 +777,76 @@ components:
         description: The creator is of the buyer type.
       description: Supported types of a booking creator.
       x-release-status: PUBLIC
-    ListTeamMemberBookingProfilesResponse:
+    Error:
       type: object
-      x-release-status: PUBLIC
-      properties:
-        team_member_booking_profiles:
-          type: array
-          items:
-            $ref: '#/components/schemas/TeamMemberBookingProfile'
-          description: 'The list of team member booking profiles. The results are returned in the ascending order of the time
+      description: 'Represents an error encountered during a request to the Connect API.
 
-            when the team member booking profiles were last updated. Multiple booking profiles updated at the same time
 
-            are further sorted in the ascending order of their IDs.'
-        cursor:
-          type: string
-          description: The pagination cursor to be used in the subsequent request to get the next page of the results. Stop retrieving the next page of the results when the cursor is not set.
-          maxLength: 65536
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        errors: []
-        team_member_booking_profiles:
-        - display_name: Sandbox Seller
-          is_bookable: true
-          team_member_id: TMXUrsBWWcHTt79t
-        - display_name: Sandbox Staff
-          is_bookable: true
-          team_member_id: TMaJcbiRqPIGZuS9
-    AppointmentSegment:
-      type: object
-      description: Defines an appointment segment of a booking.
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
       x-release-status: PUBLIC
       required:
-      - team_member_id
+      - category
+      - code
       properties:
-        duration_minutes:
-          type:
-          - integer
-          - 'null'
-          description: The time span in minutes of an appointment segment.
-          maximum: 1500
-        service_variation_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the [CatalogItemVariation](entity:CatalogItemVariation) object representing the service booked in this segment.
-          maxLength: 36
-        team_member_id:
-          type: string
-          description: The ID of the [TeamMember](entity:TeamMember) object representing the team member booked in this segment.
-          minLength: 1
-          maxLength: 32
-        service_variation_version:
-          type:
-          - integer
-          - 'null'
-          description: The current version of the item variation representing the service booked in this segment.
-          format: int64
-        intermission_minutes:
-          type: integer
-          description: Time between the end of this segment and the beginning of the subsequent segment.
-          readOnly: true
-        any_team_member:
-          type: boolean
-          description: Whether the customer accepts any team member, instead of a specific one, to serve this segment.
-          readOnly: true
-        resource_ids:
-          type: array
-          items:
-            type: string
-          description: The IDs of the seller-accessible resources used for this appointment segment.
-          readOnly: true
-    RetrieveBookingResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        booking:
-          $ref: '#/components/schemas/Booking'
-          description: The booking that was requested.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        booking:
-          appointment_segments:
-          - duration_minutes: 60
-            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
-            service_variation_version: 1599775456731
-            team_member_id: TMXUrsBWWcHTt79t
-          created_at: '2020-10-28T15:47:41Z'
-          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
-          customer_note: ''
-          id: zkras0xv0xwswx
-          location_id: LEQHH0YY8B42M
-          seller_note: ''
-          start_at: '2020-11-26T13:00:00Z'
-          status: ACCEPTED
-          updated_at: '2020-10-28T15:49:25Z'
-          version: 1
-        errors: []
-    BookingCreatorDetails:
-      type: object
-      description: Information about a booking creator.
-      x-release-status: PUBLIC
-      properties:
-        creator_type:
-          $ref: '#/components/schemas/BookingCreatorDetailsCreatorType'
-          description: 'The seller-accessible type of the creator of the booking.
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
 
-            See [BookingCreatorDetailsCreatorType](#type-bookingcreatordetailscreatortype) for possible values'
-          readOnly: true
-        team_member_id:
-          type: string
-          description: 'The ID of the team member who created the booking, when the booking creator is of the `TEAM_MEMBER` type.
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
 
-            Access to this field requires seller-level permissions.'
-          maxLength: 32
-          readOnly: true
-        customer_id:
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
           type: string
-          description: 'The ID of the customer who created the booking, when the booking creator is of the `CUSTOMER` type.
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
 
-            Access to this field requires seller-level permissions.'
-          maxLength: 192
-          readOnly: true
-    LocationBookingProfile:
-      type: object
-      description: The booking profile of a seller's location, including the location's ID and whether the location is enabled for online booking.
-      x-release-status: PUBLIC
-      properties:
-        location_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the [location](entity:Location).
-        booking_site_url:
-          type:
-          - string
-          - 'null'
-          description: Url for the online booking site for this location.
-        online_booking_enabled:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether the location is enabled for online booking.
-    BusinessAppointmentSettingsMaxAppointmentsPerDayLimitType:
+            the error pertains to.'
+    BusinessAppointmentSettingsBookingLocationType:
       type: string
       enum:
-      - PER_TEAM_MEMBER
-      - PER_LOCATION
+      - BUSINESS_LOCATION
+      - CUSTOMER_LOCATION
+      - PHONE
       x-enum-elements:
-      - name: PER_TEAM_MEMBER
-        description: The maximum number of daily appointments is set on a per team member basis.
-      - name: PER_LOCATION
-        description: The maximum number of daily appointments is set on a per location basis.
-      description: Types of daily appointment limits.
+      - name: BUSINESS_LOCATION
+        description: The service is provided at a seller location.
+      - name: CUSTOMER_LOCATION
+        description: The service is provided at a customer location.
+      - name: PHONE
+        description: The service is provided over the phone.
+      description: Supported types of location where service is provided.
       x-release-status: PUBLIC
-    CancelBookingRequest:
-      type: object
+    BookingStatus:
+      type: string
+      enum:
+      - PENDING
+      - CANCELLED_BY_CUSTOMER
+      - CANCELLED_BY_SELLER
+      - DECLINED
+      - ACCEPTED
+      - NO_SHOW
+      x-enum-elements:
+      - name: PENDING
+        description: An unaccepted booking. It is visible to both sellers and customers.
+      - name: CANCELLED_BY_CUSTOMER
+        description: A customer-cancelled booking. It is visible to both the seller and the customer.
+      - name: CANCELLED_BY_SELLER
+        description: A seller-cancelled booking. It is visible to both the seller and the customer.
+      - name: DECLINED
+        description: A declined booking. It had once been pending, but was then declined by the seller.
+      - name: ACCEPTED
+        description: An accepted booking agreed to or accepted by the seller.
+      - name: NO_SHOW
+        description: 'A no-show booking. The booking was accepted at one time, but have now been marked as a no-show by
+
+          the seller because the client either missed the booking or cancelled it without enough notice.'
+      description: Supported booking statuses.
       x-release-status: PUBLIC
-      properties:
-        idempotency_key:
-          type:
-          - string
-          - 'null'
-          description: A unique key to make this request an idempotent operation.
-          maxLength: 255
-        booking_version:
-          type:
-          - integer
-          - 'null'
-          description: The revision number for the booking used for optimistic concurrency.
     ErrorCode:
       type: string
       enum:
@@ -1564,102 +1593,6 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    TimeRange:
-      type: object
-      description: 'Represents a generic time range. The start and end values are
-
-        represented in RFC 3339 format. Time ranges are customized to be
-
-        inclusive or exclusive based on the needs of a particular endpoint.
-
-        Refer to the relevant endpoint-specific documentation to determine
-
-        how time ranges are handled.'
-      x-release-status: PUBLIC
-      properties:
-        start_at:
-          type:
-          - string
-          - 'null'
-          description: 'A datetime value in RFC 3339 format indicating when the time range
-
-            starts.'
-        end_at:
-          type:
-          - string
-          - 'null'
-          description: 'A datetime value in RFC 3339 format indicating when the time range
-
-            ends.'
-    SearchAvailabilityRequest:
-      type: object
-      x-release-status: PUBLIC
-      required:
-      - query
-      properties:
-        query:
-          $ref: '#/components/schemas/SearchAvailabilityQuery'
-          description: Query conditions used to filter buyer-accessible booking availabilities.
-    BulkRetrieveBookingsResponse:
-      type: object
-      description: Response payload for bulk retrieval of bookings.
-      x-release-status: PUBLIC
-      properties:
-        bookings:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/RetrieveBookingResponse'
-          description: Requested bookings returned as a map containing `booking_id` as the key and `RetrieveBookingResponse` as the value.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        bookings:
-          sc3p3m7dvctfr1:
-            booking:
-              all_day: false
-              appointment_segments:
-              - any_team_member: false
-                duration_minutes: 60
-                service_variation_id: VG4FYBKK3UL6UITOEYQ6MFLS
-                service_variation_version: 1641341724039
-                team_member_id: TMjiqI3PxyLMKr4k
-              created_at: '2023-04-26T18:19:21Z'
-              customer_id: 4TDWKN9E8165X8Z77MRS0VFMJM
-              id: sc3p3m7dvctfr1
-              location_id: LY6WNBPVM6VGV
-              start_at: '2023-05-01T14:00:00Z'
-              status: ACCEPTED
-              updated_at: '2023-04-26T18:19:21Z'
-              version: 0
-            errors: []
-          tdegug1dvctdef:
-            errors:
-            - category: INVALID_REQUEST_ERROR
-              code: NOT_FOUND
-              detail: Specified booking was not found.
-              field: booking_id
-          tdegug1fqni3wh:
-            booking:
-              all_day: false
-              appointment_segments:
-              - any_team_member: false
-                duration_minutes: 60
-                service_variation_id: VG4FYBKK3UL6UITOEYQ6MFLS
-                service_variation_version: 1641341724039
-                team_member_id: TMjiqI3PxyLMKr4k
-              created_at: '2023-04-26T18:19:30Z'
-              customer_id: 4TDWKN9E8165X8Z77MRS0VFMJM
-              id: tdegug1fqni3wh
-              location_id: LY6WNBPVM6VGV
-              start_at: '2023-05-02T14:00:00Z'
-              status: ACCEPTED
-              updated_at: '2023-04-26T18:19:30Z'
-              version: 0
-            errors: []
-        errors: []
     SearchAvailabilityResponse:
       type: object
       x-release-status: PUBLIC
@@ -1803,155 +1736,65 @@ components:
           location_id: LEQHH0YY8B42M
           start_at: '2020-11-27T14:00:00Z'
         errors: []
-    BookingStatus:
-      type: string
-      enum:
-      - PENDING
-      - CANCELLED_BY_CUSTOMER
-      - CANCELLED_BY_SELLER
-      - DECLINED
-      - ACCEPTED
-      - NO_SHOW
-      x-enum-elements:
-      - name: PENDING
-        description: An unaccepted booking. It is visible to both sellers and customers.
-      - name: CANCELLED_BY_CUSTOMER
-        description: A customer-cancelled booking. It is visible to both the seller and the customer.
-      - name: CANCELLED_BY_SELLER
-        description: A seller-cancelled booking. It is visible to both the seller and the customer.
-      - name: DECLINED
-        description: A declined booking. It had once been pending, but was then declined by the seller.
-      - name: ACCEPTED
-        description: An accepted booking agreed to or accepted by the seller.
-      - name: NO_SHOW
-        description: 'A no-show booking. The booking was accepted at one time, but have now been marked as a no-show by
-
-          the seller because the client either missed the booking or cancelled it without enough notice.'
-      description: Supported booking statuses.
-      x-release-status: PUBLIC
-    BusinessAppointmentSettingsAlignmentTime:
-      type: string
-      enum:
-      - SERVICE_DURATION
-      - QUARTER_HOURLY
-      - HALF_HOURLY
-      - HOURLY
-      x-enum-elements:
-      - name: SERVICE_DURATION
-        description: The service duration unit is one visit of a fixed time interval specified by the seller.
-      - name: QUARTER_HOURLY
-        description: The service duration unit is a 15-minute interval. Bookings can be scheduled every quarter hour.
-      - name: HALF_HOURLY
-        description: The service duration unit is a 30-minute interval. Bookings can be scheduled every half hour.
-      - name: HOURLY
-        description: The service duration unit is a 60-minute interval. Bookings can be scheduled every hour.
-      description: Time units of a service duration for bookings.
-      x-release-status: PUBLIC
-    Availability:
+    BusinessBookingProfile:
       type: object
-      description: Defines an appointment slot that encapsulates the appointment segments, location and starting time available for booking.
+      description: A seller's business booking profile, including booking policy, appointment settings, etc.
       x-release-status: PUBLIC
       properties:
-        start_at:
+        seller_id:
           type:
           - string
           - 'null'
-          description: The RFC 3339 timestamp specifying the beginning time of the slot available for booking.
-        location_id:
-          type: string
-          description: The ID of the location available for booking.
+          description: The ID of the seller, obtainable using the Merchants API.
           maxLength: 32
-          readOnly: true
-        appointment_segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AppointmentSegment'
-          description: The list of appointment segments available for booking
-    BulkRetrieveTeamMemberBookingProfilesResponse:
-      type: object
-      description: Response payload for the [BulkRetrieveTeamMemberBookingProfiles](api-endpoint:Bookings-BulkRetrieveTeamMemberBookingProfiles) endpoint.
-      x-release-status: PUBLIC
-      properties:
-        team_member_booking_profiles:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/RetrieveTeamMemberBookingProfileResponse'
-          description: The returned team members' booking profiles, as a map with `team_member_id` as the key and [TeamMemberBookingProfile](entity:TeamMemberBookingProfile) the value.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        errors: []
-        team_member_booking_profiles:
-          TMXUrsBWWcHTt79t:
-            errors:
-            - category: INVALID_REQUEST_ERROR
-              code: NOT_FOUND
-              detail: Resource not found.
-          TMaJcbiRqPIGZuS9:
-            errors: []
-            team_member_booking_profile:
-              display_name: Sandbox Staff 1
-              is_bookable: true
-              team_member_id: TMaJcbiRqPIGZuS9
-          TMtdegug1fqni3wh:
-            errors: []
-            team_member_booking_profile:
-              display_name: Sandbox Staff 2
-              is_bookable: true
-              team_member_id: TMtdegug1fqni3wh
-    RetrieveTeamMemberBookingProfileResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        team_member_booking_profile:
-          $ref: '#/components/schemas/TeamMemberBookingProfile'
-          description: The returned team member booking profile.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        errors: []
-        team_member_booking_profile:
-          display_name: Sandbox Staff
-          is_bookable: true
-          team_member_id: TMaJcbiRqPIGZuS9
-    TeamMemberBookingProfile:
-      type: object
-      description: The booking profile of a seller's team member, including the team member's ID, display name, description and whether the team member can be booked as a service provider.
-      x-release-status: PUBLIC
-      properties:
-        team_member_id:
+        created_at:
           type: string
-          description: The ID of the [TeamMember](entity:TeamMember) object for the team member associated with the booking profile.
-          maxLength: 32
+          description: The RFC 3339 timestamp specifying the booking's creation time.
           readOnly: true
-        description:
-          type: string
-          description: The description of the team member.
-          maxLength: 65536
-          readOnly: true
-        display_name:
-          type: string
-          description: The display name of the team member.
-          maxLength: 512
-          readOnly: true
-        is_bookable:
+        booking_enabled:
           type:
           - boolean
           - 'null'
-          description: Indicates whether the team member can be booked through the Bookings API or the seller's online booking channel or site (`true`) or not (`false`).
-        profile_image_url:
-          type: string
-          description: The URL of the team member's image for the bookings profile.
-          maxLength: 2048
-          readOnly: true
+          description: Indicates whether the seller is open for booking.
+        customer_timezone_choice:
+          $ref: '#/components/schemas/BusinessBookingProfileCustomerTimezoneChoice'
+          description: 'The choice of customer''s time zone information of a booking.
+
+            The Square online booking site and all notifications to customers uses either the seller location’s time zone
+
+            or the time zone the customer chooses at booking.
+
+            See [BusinessBookingProfileCustomerTimezoneChoice](#type-businessbookingprofilecustomertimezonechoice) for possible values'
+        booking_policy:
+          $ref: '#/components/schemas/BusinessBookingProfileBookingPolicy'
+          description: 'The policy for the seller to automatically accept booking requests (`ACCEPT_ALL`) or not (`REQUIRES_ACCEPTANCE`).
+
+            See [BusinessBookingProfileBookingPolicy](#type-businessbookingprofilebookingpolicy) for possible values'
+        allow_user_cancel:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether customers can cancel or reschedule their own bookings (`true`) or not (`false`).
+        business_appointment_settings:
+          $ref: '#/components/schemas/BusinessAppointmentSettings'
+          description: Settings for appointment-type bookings.
+        support_seller_level_writes:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether the seller's subscription to Square Appointments supports creating, updating or canceling an appointment through the API (`true`) or not (`false`) using seller permission.
+    BusinessBookingProfileBookingPolicy:
+      type: string
+      enum:
+      - ACCEPT_ALL
+      - REQUIRES_ACCEPTANCE
+      x-enum-elements:
+      - name: ACCEPT_ALL
+        description: The seller accepts all booking requests automatically.
+      - name: REQUIRES_ACCEPTANCE
+        description: The seller must accept requests to complete bookings.
+      description: Policies for accepting bookings.
+      x-release-status: PUBLIC
     BusinessAppointmentSettings:
       type: object
       description: The service appointment settings, including where and how the service is provided.
@@ -2029,232 +1872,17 @@ components:
           - boolean
           - 'null'
           description: Indicates whether customers has an assigned staff member (`true`) or can select s staff member of their choice (`false`).
-    Booking:
-      type: object
-      description: 'Represents a booking as a time-bound service contract for a seller''s staff member to provide a specified service
-
-        at a given location to a requesting customer in one or more appointment segments.'
-      x-release-status: PUBLIC
-      properties:
-        id:
-          type: string
-          description: A unique ID of this object representing a booking.
-          maxLength: 36
-          readOnly: true
-        version:
-          type: integer
-          description: The revision number for the booking used for optimistic concurrency.
-        status:
-          $ref: '#/components/schemas/BookingStatus'
-          description: 'The status of the booking, describing where the booking stands with respect to the booking state machine.
-
-            See [BookingStatus](#type-bookingstatus) for possible values'
-          readOnly: true
-        created_at:
-          type: string
-          description: The RFC 3339 timestamp specifying the creation time of this booking.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The RFC 3339 timestamp specifying the most recent update time of this booking.
-          readOnly: true
-        start_at:
-          type:
-          - string
-          - 'null'
-          description: The RFC 3339 timestamp specifying the starting time of this booking.
-        location_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the [Location](entity:Location) object representing the location where the booked service is provided. Once set when the booking is created, its value cannot be changed.
-          maxLength: 32
-        customer_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the [Customer](entity:Customer) object representing the customer receiving the booked service.
-          maxLength: 192
-        customer_note:
-          type:
-          - string
-          - 'null'
-          description: The free-text field for the customer to supply notes about the booking. For example, the note can be preferences that cannot be expressed by supported attributes of a relevant [CatalogObject](entity:CatalogObject) instance.
-          maxLength: 4096
-        seller_note:
-          type:
-          - string
-          - 'null'
-          description: 'The free-text field for the seller to supply notes about the booking. For example, the note can be preferences that cannot be expressed by supported attributes of a specific [CatalogObject](entity:CatalogObject) instance.
-
-            This field should not be visible to customers.'
-          maxLength: 4096
-        appointment_segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AppointmentSegment'
-          description: A list of appointment segments for this booking.
-        transition_time_minutes:
-          type: integer
-          description: 'Additional time at the end of a booking.
-
-            Applications should not make this field visible to customers of a seller.'
-          readOnly: true
-        all_day:
-          type: boolean
-          description: Whether the booking is of a full business day.
-          readOnly: true
-        location_type:
-          $ref: '#/components/schemas/BusinessAppointmentSettingsBookingLocationType'
-          description: 'The type of location where the booking is held.
-
-            See [BusinessAppointmentSettingsBookingLocationType](#type-businessappointmentsettingsbookinglocationtype) for possible values'
-        creator_details:
-          $ref: '#/components/schemas/BookingCreatorDetails'
-          description: Information about the booking creator.
-          readOnly: true
-        source:
-          $ref: '#/components/schemas/BookingBookingSource'
-          description: 'The source of the booking.
-
-            Access to this field requires seller-level permissions.
-
-            See [BookingBookingSource](#type-bookingbookingsource) for possible values'
-          readOnly: true
-        address:
-          $ref: '#/components/schemas/Address'
-          description: Stores a customer address if the location type is `CUSTOMER_LOCATION`.
-    BookingBookingSource:
+    BusinessBookingProfileCustomerTimezoneChoice:
       type: string
       enum:
-      - FIRST_PARTY_MERCHANT
-      - FIRST_PARTY_BUYER
-      - THIRD_PARTY_BUYER
-      - API
+      - BUSINESS_LOCATION_TIMEZONE
+      - CUSTOMER_CHOICE
       x-enum-elements:
-      - name: FIRST_PARTY_MERCHANT
-        description: The booking was created by a seller from a Square Appointments application, such as the Square Appointments Dashboard or a Square Appointments mobile app.
-      - name: FIRST_PARTY_BUYER
-        description: The booking was created by a buyer from a Square Appointments application, such as Square Online Booking Site.
-      - name: THIRD_PARTY_BUYER
-        description: The booking was created by a buyer created from a third-party application.
-      - name: API
-        description: The booking was created by a seller or a buyer from the Square Bookings API.
-      description: Supported sources a booking was created from.
-      x-release-status: PUBLIC
-    RetrieveBusinessBookingProfileResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        business_booking_profile:
-          $ref: '#/components/schemas/BusinessBookingProfile'
-          description: The seller's booking profile.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        business_booking_profile:
-          allow_user_cancel: true
-          booking_enabled: true
-          booking_policy: ACCEPT_ALL
-          business_appointment_settings:
-            alignment_time: HALF_HOURLY
-            any_team_member_booking_enabled: true
-            cancellation_fee_money:
-              currency: USD
-            cancellation_policy: CUSTOM_POLICY
-            location_types:
-            - BUSINESS_LOCATION
-            max_booking_lead_time_seconds: 31536000
-            min_booking_lead_time_seconds: 0
-            multiple_service_booking_enabled: true
-            skip_booking_flow_staff_selection: false
-          created_at: '2020-09-10T21:40:38Z'
-          customer_timezone_choice: CUSTOMER_CHOICE
-          seller_id: MLJQYZZRM0D3Y
-        errors: []
-    CreateBookingResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        booking:
-          $ref: '#/components/schemas/Booking'
-          description: The booking that was created.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        booking:
-          appointment_segments:
-          - duration_minutes: 60
-            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
-            service_variation_version: 1599775456731
-            team_member_id: TMXUrsBWWcHTt79t
-          created_at: '2020-10-28T15:47:41Z'
-          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
-          customer_note: ''
-          id: zkras0xv0xwswx
-          location_id: LEQHH0YY8B42M
-          seller_note: ''
-          start_at: '2020-11-26T13:00:00Z'
-          status: ACCEPTED
-          updated_at: '2020-10-28T15:47:41Z'
-          version: 0
-        errors: []
-    Money:
-      type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
-
-        Fields that do not explicitly define whether they are signed or unsigned are
-
-        considered unsigned and can only hold positive amounts. For signed fields, the
-
-        sign of the value indicates the purpose of the money transfer. See
-
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
-
-        for more information.'
-      x-release-status: PUBLIC
-      properties:
-        amount:
-          type:
-          - integer
-          - 'null'
-          description: 'The amount of money, in the smallest denomination of the currency
-
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
-
-            in cents. Monetary amounts can be positive or negative. See the specific
-
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
-
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
-    BusinessBookingProfileBookingPolicy:
-      type: string
-      enum:
-      - ACCEPT_ALL
-      - REQUIRES_ACCEPTANCE
-      x-enum-elements:
-      - name: ACCEPT_ALL
-        description: The seller accepts all booking requests automatically.
-      - name: REQUIRES_ACCEPTANCE
-        description: The seller must accept requests to complete bookings.
-      description: Policies for accepting bookings.
+      - name: BUSINESS_LOCATION_TIMEZONE
+        description: Use the time zone of the business location for bookings.
+      - name: CUSTOMER_CHOICE
+        description: Use the customer-chosen time zone for bookings.
+      description: Choices of customer-facing time zone used for bookings.
       x-release-status: PUBLIC
     SearchAvailabilityFilter:
       type: object
@@ -2300,739 +1928,6 @@ components:
 
             If this expression is set, the `location_id` and `segment_filters` expressions cannot be set.'
           maxLength: 36
-    SegmentFilter:
-      type: object
-      description: A query filter to search for buyer-accessible appointment segments by.
-      x-release-status: PUBLIC
-      required:
-      - service_variation_id
-      properties:
-        service_variation_id:
-          type: string
-          description: The ID of the [CatalogItemVariation](entity:CatalogItemVariation) object representing the service booked in this segment.
-          minLength: 1
-          maxLength: 36
-        team_member_id_filter:
-          $ref: '#/components/schemas/FilterValue'
-          description: 'A query filter to search for buyer-accessible appointment segments with service-providing team members matching the specified list of team member IDs.  Supported query expressions are
-
-            - `ANY`: return the appointment segments with team members whose IDs match any member in this list.
-
-            - `NONE`: return the appointment segments with team members whose IDs are not in this list.
-
-            - `ALL`: not supported.
-
-
-            When no expression is specified, any service-providing team member is eligible to fulfill the Booking.'
-    FilterValue:
-      type: object
-      description: 'A filter to select resources based on an exact field value. For any given
-
-        value, the value can only be in one property. Depending on the field, either
-
-        all properties can be set or only a subset will be available.
-
-
-        Refer to the documentation of the field.'
-      x-release-status: BETA
-      properties:
-        all:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of terms that must be present on the field of the resource.
-        any:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: 'A list of terms where at least one of them must be present on the
-
-            field of the resource.'
-        none:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of terms that must not be present on the field the resource
-    BusinessAppointmentSettingsBookingLocationType:
-      type: string
-      enum:
-      - BUSINESS_LOCATION
-      - CUSTOMER_LOCATION
-      - PHONE
-      x-enum-elements:
-      - name: BUSINESS_LOCATION
-        description: The service is provided at a seller location.
-      - name: CUSTOMER_LOCATION
-        description: The service is provided at a customer location.
-      - name: PHONE
-        description: The service is provided over the phone.
-      description: Supported types of location where service is provided.
-      x-release-status: PUBLIC
-    Currency:
-      type: string
-      enum:
-      - UNKNOWN_CURRENCY
-      - AED
-      - AFN
-      - ALL
-      - AMD
-      - ANG
-      - AOA
-      - ARS
-      - AUD
-      - AWG
-      - AZN
-      - BAM
-      - BBD
-      - BDT
-      - BGN
-      - BHD
-      - BIF
-      - BMD
-      - BND
-      - BOB
-      - BOV
-      - BRL
-      - BSD
-      - BTN
-      - BWP
-      - BYR
-      - BZD
-      - CAD
-      - CDF
-      - CHE
-      - CHF
-      - CHW
-      - CLF
-      - CLP
-      - CNY
-      - COP
-      - COU
-      - CRC
-      - CUC
-      - CUP
-      - CVE
-      - CZK
-      - DJF
-      - DKK
-      - DOP
-      - DZD
-      - EGP
-      - ERN
-      - ETB
-      - EUR
-      - FJD
-      - FKP
-      - GBP
-      - GEL
-      - GHS
-      - GIP
-      - GMD
-      - GNF
-      - GTQ
-      - GYD
-      - HKD
-      - HNL
-      - HRK
-      - HTG
-      - HUF
-      - IDR
-      - ILS
-      - INR
-      - IQD
-      - IRR
-      - ISK
-      - JMD
-      - JOD
-      - JPY
-      - KES
-      - KGS
-      - KHR
-      - KMF
-      - KPW
-      - KRW
-      - KWD
-      - KYD
-      - KZT
-      - LAK
-      - LBP
-      - LKR
-      - LRD
-      - LSL
-      - LTL
-      - LVL
-      - LYD
-      - MAD
-      - MDL
-      - MGA
-      - MKD
-      - MMK
-      - MNT
-      - MOP
-      - MRO
-      - MUR
-      - MVR
-      - MWK
-      - MXN
-      - MXV
-      - MYR
-      - MZN
-      - NAD
-      - NGN
-      - NIO
-      - NOK
-      - NPR
-      - NZD
-      - OMR
-      - PAB
-      - PEN
-      - PGK
-      - PHP
-      - PKR
-      - PLN
-      - PYG
-      - QAR
-      - RON
-      - RSD
-      - RUB
-      - RWF
-      - SAR
-      - SBD
-      - SCR
-      - SDG
-      - SEK
-      - SGD
-      - SHP
-      - SLL
-      - SLE
-      - SOS
-      - SRD
-      - SSP
-      - STD
-      - SVC
-      - SYP
-      - SZL
-      - THB
-      - TJS
-      - TMT
-      - TND
-      - TOP
-      - TRY
-      - TTD
-      - TWD
-      - TZS
-      - UAH
-      - UGX
-      - USD
-      - USN
-      - USS
-      - UYI
-      - UYU
-      - UZS
-      - VEF
-      - VND
-      - VUV
-      - WST
-      - XAF
-      - XAG
-      - XAU
-      - XBA
-      - XBB
-      - XBC
-      - XBD
-      - XCD
-      - XDR
-      - XOF
-      - XPD
-      - XPF
-      - XPT
-      - XTS
-      - XXX
-      - YER
-      - ZAR
-      - ZMK
-      - ZMW
-      - BTC
-      - XUS
-      x-enum-elements:
-      - name: UNKNOWN_CURRENCY
-        description: Unknown currency
-      - name: AED
-        description: United Arab Emirates dirham
-      - name: AFN
-        description: Afghan afghani
-      - name: ALL
-        description: Albanian lek
-      - name: AMD
-        description: Armenian dram
-      - name: ANG
-        description: Netherlands Antillean guilder
-      - name: AOA
-        description: Angolan kwanza
-      - name: ARS
-        description: Argentine peso
-      - name: AUD
-        description: Australian dollar
-      - name: AWG
-        description: Aruban florin
-      - name: AZN
-        description: Azerbaijani manat
-      - name: BAM
-        description: Bosnia and Herzegovina convertible mark
-      - name: BBD
-        description: Barbados dollar
-      - name: BDT
-        description: Bangladeshi taka
-      - name: BGN
-        description: Bulgarian lev
-      - name: BHD
-        description: Bahraini dinar
-      - name: BIF
-        description: Burundian franc
-      - name: BMD
-        description: Bermudian dollar
-      - name: BND
-        description: Brunei dollar
-      - name: BOB
-        description: Boliviano
-      - name: BOV
-        description: Bolivian Mvdol
-      - name: BRL
-        description: Brazilian real
-      - name: BSD
-        description: Bahamian dollar
-      - name: BTN
-        description: Bhutanese ngultrum
-      - name: BWP
-        description: Botswana pula
-      - name: BYR
-        description: Belarusian ruble
-      - name: BZD
-        description: Belize dollar
-      - name: CAD
-        description: Canadian dollar
-      - name: CDF
-        description: Congolese franc
-      - name: CHE
-        description: WIR Euro
-      - name: CHF
-        description: Swiss franc
-      - name: CHW
-        description: WIR Franc
-      - name: CLF
-        description: Unidad de Fomento
-      - name: CLP
-        description: Chilean peso
-      - name: CNY
-        description: Chinese yuan
-      - name: COP
-        description: Colombian peso
-      - name: COU
-        description: Unidad de Valor Real
-      - name: CRC
-        description: Costa Rican colon
-      - name: CUC
-        description: Cuban convertible peso
-      - name: CUP
-        description: Cuban peso
-      - name: CVE
-        description: Cape Verdean escudo
-      - name: CZK
-        description: Czech koruna
-      - name: DJF
-        description: Djiboutian franc
-      - name: DKK
-        description: Danish krone
-      - name: DOP
-        description: Dominican peso
-      - name: DZD
-        description: Algerian dinar
-      - name: EGP
-        description: Egyptian pound
-      - name: ERN
-        description: Eritrean nakfa
-      - name: ETB
-        description: Ethiopian birr
-      - name: EUR
-        description: Euro
-      - name: FJD
-        description: Fiji dollar
-      - name: FKP
-        description: Falkland Islands pound
-      - name: GBP
-        description: Pound sterling
-      - name: GEL
-        description: Georgian lari
-      - name: GHS
-        description: Ghanaian cedi
-      - name: GIP
-        description: Gibraltar pound
-      - name: GMD
-        description: Gambian dalasi
-      - name: GNF
-        description: Guinean franc
-      - name: GTQ
-        description: Guatemalan quetzal
-      - name: GYD
-        description: Guyanese dollar
-      - name: HKD
-        description: Hong Kong dollar
-      - name: HNL
-        description: Honduran lempira
-      - name: HRK
-        description: Croatian kuna
-      - name: HTG
-        description: Haitian gourde
-      - name: HUF
-        description: Hungarian forint
-      - name: IDR
-        description: Indonesian rupiah
-      - name: ILS
-        description: Israeli new shekel
-      - name: INR
-        description: Indian rupee
-      - name: IQD
-        description: Iraqi dinar
-      - name: IRR
-        description: Iranian rial
-      - name: ISK
-        description: Icelandic króna
-      - name: JMD
-        description: Jamaican dollar
-      - name: JOD
-        description: Jordanian dinar
-      - name: JPY
-        description: Japanese yen
-      - name: KES
-        description: Kenyan shilling
-      - name: KGS
-        description: Kyrgyzstani som
-      - name: KHR
-        description: Cambodian riel
-      - name: KMF
-        description: Comoro franc
-      - name: KPW
-        description: North Korean won
-      - name: KRW
-        description: South Korean won
-      - name: KWD
-        description: Kuwaiti dinar
-      - name: KYD
-        description: Cayman Islands dollar
-      - name: KZT
-        description: Kazakhstani tenge
-      - name: LAK
-        description: Lao kip
-      - name: LBP
-        description: Lebanese pound
-      - name: LKR
-        description: Sri Lankan rupee
-      - name: LRD
-        description: Liberian dollar
-      - name: LSL
-        description: Lesotho loti
-      - name: LTL
-        description: Lithuanian litas
-      - name: LVL
-        description: Latvian lats
-      - name: LYD
-        description: Libyan dinar
-      - name: MAD
-        description: Moroccan dirham
-      - name: MDL
-        description: Moldovan leu
-      - name: MGA
-        description: Malagasy ariary
-      - name: MKD
-        description: Macedonian denar
-      - name: MMK
-        description: Myanmar kyat
-      - name: MNT
-        description: Mongolian tögrög
-      - name: MOP
-        description: Macanese pataca
-      - name: MRO
-        description: Mauritanian ouguiya
-      - name: MUR
-        description: Mauritian rupee
-      - name: MVR
-        description: Maldivian rufiyaa
-      - name: MWK
-        description: Malawian kwacha
-      - name: MXN
-        description: Mexican peso
-      - name: MXV
-        description: Mexican Unidad de Inversion
-      - name: MYR
-        description: Malaysian ringgit
-      - name: MZN
-        description: Mozambican metical
-      - name: NAD
-        description: Namibian dollar
-      - name: NGN
-        description: Nigerian naira
-      - name: NIO
-        description: Nicaraguan córdoba
-      - name: NOK
-        description: Norwegian krone
-      - name: NPR
-        description: Nepalese rupee
-      - name: NZD
-        description: New Zealand dollar
-      - name: OMR
-        description: Omani rial
-      - name: PAB
-        description: Panamanian balboa
-      - name: PEN
-        description: Peruvian sol
-      - name: PGK
-        description: Papua New Guinean kina
-      - name: PHP
-        description: Philippine peso
-      - name: PKR
-        description: Pakistani rupee
-      - name: PLN
-        description: Polish zBoty
-      - name: PYG
-        description: Paraguayan guaraní
-      - name: QAR
-        description: Qatari riyal
-      - name: RON
-        description: Romanian leu
-      - name: RSD
-        description: Serbian dinar
-      - name: RUB
-        description: Russian ruble
-      - name: RWF
-        description: Rwandan franc
-      - name: SAR
-        description: Saudi riyal
-      - name: SBD
-        description: Solomon Islands dollar
-      - name: SCR
-        description: Seychelles rupee
-      - name: SDG
-        description: Sudanese pound
-      - name: SEK
-        description: Swedish krona
-      - name: SGD
-        description: Singapore dollar
-      - name: SHP
-        description: Saint Helena pound
-      - name: SLL
-        description: Sierra Leonean first leone
-      - name: SLE
-        description: Sierra Leonean second leone
-      - name: SOS
-        description: Somali shilling
-      - name: SRD
-        description: Surinamese dollar
-      - name: SSP
-        description: South Sudanese pound
-      - name: STD
-        description: São Tomé and Príncipe dobra
-      - name: SVC
-        description: Salvadoran colón
-      - name: SYP
-        description: Syrian pound
-      - name: SZL
-        description: Swazi lilangeni
-      - name: THB
-        description: Thai baht
-      - name: TJS
-        description: Tajikstani somoni
-      - name: TMT
-        description: Turkmenistan manat
-      - name: TND
-        description: Tunisian dinar
-      - name: TOP
-        description: Tongan pa'anga
-      - name: TRY
-        description: Turkish lira
-      - name: TTD
-        description: Trinidad and Tobago dollar
-      - name: TWD
-        description: New Taiwan dollar
-      - name: TZS
-        description: Tanzanian shilling
-      - name: UAH
-        description: Ukrainian hryvnia
-      - name: UGX
-        description: Ugandan shilling
-      - name: USD
-        description: United States dollar
-      - name: USN
-        description: United States dollar (next day)
-      - name: USS
-        description: United States dollar (same day)
-      - name: UYI
-        description: Uruguay Peso en Unidedades Indexadas
-      - name: UYU
-        description: Uruguyan peso
-      - name: UZS
-        description: Uzbekistan som
-      - name: VEF
-        description: Venezuelan bolívar soberano
-      - name: VND
-        description: Vietnamese ’Óng
-      - name: VUV
-        description: Vanuatu vatu
-      - name: WST
-        description: Samoan tala
-      - name: XAF
-        description: CFA franc BEAC
-      - name: XAG
-        description: Silver
-      - name: XAU
-        description: Gold
-      - name: XBA
-        description: European Composite Unit
-      - name: XBB
-        description: European Monetary Unit
-      - name: XBC
-        description: European Unit of Account 9
-      - name: XBD
-        description: European Unit of Account 17
-      - name: XCD
-        description: East Caribbean dollar
-      - name: XDR
-        description: Special drawing rights (International Monetary Fund)
-      - name: XOF
-        description: CFA franc BCEAO
-      - name: XPD
-        description: Palladium
-      - name: XPF
-        description: CFP franc
-      - name: XPT
-        description: Platinum
-      - name: XTS
-        description: Code reserved for testing
-      - name: XXX
-        description: No currency
-      - name: YER
-        description: Yemeni rial
-      - name: ZAR
-        description: South African rand
-      - name: ZMK
-        description: Zambian kwacha
-      - name: ZMW
-        description: Zambian kwacha
-      - name: BTC
-        description: Bitcoin
-      - name: XUS
-        description: USD Coin
-      description: 'Indicates the associated currency for an amount of money. Values correspond
-
-        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
-      x-release-status: PUBLIC
-    UpdateBookingResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        booking:
-          $ref: '#/components/schemas/Booking'
-          description: The booking that was updated.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        booking:
-          address:
-            address_line_1: 1955 Broadway
-            address_line_2: Suite 600
-            administrative_district_level_1: CA
-            locality: Oakland
-            postal_code: '94612'
-          appointment_segments:
-          - duration_minutes: 60
-            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
-            service_variation_version: 1599775456731
-            team_member_id: TMXUrsBWWcHTt79t
-          created_at: '2020-10-28T15:47:41Z'
-          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
-          customer_note: I would like to sit near the window please
-          id: zkras0xv0xwswx
-          location_id: LEQHH0YY8B42M
-          location_type: CUSTOMER_LOCATION
-          seller_note: ''
-          start_at: '2020-11-26T13:00:00Z'
-          status: ACCEPTED
-          updated_at: '2020-10-28T15:49:25Z'
-          version: 2
-        errors: []
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    RetrieveLocationBookingProfileResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        location_booking_profile:
-          $ref: '#/components/schemas/LocationBookingProfile'
-          description: The requested location booking profile.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Errors that occurred during the request.
-      example:
-        errors: []
-        location_booking_profile:
-          booking_enabled: true
-          booking_site_url: https://square.site/book/L3HETDGYQ4A2C/prod-business
-          location_id: L3HETDGYQ4A2C
     Country:
       type: string
       enum:
@@ -3791,19 +2686,6 @@ components:
 
         Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
       x-release-status: PUBLIC
-    CreateBookingRequest:
-      type: object
-      x-release-status: PUBLIC
-      required:
-      - booking
-      properties:
-        idempotency_key:
-          type: string
-          description: A unique key to make this request an idempotent operation.
-          maxLength: 255
-        booking:
-          $ref: '#/components/schemas/Booking'
-          description: The details of the booking to be created.
     SearchAvailabilityQuery:
       type: object
       description: The query used to search for buyer-accessible availabilities of bookings.
@@ -3814,6 +2696,54 @@ components:
         filter:
           $ref: '#/components/schemas/SearchAvailabilityFilter'
           description: The query filter to search for buyer-accessible availabilities of existing bookings.
+    RetrieveTeamMemberBookingProfileResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        team_member_booking_profile:
+          $ref: '#/components/schemas/TeamMemberBookingProfile'
+          description: The returned team member booking profile.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        team_member_booking_profile:
+          display_name: Sandbox Staff
+          is_bookable: true
+          team_member_id: TMaJcbiRqPIGZuS9
+    CancelBookingRequest:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: A unique key to make this request an idempotent operation.
+          maxLength: 255
+        booking_version:
+          type:
+          - integer
+          - 'null'
+          description: The revision number for the booking used for optimistic concurrency.
+    UpdateBookingRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - booking
+      properties:
+        idempotency_key:
+          type:
+          - string
+          - 'null'
+          description: A unique key to make this request an idempotent operation.
+          maxLength: 255
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking to be updated. Individual attributes explicitly specified here override the corresponding values of the existing booking.
     ListBookingsResponse:
       type: object
       x-release-status: PUBLIC
@@ -3851,143 +2781,63 @@ components:
           version: 1
         cursor: null
         errors: []
-    BusinessBookingProfile:
+    TimeRange:
       type: object
-      description: A seller's business booking profile, including booking policy, appointment settings, etc.
+      description: 'Represents a generic time range. The start and end values are
+
+        represented in RFC 3339 format. Time ranges are customized to be
+
+        inclusive or exclusive based on the needs of a particular endpoint.
+
+        Refer to the relevant endpoint-specific documentation to determine
+
+        how time ranges are handled.'
       x-release-status: PUBLIC
       properties:
-        seller_id:
+        start_at:
           type:
           - string
           - 'null'
-          description: The ID of the seller, obtainable using the Merchants API.
-          maxLength: 32
-        created_at:
-          type: string
-          description: The RFC 3339 timestamp specifying the booking's creation time.
-          readOnly: true
-        booking_enabled:
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            starts.'
+        end_at:
           type:
-          - boolean
+          - string
           - 'null'
-          description: Indicates whether the seller is open for booking.
-        customer_timezone_choice:
-          $ref: '#/components/schemas/BusinessBookingProfileCustomerTimezoneChoice'
-          description: 'The choice of customer''s time zone information of a booking.
+          description: 'A datetime value in RFC 3339 format indicating when the time range
 
-            The Square online booking site and all notifications to customers uses either the seller location’s time zone
-
-            or the time zone the customer chooses at booking.
-
-            See [BusinessBookingProfileCustomerTimezoneChoice](#type-businessbookingprofilecustomertimezonechoice) for possible values'
-        booking_policy:
-          $ref: '#/components/schemas/BusinessBookingProfileBookingPolicy'
-          description: 'The policy for the seller to automatically accept booking requests (`ACCEPT_ALL`) or not (`REQUIRES_ACCEPTANCE`).
-
-            See [BusinessBookingProfileBookingPolicy](#type-businessbookingprofilebookingpolicy) for possible values'
-        allow_user_cancel:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether customers can cancel or reschedule their own bookings (`true`) or not (`false`).
-        business_appointment_settings:
-          $ref: '#/components/schemas/BusinessAppointmentSettings'
-          description: Settings for appointment-type bookings.
-        support_seller_level_writes:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether the seller's subscription to Square Appointments supports creating, updating or canceling an appointment through the API (`true`) or not (`false`) using seller permission.
-    BulkRetrieveTeamMemberBookingProfilesRequest:
-      type: object
-      description: Request payload for the [BulkRetrieveTeamMemberBookingProfiles](api-endpoint:Bookings-BulkRetrieveTeamMemberBookingProfiles) endpoint.
-      x-release-status: PUBLIC
-      required:
-      - team_member_ids
-      properties:
-        team_member_ids:
-          type: array
-          items:
-            type: string
-          description: A non-empty list of IDs of team members whose booking profiles you want to retrieve.
-    BusinessBookingProfileCustomerTimezoneChoice:
-      type: string
-      enum:
-      - BUSINESS_LOCATION_TIMEZONE
-      - CUSTOMER_CHOICE
-      x-enum-elements:
-      - name: BUSINESS_LOCATION_TIMEZONE
-        description: Use the time zone of the business location for bookings.
-      - name: CUSTOMER_CHOICE
-        description: Use the customer-chosen time zone for bookings.
-      description: Choices of customer-facing time zone used for bookings.
-      x-release-status: PUBLIC
-    ListLocationBookingProfilesResponse:
+            ends.'
+    CancelBookingResponse:
       type: object
       x-release-status: PUBLIC
       properties:
-        location_booking_profiles:
-          type: array
-          items:
-            $ref: '#/components/schemas/LocationBookingProfile'
-          description: The list of a seller's location booking profiles.
-        cursor:
-          type: string
-          description: The pagination cursor to be used in the subsequent request to get the next page of the results. Stop retrieving the next page of the results when the cursor is not set.
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking that was cancelled.
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
           description: Errors that occurred during the request.
       example:
+        booking:
+          appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          created_at: '2020-10-28T15:47:41Z'
+          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
+          customer_note: ''
+          id: zkras0xv0xwswx
+          location_id: LEQHH0YY8B42M
+          seller_note: ''
+          start_at: '2020-11-26T13:00:00Z'
+          status: CANCELLED_BY_CUSTOMER
+          updated_at: '2020-10-28T15:49:25Z'
+          version: 1
         errors: []
-        location_booking_profiles:
-        - booking_site_url: https://squareup.com/book/LY6WNBPVM6VGV/testbusiness
-          location_id: LY6WNBPVM6VGV
-          online_booking_enabled: true
-        - location_id: PYTRNBPVMJUPV
-          online_booking_enabled: false
-    BulkRetrieveBookingsRequest:
-      type: object
-      description: Request payload for bulk retrieval of bookings.
-      x-release-status: PUBLIC
-      required:
-      - booking_ids
-      properties:
-        booking_ids:
-          type: array
-          items:
-            type: string
-          description: A non-empty list of [Booking](entity:Booking) IDs specifying bookings to retrieve.
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
     Address:
       type: object
       description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
@@ -4078,25 +2928,90 @@ components:
           - string
           - 'null'
           description: Optional last name when it's representing recipient.
-    BusinessAppointmentSettingsCancellationPolicy:
+    TeamMemberBookingProfile:
+      type: object
+      description: The booking profile of a seller's team member, including the team member's ID, display name, description and whether the team member can be booked as a service provider.
+      x-release-status: PUBLIC
+      properties:
+        team_member_id:
+          type: string
+          description: The ID of the [TeamMember](entity:TeamMember) object for the team member associated with the booking profile.
+          maxLength: 32
+          readOnly: true
+        description:
+          type: string
+          description: The description of the team member.
+          maxLength: 65536
+          readOnly: true
+        display_name:
+          type: string
+          description: The display name of the team member.
+          maxLength: 512
+          readOnly: true
+        is_bookable:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether the team member can be booked through the Bookings API or the seller's online booking channel or site (`true`) or not (`false`).
+        profile_image_url:
+          type: string
+          description: The URL of the team member's image for the bookings profile.
+          maxLength: 2048
+          readOnly: true
+    ErrorCategory:
       type: string
       enum:
-      - CANCELLATION_TREATED_AS_NO_SHOW
-      - CUSTOM_POLICY
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
       x-enum-elements:
-      - name: CANCELLATION_TREATED_AS_NO_SHOW
-        description: Cancellations are treated as no shows and may incur a fee as specified by `cancellation_fee_money`.
-      - name: CUSTOM_POLICY
-        description: Cancellations follow the seller-specified policy that is described in free-form text and not enforced automatically by Square.
-      description: The category of the seller’s cancellation policy.
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
       x-release-status: PUBLIC
-    CancelBookingResponse:
+    CreateBookingResponse:
       type: object
       x-release-status: PUBLIC
       properties:
         booking:
           $ref: '#/components/schemas/Booking'
-          description: The booking that was cancelled.
+          description: The booking that was created.
         errors:
           type: array
           items:
@@ -4116,25 +3031,1110 @@ components:
           location_id: LEQHH0YY8B42M
           seller_note: ''
           start_at: '2020-11-26T13:00:00Z'
-          status: CANCELLED_BY_CUSTOMER
+          status: ACCEPTED
+          updated_at: '2020-10-28T15:47:41Z'
+          version: 0
+        errors: []
+    BulkRetrieveBookingsRequest:
+      type: object
+      description: Request payload for bulk retrieval of bookings.
+      x-release-status: PUBLIC
+      required:
+      - booking_ids
+      properties:
+        booking_ids:
+          type: array
+          items:
+            type: string
+          description: A non-empty list of [Booking](entity:Booking) IDs specifying bookings to retrieve.
+    BusinessAppointmentSettingsAlignmentTime:
+      type: string
+      enum:
+      - SERVICE_DURATION
+      - QUARTER_HOURLY
+      - HALF_HOURLY
+      - HOURLY
+      x-enum-elements:
+      - name: SERVICE_DURATION
+        description: The service duration unit is one visit of a fixed time interval specified by the seller.
+      - name: QUARTER_HOURLY
+        description: The service duration unit is a 15-minute interval. Bookings can be scheduled every quarter hour.
+      - name: HALF_HOURLY
+        description: The service duration unit is a 30-minute interval. Bookings can be scheduled every half hour.
+      - name: HOURLY
+        description: The service duration unit is a 60-minute interval. Bookings can be scheduled every hour.
+      description: Time units of a service duration for bookings.
+      x-release-status: PUBLIC
+    RetrieveBookingResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking that was requested.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        booking:
+          appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          created_at: '2020-10-28T15:47:41Z'
+          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
+          customer_note: ''
+          id: zkras0xv0xwswx
+          location_id: LEQHH0YY8B42M
+          seller_note: ''
+          start_at: '2020-11-26T13:00:00Z'
+          status: ACCEPTED
           updated_at: '2020-10-28T15:49:25Z'
           version: 1
         errors: []
-    UpdateBookingRequest:
+    LocationBookingProfile:
+      type: object
+      description: The booking profile of a seller's location, including the location's ID and whether the location is enabled for online booking.
+      x-release-status: PUBLIC
+      properties:
+        location_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the [location](entity:Location).
+        booking_site_url:
+          type:
+          - string
+          - 'null'
+          description: Url for the online booking site for this location.
+        online_booking_enabled:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether the location is enabled for online booking.
+    FilterValue:
+      type: object
+      description: 'A filter to select resources based on an exact field value. For any given
+
+        value, the value can only be in one property. Depending on the field, either
+
+        all properties can be set or only a subset will be available.
+
+
+        Refer to the documentation of the field.'
+      x-release-status: BETA
+      properties:
+        all:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of terms that must be present on the field of the resource.
+        any:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'A list of terms where at least one of them must be present on the
+
+            field of the resource.'
+        none:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of terms that must not be present on the field the resource
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    BulkRetrieveTeamMemberBookingProfilesResponse:
+      type: object
+      description: Response payload for the [BulkRetrieveTeamMemberBookingProfiles](api-endpoint:Bookings-BulkRetrieveTeamMemberBookingProfiles) endpoint.
+      x-release-status: PUBLIC
+      properties:
+        team_member_booking_profiles:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RetrieveTeamMemberBookingProfileResponse'
+          description: The returned team members' booking profiles, as a map with `team_member_id` as the key and [TeamMemberBookingProfile](entity:TeamMemberBookingProfile) the value.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        team_member_booking_profiles:
+          TMXUrsBWWcHTt79t:
+            errors:
+            - category: INVALID_REQUEST_ERROR
+              code: NOT_FOUND
+              detail: Resource not found.
+          TMaJcbiRqPIGZuS9:
+            errors: []
+            team_member_booking_profile:
+              display_name: Sandbox Staff 1
+              is_bookable: true
+              team_member_id: TMaJcbiRqPIGZuS9
+          TMtdegug1fqni3wh:
+            errors: []
+            team_member_booking_profile:
+              display_name: Sandbox Staff 2
+              is_bookable: true
+              team_member_id: TMtdegug1fqni3wh
+    SearchAvailabilityRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - query
+      properties:
+        query:
+          $ref: '#/components/schemas/SearchAvailabilityQuery'
+          description: Query conditions used to filter buyer-accessible booking availabilities.
+    Availability:
+      type: object
+      description: Defines an appointment slot that encapsulates the appointment segments, location and starting time available for booking.
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type:
+          - string
+          - 'null'
+          description: The RFC 3339 timestamp specifying the beginning time of the slot available for booking.
+        location_id:
+          type: string
+          description: The ID of the location available for booking.
+          maxLength: 32
+          readOnly: true
+        appointment_segments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AppointmentSegment'
+          description: The list of appointment segments available for booking
+    UpdateBookingResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The booking that was updated.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        booking:
+          address:
+            address_line_1: 1955 Broadway
+            address_line_2: Suite 600
+            administrative_district_level_1: CA
+            locality: Oakland
+            postal_code: '94612'
+          appointment_segments:
+          - duration_minutes: 60
+            service_variation_id: RU3PBTZTK7DXZDQFCJHOK2MC
+            service_variation_version: 1599775456731
+            team_member_id: TMXUrsBWWcHTt79t
+          created_at: '2020-10-28T15:47:41Z'
+          customer_id: EX2QSVGTZN4K1E5QE1CBFNVQ8M
+          customer_note: I would like to sit near the window please
+          id: zkras0xv0xwswx
+          location_id: LEQHH0YY8B42M
+          location_type: CUSTOMER_LOCATION
+          seller_note: ''
+          start_at: '2020-11-26T13:00:00Z'
+          status: ACCEPTED
+          updated_at: '2020-10-28T15:49:25Z'
+          version: 2
+        errors: []
+    BookingCreatorDetails:
+      type: object
+      description: Information about a booking creator.
+      x-release-status: PUBLIC
+      properties:
+        creator_type:
+          $ref: '#/components/schemas/BookingCreatorDetailsCreatorType'
+          description: 'The seller-accessible type of the creator of the booking.
+
+            See [BookingCreatorDetailsCreatorType](#type-bookingcreatordetailscreatortype) for possible values'
+          readOnly: true
+        team_member_id:
+          type: string
+          description: 'The ID of the team member who created the booking, when the booking creator is of the `TEAM_MEMBER` type.
+
+            Access to this field requires seller-level permissions.'
+          maxLength: 32
+          readOnly: true
+        customer_id:
+          type: string
+          description: 'The ID of the customer who created the booking, when the booking creator is of the `CUSTOMER` type.
+
+            Access to this field requires seller-level permissions.'
+          maxLength: 192
+          readOnly: true
+    BusinessAppointmentSettingsCancellationPolicy:
+      type: string
+      enum:
+      - CANCELLATION_TREATED_AS_NO_SHOW
+      - CUSTOM_POLICY
+      x-enum-elements:
+      - name: CANCELLATION_TREATED_AS_NO_SHOW
+        description: Cancellations are treated as no shows and may incur a fee as specified by `cancellation_fee_money`.
+      - name: CUSTOM_POLICY
+        description: Cancellations follow the seller-specified policy that is described in free-form text and not enforced automatically by Square.
+      description: The category of the seller’s cancellation policy.
+      x-release-status: PUBLIC
+    BusinessAppointmentSettingsMaxAppointmentsPerDayLimitType:
+      type: string
+      enum:
+      - PER_TEAM_MEMBER
+      - PER_LOCATION
+      x-enum-elements:
+      - name: PER_TEAM_MEMBER
+        description: The maximum number of daily appointments is set on a per team member basis.
+      - name: PER_LOCATION
+        description: The maximum number of daily appointments is set on a per location basis.
+      description: Types of daily appointment limits.
+      x-release-status: PUBLIC
+    Booking:
+      type: object
+      description: 'Represents a booking as a time-bound service contract for a seller''s staff member to provide a specified service
+
+        at a given location to a requesting customer in one or more appointment segments.'
+      x-release-status: PUBLIC
+      properties:
+        id:
+          type: string
+          description: A unique ID of this object representing a booking.
+          maxLength: 36
+          readOnly: true
+        version:
+          type: integer
+          description: The revision number for the booking used for optimistic concurrency.
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+          description: 'The status of the booking, describing where the booking stands with respect to the booking state machine.
+
+            See [BookingStatus](#type-bookingstatus) for possible values'
+          readOnly: true
+        created_at:
+          type: string
+          description: The RFC 3339 timestamp specifying the creation time of this booking.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The RFC 3339 timestamp specifying the most recent update time of this booking.
+          readOnly: true
+        start_at:
+          type:
+          - string
+          - 'null'
+          description: The RFC 3339 timestamp specifying the starting time of this booking.
+        location_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the [Location](entity:Location) object representing the location where the booked service is provided. Once set when the booking is created, its value cannot be changed.
+          maxLength: 32
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the [Customer](entity:Customer) object representing the customer receiving the booked service.
+          maxLength: 192
+        customer_note:
+          type:
+          - string
+          - 'null'
+          description: The free-text field for the customer to supply notes about the booking. For example, the note can be preferences that cannot be expressed by supported attributes of a relevant [CatalogObject](entity:CatalogObject) instance.
+          maxLength: 4096
+        seller_note:
+          type:
+          - string
+          - 'null'
+          description: 'The free-text field for the seller to supply notes about the booking. For example, the note can be preferences that cannot be expressed by supported attributes of a specific [CatalogObject](entity:CatalogObject) instance.
+
+            This field should not be visible to customers.'
+          maxLength: 4096
+        appointment_segments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AppointmentSegment'
+          description: A list of appointment segments for this booking.
+        transition_time_minutes:
+          type: integer
+          description: 'Additional time at the end of a booking.
+
+            Applications should not make this field visible to customers of a seller.'
+          readOnly: true
+        all_day:
+          type: boolean
+          description: Whether the booking is of a full business day.
+          readOnly: true
+        location_type:
+          $ref: '#/components/schemas/BusinessAppointmentSettingsBookingLocationType'
+          description: 'The type of location where the booking is held.
+
+            See [BusinessAppointmentSettingsBookingLocationType](#type-businessappointmentsettingsbookinglocationtype) for possible values'
+        creator_details:
+          $ref: '#/components/schemas/BookingCreatorDetails'
+          description: Information about the booking creator.
+          readOnly: true
+        source:
+          $ref: '#/components/schemas/BookingBookingSource'
+          description: 'The source of the booking.
+
+            Access to this field requires seller-level permissions.
+
+            See [BookingBookingSource](#type-bookingbookingsource) for possible values'
+          readOnly: true
+        address:
+          $ref: '#/components/schemas/Address'
+          description: Stores a customer address if the location type is `CUSTOMER_LOCATION`.
+    AppointmentSegment:
+      type: object
+      description: Defines an appointment segment of a booking.
+      x-release-status: PUBLIC
+      required:
+      - team_member_id
+      properties:
+        duration_minutes:
+          type:
+          - integer
+          - 'null'
+          description: The time span in minutes of an appointment segment.
+          maximum: 1500
+        service_variation_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the [CatalogItemVariation](entity:CatalogItemVariation) object representing the service booked in this segment.
+          maxLength: 36
+        team_member_id:
+          type: string
+          description: The ID of the [TeamMember](entity:TeamMember) object representing the team member booked in this segment.
+          minLength: 1
+          maxLength: 32
+        service_variation_version:
+          type:
+          - integer
+          - 'null'
+          description: The current version of the item variation representing the service booked in this segment.
+          format: int64
+        intermission_minutes:
+          type: integer
+          description: Time between the end of this segment and the beginning of the subsequent segment.
+          readOnly: true
+        any_team_member:
+          type: boolean
+          description: Whether the customer accepts any team member, instead of a specific one, to serve this segment.
+          readOnly: true
+        resource_ids:
+          type: array
+          items:
+            type: string
+          description: The IDs of the seller-accessible resources used for this appointment segment.
+          readOnly: true
+    RetrieveLocationBookingProfileResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        location_booking_profile:
+          $ref: '#/components/schemas/LocationBookingProfile'
+          description: The requested location booking profile.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        location_booking_profile:
+          booking_enabled: true
+          booking_site_url: https://square.site/book/L3HETDGYQ4A2C/prod-business
+          location_id: L3HETDGYQ4A2C
+    BulkRetrieveTeamMemberBookingProfilesRequest:
+      type: object
+      description: Request payload for the [BulkRetrieveTeamMemberBookingProfiles](api-endpoint:Bookings-BulkRetrieveTeamMemberBookingProfiles) endpoint.
+      x-release-status: PUBLIC
+      required:
+      - team_member_ids
+      properties:
+        team_member_ids:
+          type: array
+          items:
+            type: string
+          description: A non-empty list of IDs of team members whose booking profiles you want to retrieve.
+    SegmentFilter:
+      type: object
+      description: A query filter to search for buyer-accessible appointment segments by.
+      x-release-status: PUBLIC
+      required:
+      - service_variation_id
+      properties:
+        service_variation_id:
+          type: string
+          description: The ID of the [CatalogItemVariation](entity:CatalogItemVariation) object representing the service booked in this segment.
+          minLength: 1
+          maxLength: 36
+        team_member_id_filter:
+          $ref: '#/components/schemas/FilterValue'
+          description: 'A query filter to search for buyer-accessible appointment segments with service-providing team members matching the specified list of team member IDs.  Supported query expressions are
+
+            - `ANY`: return the appointment segments with team members whose IDs match any member in this list.
+
+            - `NONE`: return the appointment segments with team members whose IDs are not in this list.
+
+            - `ALL`: not supported.
+
+
+            When no expression is specified, any service-providing team member is eligible to fulfill the Booking.'
+    ListTeamMemberBookingProfilesResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        team_member_booking_profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMemberBookingProfile'
+          description: 'The list of team member booking profiles. The results are returned in the ascending order of the time
+
+            when the team member booking profiles were last updated. Multiple booking profiles updated at the same time
+
+            are further sorted in the ascending order of their IDs.'
+        cursor:
+          type: string
+          description: The pagination cursor to be used in the subsequent request to get the next page of the results. Stop retrieving the next page of the results when the cursor is not set.
+          maxLength: 65536
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Errors that occurred during the request.
+      example:
+        errors: []
+        team_member_booking_profiles:
+        - display_name: Sandbox Seller
+          is_bookable: true
+          team_member_id: TMXUrsBWWcHTt79t
+        - display_name: Sandbox Staff
+          is_bookable: true
+          team_member_id: TMaJcbiRqPIGZuS9
+    CreateBookingRequest:
       type: object
       x-release-status: PUBLIC
       required:
       - booking
       properties:
         idempotency_key:
-          type:
-          - string
-          - 'null'
+          type: string
           description: A unique key to make this request an idempotent operation.
           maxLength: 255
         booking:
           $ref: '#/components/schemas/Booking'
-          description: The booking to be updated. Individual attributes explicitly specified here override the corresponding values of the existing booking.
+          description: The details of the booking to be created.
   securitySchemes:
     oauth2:
       type: oauth2

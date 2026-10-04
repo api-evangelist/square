@@ -341,121 +341,57 @@ paths:
       - error-code: DELAYED_TRANSACTION_EXPIRED
 components:
   schemas:
-    TenderBuyNowPayLaterDetails:
+    CaptureTransactionResponse:
       type: object
-      description: Represents the details of a tender with `type` `BUY_NOW_PAY_LATER`.
-      x-release-status: PUBLIC
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [CaptureTransaction](api-endpoint:Transactions-CaptureTransaction) endpoint.'
+      x-release-status: DEPRECATED
       properties:
-        buy_now_pay_later_brand:
-          $ref: '#/components/schemas/TenderBuyNowPayLaterDetailsBrand'
-          description: 'The Buy Now Pay Later brand.
-
-            See [Brand](#type-brand) for possible values'
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/TenderBuyNowPayLaterDetailsStatus'
-          description: 'The buy now pay later payment''s current state (such as `AUTHORIZED` or
-
-            `CAPTURED`). See [TenderBuyNowPayLaterDetailsStatus](entity:TenderBuyNowPayLaterDetailsStatus)
-
-            for possible values.
-
-            See [Status](#type-status) for possible values'
-    RefundStatus:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.csharp
+        java: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.java
+        javascript: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.javascript
+        php: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.php
+        python: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.python
+        ruby: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.ruby
+    TenderSquareAccountDetailsStatus:
+      type: string
+      enum:
+      - AUTHORIZED
+      - CAPTURED
+      - VOIDED
+      - FAILED
+      x-enum-elements:
+      - name: AUTHORIZED
+        description: The Square Account payment has been authorized but not yet captured.
+      - name: CAPTURED
+        description: The Square Account payment was authorized and subsequently captured (i.e., completed).
+      - name: VOIDED
+        description: The Square Account payment was authorized and subsequently voided (i.e., canceled).
+      - name: FAILED
+        description: The Square Account payment failed.
+      x-release-status: PUBLIC
+    TenderBankAccountDetailsStatus:
       type: string
       enum:
       - PENDING
-      - APPROVED
-      - REJECTED
+      - COMPLETED
       - FAILED
       x-enum-elements:
       - name: PENDING
-        description: The refund is pending.
-      - name: APPROVED
-        description: The refund has been approved by Square.
-      - name: REJECTED
-        description: The refund has been rejected by Square.
+        description: The bank account payment is in progress.
+      - name: COMPLETED
+        description: The bank account payment has been completed.
       - name: FAILED
-        description: The refund failed.
-      description: Indicates a refund's current status.
-      x-release-status: PUBLIC
-    TenderBankAccountDetails:
-      type: object
-      description: 'Represents the details of a tender with `type` `BANK_ACCOUNT`.
-
-
-        See [BankAccountPaymentDetails](entity:BankAccountPaymentDetails)
-
-        for more exposed details of a bank account payment.'
-      x-release-status: PUBLIC
-      properties:
-        status:
-          $ref: '#/components/schemas/TenderBankAccountDetailsStatus'
-          description: 'The bank account payment''s current state.
-
-
-            See [TenderBankAccountPaymentDetailsStatus](entity:TenderBankAccountDetailsStatus) for possible values.
-
-            See [TenderBankAccountDetailsStatus](#type-tenderbankaccountdetailsstatus) for possible values'
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    TenderType:
-      type: string
-      enum:
-      - CARD
-      - CASH
-      - THIRD_PARTY_CARD
-      - SQUARE_GIFT_CARD
-      - NO_SALE
-      - BANK_ACCOUNT
-      - WALLET
-      - BUY_NOW_PAY_LATER
-      - SQUARE_ACCOUNT
-      - OTHER
-      x-enum-elements:
-      - name: CARD
-        description: A credit card.
-      - name: CASH
-        description: Cash.
-      - name: THIRD_PARTY_CARD
-        description: 'A credit card processed with a card processor other than Square.
-
-
-          This value applies only to merchants in countries where Square does not
-
-          yet provide card processing.'
-      - name: SQUARE_GIFT_CARD
-        description: A Square gift card.
-      - name: NO_SALE
-        description: This tender represents the register being opened for a "no sale" event.
-      - name: BANK_ACCOUNT
-        description: A bank account payment.
-      - name: WALLET
-        description: 'A payment from a digital wallet, e.g. Cash App, Paypay, Rakuten Pay,
-
-          Au Pay, D Barai, Merpay, Wechat Pay, Alipay.
-
-
-          Note: Some "digital wallets", including Google Pay and Apple Pay, facilitate
-
-          card payments.  Those payments have the `CARD` type.'
-      - name: BUY_NOW_PAY_LATER
-        description: A Buy Now Pay Later payment.
-      - name: SQUARE_ACCOUNT
-        description: A Square House Account payment.
-      - name: OTHER
-        description: A form of tender that does not match any other value.
-      description: Indicates a tender's type.
+        description: The bank account payment failed.
+      description: Indicates the bank account payment's current status.
       x-release-status: PUBLIC
     Transaction:
       type: object
@@ -543,6 +479,53 @@ components:
           - 'null'
           description: The order_id is an identifier for the order associated with this transaction, if any.
           maxLength: 192
+    TenderBankAccountDetails:
+      type: object
+      description: 'Represents the details of a tender with `type` `BANK_ACCOUNT`.
+
+
+        See [BankAccountPaymentDetails](entity:BankAccountPaymentDetails)
+
+        for more exposed details of a bank account payment.'
+      x-release-status: PUBLIC
+      properties:
+        status:
+          $ref: '#/components/schemas/TenderBankAccountDetailsStatus'
+          description: 'The bank account payment''s current state.
+
+
+            See [TenderBankAccountPaymentDetailsStatus](entity:TenderBankAccountDetailsStatus) for possible values.
+
+            See [TenderBankAccountDetailsStatus](#type-tenderbankaccountdetailsstatus) for possible values'
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     ErrorCode:
       type: string
       enum:
@@ -1289,6 +1272,95 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    ListTransactionsResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [ListTransactions](api-endpoint:Transactions-ListTransactions) endpoint.
+
+
+        One of `errors` or `transactions` is present in a given response (never both).'
+      x-release-status: DEPRECATED
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+          description: An array of transactions that match your query.
+        cursor:
+          type: string
+          description: 'A pagination cursor for retrieving the next set of results,
+
+            if any remain. Provide this value as the `cursor` parameter in a subsequent
+
+            request to this endpoint.
+
+
+            See [Paginating results](https://developer.squareup.com/docs/working-with-apis/pagination) for more information.'
+      example:
+        transactions:
+        - created_at: '2016-01-20T22:57:56Z'
+          id: KnL67ZIwXCPtzOrqj0HrkxMF
+          location_id: 18YC4JDH91E1H
+          product: EXTERNAL_API
+          reference_id: some optional reference id
+          refunds:
+          - additional_recipients:
+            - amount_money:
+                amount: 100
+                currency: USD
+              description: Application fees
+              location_id: 057P5VYJ4A5X1
+            amount_money:
+              amount: 5000
+              currency: USD
+            created_at: '2016-01-20T22:59:20Z'
+            id: 7a5RcVI0CxbOcJ2wMOkE
+            location_id: 18YC4JDH91E1H
+            processing_fee_money:
+              amount: 138
+              currency: USD
+            reason: some reason why
+            status: APPROVED
+            tender_id: MtZRYYdDrYNQbOvV7nbuBvMF
+            transaction_id: KnL67ZIwXCPtzOrqj0HrkxMF
+          tenders:
+          - additional_recipients:
+            - amount_money:
+                amount: 20
+                currency: USD
+              description: Application fees
+              location_id: 057P5VYJ4A5X1
+            amount_money:
+              amount: 5000
+              currency: USD
+            card_details:
+              card:
+                card_brand: VISA
+                last_4: '1111'
+              entry_method: KEYED
+              status: CAPTURED
+            created_at: '2016-01-20T22:57:56Z'
+            id: MtZRYYdDrYNQbOvV7nbuBvMF
+            location_id: 18YC4JDH91E1H
+            note: some optional note
+            processing_fee_money:
+              amount: 138
+              currency: USD
+            transaction_id: KnL67ZIwXCPtzOrqj0HrkxMF
+            type: CARD
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/ListTransactions/ListTransactionsResponse.csharp
+        java: /sdk_samples/ListTransactions/ListTransactionsResponse.java
+        javascript: /sdk_samples/ListTransactions/ListTransactionsResponse.javascript
+        php: /sdk_samples/ListTransactions/ListTransactionsResponse.php
+        python: /sdk_samples/ListTransactions/ListTransactionsResponse.python
+        ruby: /sdk_samples/ListTransactions/ListTransactionsResponse.ruby
     TenderCardDetailsEntryMethod:
       type: string
       enum:
@@ -1314,870 +1386,20 @@ components:
           with a Square reader.'
       description: Indicates the method used to enter the card's details.
       x-release-status: PUBLIC
-    CardBrand:
+    CardPrepaidType:
       type: string
       enum:
-      - OTHER_BRAND
-      - VISA
-      - MASTERCARD
-      - AMERICAN_EXPRESS
-      - DISCOVER
-      - DISCOVER_DINERS
-      - JCB
-      - CHINA_UNIONPAY
-      - SQUARE_GIFT_CARD
-      - SQUARE_CAPITAL_CARD
-      - INTERAC
-      - EFTPOS
-      - FELICA
-      - EBT
+      - UNKNOWN_PREPAID_TYPE
+      - NOT_PREPAID
+      - PREPAID
       x-enum-elements:
-      - name: OTHER_BRAND
+      - name: UNKNOWN_PREPAID_TYPE
         description: ''
-      - name: VISA
+      - name: NOT_PREPAID
         description: ''
-      - name: MASTERCARD
+      - name: PREPAID
         description: ''
-      - name: AMERICAN_EXPRESS
-        description: ''
-      - name: DISCOVER
-        description: ''
-      - name: DISCOVER_DINERS
-        description: ''
-      - name: JCB
-        description: ''
-      - name: CHINA_UNIONPAY
-        description: ''
-      - name: SQUARE_GIFT_CARD
-        description: ''
-      - name: SQUARE_CAPITAL_CARD
-        description: ''
-      - name: INTERAC
-        description: ''
-      - name: EFTPOS
-        description: ''
-      - name: FELICA
-        description: ''
-      - name: EBT
-        description: ''
-      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
-      x-release-status: PUBLIC
-    TenderCardDetails:
-      type: object
-      description: Represents additional details of a tender with `type` `CARD` or `SQUARE_GIFT_CARD`
-      x-release-status: PUBLIC
-      properties:
-        status:
-          $ref: '#/components/schemas/TenderCardDetailsStatus'
-          description: 'The credit card payment''s current state (such as `AUTHORIZED` or
-
-            `CAPTURED`). See [TenderCardDetailsStatus](entity:TenderCardDetailsStatus)
-
-            for possible values.
-
-            See [TenderCardDetailsStatus](#type-tendercarddetailsstatus) for possible values'
-        card:
-          $ref: '#/components/schemas/Card'
-          description: The credit card's non-confidential details.
-        entry_method:
-          $ref: '#/components/schemas/TenderCardDetailsEntryMethod'
-          description: 'The method used to enter the card''s details for the transaction.
-
-            See [TenderCardDetailsEntryMethod](#type-tendercarddetailsentrymethod) for possible values'
-    TenderBuyNowPayLaterDetailsBrand:
-      type: string
-      enum:
-      - OTHER_BRAND
-      - AFTERPAY
-      x-enum-elements:
-      - name: OTHER_BRAND
-        description: ''
-      - name: AFTERPAY
-        description: ''
-      x-release-status: PUBLIC
-    TenderCashDetails:
-      type: object
-      description: Represents the details of a tender with `type` `CASH`.
-      x-release-status: PUBLIC
-      properties:
-        buyer_tendered_money:
-          $ref: '#/components/schemas/Money'
-          description: The total amount of cash provided by the buyer, before change is given.
-        change_back_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of change returned to the buyer.
-    Money:
-      type: object
-      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
-
-        Fields that do not explicitly define whether they are signed or unsigned are
-
-        considered unsigned and can only hold positive amounts. For signed fields, the
-
-        sign of the value indicates the purpose of the money transfer. See
-
-        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
-
-        for more information.'
-      x-release-status: PUBLIC
-      properties:
-        amount:
-          type:
-          - integer
-          - 'null'
-          description: 'The amount of money, in the smallest denomination of the currency
-
-            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
-
-            in cents. Monetary amounts can be positive or negative. See the specific
-
-            field description to determine the meaning of the sign in a particular case.'
-          format: int64
-        currency:
-          $ref: '#/components/schemas/Currency'
-          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
-
-            code for US dollars is `USD`.
-
-
-            See [Currency](entity:Currency) for possible values.
-
-            See [Currency](#type-currency) for possible values'
-    AdditionalRecipient:
-      type: object
-      description: Represents an additional recipient (other than the merchant) receiving a portion of this tender.
-      x-release-status: DEPRECATED
-      required:
-      - location_id
-      - amount_money
-      properties:
-        location_id:
-          type: string
-          description: The location ID for a recipient (other than the merchant) receiving a portion of this tender.
-          minLength: 1
-          maxLength: 50
-        description:
-          type:
-          - string
-          - 'null'
-          description: The description of the additional recipient.
-          maxLength: 100
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of money distributed to the recipient.
-        receivable_id:
-          type:
-          - string
-          - 'null'
-          description: The unique ID for the RETIRED `AdditionalRecipientReceivable` object. This field should be empty for any `AdditionalRecipient` objects created after the retirement.
-          maxLength: 192
-    CardCoBrand:
-      type: string
-      enum:
-      - UNKNOWN
-      - AFTERPAY
-      - CLEARPAY
-      x-enum-elements:
-      - name: UNKNOWN
-        description: ''
-      - name: AFTERPAY
-        description: ''
-      - name: CLEARPAY
-        description: ''
-      description: Indicates the brand for a co-branded card.
-      x-release-status: PUBLIC
-    RetrieveTransactionResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [RetrieveTransaction](api-endpoint:Transactions-RetrieveTransaction) endpoint.
-
-
-        One of `errors` or `transaction` is present in a given response (never both).'
-      x-release-status: DEPRECATED
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        transaction:
-          $ref: '#/components/schemas/Transaction'
-          description: The requested transaction.
-      example:
-        transaction:
-          created_at: '2016-03-10T22:57:56Z'
-          id: KnL67ZIwXCPtzOrqj0HrkxMF
-          location_id: 18YC4JDH91E1H
-          product: EXTERNAL_API
-          reference_id: some optional reference id
-          tenders:
-          - additional_recipients:
-            - amount_money:
-                amount: 20
-                currency: USD
-              description: Application fees
-              location_id: 057P5VYJ4A5X1
-            amount_money:
-              amount: 5000
-              currency: USD
-            card_details:
-              card:
-                card_brand: VISA
-                last_4: '1111'
-              entry_method: KEYED
-              status: CAPTURED
-            created_at: '2016-03-10T22:57:56Z'
-            id: MtZRYYdDrYNQbOvV7nbuBvMF
-            location_id: 18YC4JDH91E1H
-            note: some optional note
-            processing_fee_money:
-              amount: 138
-              currency: USD
-            transaction_id: KnL67ZIwXCPtzOrqj0HrkxMF
-            type: CARD
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.csharp
-        java: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.java
-        javascript: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.javascript
-        php: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.php
-        python: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.python
-        ruby: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.ruby
-    CardType:
-      type: string
-      enum:
-      - UNKNOWN_CARD_TYPE
-      - CREDIT
-      - DEBIT
-      x-enum-elements:
-      - name: UNKNOWN_CARD_TYPE
-        description: ''
-      - name: CREDIT
-        description: ''
-      - name: DEBIT
-        description: ''
-      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
-      x-release-status: PUBLIC
-    TenderSquareAccountDetailsStatus:
-      type: string
-      enum:
-      - AUTHORIZED
-      - CAPTURED
-      - VOIDED
-      - FAILED
-      x-enum-elements:
-      - name: AUTHORIZED
-        description: The Square Account payment has been authorized but not yet captured.
-      - name: CAPTURED
-        description: The Square Account payment was authorized and subsequently captured (i.e., completed).
-      - name: VOIDED
-        description: The Square Account payment was authorized and subsequently voided (i.e., canceled).
-      - name: FAILED
-        description: The Square Account payment failed.
-      x-release-status: PUBLIC
-    Currency:
-      type: string
-      enum:
-      - UNKNOWN_CURRENCY
-      - AED
-      - AFN
-      - ALL
-      - AMD
-      - ANG
-      - AOA
-      - ARS
-      - AUD
-      - AWG
-      - AZN
-      - BAM
-      - BBD
-      - BDT
-      - BGN
-      - BHD
-      - BIF
-      - BMD
-      - BND
-      - BOB
-      - BOV
-      - BRL
-      - BSD
-      - BTN
-      - BWP
-      - BYR
-      - BZD
-      - CAD
-      - CDF
-      - CHE
-      - CHF
-      - CHW
-      - CLF
-      - CLP
-      - CNY
-      - COP
-      - COU
-      - CRC
-      - CUC
-      - CUP
-      - CVE
-      - CZK
-      - DJF
-      - DKK
-      - DOP
-      - DZD
-      - EGP
-      - ERN
-      - ETB
-      - EUR
-      - FJD
-      - FKP
-      - GBP
-      - GEL
-      - GHS
-      - GIP
-      - GMD
-      - GNF
-      - GTQ
-      - GYD
-      - HKD
-      - HNL
-      - HRK
-      - HTG
-      - HUF
-      - IDR
-      - ILS
-      - INR
-      - IQD
-      - IRR
-      - ISK
-      - JMD
-      - JOD
-      - JPY
-      - KES
-      - KGS
-      - KHR
-      - KMF
-      - KPW
-      - KRW
-      - KWD
-      - KYD
-      - KZT
-      - LAK
-      - LBP
-      - LKR
-      - LRD
-      - LSL
-      - LTL
-      - LVL
-      - LYD
-      - MAD
-      - MDL
-      - MGA
-      - MKD
-      - MMK
-      - MNT
-      - MOP
-      - MRO
-      - MUR
-      - MVR
-      - MWK
-      - MXN
-      - MXV
-      - MYR
-      - MZN
-      - NAD
-      - NGN
-      - NIO
-      - NOK
-      - NPR
-      - NZD
-      - OMR
-      - PAB
-      - PEN
-      - PGK
-      - PHP
-      - PKR
-      - PLN
-      - PYG
-      - QAR
-      - RON
-      - RSD
-      - RUB
-      - RWF
-      - SAR
-      - SBD
-      - SCR
-      - SDG
-      - SEK
-      - SGD
-      - SHP
-      - SLL
-      - SLE
-      - SOS
-      - SRD
-      - SSP
-      - STD
-      - SVC
-      - SYP
-      - SZL
-      - THB
-      - TJS
-      - TMT
-      - TND
-      - TOP
-      - TRY
-      - TTD
-      - TWD
-      - TZS
-      - UAH
-      - UGX
-      - USD
-      - USN
-      - USS
-      - UYI
-      - UYU
-      - UZS
-      - VEF
-      - VND
-      - VUV
-      - WST
-      - XAF
-      - XAG
-      - XAU
-      - XBA
-      - XBB
-      - XBC
-      - XBD
-      - XCD
-      - XDR
-      - XOF
-      - XPD
-      - XPF
-      - XPT
-      - XTS
-      - XXX
-      - YER
-      - ZAR
-      - ZMK
-      - ZMW
-      - BTC
-      - XUS
-      x-enum-elements:
-      - name: UNKNOWN_CURRENCY
-        description: Unknown currency
-      - name: AED
-        description: United Arab Emirates dirham
-      - name: AFN
-        description: Afghan afghani
-      - name: ALL
-        description: Albanian lek
-      - name: AMD
-        description: Armenian dram
-      - name: ANG
-        description: Netherlands Antillean guilder
-      - name: AOA
-        description: Angolan kwanza
-      - name: ARS
-        description: Argentine peso
-      - name: AUD
-        description: Australian dollar
-      - name: AWG
-        description: Aruban florin
-      - name: AZN
-        description: Azerbaijani manat
-      - name: BAM
-        description: Bosnia and Herzegovina convertible mark
-      - name: BBD
-        description: Barbados dollar
-      - name: BDT
-        description: Bangladeshi taka
-      - name: BGN
-        description: Bulgarian lev
-      - name: BHD
-        description: Bahraini dinar
-      - name: BIF
-        description: Burundian franc
-      - name: BMD
-        description: Bermudian dollar
-      - name: BND
-        description: Brunei dollar
-      - name: BOB
-        description: Boliviano
-      - name: BOV
-        description: Bolivian Mvdol
-      - name: BRL
-        description: Brazilian real
-      - name: BSD
-        description: Bahamian dollar
-      - name: BTN
-        description: Bhutanese ngultrum
-      - name: BWP
-        description: Botswana pula
-      - name: BYR
-        description: Belarusian ruble
-      - name: BZD
-        description: Belize dollar
-      - name: CAD
-        description: Canadian dollar
-      - name: CDF
-        description: Congolese franc
-      - name: CHE
-        description: WIR Euro
-      - name: CHF
-        description: Swiss franc
-      - name: CHW
-        description: WIR Franc
-      - name: CLF
-        description: Unidad de Fomento
-      - name: CLP
-        description: Chilean peso
-      - name: CNY
-        description: Chinese yuan
-      - name: COP
-        description: Colombian peso
-      - name: COU
-        description: Unidad de Valor Real
-      - name: CRC
-        description: Costa Rican colon
-      - name: CUC
-        description: Cuban convertible peso
-      - name: CUP
-        description: Cuban peso
-      - name: CVE
-        description: Cape Verdean escudo
-      - name: CZK
-        description: Czech koruna
-      - name: DJF
-        description: Djiboutian franc
-      - name: DKK
-        description: Danish krone
-      - name: DOP
-        description: Dominican peso
-      - name: DZD
-        description: Algerian dinar
-      - name: EGP
-        description: Egyptian pound
-      - name: ERN
-        description: Eritrean nakfa
-      - name: ETB
-        description: Ethiopian birr
-      - name: EUR
-        description: Euro
-      - name: FJD
-        description: Fiji dollar
-      - name: FKP
-        description: Falkland Islands pound
-      - name: GBP
-        description: Pound sterling
-      - name: GEL
-        description: Georgian lari
-      - name: GHS
-        description: Ghanaian cedi
-      - name: GIP
-        description: Gibraltar pound
-      - name: GMD
-        description: Gambian dalasi
-      - name: GNF
-        description: Guinean franc
-      - name: GTQ
-        description: Guatemalan quetzal
-      - name: GYD
-        description: Guyanese dollar
-      - name: HKD
-        description: Hong Kong dollar
-      - name: HNL
-        description: Honduran lempira
-      - name: HRK
-        description: Croatian kuna
-      - name: HTG
-        description: Haitian gourde
-      - name: HUF
-        description: Hungarian forint
-      - name: IDR
-        description: Indonesian rupiah
-      - name: ILS
-        description: Israeli new shekel
-      - name: INR
-        description: Indian rupee
-      - name: IQD
-        description: Iraqi dinar
-      - name: IRR
-        description: Iranian rial
-      - name: ISK
-        description: Icelandic króna
-      - name: JMD
-        description: Jamaican dollar
-      - name: JOD
-        description: Jordanian dinar
-      - name: JPY
-        description: Japanese yen
-      - name: KES
-        description: Kenyan shilling
-      - name: KGS
-        description: Kyrgyzstani som
-      - name: KHR
-        description: Cambodian riel
-      - name: KMF
-        description: Comoro franc
-      - name: KPW
-        description: North Korean won
-      - name: KRW
-        description: South Korean won
-      - name: KWD
-        description: Kuwaiti dinar
-      - name: KYD
-        description: Cayman Islands dollar
-      - name: KZT
-        description: Kazakhstani tenge
-      - name: LAK
-        description: Lao kip
-      - name: LBP
-        description: Lebanese pound
-      - name: LKR
-        description: Sri Lankan rupee
-      - name: LRD
-        description: Liberian dollar
-      - name: LSL
-        description: Lesotho loti
-      - name: LTL
-        description: Lithuanian litas
-      - name: LVL
-        description: Latvian lats
-      - name: LYD
-        description: Libyan dinar
-      - name: MAD
-        description: Moroccan dirham
-      - name: MDL
-        description: Moldovan leu
-      - name: MGA
-        description: Malagasy ariary
-      - name: MKD
-        description: Macedonian denar
-      - name: MMK
-        description: Myanmar kyat
-      - name: MNT
-        description: Mongolian tögrög
-      - name: MOP
-        description: Macanese pataca
-      - name: MRO
-        description: Mauritanian ouguiya
-      - name: MUR
-        description: Mauritian rupee
-      - name: MVR
-        description: Maldivian rufiyaa
-      - name: MWK
-        description: Malawian kwacha
-      - name: MXN
-        description: Mexican peso
-      - name: MXV
-        description: Mexican Unidad de Inversion
-      - name: MYR
-        description: Malaysian ringgit
-      - name: MZN
-        description: Mozambican metical
-      - name: NAD
-        description: Namibian dollar
-      - name: NGN
-        description: Nigerian naira
-      - name: NIO
-        description: Nicaraguan córdoba
-      - name: NOK
-        description: Norwegian krone
-      - name: NPR
-        description: Nepalese rupee
-      - name: NZD
-        description: New Zealand dollar
-      - name: OMR
-        description: Omani rial
-      - name: PAB
-        description: Panamanian balboa
-      - name: PEN
-        description: Peruvian sol
-      - name: PGK
-        description: Papua New Guinean kina
-      - name: PHP
-        description: Philippine peso
-      - name: PKR
-        description: Pakistani rupee
-      - name: PLN
-        description: Polish zBoty
-      - name: PYG
-        description: Paraguayan guaraní
-      - name: QAR
-        description: Qatari riyal
-      - name: RON
-        description: Romanian leu
-      - name: RSD
-        description: Serbian dinar
-      - name: RUB
-        description: Russian ruble
-      - name: RWF
-        description: Rwandan franc
-      - name: SAR
-        description: Saudi riyal
-      - name: SBD
-        description: Solomon Islands dollar
-      - name: SCR
-        description: Seychelles rupee
-      - name: SDG
-        description: Sudanese pound
-      - name: SEK
-        description: Swedish krona
-      - name: SGD
-        description: Singapore dollar
-      - name: SHP
-        description: Saint Helena pound
-      - name: SLL
-        description: Sierra Leonean first leone
-      - name: SLE
-        description: Sierra Leonean second leone
-      - name: SOS
-        description: Somali shilling
-      - name: SRD
-        description: Surinamese dollar
-      - name: SSP
-        description: South Sudanese pound
-      - name: STD
-        description: São Tomé and Príncipe dobra
-      - name: SVC
-        description: Salvadoran colón
-      - name: SYP
-        description: Syrian pound
-      - name: SZL
-        description: Swazi lilangeni
-      - name: THB
-        description: Thai baht
-      - name: TJS
-        description: Tajikstani somoni
-      - name: TMT
-        description: Turkmenistan manat
-      - name: TND
-        description: Tunisian dinar
-      - name: TOP
-        description: Tongan pa'anga
-      - name: TRY
-        description: Turkish lira
-      - name: TTD
-        description: Trinidad and Tobago dollar
-      - name: TWD
-        description: New Taiwan dollar
-      - name: TZS
-        description: Tanzanian shilling
-      - name: UAH
-        description: Ukrainian hryvnia
-      - name: UGX
-        description: Ugandan shilling
-      - name: USD
-        description: United States dollar
-      - name: USN
-        description: United States dollar (next day)
-      - name: USS
-        description: United States dollar (same day)
-      - name: UYI
-        description: Uruguay Peso en Unidedades Indexadas
-      - name: UYU
-        description: Uruguyan peso
-      - name: UZS
-        description: Uzbekistan som
-      - name: VEF
-        description: Venezuelan bolívar soberano
-      - name: VND
-        description: Vietnamese ’Óng
-      - name: VUV
-        description: Vanuatu vatu
-      - name: WST
-        description: Samoan tala
-      - name: XAF
-        description: CFA franc BEAC
-      - name: XAG
-        description: Silver
-      - name: XAU
-        description: Gold
-      - name: XBA
-        description: European Composite Unit
-      - name: XBB
-        description: European Monetary Unit
-      - name: XBC
-        description: European Unit of Account 9
-      - name: XBD
-        description: European Unit of Account 17
-      - name: XCD
-        description: East Caribbean dollar
-      - name: XDR
-        description: Special drawing rights (International Monetary Fund)
-      - name: XOF
-        description: CFA franc BCEAO
-      - name: XPD
-        description: Palladium
-      - name: XPF
-        description: CFP franc
-      - name: XPT
-        description: Platinum
-      - name: XTS
-        description: Code reserved for testing
-      - name: XXX
-        description: No currency
-      - name: YER
-        description: Yemeni rial
-      - name: ZAR
-        description: South African rand
-      - name: ZMK
-        description: Zambian kwacha
-      - name: ZMW
-        description: Zambian kwacha
-      - name: BTC
-        description: Bitcoin
-      - name: XUS
-        description: USD Coin
-      description: 'Indicates the associated currency for an amount of money. Values correspond
-
-        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
-      x-release-status: PUBLIC
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+      description: Indicates a card's prepaid type, such as `NOT_PREPAID` or `PREPAID`.
       x-release-status: PUBLIC
     Country:
       type: string
@@ -2937,6 +2159,411 @@ components:
 
         Values are in [ISO 3166-1-alpha-2 format](http://www.iso.org/iso/home/standards/country_codes.htm).'
       x-release-status: PUBLIC
+    CardCoBrand:
+      type: string
+      enum:
+      - UNKNOWN
+      - AFTERPAY
+      - CLEARPAY
+      x-enum-elements:
+      - name: UNKNOWN
+        description: ''
+      - name: AFTERPAY
+        description: ''
+      - name: CLEARPAY
+        description: ''
+      description: Indicates the brand for a co-branded card.
+      x-release-status: PUBLIC
+    CardType:
+      type: string
+      enum:
+      - UNKNOWN_CARD_TYPE
+      - CREDIT
+      - DEBIT
+      x-enum-elements:
+      - name: UNKNOWN_CARD_TYPE
+        description: ''
+      - name: CREDIT
+        description: ''
+      - name: DEBIT
+        description: ''
+      description: Indicates a card's type, such as `CREDIT` or `DEBIT`.
+      x-release-status: PUBLIC
+    Address:
+      type: object
+      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
+      x-release-status: PUBLIC
+      properties:
+        address_line_1:
+          type:
+          - string
+          - 'null'
+          description: 'The first line of the address.
+
+
+            Fields that start with `address_line` provide the address''s most specific
+
+            details, like street number, street name, and building name. They do *not*
+
+            provide less specific details like city, state/province, or country (these
+
+            details are provided in other fields).'
+        address_line_2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the address, if any.
+        address_line_3:
+          type:
+          - string
+          - 'null'
+          description: The third line of the address, if any.
+        locality:
+          type:
+          - string
+          - 'null'
+          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        sublocality:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `locality`, if any.
+        sublocality_2:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality`, if any.
+        sublocality_3:
+          type:
+          - string
+          - 'null'
+          description: A civil region within the address's `sublocality_2`, if any.
+        administrative_district_level_1:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s country. In the US, this
+
+            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
+        administrative_district_level_2:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_1`.
+
+            In the US, this is the county.'
+        administrative_district_level_3:
+          type:
+          - string
+          - 'null'
+          description: 'A civil entity within the address''s `administrative_district_level_2`,
+
+            if any.'
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
+        country:
+          $ref: '#/components/schemas/Country'
+          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
+
+            See [Country](#type-country) for possible values'
+        first_name:
+          type:
+          - string
+          - 'null'
+          description: Optional first name when it's representing recipient.
+        last_name:
+          type:
+          - string
+          - 'null'
+          description: Optional last name when it's representing recipient.
+    TenderCardDetails:
+      type: object
+      description: Represents additional details of a tender with `type` `CARD` or `SQUARE_GIFT_CARD`
+      x-release-status: PUBLIC
+      properties:
+        status:
+          $ref: '#/components/schemas/TenderCardDetailsStatus'
+          description: 'The credit card payment''s current state (such as `AUTHORIZED` or
+
+            `CAPTURED`). See [TenderCardDetailsStatus](entity:TenderCardDetailsStatus)
+
+            for possible values.
+
+            See [TenderCardDetailsStatus](#type-tendercarddetailsstatus) for possible values'
+        card:
+          $ref: '#/components/schemas/Card'
+          description: The credit card's non-confidential details.
+        entry_method:
+          $ref: '#/components/schemas/TenderCardDetailsEntryMethod'
+          description: 'The method used to enter the card''s details for the transaction.
+
+            See [TenderCardDetailsEntryMethod](#type-tendercarddetailsentrymethod) for possible values'
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    TenderCardDetailsStatus:
+      type: string
+      enum:
+      - AUTHORIZED
+      - CAPTURED
+      - VOIDED
+      - FAILED
+      x-enum-elements:
+      - name: AUTHORIZED
+        description: The card transaction has been authorized but not yet captured.
+      - name: CAPTURED
+        description: The card transaction was authorized and subsequently captured (i.e., completed).
+      - name: VOIDED
+        description: The card transaction was authorized and subsequently voided (i.e., canceled).
+      - name: FAILED
+        description: The card transaction failed.
+      description: Indicates the card transaction's current status.
+      x-release-status: PUBLIC
+    Money:
+      type: object
+      description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
+
+        Fields that do not explicitly define whether they are signed or unsigned are
+
+        considered unsigned and can only hold positive amounts. For signed fields, the
+
+        sign of the value indicates the purpose of the money transfer. See
+
+        [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts)
+
+        for more information.'
+      x-release-status: PUBLIC
+      properties:
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: 'The amount of money, in the smallest denomination of the currency
+
+            indicated by `currency`. For example, when `currency` is `USD`, `amount` is
+
+            in cents. Monetary amounts can be positive or negative. See the specific
+
+            field description to determine the meaning of the sign in a particular case.'
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: 'The type of currency, in __ISO 4217 format__. For example, the currency
+
+            code for US dollars is `USD`.
+
+
+            See [Currency](entity:Currency) for possible values.
+
+            See [Currency](#type-currency) for possible values'
+    Tender:
+      type: object
+      description: Represents a tender (i.e., a method of payment) used in a Square transaction.
+      x-release-status: PUBLIC
+      required:
+      - type
+      properties:
+        id:
+          type: string
+          description: The tender's unique ID. It is the associated payment ID.
+          maxLength: 192
+        location_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the transaction's associated location.
+          maxLength: 50
+        transaction_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the tender's associated transaction.
+          maxLength: 192
+        created_at:
+          type: string
+          description: The timestamp for when the tender was created, in RFC 3339 format.
+          maxLength: 32
+          readOnly: true
+        note:
+          type:
+          - string
+          - 'null'
+          description: An optional note associated with the tender at the time of payment.
+          maxLength: 500
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The total amount of the tender, including `tip_money`. If the tender has a `payment_id`,
+
+            the `total_money` of the corresponding [Payment](entity:Payment) will be equal to the
+
+            `amount_money` of the tender.'
+        tip_money:
+          $ref: '#/components/schemas/Money'
+          description: The tip's amount of the tender.
+        processing_fee_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of any Square processing fees applied to the tender.
+
+
+            This field is not immediately populated when a new transaction is created.
+
+            It is usually available after about ten seconds.'
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: 'If the tender is associated with a customer or represents a customer''s card on file,
+
+            this is the ID of the associated customer.'
+          maxLength: 191
+        type:
+          $ref: '#/components/schemas/TenderType'
+          description: 'The type of tender, such as `CARD` or `CASH`.
+
+            See [TenderType](#type-tendertype) for possible values'
+        card_details:
+          $ref: '#/components/schemas/TenderCardDetails'
+          description: 'The details of the card tender.
+
+
+            This value is present only if the value of `type` is `CARD`.'
+        cash_details:
+          $ref: '#/components/schemas/TenderCashDetails'
+          description: 'The details of the cash tender.
+
+
+            This value is present only if the value of `type` is `CASH`.'
+        bank_account_details:
+          $ref: '#/components/schemas/TenderBankAccountDetails'
+          description: 'The details of the bank account tender.
+
+
+            This value is present only if the value of `type` is `BANK_ACCOUNT`.'
+        buy_now_pay_later_details:
+          $ref: '#/components/schemas/TenderBuyNowPayLaterDetails'
+          description: 'The details of a Buy Now Pay Later tender.
+
+
+            This value is present only if the value of `type` is `BUY_NOW_PAY_LATER`.'
+        square_account_details:
+          $ref: '#/components/schemas/TenderSquareAccountDetails'
+          description: 'The details of a Square Account tender.
+
+
+            This value is present only if the value of `type` is `SQUARE_ACCOUNT`.'
+        additional_recipients:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AdditionalRecipient'
+          description: 'Additional recipients (other than the merchant) receiving a portion of this tender.
+
+            For example, fees assessed on the purchase by a third party integration.'
+          x-release-status: DEPRECATED
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the [Payment](entity:Payment) that corresponds to this tender.
+
+            This value is only present for payments created with the v2 Payments API.'
+          maxLength: 192
+    CardBrand:
+      type: string
+      enum:
+      - OTHER_BRAND
+      - VISA
+      - MASTERCARD
+      - AMERICAN_EXPRESS
+      - DISCOVER
+      - DISCOVER_DINERS
+      - JCB
+      - CHINA_UNIONPAY
+      - SQUARE_GIFT_CARD
+      - SQUARE_CAPITAL_CARD
+      - INTERAC
+      - EFTPOS
+      - FELICA
+      - EBT
+      x-enum-elements:
+      - name: OTHER_BRAND
+        description: ''
+      - name: VISA
+        description: ''
+      - name: MASTERCARD
+        description: ''
+      - name: AMERICAN_EXPRESS
+        description: ''
+      - name: DISCOVER
+        description: ''
+      - name: DISCOVER_DINERS
+        description: ''
+      - name: JCB
+        description: ''
+      - name: CHINA_UNIONPAY
+        description: ''
+      - name: SQUARE_GIFT_CARD
+        description: ''
+      - name: SQUARE_CAPITAL_CARD
+        description: ''
+      - name: INTERAC
+        description: ''
+      - name: EFTPOS
+        description: ''
+      - name: FELICA
+        description: ''
+      - name: EBT
+        description: ''
+      description: Indicates a card's brand, such as `VISA` or `MASTERCARD`.
+      x-release-status: PUBLIC
     TenderBuyNowPayLaterDetailsStatus:
       type: string
       enum:
@@ -2954,6 +2581,774 @@ components:
       - name: FAILED
         description: The buy now pay later payment failed.
       x-release-status: PUBLIC
+    Currency:
+      type: string
+      enum:
+      - UNKNOWN_CURRENCY
+      - AED
+      - AFN
+      - ALL
+      - AMD
+      - ANG
+      - AOA
+      - ARS
+      - AUD
+      - AWG
+      - AZN
+      - BAM
+      - BBD
+      - BDT
+      - BGN
+      - BHD
+      - BIF
+      - BMD
+      - BND
+      - BOB
+      - BOV
+      - BRL
+      - BSD
+      - BTN
+      - BWP
+      - BYR
+      - BZD
+      - CAD
+      - CDF
+      - CHE
+      - CHF
+      - CHW
+      - CLF
+      - CLP
+      - CNY
+      - COP
+      - COU
+      - CRC
+      - CUC
+      - CUP
+      - CVE
+      - CZK
+      - DJF
+      - DKK
+      - DOP
+      - DZD
+      - EGP
+      - ERN
+      - ETB
+      - EUR
+      - FJD
+      - FKP
+      - GBP
+      - GEL
+      - GHS
+      - GIP
+      - GMD
+      - GNF
+      - GTQ
+      - GYD
+      - HKD
+      - HNL
+      - HRK
+      - HTG
+      - HUF
+      - IDR
+      - ILS
+      - INR
+      - IQD
+      - IRR
+      - ISK
+      - JMD
+      - JOD
+      - JPY
+      - KES
+      - KGS
+      - KHR
+      - KMF
+      - KPW
+      - KRW
+      - KWD
+      - KYD
+      - KZT
+      - LAK
+      - LBP
+      - LKR
+      - LRD
+      - LSL
+      - LTL
+      - LVL
+      - LYD
+      - MAD
+      - MDL
+      - MGA
+      - MKD
+      - MMK
+      - MNT
+      - MOP
+      - MRO
+      - MUR
+      - MVR
+      - MWK
+      - MXN
+      - MXV
+      - MYR
+      - MZN
+      - NAD
+      - NGN
+      - NIO
+      - NOK
+      - NPR
+      - NZD
+      - OMR
+      - PAB
+      - PEN
+      - PGK
+      - PHP
+      - PKR
+      - PLN
+      - PYG
+      - QAR
+      - RON
+      - RSD
+      - RUB
+      - RWF
+      - SAR
+      - SBD
+      - SCR
+      - SDG
+      - SEK
+      - SGD
+      - SHP
+      - SLL
+      - SLE
+      - SOS
+      - SRD
+      - SSP
+      - STD
+      - SVC
+      - SYP
+      - SZL
+      - THB
+      - TJS
+      - TMT
+      - TND
+      - TOP
+      - TRY
+      - TTD
+      - TWD
+      - TZS
+      - UAH
+      - UGX
+      - USD
+      - USN
+      - USS
+      - UYI
+      - UYU
+      - UZS
+      - VEF
+      - VND
+      - VUV
+      - WST
+      - XAF
+      - XAG
+      - XAU
+      - XBA
+      - XBB
+      - XBC
+      - XBD
+      - XCD
+      - XDR
+      - XOF
+      - XPD
+      - XPF
+      - XPT
+      - XTS
+      - XXX
+      - YER
+      - ZAR
+      - ZMK
+      - ZMW
+      - BTC
+      - XUS
+      x-enum-elements:
+      - name: UNKNOWN_CURRENCY
+        description: Unknown currency
+      - name: AED
+        description: United Arab Emirates dirham
+      - name: AFN
+        description: Afghan afghani
+      - name: ALL
+        description: Albanian lek
+      - name: AMD
+        description: Armenian dram
+      - name: ANG
+        description: Netherlands Antillean guilder
+      - name: AOA
+        description: Angolan kwanza
+      - name: ARS
+        description: Argentine peso
+      - name: AUD
+        description: Australian dollar
+      - name: AWG
+        description: Aruban florin
+      - name: AZN
+        description: Azerbaijani manat
+      - name: BAM
+        description: Bosnia and Herzegovina convertible mark
+      - name: BBD
+        description: Barbados dollar
+      - name: BDT
+        description: Bangladeshi taka
+      - name: BGN
+        description: Bulgarian lev
+      - name: BHD
+        description: Bahraini dinar
+      - name: BIF
+        description: Burundian franc
+      - name: BMD
+        description: Bermudian dollar
+      - name: BND
+        description: Brunei dollar
+      - name: BOB
+        description: Boliviano
+      - name: BOV
+        description: Bolivian Mvdol
+      - name: BRL
+        description: Brazilian real
+      - name: BSD
+        description: Bahamian dollar
+      - name: BTN
+        description: Bhutanese ngultrum
+      - name: BWP
+        description: Botswana pula
+      - name: BYR
+        description: Belarusian ruble
+      - name: BZD
+        description: Belize dollar
+      - name: CAD
+        description: Canadian dollar
+      - name: CDF
+        description: Congolese franc
+      - name: CHE
+        description: WIR Euro
+      - name: CHF
+        description: Swiss franc
+      - name: CHW
+        description: WIR Franc
+      - name: CLF
+        description: Unidad de Fomento
+      - name: CLP
+        description: Chilean peso
+      - name: CNY
+        description: Chinese yuan
+      - name: COP
+        description: Colombian peso
+      - name: COU
+        description: Unidad de Valor Real
+      - name: CRC
+        description: Costa Rican colon
+      - name: CUC
+        description: Cuban convertible peso
+      - name: CUP
+        description: Cuban peso
+      - name: CVE
+        description: Cape Verdean escudo
+      - name: CZK
+        description: Czech koruna
+      - name: DJF
+        description: Djiboutian franc
+      - name: DKK
+        description: Danish krone
+      - name: DOP
+        description: Dominican peso
+      - name: DZD
+        description: Algerian dinar
+      - name: EGP
+        description: Egyptian pound
+      - name: ERN
+        description: Eritrean nakfa
+      - name: ETB
+        description: Ethiopian birr
+      - name: EUR
+        description: Euro
+      - name: FJD
+        description: Fiji dollar
+      - name: FKP
+        description: Falkland Islands pound
+      - name: GBP
+        description: Pound sterling
+      - name: GEL
+        description: Georgian lari
+      - name: GHS
+        description: Ghanaian cedi
+      - name: GIP
+        description: Gibraltar pound
+      - name: GMD
+        description: Gambian dalasi
+      - name: GNF
+        description: Guinean franc
+      - name: GTQ
+        description: Guatemalan quetzal
+      - name: GYD
+        description: Guyanese dollar
+      - name: HKD
+        description: Hong Kong dollar
+      - name: HNL
+        description: Honduran lempira
+      - name: HRK
+        description: Croatian kuna
+      - name: HTG
+        description: Haitian gourde
+      - name: HUF
+        description: Hungarian forint
+      - name: IDR
+        description: Indonesian rupiah
+      - name: ILS
+        description: Israeli new shekel
+      - name: INR
+        description: Indian rupee
+      - name: IQD
+        description: Iraqi dinar
+      - name: IRR
+        description: Iranian rial
+      - name: ISK
+        description: Icelandic króna
+      - name: JMD
+        description: Jamaican dollar
+      - name: JOD
+        description: Jordanian dinar
+      - name: JPY
+        description: Japanese yen
+      - name: KES
+        description: Kenyan shilling
+      - name: KGS
+        description: Kyrgyzstani som
+      - name: KHR
+        description: Cambodian riel
+      - name: KMF
+        description: Comoro franc
+      - name: KPW
+        description: North Korean won
+      - name: KRW
+        description: South Korean won
+      - name: KWD
+        description: Kuwaiti dinar
+      - name: KYD
+        description: Cayman Islands dollar
+      - name: KZT
+        description: Kazakhstani tenge
+      - name: LAK
+        description: Lao kip
+      - name: LBP
+        description: Lebanese pound
+      - name: LKR
+        description: Sri Lankan rupee
+      - name: LRD
+        description: Liberian dollar
+      - name: LSL
+        description: Lesotho loti
+      - name: LTL
+        description: Lithuanian litas
+      - name: LVL
+        description: Latvian lats
+      - name: LYD
+        description: Libyan dinar
+      - name: MAD
+        description: Moroccan dirham
+      - name: MDL
+        description: Moldovan leu
+      - name: MGA
+        description: Malagasy ariary
+      - name: MKD
+        description: Macedonian denar
+      - name: MMK
+        description: Myanmar kyat
+      - name: MNT
+        description: Mongolian tögrög
+      - name: MOP
+        description: Macanese pataca
+      - name: MRO
+        description: Mauritanian ouguiya
+      - name: MUR
+        description: Mauritian rupee
+      - name: MVR
+        description: Maldivian rufiyaa
+      - name: MWK
+        description: Malawian kwacha
+      - name: MXN
+        description: Mexican peso
+      - name: MXV
+        description: Mexican Unidad de Inversion
+      - name: MYR
+        description: Malaysian ringgit
+      - name: MZN
+        description: Mozambican metical
+      - name: NAD
+        description: Namibian dollar
+      - name: NGN
+        description: Nigerian naira
+      - name: NIO
+        description: Nicaraguan córdoba
+      - name: NOK
+        description: Norwegian krone
+      - name: NPR
+        description: Nepalese rupee
+      - name: NZD
+        description: New Zealand dollar
+      - name: OMR
+        description: Omani rial
+      - name: PAB
+        description: Panamanian balboa
+      - name: PEN
+        description: Peruvian sol
+      - name: PGK
+        description: Papua New Guinean kina
+      - name: PHP
+        description: Philippine peso
+      - name: PKR
+        description: Pakistani rupee
+      - name: PLN
+        description: Polish zBoty
+      - name: PYG
+        description: Paraguayan guaraní
+      - name: QAR
+        description: Qatari riyal
+      - name: RON
+        description: Romanian leu
+      - name: RSD
+        description: Serbian dinar
+      - name: RUB
+        description: Russian ruble
+      - name: RWF
+        description: Rwandan franc
+      - name: SAR
+        description: Saudi riyal
+      - name: SBD
+        description: Solomon Islands dollar
+      - name: SCR
+        description: Seychelles rupee
+      - name: SDG
+        description: Sudanese pound
+      - name: SEK
+        description: Swedish krona
+      - name: SGD
+        description: Singapore dollar
+      - name: SHP
+        description: Saint Helena pound
+      - name: SLL
+        description: Sierra Leonean first leone
+      - name: SLE
+        description: Sierra Leonean second leone
+      - name: SOS
+        description: Somali shilling
+      - name: SRD
+        description: Surinamese dollar
+      - name: SSP
+        description: South Sudanese pound
+      - name: STD
+        description: São Tomé and Príncipe dobra
+      - name: SVC
+        description: Salvadoran colón
+      - name: SYP
+        description: Syrian pound
+      - name: SZL
+        description: Swazi lilangeni
+      - name: THB
+        description: Thai baht
+      - name: TJS
+        description: Tajikstani somoni
+      - name: TMT
+        description: Turkmenistan manat
+      - name: TND
+        description: Tunisian dinar
+      - name: TOP
+        description: Tongan pa'anga
+      - name: TRY
+        description: Turkish lira
+      - name: TTD
+        description: Trinidad and Tobago dollar
+      - name: TWD
+        description: New Taiwan dollar
+      - name: TZS
+        description: Tanzanian shilling
+      - name: UAH
+        description: Ukrainian hryvnia
+      - name: UGX
+        description: Ugandan shilling
+      - name: USD
+        description: United States dollar
+      - name: USN
+        description: United States dollar (next day)
+      - name: USS
+        description: United States dollar (same day)
+      - name: UYI
+        description: Uruguay Peso en Unidedades Indexadas
+      - name: UYU
+        description: Uruguyan peso
+      - name: UZS
+        description: Uzbekistan som
+      - name: VEF
+        description: Venezuelan bolívar soberano
+      - name: VND
+        description: Vietnamese ’Óng
+      - name: VUV
+        description: Vanuatu vatu
+      - name: WST
+        description: Samoan tala
+      - name: XAF
+        description: CFA franc BEAC
+      - name: XAG
+        description: Silver
+      - name: XAU
+        description: Gold
+      - name: XBA
+        description: European Composite Unit
+      - name: XBB
+        description: European Monetary Unit
+      - name: XBC
+        description: European Unit of Account 9
+      - name: XBD
+        description: European Unit of Account 17
+      - name: XCD
+        description: East Caribbean dollar
+      - name: XDR
+        description: Special drawing rights (International Monetary Fund)
+      - name: XOF
+        description: CFA franc BCEAO
+      - name: XPD
+        description: Palladium
+      - name: XPF
+        description: CFP franc
+      - name: XPT
+        description: Platinum
+      - name: XTS
+        description: Code reserved for testing
+      - name: XXX
+        description: No currency
+      - name: YER
+        description: Yemeni rial
+      - name: ZAR
+        description: South African rand
+      - name: ZMK
+        description: Zambian kwacha
+      - name: ZMW
+        description: Zambian kwacha
+      - name: BTC
+        description: Bitcoin
+      - name: XUS
+        description: USD Coin
+      description: 'Indicates the associated currency for an amount of money. Values correspond
+
+        to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
+      x-release-status: PUBLIC
+    TransactionProduct:
+      type: string
+      enum:
+      - REGISTER
+      - EXTERNAL_API
+      - BILLING
+      - APPOINTMENTS
+      - INVOICES
+      - ONLINE_STORE
+      - PAYROLL
+      - OTHER
+      x-enum-elements:
+      - name: REGISTER
+        description: Square Point of Sale.
+      - name: EXTERNAL_API
+        description: The Square Connect API.
+      - name: BILLING
+        description: A Square subscription for one of multiple products.
+      - name: APPOINTMENTS
+        description: Square Appointments.
+      - name: INVOICES
+        description: Square Invoices.
+      - name: ONLINE_STORE
+        description: Square Online Store.
+      - name: PAYROLL
+        description: Square Payroll.
+      - name: OTHER
+        description: A Square product that does not match any other value.
+      description: Indicates the Square product used to process a transaction.
+      x-release-status: DEPRECATED
+    TenderBuyNowPayLaterDetailsBrand:
+      type: string
+      enum:
+      - OTHER_BRAND
+      - AFTERPAY
+      x-enum-elements:
+      - name: OTHER_BRAND
+        description: ''
+      - name: AFTERPAY
+        description: ''
+      x-release-status: PUBLIC
+    Refund:
+      type: object
+      description: Represents a refund processed for a Square transaction.
+      x-release-status: PUBLIC
+      required:
+      - id
+      - location_id
+      - tender_id
+      - reason
+      - amount_money
+      - status
+      properties:
+        id:
+          type: string
+          description: The refund's unique ID.
+          maxLength: 255
+        location_id:
+          type: string
+          description: The ID of the refund's associated location.
+          maxLength: 50
+        transaction_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the transaction that the refunded tender is part of.
+          maxLength: 192
+        tender_id:
+          type: string
+          description: The ID of the refunded tender.
+          maxLength: 192
+        created_at:
+          type: string
+          description: The timestamp for when the refund was created, in RFC 3339 format.
+          maxLength: 32
+          readOnly: true
+        reason:
+          type: string
+          description: The reason for the refund being issued.
+          maxLength: 192
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of money refunded to the buyer.
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+          description: 'The current status of the refund (`PENDING`, `APPROVED`, `REJECTED`,
+
+            or `FAILED`).
+
+            See [RefundStatus](#type-refundstatus) for possible values'
+        processing_fee_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of Square processing fee money refunded to the *merchant*.
+        additional_recipients:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AdditionalRecipient'
+          description: 'Additional recipients (other than the merchant) receiving a portion of this refund.
+
+            For example, fees assessed on a refund of a purchase by a third party integration.'
+          x-release-status: DEPRECATED
+    VoidTransactionResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [VoidTransaction](api-endpoint:Transactions-VoidTransaction) endpoint.'
+      x-release-status: DEPRECATED
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example: {}
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/VoidTransaction/VoidTransactionResponse.csharp
+        java: /sdk_samples/VoidTransaction/VoidTransactionResponse.java
+        javascript: /sdk_samples/VoidTransaction/VoidTransactionResponse.javascript
+        php: /sdk_samples/VoidTransaction/VoidTransactionResponse.php
+        python: /sdk_samples/VoidTransaction/VoidTransactionResponse.python
+        ruby: /sdk_samples/VoidTransaction/VoidTransactionResponse.ruby
+    TenderBuyNowPayLaterDetails:
+      type: object
+      description: Represents the details of a tender with `type` `BUY_NOW_PAY_LATER`.
+      x-release-status: PUBLIC
+      properties:
+        buy_now_pay_later_brand:
+          $ref: '#/components/schemas/TenderBuyNowPayLaterDetailsBrand'
+          description: 'The Buy Now Pay Later brand.
+
+            See [Brand](#type-brand) for possible values'
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/TenderBuyNowPayLaterDetailsStatus'
+          description: 'The buy now pay later payment''s current state (such as `AUTHORIZED` or
+
+            `CAPTURED`). See [TenderBuyNowPayLaterDetailsStatus](entity:TenderBuyNowPayLaterDetailsStatus)
+
+            for possible values.
+
+            See [Status](#type-status) for possible values'
+    RetrieveTransactionResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [RetrieveTransaction](api-endpoint:Transactions-RetrieveTransaction) endpoint.
+
+
+        One of `errors` or `transaction` is present in a given response (never both).'
+      x-release-status: DEPRECATED
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+          description: The requested transaction.
+      example:
+        transaction:
+          created_at: '2016-03-10T22:57:56Z'
+          id: KnL67ZIwXCPtzOrqj0HrkxMF
+          location_id: 18YC4JDH91E1H
+          product: EXTERNAL_API
+          reference_id: some optional reference id
+          tenders:
+          - additional_recipients:
+            - amount_money:
+                amount: 20
+                currency: USD
+              description: Application fees
+              location_id: 057P5VYJ4A5X1
+            amount_money:
+              amount: 5000
+              currency: USD
+            card_details:
+              card:
+                card_brand: VISA
+                last_4: '1111'
+              entry_method: KEYED
+              status: CAPTURED
+            created_at: '2016-03-10T22:57:56Z'
+            id: MtZRYYdDrYNQbOvV7nbuBvMF
+            location_id: 18YC4JDH91E1H
+            note: some optional note
+            processing_fee_money:
+              amount: 138
+              currency: USD
+            transaction_id: KnL67ZIwXCPtzOrqj0HrkxMF
+            type: CARD
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.csharp
+        java: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.java
+        javascript: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.javascript
+        php: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.php
+        python: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.python
+        ruby: /sdk_samples/RetrieveTransaction/RetrieveTransactionResponse.ruby
+    TenderCashDetails:
+      type: object
+      description: Represents the details of a tender with `type` `CASH`.
+      x-release-status: PUBLIC
+      properties:
+        buyer_tendered_money:
+          $ref: '#/components/schemas/Money'
+          description: The total amount of cash provided by the buyer, before change is given.
+        change_back_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of change returned to the buyer.
     Card:
       type: object
       description: 'Represents the payment details of a card to be used for payments. These
@@ -3069,20 +3464,17 @@ components:
 
             See [CardCoBrand](#type-cardcobrand) for possible values'
           readOnly: true
-    TenderBankAccountDetailsStatus:
+    SortOrder:
       type: string
       enum:
-      - PENDING
-      - COMPLETED
-      - FAILED
+      - DESC
+      - ASC
       x-enum-elements:
-      - name: PENDING
-        description: The bank account payment is in progress.
-      - name: COMPLETED
-        description: The bank account payment has been completed.
-      - name: FAILED
-        description: The bank account payment failed.
-      description: Indicates the bank account payment's current status.
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
       x-release-status: PUBLIC
     TenderSquareAccountDetails:
       type: object
@@ -3098,492 +3490,100 @@ components:
             for possible values.
 
             See [Status](#type-status) for possible values'
-    TransactionProduct:
+    RefundStatus:
       type: string
       enum:
-      - REGISTER
-      - EXTERNAL_API
-      - BILLING
-      - APPOINTMENTS
-      - INVOICES
-      - ONLINE_STORE
-      - PAYROLL
-      - OTHER
-      x-enum-elements:
-      - name: REGISTER
-        description: Square Point of Sale.
-      - name: EXTERNAL_API
-        description: The Square Connect API.
-      - name: BILLING
-        description: A Square subscription for one of multiple products.
-      - name: APPOINTMENTS
-        description: Square Appointments.
-      - name: INVOICES
-        description: Square Invoices.
-      - name: ONLINE_STORE
-        description: Square Online Store.
-      - name: PAYROLL
-        description: Square Payroll.
-      - name: OTHER
-        description: A Square product that does not match any other value.
-      description: Indicates the Square product used to process a transaction.
-      x-release-status: DEPRECATED
-    CaptureTransactionResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [CaptureTransaction](api-endpoint:Transactions-CaptureTransaction) endpoint.'
-      x-release-status: DEPRECATED
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.csharp
-        java: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.java
-        javascript: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.javascript
-        php: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.php
-        python: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.python
-        ruby: /sdk_samples/CaptureTransaction/CaptureTransactionResponse.ruby
-    Refund:
-      type: object
-      description: Represents a refund processed for a Square transaction.
-      x-release-status: PUBLIC
-      required:
-      - id
-      - location_id
-      - tender_id
-      - reason
-      - amount_money
-      - status
-      properties:
-        id:
-          type: string
-          description: The refund's unique ID.
-          maxLength: 255
-        location_id:
-          type: string
-          description: The ID of the refund's associated location.
-          maxLength: 50
-        transaction_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the transaction that the refunded tender is part of.
-          maxLength: 192
-        tender_id:
-          type: string
-          description: The ID of the refunded tender.
-          maxLength: 192
-        created_at:
-          type: string
-          description: The timestamp for when the refund was created, in RFC 3339 format.
-          maxLength: 32
-          readOnly: true
-        reason:
-          type: string
-          description: The reason for the refund being issued.
-          maxLength: 192
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of money refunded to the buyer.
-        status:
-          $ref: '#/components/schemas/RefundStatus'
-          description: 'The current status of the refund (`PENDING`, `APPROVED`, `REJECTED`,
-
-            or `FAILED`).
-
-            See [RefundStatus](#type-refundstatus) for possible values'
-        processing_fee_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of Square processing fee money refunded to the *merchant*.
-        additional_recipients:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AdditionalRecipient'
-          description: 'Additional recipients (other than the merchant) receiving a portion of this refund.
-
-            For example, fees assessed on a refund of a purchase by a third party integration.'
-          x-release-status: DEPRECATED
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    CardPrepaidType:
-      type: string
-      enum:
-      - UNKNOWN_PREPAID_TYPE
-      - NOT_PREPAID
-      - PREPAID
-      x-enum-elements:
-      - name: UNKNOWN_PREPAID_TYPE
-        description: ''
-      - name: NOT_PREPAID
-        description: ''
-      - name: PREPAID
-        description: ''
-      description: Indicates a card's prepaid type, such as `NOT_PREPAID` or `PREPAID`.
-      x-release-status: PUBLIC
-    Tender:
-      type: object
-      description: Represents a tender (i.e., a method of payment) used in a Square transaction.
-      x-release-status: PUBLIC
-      required:
-      - type
-      properties:
-        id:
-          type: string
-          description: The tender's unique ID. It is the associated payment ID.
-          maxLength: 192
-        location_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the transaction's associated location.
-          maxLength: 50
-        transaction_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the tender's associated transaction.
-          maxLength: 192
-        created_at:
-          type: string
-          description: The timestamp for when the tender was created, in RFC 3339 format.
-          maxLength: 32
-          readOnly: true
-        note:
-          type:
-          - string
-          - 'null'
-          description: An optional note associated with the tender at the time of payment.
-          maxLength: 500
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The total amount of the tender, including `tip_money`. If the tender has a `payment_id`,
-
-            the `total_money` of the corresponding [Payment](entity:Payment) will be equal to the
-
-            `amount_money` of the tender.'
-        tip_money:
-          $ref: '#/components/schemas/Money'
-          description: The tip's amount of the tender.
-        processing_fee_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of any Square processing fees applied to the tender.
-
-
-            This field is not immediately populated when a new transaction is created.
-
-            It is usually available after about ten seconds.'
-        customer_id:
-          type:
-          - string
-          - 'null'
-          description: 'If the tender is associated with a customer or represents a customer''s card on file,
-
-            this is the ID of the associated customer.'
-          maxLength: 191
-        type:
-          $ref: '#/components/schemas/TenderType'
-          description: 'The type of tender, such as `CARD` or `CASH`.
-
-            See [TenderType](#type-tendertype) for possible values'
-        card_details:
-          $ref: '#/components/schemas/TenderCardDetails'
-          description: 'The details of the card tender.
-
-
-            This value is present only if the value of `type` is `CARD`.'
-        cash_details:
-          $ref: '#/components/schemas/TenderCashDetails'
-          description: 'The details of the cash tender.
-
-
-            This value is present only if the value of `type` is `CASH`.'
-        bank_account_details:
-          $ref: '#/components/schemas/TenderBankAccountDetails'
-          description: 'The details of the bank account tender.
-
-
-            This value is present only if the value of `type` is `BANK_ACCOUNT`.'
-        buy_now_pay_later_details:
-          $ref: '#/components/schemas/TenderBuyNowPayLaterDetails'
-          description: 'The details of a Buy Now Pay Later tender.
-
-
-            This value is present only if the value of `type` is `BUY_NOW_PAY_LATER`.'
-        square_account_details:
-          $ref: '#/components/schemas/TenderSquareAccountDetails'
-          description: 'The details of a Square Account tender.
-
-
-            This value is present only if the value of `type` is `SQUARE_ACCOUNT`.'
-        additional_recipients:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AdditionalRecipient'
-          description: 'Additional recipients (other than the merchant) receiving a portion of this tender.
-
-            For example, fees assessed on the purchase by a third party integration.'
-          x-release-status: DEPRECATED
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: 'The ID of the [Payment](entity:Payment) that corresponds to this tender.
-
-            This value is only present for payments created with the v2 Payments API.'
-          maxLength: 192
-    ListTransactionsResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [ListTransactions](api-endpoint:Transactions-ListTransactions) endpoint.
-
-
-        One of `errors` or `transactions` is present in a given response (never both).'
-      x-release-status: DEPRECATED
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        transactions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Transaction'
-          description: An array of transactions that match your query.
-        cursor:
-          type: string
-          description: 'A pagination cursor for retrieving the next set of results,
-
-            if any remain. Provide this value as the `cursor` parameter in a subsequent
-
-            request to this endpoint.
-
-
-            See [Paginating results](https://developer.squareup.com/docs/working-with-apis/pagination) for more information.'
-      example:
-        transactions:
-        - created_at: '2016-01-20T22:57:56Z'
-          id: KnL67ZIwXCPtzOrqj0HrkxMF
-          location_id: 18YC4JDH91E1H
-          product: EXTERNAL_API
-          reference_id: some optional reference id
-          refunds:
-          - additional_recipients:
-            - amount_money:
-                amount: 100
-                currency: USD
-              description: Application fees
-              location_id: 057P5VYJ4A5X1
-            amount_money:
-              amount: 5000
-              currency: USD
-            created_at: '2016-01-20T22:59:20Z'
-            id: 7a5RcVI0CxbOcJ2wMOkE
-            location_id: 18YC4JDH91E1H
-            processing_fee_money:
-              amount: 138
-              currency: USD
-            reason: some reason why
-            status: APPROVED
-            tender_id: MtZRYYdDrYNQbOvV7nbuBvMF
-            transaction_id: KnL67ZIwXCPtzOrqj0HrkxMF
-          tenders:
-          - additional_recipients:
-            - amount_money:
-                amount: 20
-                currency: USD
-              description: Application fees
-              location_id: 057P5VYJ4A5X1
-            amount_money:
-              amount: 5000
-              currency: USD
-            card_details:
-              card:
-                card_brand: VISA
-                last_4: '1111'
-              entry_method: KEYED
-              status: CAPTURED
-            created_at: '2016-01-20T22:57:56Z'
-            id: MtZRYYdDrYNQbOvV7nbuBvMF
-            location_id: 18YC4JDH91E1H
-            note: some optional note
-            processing_fee_money:
-              amount: 138
-              currency: USD
-            transaction_id: KnL67ZIwXCPtzOrqj0HrkxMF
-            type: CARD
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/ListTransactions/ListTransactionsResponse.csharp
-        java: /sdk_samples/ListTransactions/ListTransactionsResponse.java
-        javascript: /sdk_samples/ListTransactions/ListTransactionsResponse.javascript
-        php: /sdk_samples/ListTransactions/ListTransactionsResponse.php
-        python: /sdk_samples/ListTransactions/ListTransactionsResponse.python
-        ruby: /sdk_samples/ListTransactions/ListTransactionsResponse.ruby
-    Address:
-      type: object
-      description: "Represents a postal address in a country. \nFor more information, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses)."
-      x-release-status: PUBLIC
-      properties:
-        address_line_1:
-          type:
-          - string
-          - 'null'
-          description: 'The first line of the address.
-
-
-            Fields that start with `address_line` provide the address''s most specific
-
-            details, like street number, street name, and building name. They do *not*
-
-            provide less specific details like city, state/province, or country (these
-
-            details are provided in other fields).'
-        address_line_2:
-          type:
-          - string
-          - 'null'
-          description: The second line of the address, if any.
-        address_line_3:
-          type:
-          - string
-          - 'null'
-          description: The third line of the address, if any.
-        locality:
-          type:
-          - string
-          - 'null'
-          description: The city or town of the address. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-        sublocality:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `locality`, if any.
-        sublocality_2:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `sublocality`, if any.
-        sublocality_3:
-          type:
-          - string
-          - 'null'
-          description: A civil region within the address's `sublocality_2`, if any.
-        administrative_district_level_1:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s country. In the US, this
-
-            is the state. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).'
-        administrative_district_level_2:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s `administrative_district_level_1`.
-
-            In the US, this is the county.'
-        administrative_district_level_3:
-          type:
-          - string
-          - 'null'
-          description: 'A civil entity within the address''s `administrative_district_level_2`,
-
-            if any.'
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: The address's postal code. For a full list of field meanings by country, see [Working with Addresses](https://developer.squareup.com/docs/build-basics/working-with-addresses).
-        country:
-          $ref: '#/components/schemas/Country'
-          description: 'The address''s country, in the two-letter format of ISO 3166. For example, `US` or `FR`.
-
-            See [Country](#type-country) for possible values'
-        first_name:
-          type:
-          - string
-          - 'null'
-          description: Optional first name when it's representing recipient.
-        last_name:
-          type:
-          - string
-          - 'null'
-          description: Optional last name when it's representing recipient.
-    VoidTransactionResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [VoidTransaction](api-endpoint:Transactions-VoidTransaction) endpoint.'
-      x-release-status: DEPRECATED
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example: {}
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/VoidTransaction/VoidTransactionResponse.csharp
-        java: /sdk_samples/VoidTransaction/VoidTransactionResponse.java
-        javascript: /sdk_samples/VoidTransaction/VoidTransactionResponse.javascript
-        php: /sdk_samples/VoidTransaction/VoidTransactionResponse.php
-        python: /sdk_samples/VoidTransaction/VoidTransactionResponse.python
-        ruby: /sdk_samples/VoidTransaction/VoidTransactionResponse.ruby
-    TenderCardDetailsStatus:
-      type: string
-      enum:
-      - AUTHORIZED
-      - CAPTURED
-      - VOIDED
+      - PENDING
+      - APPROVED
+      - REJECTED
       - FAILED
       x-enum-elements:
-      - name: AUTHORIZED
-        description: The card transaction has been authorized but not yet captured.
-      - name: CAPTURED
-        description: The card transaction was authorized and subsequently captured (i.e., completed).
-      - name: VOIDED
-        description: The card transaction was authorized and subsequently voided (i.e., canceled).
+      - name: PENDING
+        description: The refund is pending.
+      - name: APPROVED
+        description: The refund has been approved by Square.
+      - name: REJECTED
+        description: The refund has been rejected by Square.
       - name: FAILED
-        description: The card transaction failed.
-      description: Indicates the card transaction's current status.
+        description: The refund failed.
+      description: Indicates a refund's current status.
       x-release-status: PUBLIC
+    TenderType:
+      type: string
+      enum:
+      - CARD
+      - CASH
+      - THIRD_PARTY_CARD
+      - SQUARE_GIFT_CARD
+      - NO_SALE
+      - BANK_ACCOUNT
+      - WALLET
+      - BUY_NOW_PAY_LATER
+      - SQUARE_ACCOUNT
+      - OTHER
+      x-enum-elements:
+      - name: CARD
+        description: A credit card.
+      - name: CASH
+        description: Cash.
+      - name: THIRD_PARTY_CARD
+        description: 'A credit card processed with a card processor other than Square.
+
+
+          This value applies only to merchants in countries where Square does not
+
+          yet provide card processing.'
+      - name: SQUARE_GIFT_CARD
+        description: A Square gift card.
+      - name: NO_SALE
+        description: This tender represents the register being opened for a "no sale" event.
+      - name: BANK_ACCOUNT
+        description: A bank account payment.
+      - name: WALLET
+        description: 'A payment from a digital wallet, e.g. Cash App, Paypay, Rakuten Pay,
+
+          Au Pay, D Barai, Merpay, Wechat Pay, Alipay.
+
+
+          Note: Some "digital wallets", including Google Pay and Apple Pay, facilitate
+
+          card payments.  Those payments have the `CARD` type.'
+      - name: BUY_NOW_PAY_LATER
+        description: A Buy Now Pay Later payment.
+      - name: SQUARE_ACCOUNT
+        description: A Square House Account payment.
+      - name: OTHER
+        description: A form of tender that does not match any other value.
+      description: Indicates a tender's type.
+      x-release-status: PUBLIC
+    AdditionalRecipient:
+      type: object
+      description: Represents an additional recipient (other than the merchant) receiving a portion of this tender.
+      x-release-status: DEPRECATED
+      required:
+      - location_id
+      - amount_money
+      properties:
+        location_id:
+          type: string
+          description: The location ID for a recipient (other than the merchant) receiving a portion of this tender.
+          minLength: 1
+          maxLength: 50
+        description:
+          type:
+          - string
+          - 'null'
+          description: The description of the additional recipient.
+          maxLength: 100
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of money distributed to the recipient.
+        receivable_id:
+          type:
+          - string
+          - 'null'
+          description: The unique ID for the RETIRED `AdditionalRecipientReceivable` object. This field should be empty for any `AdditionalRecipient` objects created after the retirement.
+          maxLength: 192
   securitySchemes:
     oauth2:
       type: oauth2

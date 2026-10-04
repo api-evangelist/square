@@ -267,63 +267,53 @@ paths:
                 $ref: '#/components/schemas/RetrieveTokenStatusResponse'
 components:
   schemas:
-    RevokeTokenResponse:
+    RevokeTokenRequest:
       type: object
       x-release-status: PUBLIC
       properties:
-        success:
-          type: boolean
-          description: If the request is successful, this is `true`.
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-      example:
-        success: true
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/RevokeToken/RevokeTokenResponse.csharp
-        java: /sdk_samples/RevokeToken/RevokeTokenResponse.java
-        javascript: /sdk_samples/RevokeToken/RevokeTokenResponse.javascript
-        php: /sdk_samples/RevokeToken/RevokeTokenResponse.php
-        python: /sdk_samples/RevokeToken/RevokeTokenResponse.python
-        ruby: /sdk_samples/RevokeToken/RevokeTokenResponse.ruby
-    RetrieveTokenStatusResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the `RetrieveTokenStatus` endpoint.'
-      x-release-status: PUBLIC
-      properties:
-        scopes:
-          type: array
-          items:
-            type: string
-          description: The list of scopes associated with an access token.
-        expires_at:
-          type: string
-          description: The date and time when the `access_token` expires, in RFC 3339 format. Empty if the token never expires.
         client_id:
-          type: string
-          description: The Square-issued application ID associated with the access token. This is the same application ID used to obtain the token.
+          type:
+          - string
+          - 'null'
+          description: 'The Square-issued ID for your application, which is available on the **OAuth** page in the
+
+            [Developer Dashboard](https://developer.squareup.com/apps).'
           maxLength: 191
+        access_token:
+          type:
+          - string
+          - 'null'
+          description: 'The access token of the merchant whose token you want to revoke.
+
+            Do not provide a value for `merchant_id` if you provide this parameter.'
+          minLength: 2
+          maxLength: 1024
         merchant_id:
-          type: string
-          description: The ID of the authorizing merchant's business.
-          minLength: 8
-          maxLength: 191
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: ' Any errors that occurred during the request.'
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the merchant whose token you want to revoke.
+
+            Do not provide a value for `access_token` if you provide this parameter.'
+        revoke_only_access_token:
+          type:
+          - boolean
+          - 'null'
+          description: 'If `true`, terminate the given single access token, but do not
+
+            terminate the entire authorization.
+
+            Default: `false`'
       example:
+        access_token: ACCESS_TOKEN
         client_id: CLIENT_ID
-        expires_at: '2022-10-14T14:44:00Z'
-        merchant_id: MERCHANT_ID
-        scopes:
-        - PAYMENTS_READ
-        - PAYMENTS_WRITE
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/RevokeToken/RevokeTokenRequest.csharp
+        java: /sdk_samples/RevokeToken/RevokeTokenRequest.java
+        javascript: /sdk_samples/RevokeToken/RevokeTokenRequest.javascript
+        php: /sdk_samples/RevokeToken/RevokeTokenRequest.php
+        python: /sdk_samples/RevokeToken/RevokeTokenRequest.python
+        ruby: /sdk_samples/RevokeToken/RevokeTokenRequest.ruby
     ObtainTokenResponse:
       type: object
       x-release-status: PUBLIC
@@ -512,53 +502,6 @@ components:
         php: /sdk_samples/ObtainToken/ObtainTokenRequest.php
         python: /sdk_samples/ObtainToken/ObtainTokenRequest.python
         ruby: /sdk_samples/ObtainToken/ObtainTokenRequest.ruby
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -588,53 +531,6 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
-    RevokeTokenRequest:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        client_id:
-          type:
-          - string
-          - 'null'
-          description: 'The Square-issued ID for your application, which is available on the **OAuth** page in the
-
-            [Developer Dashboard](https://developer.squareup.com/apps).'
-          maxLength: 191
-        access_token:
-          type:
-          - string
-          - 'null'
-          description: 'The access token of the merchant whose token you want to revoke.
-
-            Do not provide a value for `merchant_id` if you provide this parameter.'
-          minLength: 2
-          maxLength: 1024
-        merchant_id:
-          type:
-          - string
-          - 'null'
-          description: 'The ID of the merchant whose token you want to revoke.
-
-            Do not provide a value for `access_token` if you provide this parameter.'
-        revoke_only_access_token:
-          type:
-          - boolean
-          - 'null'
-          description: 'If `true`, terminate the given single access token, but do not
-
-            terminate the entire authorization.
-
-            Default: `false`'
-      example:
-        access_token: ACCESS_TOKEN
-        client_id: CLIENT_ID
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/RevokeToken/RevokeTokenRequest.csharp
-        java: /sdk_samples/RevokeToken/RevokeTokenRequest.java
-        javascript: /sdk_samples/RevokeToken/RevokeTokenRequest.javascript
-        php: /sdk_samples/RevokeToken/RevokeTokenRequest.php
-        python: /sdk_samples/RevokeToken/RevokeTokenRequest.python
-        ruby: /sdk_samples/RevokeToken/RevokeTokenRequest.ruby
     ErrorCode:
       type: string
       enum:
@@ -1381,6 +1277,110 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    RevokeTokenResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        success:
+          type: boolean
+          description: If the request is successful, this is `true`.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+      example:
+        success: true
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/RevokeToken/RevokeTokenResponse.csharp
+        java: /sdk_samples/RevokeToken/RevokeTokenResponse.java
+        javascript: /sdk_samples/RevokeToken/RevokeTokenResponse.javascript
+        php: /sdk_samples/RevokeToken/RevokeTokenResponse.php
+        python: /sdk_samples/RevokeToken/RevokeTokenResponse.python
+        ruby: /sdk_samples/RevokeToken/RevokeTokenResponse.ruby
+    RetrieveTokenStatusResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the `RetrieveTokenStatus` endpoint.'
+      x-release-status: PUBLIC
+      properties:
+        scopes:
+          type: array
+          items:
+            type: string
+          description: The list of scopes associated with an access token.
+        expires_at:
+          type: string
+          description: The date and time when the `access_token` expires, in RFC 3339 format. Empty if the token never expires.
+        client_id:
+          type: string
+          description: The Square-issued application ID associated with the access token. This is the same application ID used to obtain the token.
+          maxLength: 191
+        merchant_id:
+          type: string
+          description: The ID of the authorizing merchant's business.
+          minLength: 8
+          maxLength: 191
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: ' Any errors that occurred during the request.'
+      example:
+        client_id: CLIENT_ID
+        expires_at: '2022-10-14T14:44:00Z'
+        merchant_id: MERCHANT_ID
+        scopes:
+        - PAYMENTS_READ
+        - PAYMENTS_WRITE
   securitySchemes:
     oauth2:
       type: oauth2

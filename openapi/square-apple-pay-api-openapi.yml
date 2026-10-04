@@ -167,29 +167,6 @@ paths:
                 $ref: '#/components/schemas/RegisterDomainResponse'
 components:
   schemas:
-    RegisterDomainRequest:
-      type: object
-      description: 'Defines the parameters that can be included in the body of
-
-        a request to the [RegisterDomain](api-endpoint:ApplePay-RegisterDomain) endpoint.'
-      x-release-status: PUBLIC
-      required:
-      - domain_name
-      properties:
-        domain_name:
-          type: string
-          description: A domain name as described in RFC-1034 that will be registered with ApplePay.
-          minLength: 1
-          maxLength: 255
-      example:
-        domain_name: example.com
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.csharp
-        java: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.java
-        javascript: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.javascript
-        php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.php
-        python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.python
-        ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.ruby
     RegisterDomainResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -222,6 +199,41 @@ components:
         php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.php
         python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.python
         ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.ruby
+    RegisterDomainResponseStatus:
+      type: string
+      enum:
+      - PENDING
+      - VERIFIED
+      x-enum-elements:
+      - name: PENDING
+        description: The domain is added, but not verified.
+      - name: VERIFIED
+        description: The domain is added and verified. It can be used to accept Apple Pay transactions.
+      description: The status of the domain registration.
+      x-release-status: PUBLIC
+    RegisterDomainRequest:
+      type: object
+      description: 'Defines the parameters that can be included in the body of
+
+        a request to the [RegisterDomain](api-endpoint:ApplePay-RegisterDomain) endpoint.'
+      x-release-status: PUBLIC
+      required:
+      - domain_name
+      properties:
+        domain_name:
+          type: string
+          description: A domain name as described in RFC-1034 that will be registered with ApplePay.
+          minLength: 1
+          maxLength: 255
+      example:
+        domain_name: example.com
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.csharp
+        java: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.java
+        javascript: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.javascript
+        php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.php
+        python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.python
+        ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.ruby
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -251,65 +263,6 @@ components:
           description: 'The name of the field provided in the original request (if any) that
 
             the error pertains to.'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    RegisterDomainResponseStatus:
-      type: string
-      enum:
-      - PENDING
-      - VERIFIED
-      x-enum-elements:
-      - name: PENDING
-        description: The domain is added, but not verified.
-      - name: VERIFIED
-        description: The domain is added and verified. It can be used to accept Apple Pay transactions.
-      description: The status of the domain registration.
-      x-release-status: PUBLIC
     ErrorCode:
       type: string
       enum:
@@ -1055,6 +1008,53 @@ components:
       description: 'Indicates the specific error that occurred during a request to a
 
         Square API.'
+      x-release-status: PUBLIC
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
       x-release-status: PUBLIC
   securitySchemes:
     oauth2:

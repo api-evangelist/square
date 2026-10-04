@@ -602,7 +602,273 @@ paths:
       - error-code: NOT_FOUND
 components:
   schemas:
-    SearchTerminalCheckoutsResponse:
+    TerminalAction:
+      type: object
+      description: Represents an action processed by the Square Terminal.
+      x-release-status: BETA
+      properties:
+        id:
+          type: string
+          description: A unique ID for this `TerminalAction`.
+          minLength: 10
+          maxLength: 255
+          readOnly: true
+        device_id:
+          type:
+          - string
+          - 'null'
+          description: 'The unique Id of the device intended for this `TerminalAction`.
+
+            The Id can be retrieved from /v2/devices api.'
+        deadline_duration:
+          type:
+          - string
+          - 'null'
+          description: 'The duration as an RFC 3339 duration, after which the action will be automatically canceled.
+
+            TerminalActions that are `PENDING` will be automatically `CANCELED` and have a cancellation reason
+
+            of `TIMED_OUT`
+
+
+            Default: 5 minutes from creation
+
+
+            Maximum: 5 minutes'
+        status:
+          type: string
+          description: 'The status of the `TerminalAction`.
+
+            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, `COMPLETED`'
+          readOnly: true
+        cancel_reason:
+          $ref: '#/components/schemas/ActionCancelReason'
+          description: 'The reason why `TerminalAction` is canceled. Present if the status is `CANCELED`.
+
+            See [ActionCancelReason](#type-actioncancelreason) for possible values'
+          readOnly: true
+        created_at:
+          type: string
+          description: The time when the `TerminalAction` was created as an RFC 3339 timestamp.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The time when the `TerminalAction` was last updated as an RFC 3339 timestamp.
+          readOnly: true
+        app_id:
+          type: string
+          description: The ID of the application that created the action.
+          readOnly: true
+        location_id:
+          type: string
+          description: The location id the action is attached to, if a link can be made.
+          maxLength: 64
+          readOnly: true
+          x-release-status: PUBLIC
+        type:
+          $ref: '#/components/schemas/TerminalActionActionType'
+          description: 'Represents the type of the action.
+
+            See [ActionType](#type-actiontype) for possible values'
+        qr_code_options:
+          $ref: '#/components/schemas/QrCodeOptions'
+          description: Describes configuration for the QR code action. Requires `QR_CODE` type.
+        save_card_options:
+          $ref: '#/components/schemas/SaveCardOptions'
+          description: Describes configuration for the save-card action. Requires `SAVE_CARD` type.
+        signature_options:
+          $ref: '#/components/schemas/SignatureOptions'
+          description: Describes configuration for the signature capture action. Requires `SIGNATURE` type.
+        confirmation_options:
+          $ref: '#/components/schemas/ConfirmationOptions'
+          description: Describes configuration for the confirmation action. Requires `CONFIRMATION` type.
+        receipt_options:
+          $ref: '#/components/schemas/ReceiptOptions'
+          description: Describes configuration for the receipt action. Requires `RECEIPT` type.
+        data_collection_options:
+          $ref: '#/components/schemas/DataCollectionOptions'
+          description: Describes configuration for the data collection action. Requires `DATA_COLLECTION` type.
+        select_options:
+          $ref: '#/components/schemas/SelectOptions'
+          description: Describes configuration for the select action. Requires `SELECT` type.
+        device_metadata:
+          $ref: '#/components/schemas/DeviceMetadata'
+          description: 'Details about the Terminal that received the action request (such as battery level,
+
+            operating system version, and network connection settings).
+
+
+            Only available for `PING` action type.'
+          readOnly: true
+        await_next_action:
+          type:
+          - boolean
+          - 'null'
+          description: 'Indicates the action will be linked to another action and requires a waiting dialog to be
+
+            displayed instead of returning to the idle screen on completion of the action.
+
+
+            Only supported on SIGNATURE, CONFIRMATION, DATA_COLLECTION, and SELECT types.'
+        await_next_action_duration:
+          type:
+          - string
+          - 'null'
+          description: 'The timeout duration of the waiting dialog as an RFC 3339 duration, after which the
+
+            waiting dialog will no longer be displayed and the Terminal will return to the idle screen.
+
+
+            Default: 5 minutes from when the waiting dialog is displayed
+
+
+            Maximum: 5 minutes'
+    CreateTerminalRefundRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      properties:
+        idempotency_key:
+          type: string
+          description: 'A unique string that identifies this `CreateRefund` request. Keys can be any valid string but
+
+            must be unique for every `CreateRefund` request.
+
+
+            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
+          minLength: 1
+          maxLength: 64
+        refund:
+          $ref: '#/components/schemas/TerminalRefund'
+          description: The refund to create.
+      example:
+        idempotency_key: 402a640b-b26f-401f-b406-46f839590c04
+        refund:
+          amount_money:
+            amount: 111
+            currency: CAD
+          device_id: f72dfb8e-4d65-4e56-aade-ec3fb8d33291
+          payment_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY
+          reason: Returning items
+    SearchTerminalActionsRequest:
+      type: object
+      x-release-status: BETA
+      properties:
+        query:
+          $ref: '#/components/schemas/TerminalActionQuery'
+          description: 'Queries terminal actions based on given conditions and sort order.
+
+            Leaving this unset will return all actions with the default sort order.'
+        cursor:
+          type: string
+          description: 'A pagination cursor returned by a previous call to this endpoint.
+
+            Provide this to retrieve the next set of results for the original query.
+
+            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more
+
+            information.'
+        limit:
+          type: integer
+          description: Limit the number of results returned for a single request.
+          minimum: 1
+          maximum: 100
+      example:
+        limit: 2
+        query:
+          filter:
+            created_at:
+              start_at: '2022-04-01T00:00:00.000Z'
+          sort:
+            sort_order: DESC
+    CollectedData:
+      type: object
+      x-release-status: BETA
+      properties:
+        input_text:
+          type: string
+          description: The buyer's input text.
+          readOnly: true
+    GetTerminalActionResponse:
+      type: object
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        action:
+          $ref: '#/components/schemas/TerminalAction'
+          description: The requested `TerminalAction`
+      example:
+        action:
+          app_id: APP_ID
+          created_at: '2021-07-28T23:22:07.476Z'
+          deadline_duration: PT5M
+          device_id: DEVICE_ID
+          id: termapia:jveJIAkkAjILHkdCE
+          location_id: LOCATION_ID
+          save_card_options:
+            customer_id: CUSTOMER_ID
+            reference_id: user-id-1
+          status: IN_PROGRESS
+          type: SAVE_CARD
+          updated_at: '2021-07-28T23:22:08.301Z'
+    SelectOptions:
+      type: object
+      x-release-status: BETA
+      required:
+      - title
+      - body
+      - options
+      properties:
+        title:
+          type: string
+          description: The title text to display in the select flow on the Terminal.
+          minLength: 1
+          maxLength: 250
+        body:
+          type: string
+          description: The body text to display in the select flow on the Terminal.
+          minLength: 1
+          maxLength: 10000
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/SelectOption'
+          description: Represents the buttons/options that should be displayed in the select flow on the Terminal.
+        selected_option:
+          $ref: '#/components/schemas/SelectOption'
+          description: The buyer’s selected option.
+          readOnly: true
+    TerminalCheckoutQueryFilter:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        device_id:
+          type:
+          - string
+          - 'null'
+          description: 'The `TerminalCheckout` objects associated with a specific device. If no device is specified, then all
+
+            `TerminalCheckout` objects for the merchant are displayed.'
+        created_at:
+          $ref: '#/components/schemas/TimeRange'
+          description: 'The time range for the beginning of the reporting period, which is inclusive.
+
+            Default value: The current time minus one day.
+
+            Note that `TerminalCheckout`s are available for 30 days after creation.'
+        status:
+          type:
+          - string
+          - 'null'
+          description: 'Filtered results with the desired status of the `TerminalCheckout`.
+
+            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, `COMPLETED`'
+    GetTerminalRefundResponse:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -611,92 +877,34 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Information about errors encountered during the request.
-        checkouts:
-          type: array
-          items:
-            $ref: '#/components/schemas/TerminalCheckout'
-          description: The requested search result of `TerminalCheckout` objects.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If empty,
-
-            this is the final response.
-
-
-            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
+        refund:
+          $ref: '#/components/schemas/TerminalRefund'
+          description: The requested `Refund`.
       example:
-        checkouts:
-        - amount_money:
-            amount: 2610
-            currency: USD
-          app_id: APP_ID
-          created_at: '2020-03-31T18:13:15.921Z'
+        refund:
+          amount_money:
+            amount: 111
+            currency: CAD
+          app_id: sandbox-sq0idb-c2OuYt13YaCAeJq_2cd8OQ
+          card:
+            bin: '411111'
+            card_brand: INTERAC
+            card_type: CREDIT
+            exp_month: 1
+            exp_year: 2022
+            fingerprint: sq-1-B1fP9MNNmZgVVaPKRND6oDKYbz25S2cTvg9Mzwg3RMTK1zT1PiGRT-AE3nTA8vSmmw
+            last_4: '1111'
+          created_at: '2020-09-29T15:21:46.771Z'
           deadline_duration: PT5M
-          device_options:
-            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
-            skip_receipt_screen: false
-            tip_settings:
-              allow_tipping: false
-          id: tsQPvzwBpMqqO
-          note: A brief note
-          payment_ids:
-          - rXnhZzywrEk4vR6pw76fPZfgvaB
-          reference_id: id14467
+          device_id: f72dfb8e-4d65-4e56-aade-ec3fb8d33291
+          id: 009DP5HD-5O5OvgkcNUhl7JBuINflcjKqUzXZY
+          location_id: 76C9W6K8CNNQ5
+          order_id: kcuKDKreRaI4gF4TjmEgZjHk8Z7YY
+          payment_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY
+          reason: Returning item
+          refund_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY_43Q4iGp7sNeATiWrUruA1EYeMRUXaddXXlDDJ1EQLvb
           status: COMPLETED
-          updated_at: '2020-03-31T18:13:52.725Z'
-        - amount_money:
-            amount: 2610
-            currency: USD
-          app_id: APP_ID
-          created_at: '2020-03-31T18:08:31.882Z'
-          deadline_duration: PT5M
-          device_options:
-            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
-            skip_receipt_screen: true
-            tip_settings:
-              allow_tipping: false
-          id: XlOPTgcEhrbqO
-          note: A brief note
-          payment_ids:
-          - VYBF861PaoKPP7Pih0TlbZiNvaB
-          reference_id: id41623
-          status: COMPLETED
-          updated_at: '2020-03-31T18:08:41.635Z'
-        cursor: RiTJqBoTuXlbLmmrPvEkX9iG7XnQ4W4RjGnH
-    ConfirmationOptions:
-      type: object
-      x-release-status: BETA
-      required:
-      - title
-      - body
-      - agree_button_text
-      properties:
-        title:
-          type: string
-          description: The title text to display in the confirmation screen flow on the Terminal.
-          minLength: 1
-          maxLength: 250
-        body:
-          type: string
-          description: The agreement details to display in the confirmation flow on the Terminal.
-          minLength: 1
-          maxLength: 10000
-        agree_button_text:
-          type: string
-          description: The button text to display indicating the customer agrees to the displayed terms.
-          minLength: 1
-          maxLength: 250
-        disagree_button_text:
-          type:
-          - string
-          - 'null'
-          description: The button text to display indicating the customer does not agree to the displayed terms.
-          minLength: 1
-          maxLength: 250
-        decision:
-          $ref: '#/components/schemas/ConfirmationDecision'
-          description: The result of the buyer’s actions when presented with the confirmation screen.
-          readOnly: true
+          updated_at: '2020-09-29T15:21:48.675Z'
     DeviceMetadata:
       type: object
       x-release-status: BETA
@@ -769,205 +977,69 @@ components:
           - string
           - 'null'
           description: The IP address of the Terminal.
-    CancelTerminalActionResponse:
-      type: object
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        action:
-          $ref: '#/components/schemas/TerminalAction'
-          description: The canceled `TerminalAction`
-      example:
-        action:
-          app_id: APP_ID
-          cancel_reason: SELLER_CANCELED
-          created_at: '2021-07-28T23:22:07.476Z'
-          deadline_duration: PT5M
-          device_id: DEVICE_ID
-          id: termapia:jveJIAkkAjILHkdCE
-          location_id: LOCATION_ID
-          save_card_options:
-            customer_id: CUSTOMER_ID
-            reference_id: user-id-1
-          status: CANCELED
-          type: SAVE_CARD
-          updated_at: '2021-07-28T23:22:29.511Z'
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    SearchTerminalRefundsResponse:
+    DeviceCheckoutOptions:
       type: object
       x-release-status: PUBLIC
+      required:
+      - device_id
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        refunds:
-          type: array
-          items:
-            $ref: '#/components/schemas/TerminalRefund'
-          description: The requested search result of `TerminalRefund` objects.
-        cursor:
+        device_id:
           type: string
-          description: 'The pagination cursor to be used in a subsequent request. If empty,
+          description: 'The unique ID of the device intended for this `TerminalCheckout`.
 
-            this is the final response.
+            A list of `DeviceCode` objects can be retrieved from the /v2/devices/codes endpoint.
 
+            Match a `DeviceCode.device_id` value with `device_id` to get the associated device code.'
+        skip_receipt_screen:
+          type:
+          - boolean
+          - 'null'
+          description: Instructs the device to skip the receipt screen. Defaults to false.
+        collect_signature:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates that signature collection is desired during checkout. Defaults to false.
+        tip_settings:
+          $ref: '#/components/schemas/TipSettings'
+          description: Tip-specific settings.
+        show_itemized_cart:
+          type:
+          - boolean
+          - 'null'
+          description: 'Show the itemization screen prior to taking a payment. This field is only meaningful when the
 
-            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
-      example:
-        refunds:
-        - amount_money:
-            amount: 111
-            currency: CAD
-          app_id: sandbox-sq0idb-c2OuYt13YaCAeJq_2cd8OQ
-          card:
-            bin: '411111'
-            card_brand: INTERAC
-            card_type: CREDIT
-            exp_month: 1
-            exp_year: 2022
-            fingerprint: sq-1-B1fP9MNNmZgVVaPKRND6oDKYbz25S2cTvg9Mzwg3RMTK1zT1PiGRT-AE3nTA8vSmmw
-            last_4: '1111'
-          created_at: '2020-09-29T15:21:46.771Z'
-          deadline_duration: PT5M
-          device_id: f72dfb8e-4d65-4e56-aade-ec3fb8d33291
-          id: 009DP5HD-5O5OvgkcNUhl7JBuINflcjKqUzXZY
-          location_id: 76C9W6K8CNNQ5
-          order_id: kcuKDKreRaI4gF4TjmEgZjHk8Z7YY
-          payment_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY
-          reason: Returning item
-          refund_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY_43Q4iGp7sNeATiWrUruA1EYeMRUXaddXXlDDJ1EQLvb
-          status: COMPLETED
-          updated_at: '2020-09-29T15:21:48.675Z'
-    DismissTerminalCheckoutResponse:
+            checkout includes an order ID. Defaults to true.'
+          x-release-status: BETA
+    Error:
       type: object
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        checkout:
-          $ref: '#/components/schemas/TerminalCheckout'
-          description: Current state of the checkout to be dismissed.
-      example:
-        checkout:
-          amount_money:
-            amount: 2610
-            currency: USD
-          app_id: APP_ID
-          created_at: '2023-11-29T14:59:50.682Z'
-          deadline_duration: PT5M
-          device_options:
-            collect_signature: true
-            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
-            loyalty_settings:
-              loyalty_screen_max_display_duration: PT60S
-              show_card_linked_reward_redemption_screen: false
-              show_loyalty_screen: false
-              show_non_qualifying_loyalty_screen: false
-            skip_receipt_screen: false
-            tip_settings:
-              allow_tipping: true
-              custom_tip_field: false
-              separate_tip_screen: true
-          id: LmZEKbo3SBfqO
-          location_id: LOCATION_ID
-          payment_ids:
-          - D7vLJqMkvSoAlX4yyFzUitOy4EPZY
-          payment_options:
-            autocomplete: true
-          payment_type: CARD_PRESENT
-          status: COMPLETED
-          updated_at: '2023-11-29T15:00:18.936Z'
-    GetTerminalActionResponse:
-      type: object
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        action:
-          $ref: '#/components/schemas/TerminalAction'
-          description: The requested `TerminalAction`
-      example:
-        action:
-          app_id: APP_ID
-          created_at: '2021-07-28T23:22:07.476Z'
-          deadline_duration: PT5M
-          device_id: DEVICE_ID
-          id: termapia:jveJIAkkAjILHkdCE
-          location_id: LOCATION_ID
-          save_card_options:
-            customer_id: CUSTOMER_ID
-            reference_id: user-id-1
-          status: IN_PROGRESS
-          type: SAVE_CARD
-          updated_at: '2021-07-28T23:22:08.301Z'
-    ActionCancelReason:
-      type: string
-      enum:
-      - BUYER_CANCELED
-      - SELLER_CANCELED
-      - TIMED_OUT
-      x-enum-elements:
-      - name: BUYER_CANCELED
-        description: A person canceled the `TerminalCheckout` from a Square device.
-      - name: SELLER_CANCELED
-        description: A client canceled the `TerminalCheckout` using the API.
-      - name: TIMED_OUT
-        description: The `TerminalCheckout` timed out (see `deadline_duration` on the `TerminalCheckout`).
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
       x-release-status: PUBLIC
-    GetTerminalCheckoutResponse:
-      type: object
-      x-release-status: PUBLIC
+      required:
+      - category
+      - code
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        checkout:
-          $ref: '#/components/schemas/TerminalCheckout'
-          description: The requested `TerminalCheckout`.
-      example:
-        checkout:
-          amount_money:
-            amount: 2610
-            currency: USD
-          app_id: APP_ID
-          created_at: '2020-04-06T16:39:32.545Z'
-          deadline_duration: PT5M
-          device_options:
-            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
-            skip_receipt_screen: false
-            tip_settings:
-              allow_tipping: false
-          id: 08YceKh7B3ZqO
-          location_id: LOCATION_ID
-          note: A brief note
-          reference_id: id11572
-          status: IN_PROGRESS
-          updated_at: 2020-04-06T16:39:323.001Z
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     ErrorCode:
       type: string
       enum:
@@ -1714,34 +1786,33 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    TimeRange:
+    ReceiptOptions:
       type: object
-      description: 'Represents a generic time range. The start and end values are
-
-        represented in RFC 3339 format. Time ranges are customized to be
-
-        inclusive or exclusive based on the needs of a particular endpoint.
-
-        Refer to the relevant endpoint-specific documentation to determine
-
-        how time ranges are handled.'
-      x-release-status: PUBLIC
+      description: Describes receipt action fields.
+      x-release-status: BETA
+      required:
+      - payment_id
       properties:
-        start_at:
+        payment_id:
+          type: string
+          description: The reference to the Square payment ID for the receipt.
+        print_only:
           type:
-          - string
+          - boolean
           - 'null'
-          description: 'A datetime value in RFC 3339 format indicating when the time range
+          description: 'Instructs the device to print the receipt without displaying the receipt selection screen.
 
-            starts.'
-        end_at:
+            Requires `printer_enabled` set to true.
+
+            Defaults to false.'
+        is_duplicate:
           type:
-          - string
+          - boolean
           - 'null'
-          description: 'A datetime value in RFC 3339 format indicating when the time range
+          description: 'Identify the receipt as a reprint rather than an original receipt.
 
-            ends.'
-    CancelTerminalRefundResponse:
+            Defaults to false.'
+    CancelTerminalCheckoutResponse:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -1750,431 +1821,426 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Information about errors encountered during the request.
-        refund:
-          $ref: '#/components/schemas/TerminalRefund'
-          description: The updated `TerminalRefund`.
+        checkout:
+          $ref: '#/components/schemas/TerminalCheckout'
+          description: The canceled `TerminalCheckout`.
       example:
-        refund:
+        checkout:
           amount_money:
-            amount: 100
-            currency: CAD
-          app_id: sandbox-sq0idb-c2OuYt13YaCAeJq_2cd8OQ
+            amount: 123
+            currency: USD
+          app_id: APP_ID
           cancel_reason: SELLER_CANCELED
-          card:
-            bin: '411111'
-            card_brand: INTERAC
-            card_type: CREDIT
-            exp_month: 1
-            exp_year: 2022
-            fingerprint: sq-1-B1fP9MNNmZgVVaPKRND6oDKYbz25S2cTvg9Mzwg3RMTK1zT1PiGRT-AE3nTA8vSmmw
-            last_4: '1111'
-          created_at: '2020-10-21T22:47:23.241Z'
+          created_at: '2020-03-16T15:31:19.934Z'
           deadline_duration: PT5M
-          device_id: 42690809-faa2-4701-a24b-19d3d34c9aaa
-          id: g6ycb6HD-5O5OvgkcNUhl7JBuINflcjKqUzXZY
-          location_id: 76C9W6K8CNNQ5
-          order_id: kcuKDKreRaI4gF4TjmEgZjHk8Z7YY
-          payment_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY
-          reason: reason
+          device_options:
+            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
+            skip_receipt_screen: true
+            tip_settings:
+              allow_tipping: true
+          id: S1yDlPQx7slqO
+          location_id: LOCATION_ID
+          reference_id: id36815
           status: CANCELED
-          updated_at: '2020-10-21T22:47:30.096Z'
-    CreateTerminalRefundRequest:
+          updated_at: '2020-03-16T15:31:45.787Z'
+    TerminalRefundQuerySort:
       type: object
       x-release-status: PUBLIC
-      required:
-      - idempotency_key
       properties:
-        idempotency_key:
-          type: string
-          description: 'A unique string that identifies this `CreateRefund` request. Keys can be any valid string but
-
-            must be unique for every `CreateRefund` request.
-
-
-            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
-          minLength: 1
-          maxLength: 64
-        refund:
-          $ref: '#/components/schemas/TerminalRefund'
-          description: The refund to create.
-      example:
-        idempotency_key: 402a640b-b26f-401f-b406-46f839590c04
-        refund:
-          amount_money:
-            amount: 111
-            currency: CAD
-          device_id: f72dfb8e-4d65-4e56-aade-ec3fb8d33291
-          payment_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY
-          reason: Returning items
-    SelectOption:
-      type: object
-      x-release-status: BETA
-      required:
-      - reference_id
-      - title
-      properties:
-        reference_id:
-          type: string
-          description: The reference id for the option.
-          minLength: 1
-          maxLength: 40
-        title:
-          type: string
-          description: The title text that displays in the select option button.
-          minLength: 1
-          maxLength: 250
-    DismissTerminalRefundResponse:
-      type: object
-      x-release-status: BETA
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information on errors encountered during the request.
-        refund:
-          $ref: '#/components/schemas/TerminalRefund'
-          description: Current state of the refund to be dismissed.
-      example:
-        refund:
-          amount_money:
-            amount: 111
-            currency: CAD
-          app_id: APP_ID
-          card:
-            bin: '411111'
-            card_brand: VISA
-            card_type: DEBIT
-            exp_month: 12
-            exp_year: 2024
-            fingerprint: sq-1-ElNeDpZZqUBNDI7yNghyKO-o0yLXASp4qQDGIPtxnFvTTWoqdfdP6TV8gLsSxoztXA
-            last_4: '1111'
-            prepaid_type: NOT_PREPAID
-          card_details:
-            auth_result_code: RNy6Lf
-            avs_status: AVS_ACCEPTED
-            card:
-              bin: '411111'
-              card_brand: VISA
-              card_type: DEBIT
-              exp_month: 12
-              exp_year: 2024
-              fingerprint: sq-1-ElNeDpZZqUBNDI7yNghyKO-o0yLXASp3qQDGIPtxnFvTTWoqdfdP6TV9gLsSxoztXA
-              last_4: '1111'
-              prepaid_type: NOT_PREPAID
-            card_payment_timeline:
-              authorized_at: '2023-11-30T16:15:06.645Z'
-              captured_at: '2023-11-30T16:15:13.272Z'
-            cvv_status: CVV_ACCEPTED
-            device_details:
-              device_credential:
-                name: Terminal API Device created on Nov 2, 2023
-                token: 9BFDXEYKB7H8Y
-              device_id: f72dfb8e-4d65-4e56-aade-ec3fb8d33291
-              device_installation_id: 0ef67d8e-61a3-4418-a0be-c143bfe6108d
-            entry_method: SWIPED
-            statement_description: SQ TREATS
-            status: CAPTURED
-          created_at: '2023-11-30T16:16:39.299Z'
-          deadline_duration: PT5M
-          device_id: 47776348fd8b32b9
-          id: vjkNb2HD-xq5kiWWiJ7RhwrQnkxIn2N0l1nPZY
-          order_id: s8OMhQcpEp1b61YywlccSHWqUaQZY
-          payment_id: xq5kiWWiJ7RhwrQnkxIn2N0l1nPZY
-          reason: Returning item
-          status: IN_PROGRESS
-          updated_at: '2023-11-30T16:16:57.863Z'
-    TerminalAction:
-      type: object
-      description: Represents an action processed by the Square Terminal.
-      x-release-status: BETA
-      properties:
-        id:
-          type: string
-          description: A unique ID for this `TerminalAction`.
-          minLength: 10
-          maxLength: 255
-          readOnly: true
-        device_id:
+        sort_order:
           type:
           - string
           - 'null'
-          description: 'The unique Id of the device intended for this `TerminalAction`.
+          description: 'The order in which results are listed.
+
+            - `ASC` - Oldest to newest.
+
+            - `DESC` - Newest to oldest (default).'
+    SaveCardOptions:
+      type: object
+      description: Describes save-card action fields.
+      x-release-status: BETA
+      required:
+      - customer_id
+      properties:
+        customer_id:
+          type: string
+          description: The square-assigned ID of the customer linked to the saved card.
+        card_id:
+          type: string
+          description: The id of the created card-on-file.
+          maxLength: 64
+          readOnly: true
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: 'An optional user-defined reference ID that can be used to associate
+
+            this `Card` to another entity in an external system. For example, a customer
+
+            ID generated by a third-party system.'
+          maxLength: 128
+    TerminalRefund:
+      type: object
+      description: Represents a payment refund processed by the Square Terminal. Only supports Interac (Canadian debit network) payment refunds.
+      x-release-status: PUBLIC
+      required:
+      - payment_id
+      - amount_money
+      - reason
+      - device_id
+      properties:
+        id:
+          type: string
+          description: A unique ID for this `TerminalRefund`.
+          minLength: 10
+          maxLength: 255
+          readOnly: true
+        refund_id:
+          type: string
+          description: The reference to the payment refund created by completing this `TerminalRefund`.
+          readOnly: true
+        payment_id:
+          type: string
+          description: The unique ID of the payment being refunded.
+          minLength: 1
+        order_id:
+          type: string
+          description: The reference to the Square order ID for the payment identified by the `payment_id`.
+          readOnly: true
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount of money, inclusive of `tax_money`, that the `TerminalRefund` should return.
+
+            This value is limited to the amount taken in the original payment minus any completed or
+
+            pending refunds.'
+        reason:
+          type: string
+          description: A description of the reason for the refund.
+          maxLength: 192
+        device_id:
+          type: string
+          description: 'The unique ID of the device intended for this `TerminalRefund`.
 
             The Id can be retrieved from /v2/devices api.'
         deadline_duration:
           type:
           - string
           - 'null'
-          description: 'The duration as an RFC 3339 duration, after which the action will be automatically canceled.
+          description: 'The RFC 3339 duration, after which the refund is automatically canceled.
 
-            TerminalActions that are `PENDING` will be automatically `CANCELED` and have a cancellation reason
+            A `TerminalRefund` that is `PENDING` is automatically `CANCELED` and has a cancellation reason
 
-            of `TIMED_OUT`
+            of `TIMED_OUT`.
+
+
+            Default: 5 minutes from creation.
+
+
+            Maximum: 5 minutes'
+        status:
+          type: string
+          description: 'The status of the `TerminalRefund`.
+
+            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, or `COMPLETED`.'
+          readOnly: true
+        cancel_reason:
+          $ref: '#/components/schemas/ActionCancelReason'
+          description: 'Present if the status is `CANCELED`.
+
+            See [ActionCancelReason](#type-actioncancelreason) for possible values'
+          readOnly: true
+        created_at:
+          type: string
+          description: The time when the `TerminalRefund` was created, as an RFC 3339 timestamp.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The time when the `TerminalRefund` was last updated, as an RFC 3339 timestamp.
+          readOnly: true
+        app_id:
+          type: string
+          description: The ID of the application that created the refund.
+          readOnly: true
+        location_id:
+          type: string
+          description: The location of the device where the `TerminalRefund` was directed.
+          maxLength: 64
+          readOnly: true
+    ConfirmationDecision:
+      type: object
+      x-release-status: BETA
+      properties:
+        has_agreed:
+          type: boolean
+          description: The buyer's decision to the displayed terms.
+          readOnly: true
+    TerminalCheckout:
+      type: object
+      description: Represents a checkout processed by the Square Terminal.
+      x-release-status: PUBLIC
+      required:
+      - amount_money
+      - device_options
+      properties:
+        id:
+          type: string
+          description: A unique ID for this `TerminalCheckout`.
+          minLength: 10
+          maxLength: 255
+          readOnly: true
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of money (including the tax amount) that the Square Terminal device should try to collect.
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: 'An optional user-defined reference ID that can be used to associate
+
+            this `TerminalCheckout` to another entity in an external system. For example, an order
+
+            ID generated by a third-party shopping cart. The ID is also associated with any payments
+
+            used to complete the checkout.'
+          maxLength: 40
+        note:
+          type:
+          - string
+          - 'null'
+          description: 'An optional note to associate with the checkout, as well as with any payments used to complete the checkout.
+
+            Note: maximum 500 characters'
+          maxLength: 500
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: The reference to the Square order ID for the checkout request. Supported only in the US.
+        payment_options:
+          $ref: '#/components/schemas/PaymentOptions'
+          description: Payment-specific options for the checkout request. Supported only in the US.
+        device_options:
+          $ref: '#/components/schemas/DeviceCheckoutOptions'
+          description: Options to control the display and behavior of the Square Terminal device.
+        deadline_duration:
+          type:
+          - string
+          - 'null'
+          description: 'An RFC 3339 duration, after which the checkout is automatically canceled.
+
+            A `TerminalCheckout` that is `PENDING` is automatically `CANCELED` and has a cancellation reason
+
+            of `TIMED_OUT`.
 
 
             Default: 5 minutes from creation
 
 
             Maximum: 5 minutes'
+          x-release-status: DEPRECATED
         status:
           type: string
-          description: 'The status of the `TerminalAction`.
+          description: 'The status of the `TerminalCheckout`.
 
             Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, `COMPLETED`'
           readOnly: true
         cancel_reason:
           $ref: '#/components/schemas/ActionCancelReason'
-          description: 'The reason why `TerminalAction` is canceled. Present if the status is `CANCELED`.
+          description: 'The reason why `TerminalCheckout` is canceled. Present if the status is `CANCELED`.
 
             See [ActionCancelReason](#type-actioncancelreason) for possible values'
           readOnly: true
+        payment_ids:
+          type: array
+          items:
+            type: string
+          description: A list of IDs for payments created by this `TerminalCheckout`.
+          readOnly: true
         created_at:
           type: string
-          description: The time when the `TerminalAction` was created as an RFC 3339 timestamp.
+          description: The time when the `TerminalCheckout` was created, as an RFC 3339 timestamp.
           readOnly: true
         updated_at:
           type: string
-          description: The time when the `TerminalAction` was last updated as an RFC 3339 timestamp.
+          description: The time when the `TerminalCheckout` was last updated, as an RFC 3339 timestamp.
           readOnly: true
         app_id:
           type: string
-          description: The ID of the application that created the action.
+          description: The ID of the application that created the checkout.
           readOnly: true
         location_id:
           type: string
-          description: The location id the action is attached to, if a link can be made.
+          description: The location of the device where the `TerminalCheckout` was directed.
           maxLength: 64
           readOnly: true
-          x-release-status: PUBLIC
-        type:
-          $ref: '#/components/schemas/TerminalActionActionType'
-          description: 'Represents the type of the action.
+        payment_type:
+          $ref: '#/components/schemas/CheckoutOptionsPaymentType'
+          description: 'The type of payment the terminal should attempt to capture from. Defaults to `CARD_PRESENT`.
 
-            See [ActionType](#type-actiontype) for possible values'
-        qr_code_options:
-          $ref: '#/components/schemas/QrCodeOptions'
-          description: Describes configuration for the QR code action. Requires `QR_CODE` type.
-        save_card_options:
-          $ref: '#/components/schemas/SaveCardOptions'
-          description: Describes configuration for the save-card action. Requires `SAVE_CARD` type.
-        signature_options:
-          $ref: '#/components/schemas/SignatureOptions'
-          description: Describes configuration for the signature capture action. Requires `SIGNATURE` type.
-        confirmation_options:
-          $ref: '#/components/schemas/ConfirmationOptions'
-          description: Describes configuration for the confirmation action. Requires `CONFIRMATION` type.
-        receipt_options:
-          $ref: '#/components/schemas/ReceiptOptions'
-          description: Describes configuration for the receipt action. Requires `RECEIPT` type.
-        data_collection_options:
-          $ref: '#/components/schemas/DataCollectionOptions'
-          description: Describes configuration for the data collection action. Requires `DATA_COLLECTION` type.
-        select_options:
-          $ref: '#/components/schemas/SelectOptions'
-          description: Describes configuration for the select action. Requires `SELECT` type.
-        device_metadata:
-          $ref: '#/components/schemas/DeviceMetadata'
-          description: 'Details about the Terminal that received the action request (such as battery level,
-
-            operating system version, and network connection settings).
-
-
-            Only available for `PING` action type.'
-          readOnly: true
-        await_next_action:
-          type:
-          - boolean
-          - 'null'
-          description: 'Indicates the action will be linked to another action and requires a waiting dialog to be
-
-            displayed instead of returning to the idle screen on completion of the action.
-
-
-            Only supported on SIGNATURE, CONFIRMATION, DATA_COLLECTION, and SELECT types.'
-        await_next_action_duration:
+            See [CheckoutOptionsPaymentType](#type-checkoutoptionspaymenttype) for possible values'
+        team_member_id:
           type:
           - string
           - 'null'
-          description: 'The timeout duration of the waiting dialog as an RFC 3339 duration, after which the
+          description: An optional ID of the team member associated with creating the checkout.
+          x-release-status: BETA
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: An optional ID of the customer associated with the checkout.
+        app_fee_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount the developer is taking as a fee for facilitating the payment on behalf
 
-            waiting dialog will no longer be displayed and the Terminal will return to the idle screen.
+            of the seller.
 
 
-            Default: 5 minutes from when the waiting dialog is displayed
+            The amount cannot be more than 90% of the total amount of the payment.
 
 
-            Maximum: 5 minutes'
-    PaymentOptionsDelayAction:
+            The amount must be specified in the smallest denomination of the applicable currency (for example, US dollar amounts are specified in cents). For more information, see [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts).
+
+
+            The fee currency code must match the currency associated with the seller that is accepting the payment. The application must be from a developer account in the same country and using the same currency code as the seller.
+
+
+            For more information about the application fee scenario, see [Take Payments and Collect Fees](https://developer.squareup.com/docs/payments-api/take-payments-and-collect-fees).
+
+
+            To set this field, PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS OAuth permission is required. For more information, see [Permissions](https://developer.squareup.com/docs/payments-api/take-payments-and-collect-fees#permissions).
+
+
+            Supported only in the US.'
+        statement_description_identifier:
+          type:
+          - string
+          - 'null'
+          description: 'Optional additional payment information to include on the customer''s card statement as
+
+            part of the statement description. This can be, for example, an invoice number, ticket number,
+
+            or short description that uniquely identifies the purchase. Supported only in the US.'
+          maxLength: 20
+          x-release-status: BETA
+        tip_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount designated as a tip, in addition to `amount_money`. This may only be set for a
+
+            checkout that has tipping disabled (`tip_settings.allow_tipping` is `false`). Supported only in
+
+            the US.'
+          x-release-status: BETA
+    TerminalActionActionType:
       type: string
       enum:
-      - CANCEL
-      - COMPLETE
+      - QR_CODE
+      - PING
+      - SAVE_CARD
+      - SIGNATURE
+      - CONFIRMATION
+      - RECEIPT
+      - DATA_COLLECTION
+      - SELECT
       x-enum-elements:
-      - name: CANCEL
-        description: 'Indicates that the payment should be automatically canceled when the delay duration
+      - name: QR_CODE
+        description: 'The action represents a request to display a QR code. Details are contained in
 
-          elapses.'
-      - name: COMPLETE
-        description: 'Indicates that the payment should be automatically completed when the delay duration
+          the `qr_code_options` object.'
+      - name: PING
+        description: 'The action represents a request to check if the specific device is
 
-          elapses.'
-      description: 'Describes the action to be applied to a delayed capture payment when the delay_duration
+          online or currently active with the merchant in question. Does not require an action options value.'
+      - name: SAVE_CARD
+        description: 'Represents a request to save a card for future card-on-file use. Details are contained
 
-        has elapsed.'
+          in the `save_card_options` object.'
+      - name: SIGNATURE
+        description: 'The action represents a request to capture a buyer''s signature. Details are contained
+
+          in the `signature_options` object.'
+      - name: CONFIRMATION
+        description: 'The action represents a request to collect a buyer''s confirmation decision to the
+
+          displayed terms. Details are contained in the `confirmation_options` object.'
+      - name: RECEIPT
+        description: 'The action represents a request to display the receipt screen options. Details are
+
+          contained in the `receipt_options` object.'
+      - name: DATA_COLLECTION
+        description: 'The action represents a request to collect a buyer''s text data. Details
+
+          are contained in the `data_collection_options` object.'
+      - name: SELECT
+        description: 'The action represents a request to allow the buyer to select from provided options.
+
+          Details are contained in the `select_options` object.'
+      description: Describes the type of this unit and indicates which field contains the unit information. This is an ‘open’ enum.
       x-release-status: BETA
-    CreateTerminalCheckoutRequest:
+    SearchTerminalCheckoutsResponse:
       type: object
       x-release-status: PUBLIC
-      required:
-      - idempotency_key
-      - checkout
       properties:
-        idempotency_key:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        checkouts:
+          type: array
+          items:
+            $ref: '#/components/schemas/TerminalCheckout'
+          description: The requested search result of `TerminalCheckout` objects.
+        cursor:
           type: string
-          description: 'A unique string that identifies this `CreateCheckout` request. Keys can be any valid string but
+          description: 'The pagination cursor to be used in a subsequent request. If empty,
 
-            must be unique for every `CreateCheckout` request.
+            this is the final response.
 
 
-            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
-          minLength: 1
-          maxLength: 64
-        checkout:
-          $ref: '#/components/schemas/TerminalCheckout'
-          description: The checkout to create.
+            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
       example:
-        checkout:
-          amount_money:
+        checkouts:
+        - amount_money:
             amount: 2610
             currency: USD
+          app_id: APP_ID
+          created_at: '2020-03-31T18:13:15.921Z'
+          deadline_duration: PT5M
           device_options:
             device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
+            skip_receipt_screen: false
+            tip_settings:
+              allow_tipping: false
+          id: tsQPvzwBpMqqO
           note: A brief note
-          reference_id: id11572
-        idempotency_key: 28a0c3bc-7839-11ea-bc55-0242ac130003
-    TipSettings:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        allow_tipping:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether tipping is enabled for this checkout. Defaults to false.
-        separate_tip_screen:
-          type:
-          - boolean
-          - 'null'
-          description: 'Indicates whether tip options should be presented on the screen before presenting
-
-            the signature screen during card payment. Defaults to false.'
-        custom_tip_field:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates whether custom tip amounts are allowed during the checkout flow. Defaults to false.
-        tip_percentages:
-          type:
-          - array
-          - 'null'
-          items:
-            type: integer
-          description: 'A list of tip percentages that should be presented during the checkout flow, specified as
-
-            up to 3 non-negative integers from 0 to 100 (inclusive). Defaults to 15, 20, and 25.'
-        smart_tipping:
-          type:
-          - boolean
-          - 'null'
-          description: 'Enables the "Smart Tip Amounts" behavior.
-
-            Exact tipping options depend on the region in which the Square seller is active.
-
-
-            For payments under 10.00, in the Australia, Canada, Ireland, United Kingdom, and United States, tipping options are presented as no tip, .50, 1.00 or 2.00.
-
-
-            For payment amounts of 10.00 or greater, tipping options are presented as the following percentages: 0%, 5%, 10%, 15%.
-
-
-            If set to true, the `tip_percentages` settings is ignored.
-
-            Defaults to false.
-
-
-            To learn more about smart tipping, see [Accept Tips with the Square App](https://squareup.com/help/us/en/article/5069-accept-tips-with-the-square-app).'
-    TerminalRefundQuery:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        filter:
-          $ref: '#/components/schemas/TerminalRefundQueryFilter'
-          description: The filter for the Terminal refund query.
-        sort:
-          $ref: '#/components/schemas/TerminalRefundQuerySort'
-          description: The sort order for the Terminal refund query.
-    CheckoutOptionsPaymentType:
-      type: string
-      enum:
-      - CARD_PRESENT
-      - MANUAL_CARD_ENTRY
-      - FELICA_ID
-      - FELICA_QUICPAY
-      - FELICA_TRANSPORTATION_GROUP
-      - FELICA_ALL
-      - PAYPAY
-      - QR_CODE
-      x-enum-elements:
-      - name: CARD_PRESENT
-        description: Accept credit card or debit card payments via tap, dip or swipe.
-      - name: MANUAL_CARD_ENTRY
-        description: Launches the manual credit or debit card entry screen for the buyer to complete.
-      - name: FELICA_ID
-        description: Launches the iD checkout screen for the buyer to complete.
-      - name: FELICA_QUICPAY
-        description: Launches the QUICPay checkout screen for the buyer to complete.
-      - name: FELICA_TRANSPORTATION_GROUP
-        description: Launches the Transportation Group checkout screen for the buyer to complete.
-      - name: FELICA_ALL
-        description: 'Launches a checkout screen for the buyer on the Square Terminal that
-
-          allows them to select a specific FeliCa brand or select the check balance screen.'
-      - name: PAYPAY
-        description: Replaced by `QR_CODE`.
-      - name: QR_CODE
-        description: 'Launches Square''s QR Code checkout screen for the buyer to complete.
-
-          Displays a single code that supports all digital wallets connected to the target
-
-          Seller location (e.g. PayPay)'
-      x-release-status: PUBLIC
-    QrCodeOptions:
-      type: object
-      description: Fields to describe the action that displays QR-Codes.
-      x-release-status: BETA
-      required:
-      - title
-      - body
-      - barcode_contents
-      properties:
-        title:
-          type: string
-          description: The title text to display in the QR code flow on the Terminal.
-          minLength: 1
-          maxLength: 250
-        body:
-          type: string
-          description: The body text to display in the QR code flow on the Terminal.
-          minLength: 1
-          maxLength: 10000
-        barcode_contents:
-          type: string
-          description: 'The text representation of the data to show in the QR code
-
-            as UTF8-encoded data.'
-          minLength: 1
-          maxLength: 1024
+          payment_ids:
+          - rXnhZzywrEk4vR6pw76fPZfgvaB
+          reference_id: id14467
+          status: COMPLETED
+          updated_at: '2020-03-31T18:13:52.725Z'
+        - amount_money:
+            amount: 2610
+            currency: USD
+          app_id: APP_ID
+          created_at: '2020-03-31T18:08:31.882Z'
+          deadline_duration: PT5M
+          device_options:
+            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
+            skip_receipt_screen: true
+            tip_settings:
+              allow_tipping: false
+          id: XlOPTgcEhrbqO
+          note: A brief note
+          payment_ids:
+          - VYBF861PaoKPP7Pih0TlbZiNvaB
+          reference_id: id41623
+          status: COMPLETED
+          updated_at: '2020-03-31T18:08:41.635Z'
+        cursor: RiTJqBoTuXlbLmmrPvEkX9iG7XnQ4W4RjGnH
     CreateTerminalActionRequest:
       type: object
       x-release-status: BETA
@@ -2232,6 +2298,301 @@ components:
           status: PENDING
           type: SAVE_CARD
           updated_at: '2021-07-28T23:22:07.476Z'
+    TerminalActionQuery:
+      type: object
+      x-release-status: BETA
+      properties:
+        filter:
+          $ref: '#/components/schemas/TerminalActionQueryFilter'
+          description: Options for filtering returned `TerminalAction`s
+        sort:
+          $ref: '#/components/schemas/TerminalActionQuerySort'
+          description: Option for sorting returned `TerminalAction` objects.
+      example:
+        include:
+        - CUSTOMER
+        limit: 2
+        query:
+          filter:
+            status: COMPLETED
+    DismissTerminalActionResponse:
+      type: object
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        action:
+          $ref: '#/components/schemas/TerminalAction'
+          description: Current state of the action to be dismissed.
+      example:
+        action:
+          app_id: APP_ID
+          await_next_action: true
+          await_next_action_duration: PT5M
+          confirmation_options:
+            agree_button_text: Agree
+            body: I agree to receive promotional emails about future events and activities.
+            decision:
+              has_agreed: true
+            disagree_button_text: Decline
+            title: Marketing communications
+          created_at: '2021-07-28T23:22:07.476Z'
+          deadline_duration: PT5M
+          device_id: DEVICE_ID
+          id: termapia:abcdefg1234567
+          status: COMPLETED
+          type: CONFIRMATION
+          updated_at: '2021-07-28T23:22:29.511Z'
+    TimeRange:
+      type: object
+      description: 'Represents a generic time range. The start and end values are
+
+        represented in RFC 3339 format. Time ranges are customized to be
+
+        inclusive or exclusive based on the needs of a particular endpoint.
+
+        Refer to the relevant endpoint-specific documentation to determine
+
+        how time ranges are handled.'
+      x-release-status: PUBLIC
+      properties:
+        start_at:
+          type:
+          - string
+          - 'null'
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            starts.'
+        end_at:
+          type:
+          - string
+          - 'null'
+          description: 'A datetime value in RFC 3339 format indicating when the time range
+
+            ends.'
+    TerminalCheckoutQuerySort:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: 'The order in which results are listed.
+
+            Default: `DESC`
+
+            See [SortOrder](#type-sortorder) for possible values'
+    PaymentOptionsDelayAction:
+      type: string
+      enum:
+      - CANCEL
+      - COMPLETE
+      x-enum-elements:
+      - name: CANCEL
+        description: 'Indicates that the payment should be automatically canceled when the delay duration
+
+          elapses.'
+      - name: COMPLETE
+        description: 'Indicates that the payment should be automatically completed when the delay duration
+
+          elapses.'
+      description: 'Describes the action to be applied to a delayed capture payment when the delay_duration
+
+        has elapsed.'
+      x-release-status: BETA
+    CreateTerminalCheckoutResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        checkout:
+          $ref: '#/components/schemas/TerminalCheckout'
+          description: The created `TerminalCheckout`.
+      example:
+        checkout:
+          amount_money:
+            amount: 2610
+            currency: USD
+          app_id: APP_ID
+          created_at: '2020-04-06T16:39:32.545Z'
+          deadline_duration: PT5M
+          device_options:
+            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
+            skip_receipt_screen: false
+            tip_settings:
+              allow_tipping: false
+          id: 08YceKh7B3ZqO
+          location_id: LOCATION_ID
+          note: A brief note
+          payment_type: CARD_PRESENT
+          reference_id: id11572
+          status: PENDING
+          updated_at: '2020-04-06T16:39:32.545Z'
+    TerminalActionQueryFilter:
+      type: object
+      x-release-status: BETA
+      properties:
+        device_id:
+          type:
+          - string
+          - 'null'
+          description: '`TerminalAction`s associated with a specific device. If no device is specified then all
+
+            `TerminalAction`s for the merchant will be displayed.'
+        created_at:
+          $ref: '#/components/schemas/TimeRange'
+          description: 'Time range for the beginning of the reporting period. Inclusive.
+
+            Default value: The current time minus one day.
+
+            Note that `TerminalAction`s are available for 30 days after creation.'
+        status:
+          type:
+          - string
+          - 'null'
+          description: 'Filter results with the desired status of the `TerminalAction`
+
+            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, `COMPLETED`'
+        type:
+          $ref: '#/components/schemas/TerminalActionActionType'
+          description: 'Filter results with the requested ActionType.
+
+            See [TerminalActionActionType](#type-terminalactionactiontype) for possible values'
+    TerminalCheckoutQuery:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        filter:
+          $ref: '#/components/schemas/TerminalCheckoutQueryFilter'
+          description: Options for filtering returned `TerminalCheckout` objects.
+        sort:
+          $ref: '#/components/schemas/TerminalCheckoutQuerySort'
+          description: Option for sorting returned `TerminalCheckout` objects.
+    DismissTerminalCheckoutResponse:
+      type: object
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        checkout:
+          $ref: '#/components/schemas/TerminalCheckout'
+          description: Current state of the checkout to be dismissed.
+      example:
+        checkout:
+          amount_money:
+            amount: 2610
+            currency: USD
+          app_id: APP_ID
+          created_at: '2023-11-29T14:59:50.682Z'
+          deadline_duration: PT5M
+          device_options:
+            collect_signature: true
+            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
+            loyalty_settings:
+              loyalty_screen_max_display_duration: PT60S
+              show_card_linked_reward_redemption_screen: false
+              show_loyalty_screen: false
+              show_non_qualifying_loyalty_screen: false
+            skip_receipt_screen: false
+            tip_settings:
+              allow_tipping: true
+              custom_tip_field: false
+              separate_tip_screen: true
+          id: LmZEKbo3SBfqO
+          location_id: LOCATION_ID
+          payment_ids:
+          - D7vLJqMkvSoAlX4yyFzUitOy4EPZY
+          payment_options:
+            autocomplete: true
+          payment_type: CARD_PRESENT
+          status: COMPLETED
+          updated_at: '2023-11-29T15:00:18.936Z'
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    DataCollectionOptionsInputType:
+      type: string
+      enum:
+      - EMAIL
+      - PHONE_NUMBER
+      x-enum-elements:
+      - name: EMAIL
+        description: 'This value is used to represent an input text that contains a email validation on the
+
+          client.'
+      - name: PHONE_NUMBER
+        description: 'This value is used to represent an input text that contains a phone number validation on
+
+          the client.'
+      description: Describes the input type of the data.
+      x-release-status: BETA
+    SignatureImage:
+      type: object
+      x-release-status: BETA
+      properties:
+        image_type:
+          type: string
+          description: 'The mime/type of the image data.
+
+            Use `image/png;base64` for png.'
+          readOnly: true
+        data:
+          type: string
+          description: The base64 representation of the image.
+          readOnly: true
     PaymentOptions:
       type: object
       x-release-status: PUBLIC
@@ -2311,6 +2672,89 @@ components:
 
             See [DelayAction](#type-delayaction) for possible values'
           x-release-status: BETA
+    SignatureOptions:
+      type: object
+      x-release-status: BETA
+      required:
+      - title
+      - body
+      properties:
+        title:
+          type: string
+          description: The title text to display in the signature capture flow on the Terminal.
+          minLength: 1
+          maxLength: 250
+        body:
+          type: string
+          description: The body text to display in the signature capture flow on the Terminal.
+          minLength: 1
+          maxLength: 10000
+        signature:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignatureImage'
+          description: An image representation of the collected signature.
+          readOnly: true
+    TerminalActionQuerySort:
+      type: object
+      x-release-status: BETA
+      properties:
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: 'The order in which results are listed.
+
+            - `ASC` - Oldest to newest.
+
+            - `DESC` - Newest to oldest (default).
+
+            See [SortOrder](#type-sortorder) for possible values'
+    SearchTerminalRefundsResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/TerminalRefund'
+          description: The requested search result of `TerminalRefund` objects.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If empty,
+
+            this is the final response.
+
+
+            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
+      example:
+        refunds:
+        - amount_money:
+            amount: 111
+            currency: CAD
+          app_id: sandbox-sq0idb-c2OuYt13YaCAeJq_2cd8OQ
+          card:
+            bin: '411111'
+            card_brand: INTERAC
+            card_type: CREDIT
+            exp_month: 1
+            exp_year: 2022
+            fingerprint: sq-1-B1fP9MNNmZgVVaPKRND6oDKYbz25S2cTvg9Mzwg3RMTK1zT1PiGRT-AE3nTA8vSmmw
+            last_4: '1111'
+          created_at: '2020-09-29T15:21:46.771Z'
+          deadline_duration: PT5M
+          device_id: f72dfb8e-4d65-4e56-aade-ec3fb8d33291
+          id: 009DP5HD-5O5OvgkcNUhl7JBuINflcjKqUzXZY
+          location_id: 76C9W6K8CNNQ5
+          order_id: kcuKDKreRaI4gF4TjmEgZjHk8Z7YY
+          payment_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY
+          reason: Returning item
+          refund_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY_43Q4iGp7sNeATiWrUruA1EYeMRUXaddXXlDDJ1EQLvb
+          status: COMPLETED
+          updated_at: '2020-09-29T15:21:48.675Z'
     Money:
       type: object
       description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
@@ -2348,7 +2792,7 @@ components:
             See [Currency](entity:Currency) for possible values.
 
             See [Currency](#type-currency) for possible values'
-    DismissTerminalActionResponse:
+    SearchTerminalActionsResponse:
       type: object
       x-release-status: BETA
       properties:
@@ -2358,86 +2802,97 @@ components:
             $ref: '#/components/schemas/Error'
           description: Information on errors encountered during the request.
         action:
-          $ref: '#/components/schemas/TerminalAction'
-          description: Current state of the action to be dismissed.
+          type: array
+          items:
+            $ref: '#/components/schemas/TerminalAction'
+          description: The requested search result of `TerminalAction`s.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If empty,
+
+            this is the final response.
+
+
+            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more
+
+            information.'
       example:
         action:
-          app_id: APP_ID
-          await_next_action: true
-          await_next_action_duration: PT5M
-          confirmation_options:
-            agree_button_text: Agree
-            body: I agree to receive promotional emails about future events and activities.
-            decision:
-              has_agreed: true
-            disagree_button_text: Decline
-            title: Marketing communications
-          created_at: '2021-07-28T23:22:07.476Z'
+        - app_id: APP_ID
+          created_at: '2022-04-08T15:14:04.895Z'
           deadline_duration: PT5M
           device_id: DEVICE_ID
-          id: termapia:abcdefg1234567
+          id: termapia:oBGWlAats8xWCiCE
+          location_id: LOCATION_ID
+          save_card_options:
+            customer_id: CUSTOMER_ID
+            reference_id: user-id-1
+          status: IN_PROGRESS
+          type: SAVE_CARD
+          updated_at: '2022-04-08T15:14:05.446Z'
+        - app_id: APP_ID
+          created_at: '2022-04-08T15:14:01.210Z'
+          deadline_duration: PT5M
+          device_id: DEVICE_ID
+          id: termapia:K2NY2YSSml3lTiCE
+          location_id: LOCATION_ID
+          save_card_options:
+            card_id: ccof:CARD_ID
+            customer_id: CUSTOMER_ID
+            reference_id: user-id-1
           status: COMPLETED
-          type: CONFIRMATION
-          updated_at: '2021-07-28T23:22:29.511Z'
-    DeviceCheckoutOptions:
-      type: object
+          type: SAVE_CARD
+          updated_at: '2022-04-08T15:14:09.861Z'
+        cursor: CURSOR
+    CheckoutOptionsPaymentType:
+      type: string
+      enum:
+      - CARD_PRESENT
+      - MANUAL_CARD_ENTRY
+      - FELICA_ID
+      - FELICA_QUICPAY
+      - FELICA_TRANSPORTATION_GROUP
+      - FELICA_ALL
+      - PAYPAY
+      - QR_CODE
+      x-enum-elements:
+      - name: CARD_PRESENT
+        description: Accept credit card or debit card payments via tap, dip or swipe.
+      - name: MANUAL_CARD_ENTRY
+        description: Launches the manual credit or debit card entry screen for the buyer to complete.
+      - name: FELICA_ID
+        description: Launches the iD checkout screen for the buyer to complete.
+      - name: FELICA_QUICPAY
+        description: Launches the QUICPay checkout screen for the buyer to complete.
+      - name: FELICA_TRANSPORTATION_GROUP
+        description: Launches the Transportation Group checkout screen for the buyer to complete.
+      - name: FELICA_ALL
+        description: 'Launches a checkout screen for the buyer on the Square Terminal that
+
+          allows them to select a specific FeliCa brand or select the check balance screen.'
+      - name: PAYPAY
+        description: Replaced by `QR_CODE`.
+      - name: QR_CODE
+        description: 'Launches Square''s QR Code checkout screen for the buyer to complete.
+
+          Displays a single code that supports all digital wallets connected to the target
+
+          Seller location (e.g. PayPay)'
       x-release-status: PUBLIC
-      required:
-      - device_id
-      properties:
-        device_id:
-          type: string
-          description: 'The unique ID of the device intended for this `TerminalCheckout`.
-
-            A list of `DeviceCode` objects can be retrieved from the /v2/devices/codes endpoint.
-
-            Match a `DeviceCode.device_id` value with `device_id` to get the associated device code.'
-        skip_receipt_screen:
-          type:
-          - boolean
-          - 'null'
-          description: Instructs the device to skip the receipt screen. Defaults to false.
-        collect_signature:
-          type:
-          - boolean
-          - 'null'
-          description: Indicates that signature collection is desired during checkout. Defaults to false.
-        tip_settings:
-          $ref: '#/components/schemas/TipSettings'
-          description: Tip-specific settings.
-        show_itemized_cart:
-          type:
-          - boolean
-          - 'null'
-          description: 'Show the itemization screen prior to taking a payment. This field is only meaningful when the
-
-            checkout includes an order ID. Defaults to true.'
-          x-release-status: BETA
-    TerminalCheckoutQueryFilter:
-      type: object
+    ActionCancelReason:
+      type: string
+      enum:
+      - BUYER_CANCELED
+      - SELLER_CANCELED
+      - TIMED_OUT
+      x-enum-elements:
+      - name: BUYER_CANCELED
+        description: A person canceled the `TerminalCheckout` from a Square device.
+      - name: SELLER_CANCELED
+        description: A client canceled the `TerminalCheckout` using the API.
+      - name: TIMED_OUT
+        description: The `TerminalCheckout` timed out (see `deadline_duration` on the `TerminalCheckout`).
       x-release-status: PUBLIC
-      properties:
-        device_id:
-          type:
-          - string
-          - 'null'
-          description: 'The `TerminalCheckout` objects associated with a specific device. If no device is specified, then all
-
-            `TerminalCheckout` objects for the merchant are displayed.'
-        created_at:
-          $ref: '#/components/schemas/TimeRange'
-          description: 'The time range for the beginning of the reporting period, which is inclusive.
-
-            Default value: The current time minus one day.
-
-            Note that `TerminalCheckout`s are available for 30 days after creation.'
-        status:
-          type:
-          - string
-          - 'null'
-          description: 'Filtered results with the desired status of the `TerminalCheckout`.
-
-            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, `COMPLETED`'
     Currency:
       type: string
       enum:
@@ -2995,20 +3450,143 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
-    SignatureImage:
+    TipSettings:
       type: object
-      x-release-status: BETA
+      x-release-status: PUBLIC
       properties:
-        image_type:
-          type: string
-          description: 'The mime/type of the image data.
+        allow_tipping:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether tipping is enabled for this checkout. Defaults to false.
+        separate_tip_screen:
+          type:
+          - boolean
+          - 'null'
+          description: 'Indicates whether tip options should be presented on the screen before presenting
 
-            Use `image/png;base64` for png.'
-          readOnly: true
-        data:
+            the signature screen during card payment. Defaults to false.'
+        custom_tip_field:
+          type:
+          - boolean
+          - 'null'
+          description: Indicates whether custom tip amounts are allowed during the checkout flow. Defaults to false.
+        tip_percentages:
+          type:
+          - array
+          - 'null'
+          items:
+            type: integer
+          description: 'A list of tip percentages that should be presented during the checkout flow, specified as
+
+            up to 3 non-negative integers from 0 to 100 (inclusive). Defaults to 15, 20, and 25.'
+        smart_tipping:
+          type:
+          - boolean
+          - 'null'
+          description: 'Enables the "Smart Tip Amounts" behavior.
+
+            Exact tipping options depend on the region in which the Square seller is active.
+
+
+            For payments under 10.00, in the Australia, Canada, Ireland, United Kingdom, and United States, tipping options are presented as no tip, .50, 1.00 or 2.00.
+
+
+            For payment amounts of 10.00 or greater, tipping options are presented as the following percentages: 0%, 5%, 10%, 15%.
+
+
+            If set to true, the `tip_percentages` settings is ignored.
+
+            Defaults to false.
+
+
+            To learn more about smart tipping, see [Accept Tips with the Square App](https://squareup.com/help/us/en/article/5069-accept-tips-with-the-square-app).'
+    TerminalRefundQueryFilter:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        device_id:
+          type:
+          - string
+          - 'null'
+          description: '`TerminalRefund` objects associated with a specific device. If no device is specified, then all
+
+            `TerminalRefund` objects for the signed-in account are displayed.'
+        created_at:
+          $ref: '#/components/schemas/TimeRange'
+          description: 'The timestamp for the beginning of the reporting period, in RFC 3339 format. Inclusive.
+
+            Default value: The current time minus one day.
+
+            Note that `TerminalRefund`s are available for 30 days after creation.'
+        status:
+          type:
+          - string
+          - 'null'
+          description: 'Filtered results with the desired status of the `TerminalRefund`.
+
+            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, or `COMPLETED`.'
+    CreateTerminalCheckoutRequest:
+      type: object
+      x-release-status: PUBLIC
+      required:
+      - idempotency_key
+      - checkout
+      properties:
+        idempotency_key:
           type: string
-          description: The base64 representation of the image.
-          readOnly: true
+          description: 'A unique string that identifies this `CreateCheckout` request. Keys can be any valid string but
+
+            must be unique for every `CreateCheckout` request.
+
+
+            See [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.'
+          minLength: 1
+          maxLength: 64
+        checkout:
+          $ref: '#/components/schemas/TerminalCheckout'
+          description: The checkout to create.
+      example:
+        checkout:
+          amount_money:
+            amount: 2610
+            currency: USD
+          device_options:
+            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
+          note: A brief note
+          reference_id: id11572
+        idempotency_key: 28a0c3bc-7839-11ea-bc55-0242ac130003
+    GetTerminalCheckoutResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        checkout:
+          $ref: '#/components/schemas/TerminalCheckout'
+          description: The requested `TerminalCheckout`.
+      example:
+        checkout:
+          amount_money:
+            amount: 2610
+            currency: USD
+          app_id: APP_ID
+          created_at: '2020-04-06T16:39:32.545Z'
+          deadline_duration: PT5M
+          device_options:
+            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
+            skip_receipt_screen: false
+            tip_settings:
+              allow_tipping: false
+          id: 08YceKh7B3ZqO
+          location_id: LOCATION_ID
+          note: A brief note
+          reference_id: id11572
+          status: IN_PROGRESS
+          updated_at: 2020-04-06T16:39:323.001Z
     CreateTerminalRefundResponse:
       type: object
       x-release-status: PUBLIC
@@ -3045,285 +3623,33 @@ components:
           reason: Returning items
           status: PENDING
           updated_at: '2020-09-29T15:21:46.771Z'
-    TerminalRefundQueryFilter:
+    SearchTerminalRefundsRequest:
       type: object
       x-release-status: PUBLIC
       properties:
-        device_id:
-          type:
-          - string
-          - 'null'
-          description: '`TerminalRefund` objects associated with a specific device. If no device is specified, then all
+        query:
+          $ref: '#/components/schemas/TerminalRefundQuery'
+          description: 'Queries the Terminal refunds based on given conditions and the sort order. Calling
 
-            `TerminalRefund` objects for the signed-in account are displayed.'
-        created_at:
-          $ref: '#/components/schemas/TimeRange'
-          description: 'The timestamp for the beginning of the reporting period, in RFC 3339 format. Inclusive.
+            `SearchTerminalRefunds` without an explicit query parameter returns all available
 
-            Default value: The current time minus one day.
-
-            Note that `TerminalRefund`s are available for 30 days after creation.'
-        status:
-          type:
-          - string
-          - 'null'
-          description: 'Filtered results with the desired status of the `TerminalRefund`.
-
-            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, or `COMPLETED`.'
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    SignatureOptions:
-      type: object
-      x-release-status: BETA
-      required:
-      - title
-      - body
-      properties:
-        title:
+            refunds with the default sort order.'
+        cursor:
           type: string
-          description: The title text to display in the signature capture flow on the Terminal.
-          minLength: 1
-          maxLength: 250
-        body:
-          type: string
-          description: The body text to display in the signature capture flow on the Terminal.
-          minLength: 1
-          maxLength: 10000
-        signature:
-          type: array
-          items:
-            $ref: '#/components/schemas/SignatureImage'
-          description: An image representation of the collected signature.
-          readOnly: true
-    TerminalActionQuery:
-      type: object
-      x-release-status: BETA
-      properties:
-        filter:
-          $ref: '#/components/schemas/TerminalActionQueryFilter'
-          description: Options for filtering returned `TerminalAction`s
-        sort:
-          $ref: '#/components/schemas/TerminalActionQuerySort'
-          description: Option for sorting returned `TerminalAction` objects.
+          description: 'A pagination cursor returned by a previous call to this endpoint.
+
+            Provide this cursor to retrieve the next set of results for the original query.'
+        limit:
+          type: integer
+          description: Limits the number of results returned for a single request.
+          minimum: 1
+          maximum: 100
       example:
-        include:
-        - CUSTOMER
-        limit: 2
+        limit: 1
         query:
           filter:
             status: COMPLETED
-    TerminalActionActionType:
-      type: string
-      enum:
-      - QR_CODE
-      - PING
-      - SAVE_CARD
-      - SIGNATURE
-      - CONFIRMATION
-      - RECEIPT
-      - DATA_COLLECTION
-      - SELECT
-      x-enum-elements:
-      - name: QR_CODE
-        description: 'The action represents a request to display a QR code. Details are contained in
-
-          the `qr_code_options` object.'
-      - name: PING
-        description: 'The action represents a request to check if the specific device is
-
-          online or currently active with the merchant in question. Does not require an action options value.'
-      - name: SAVE_CARD
-        description: 'Represents a request to save a card for future card-on-file use. Details are contained
-
-          in the `save_card_options` object.'
-      - name: SIGNATURE
-        description: 'The action represents a request to capture a buyer''s signature. Details are contained
-
-          in the `signature_options` object.'
-      - name: CONFIRMATION
-        description: 'The action represents a request to collect a buyer''s confirmation decision to the
-
-          displayed terms. Details are contained in the `confirmation_options` object.'
-      - name: RECEIPT
-        description: 'The action represents a request to display the receipt screen options. Details are
-
-          contained in the `receipt_options` object.'
-      - name: DATA_COLLECTION
-        description: 'The action represents a request to collect a buyer''s text data. Details
-
-          are contained in the `data_collection_options` object.'
-      - name: SELECT
-        description: 'The action represents a request to allow the buyer to select from provided options.
-
-          Details are contained in the `select_options` object.'
-      description: Describes the type of this unit and indicates which field contains the unit information. This is an ‘open’ enum.
-      x-release-status: BETA
-    ReceiptOptions:
-      type: object
-      description: Describes receipt action fields.
-      x-release-status: BETA
-      required:
-      - payment_id
-      properties:
-        payment_id:
-          type: string
-          description: The reference to the Square payment ID for the receipt.
-        print_only:
-          type:
-          - boolean
-          - 'null'
-          description: 'Instructs the device to print the receipt without displaying the receipt selection screen.
-
-            Requires `printer_enabled` set to true.
-
-            Defaults to false.'
-        is_duplicate:
-          type:
-          - boolean
-          - 'null'
-          description: 'Identify the receipt as a reprint rather than an original receipt.
-
-            Defaults to false.'
-    SaveCardOptions:
-      type: object
-      description: Describes save-card action fields.
-      x-release-status: BETA
-      required:
-      - customer_id
-      properties:
-        customer_id:
-          type: string
-          description: The square-assigned ID of the customer linked to the saved card.
-        card_id:
-          type: string
-          description: The id of the created card-on-file.
-          maxLength: 64
-          readOnly: true
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: 'An optional user-defined reference ID that can be used to associate
-
-            this `Card` to another entity in an external system. For example, a customer
-
-            ID generated by a third-party system.'
-          maxLength: 128
-    GetTerminalRefundResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        refund:
-          $ref: '#/components/schemas/TerminalRefund'
-          description: The requested `Refund`.
-      example:
-        refund:
-          amount_money:
-            amount: 111
-            currency: CAD
-          app_id: sandbox-sq0idb-c2OuYt13YaCAeJq_2cd8OQ
-          card:
-            bin: '411111'
-            card_brand: INTERAC
-            card_type: CREDIT
-            exp_month: 1
-            exp_year: 2022
-            fingerprint: sq-1-B1fP9MNNmZgVVaPKRND6oDKYbz25S2cTvg9Mzwg3RMTK1zT1PiGRT-AE3nTA8vSmmw
-            last_4: '1111'
-          created_at: '2020-09-29T15:21:46.771Z'
-          deadline_duration: PT5M
-          device_id: f72dfb8e-4d65-4e56-aade-ec3fb8d33291
-          id: 009DP5HD-5O5OvgkcNUhl7JBuINflcjKqUzXZY
-          location_id: 76C9W6K8CNNQ5
-          order_id: kcuKDKreRaI4gF4TjmEgZjHk8Z7YY
-          payment_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY
-          reason: Returning item
-          refund_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY_43Q4iGp7sNeATiWrUruA1EYeMRUXaddXXlDDJ1EQLvb
-          status: COMPLETED
-          updated_at: '2020-09-29T15:21:48.675Z'
-    CreateTerminalCheckoutResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        checkout:
-          $ref: '#/components/schemas/TerminalCheckout'
-          description: The created `TerminalCheckout`.
-      example:
-        checkout:
-          amount_money:
-            amount: 2610
-            currency: USD
-          app_id: APP_ID
-          created_at: '2020-04-06T16:39:32.545Z'
-          deadline_duration: PT5M
-          device_options:
-            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
-            skip_receipt_screen: false
-            tip_settings:
-              allow_tipping: false
-          id: 08YceKh7B3ZqO
-          location_id: LOCATION_ID
-          note: A brief note
-          payment_type: CARD_PRESENT
-          reference_id: id11572
-          status: PENDING
-          updated_at: '2020-04-06T16:39:32.545Z'
-    SearchTerminalActionsResponse:
+    CancelTerminalActionResponse:
       type: object
       x-release-status: BETA
       properties:
@@ -3333,296 +3659,23 @@ components:
             $ref: '#/components/schemas/Error'
           description: Information on errors encountered during the request.
         action:
-          type: array
-          items:
-            $ref: '#/components/schemas/TerminalAction'
-          description: The requested search result of `TerminalAction`s.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If empty,
-
-            this is the final response.
-
-
-            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more
-
-            information.'
+          $ref: '#/components/schemas/TerminalAction'
+          description: The canceled `TerminalAction`
       example:
         action:
-        - app_id: APP_ID
-          created_at: '2022-04-08T15:14:04.895Z'
-          deadline_duration: PT5M
-          device_id: DEVICE_ID
-          id: termapia:oBGWlAats8xWCiCE
-          location_id: LOCATION_ID
-          save_card_options:
-            customer_id: CUSTOMER_ID
-            reference_id: user-id-1
-          status: IN_PROGRESS
-          type: SAVE_CARD
-          updated_at: '2022-04-08T15:14:05.446Z'
-        - app_id: APP_ID
-          created_at: '2022-04-08T15:14:01.210Z'
-          deadline_duration: PT5M
-          device_id: DEVICE_ID
-          id: termapia:K2NY2YSSml3lTiCE
-          location_id: LOCATION_ID
-          save_card_options:
-            card_id: ccof:CARD_ID
-            customer_id: CUSTOMER_ID
-            reference_id: user-id-1
-          status: COMPLETED
-          type: SAVE_CARD
-          updated_at: '2022-04-08T15:14:09.861Z'
-        cursor: CURSOR
-    ConfirmationDecision:
-      type: object
-      x-release-status: BETA
-      properties:
-        has_agreed:
-          type: boolean
-          description: The buyer's decision to the displayed terms.
-          readOnly: true
-    SearchTerminalActionsRequest:
-      type: object
-      x-release-status: BETA
-      properties:
-        query:
-          $ref: '#/components/schemas/TerminalActionQuery'
-          description: 'Queries terminal actions based on given conditions and sort order.
-
-            Leaving this unset will return all actions with the default sort order.'
-        cursor:
-          type: string
-          description: 'A pagination cursor returned by a previous call to this endpoint.
-
-            Provide this to retrieve the next set of results for the original query.
-
-            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more
-
-            information.'
-        limit:
-          type: integer
-          description: Limit the number of results returned for a single request.
-          minimum: 1
-          maximum: 100
-      example:
-        limit: 2
-        query:
-          filter:
-            created_at:
-              start_at: '2022-04-01T00:00:00.000Z'
-          sort:
-            sort_order: DESC
-    CancelTerminalCheckoutResponse:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-        checkout:
-          $ref: '#/components/schemas/TerminalCheckout'
-          description: The canceled `TerminalCheckout`.
-      example:
-        checkout:
-          amount_money:
-            amount: 123
-            currency: USD
           app_id: APP_ID
           cancel_reason: SELLER_CANCELED
-          created_at: '2020-03-16T15:31:19.934Z'
+          created_at: '2021-07-28T23:22:07.476Z'
           deadline_duration: PT5M
-          device_options:
-            device_id: dbb5d83a-7838-11ea-bc55-0242ac130003
-            skip_receipt_screen: true
-            tip_settings:
-              allow_tipping: true
-          id: S1yDlPQx7slqO
+          device_id: DEVICE_ID
+          id: termapia:jveJIAkkAjILHkdCE
           location_id: LOCATION_ID
-          reference_id: id36815
+          save_card_options:
+            customer_id: CUSTOMER_ID
+            reference_id: user-id-1
           status: CANCELED
-          updated_at: '2020-03-16T15:31:45.787Z'
-    SearchTerminalCheckoutsRequest:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        query:
-          $ref: '#/components/schemas/TerminalCheckoutQuery'
-          description: 'Queries Terminal checkouts based on given conditions and the sort order.
-
-            Leaving these unset returns all checkouts with the default sort order.'
-        cursor:
-          type: string
-          description: 'A pagination cursor returned by a previous call to this endpoint.
-
-            Provide this cursor to retrieve the next set of results for the original query.
-
-            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
-        limit:
-          type: integer
-          description: Limits the number of results returned for a single request.
-          minimum: 1
-          maximum: 100
-      example:
-        limit: 2
-        query:
-          filter:
-            status: COMPLETED
-    TerminalRefund:
-      type: object
-      description: Represents a payment refund processed by the Square Terminal. Only supports Interac (Canadian debit network) payment refunds.
-      x-release-status: PUBLIC
-      required:
-      - payment_id
-      - amount_money
-      - reason
-      - device_id
-      properties:
-        id:
-          type: string
-          description: A unique ID for this `TerminalRefund`.
-          minLength: 10
-          maxLength: 255
-          readOnly: true
-        refund_id:
-          type: string
-          description: The reference to the payment refund created by completing this `TerminalRefund`.
-          readOnly: true
-        payment_id:
-          type: string
-          description: The unique ID of the payment being refunded.
-          minLength: 1
-        order_id:
-          type: string
-          description: The reference to the Square order ID for the payment identified by the `payment_id`.
-          readOnly: true
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount of money, inclusive of `tax_money`, that the `TerminalRefund` should return.
-
-            This value is limited to the amount taken in the original payment minus any completed or
-
-            pending refunds.'
-        reason:
-          type: string
-          description: A description of the reason for the refund.
-          maxLength: 192
-        device_id:
-          type: string
-          description: 'The unique ID of the device intended for this `TerminalRefund`.
-
-            The Id can be retrieved from /v2/devices api.'
-        deadline_duration:
-          type:
-          - string
-          - 'null'
-          description: 'The RFC 3339 duration, after which the refund is automatically canceled.
-
-            A `TerminalRefund` that is `PENDING` is automatically `CANCELED` and has a cancellation reason
-
-            of `TIMED_OUT`.
-
-
-            Default: 5 minutes from creation.
-
-
-            Maximum: 5 minutes'
-        status:
-          type: string
-          description: 'The status of the `TerminalRefund`.
-
-            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, or `COMPLETED`.'
-          readOnly: true
-        cancel_reason:
-          $ref: '#/components/schemas/ActionCancelReason'
-          description: 'Present if the status is `CANCELED`.
-
-            See [ActionCancelReason](#type-actioncancelreason) for possible values'
-          readOnly: true
-        created_at:
-          type: string
-          description: The time when the `TerminalRefund` was created, as an RFC 3339 timestamp.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The time when the `TerminalRefund` was last updated, as an RFC 3339 timestamp.
-          readOnly: true
-        app_id:
-          type: string
-          description: The ID of the application that created the refund.
-          readOnly: true
-        location_id:
-          type: string
-          description: The location of the device where the `TerminalRefund` was directed.
-          maxLength: 64
-          readOnly: true
-    DataCollectionOptionsInputType:
-      type: string
-      enum:
-      - EMAIL
-      - PHONE_NUMBER
-      x-enum-elements:
-      - name: EMAIL
-        description: 'This value is used to represent an input text that contains a email validation on the
-
-          client.'
-      - name: PHONE_NUMBER
-        description: 'This value is used to represent an input text that contains a phone number validation on
-
-          the client.'
-      description: Describes the input type of the data.
-      x-release-status: BETA
-    TerminalActionQuerySort:
-      type: object
-      x-release-status: BETA
-      properties:
-        sort_order:
-          $ref: '#/components/schemas/SortOrder'
-          description: 'The order in which results are listed.
-
-            - `ASC` - Oldest to newest.
-
-            - `DESC` - Newest to oldest (default).
-
-            See [SortOrder](#type-sortorder) for possible values'
-    SelectOptions:
-      type: object
-      x-release-status: BETA
-      required:
-      - title
-      - body
-      - options
-      properties:
-        title:
-          type: string
-          description: The title text to display in the select flow on the Terminal.
-          minLength: 1
-          maxLength: 250
-        body:
-          type: string
-          description: The body text to display in the select flow on the Terminal.
-          minLength: 1
-          maxLength: 10000
-        options:
-          type: array
-          items:
-            $ref: '#/components/schemas/SelectOption'
-          description: Represents the buttons/options that should be displayed in the select flow on the Terminal.
-        selected_option:
-          $ref: '#/components/schemas/SelectOption'
-          description: The buyer’s selected option.
-          readOnly: true
-    CollectedData:
-      type: object
-      x-release-status: BETA
-      properties:
-        input_text:
-          type: string
-          description: The buyer's input text.
-          readOnly: true
+          type: SAVE_CARD
+          updated_at: '2021-07-28T23:22:29.511Z'
     DataCollectionOptions:
       type: object
       x-release-status: BETA
@@ -3652,282 +3705,229 @@ components:
           $ref: '#/components/schemas/CollectedData'
           description: The buyer’s input text from the data collection screen.
           readOnly: true
-    TerminalCheckoutQuerySort:
-      type: object
+    SortOrder:
+      type: string
+      enum:
+      - DESC
+      - ASC
+      x-enum-elements:
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
       x-release-status: PUBLIC
-      properties:
-        sort_order:
-          $ref: '#/components/schemas/SortOrder'
-          description: 'The order in which results are listed.
-
-            Default: `DESC`
-
-            See [SortOrder](#type-sortorder) for possible values'
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    TerminalCheckout:
-      type: object
-      description: Represents a checkout processed by the Square Terminal.
-      x-release-status: PUBLIC
-      required:
-      - amount_money
-      - device_options
-      properties:
-        id:
-          type: string
-          description: A unique ID for this `TerminalCheckout`.
-          minLength: 10
-          maxLength: 255
-          readOnly: true
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of money (including the tax amount) that the Square Terminal device should try to collect.
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: 'An optional user-defined reference ID that can be used to associate
-
-            this `TerminalCheckout` to another entity in an external system. For example, an order
-
-            ID generated by a third-party shopping cart. The ID is also associated with any payments
-
-            used to complete the checkout.'
-          maxLength: 40
-        note:
-          type:
-          - string
-          - 'null'
-          description: 'An optional note to associate with the checkout, as well as with any payments used to complete the checkout.
-
-            Note: maximum 500 characters'
-          maxLength: 500
-        order_id:
-          type:
-          - string
-          - 'null'
-          description: The reference to the Square order ID for the checkout request. Supported only in the US.
-        payment_options:
-          $ref: '#/components/schemas/PaymentOptions'
-          description: Payment-specific options for the checkout request. Supported only in the US.
-        device_options:
-          $ref: '#/components/schemas/DeviceCheckoutOptions'
-          description: Options to control the display and behavior of the Square Terminal device.
-        deadline_duration:
-          type:
-          - string
-          - 'null'
-          description: 'An RFC 3339 duration, after which the checkout is automatically canceled.
-
-            A `TerminalCheckout` that is `PENDING` is automatically `CANCELED` and has a cancellation reason
-
-            of `TIMED_OUT`.
-
-
-            Default: 5 minutes from creation
-
-
-            Maximum: 5 minutes'
-          x-release-status: DEPRECATED
-        status:
-          type: string
-          description: 'The status of the `TerminalCheckout`.
-
-            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, `COMPLETED`'
-          readOnly: true
-        cancel_reason:
-          $ref: '#/components/schemas/ActionCancelReason'
-          description: 'The reason why `TerminalCheckout` is canceled. Present if the status is `CANCELED`.
-
-            See [ActionCancelReason](#type-actioncancelreason) for possible values'
-          readOnly: true
-        payment_ids:
-          type: array
-          items:
-            type: string
-          description: A list of IDs for payments created by this `TerminalCheckout`.
-          readOnly: true
-        created_at:
-          type: string
-          description: The time when the `TerminalCheckout` was created, as an RFC 3339 timestamp.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The time when the `TerminalCheckout` was last updated, as an RFC 3339 timestamp.
-          readOnly: true
-        app_id:
-          type: string
-          description: The ID of the application that created the checkout.
-          readOnly: true
-        location_id:
-          type: string
-          description: The location of the device where the `TerminalCheckout` was directed.
-          maxLength: 64
-          readOnly: true
-        payment_type:
-          $ref: '#/components/schemas/CheckoutOptionsPaymentType'
-          description: 'The type of payment the terminal should attempt to capture from. Defaults to `CARD_PRESENT`.
-
-            See [CheckoutOptionsPaymentType](#type-checkoutoptionspaymenttype) for possible values'
-        team_member_id:
-          type:
-          - string
-          - 'null'
-          description: An optional ID of the team member associated with creating the checkout.
-          x-release-status: BETA
-        customer_id:
-          type:
-          - string
-          - 'null'
-          description: An optional ID of the customer associated with the checkout.
-        app_fee_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount the developer is taking as a fee for facilitating the payment on behalf
-
-            of the seller.
-
-
-            The amount cannot be more than 90% of the total amount of the payment.
-
-
-            The amount must be specified in the smallest denomination of the applicable currency (for example, US dollar amounts are specified in cents). For more information, see [Working with Monetary Amounts](https://developer.squareup.com/docs/build-basics/working-with-monetary-amounts).
-
-
-            The fee currency code must match the currency associated with the seller that is accepting the payment. The application must be from a developer account in the same country and using the same currency code as the seller.
-
-
-            For more information about the application fee scenario, see [Take Payments and Collect Fees](https://developer.squareup.com/docs/payments-api/take-payments-and-collect-fees).
-
-
-            To set this field, PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS OAuth permission is required. For more information, see [Permissions](https://developer.squareup.com/docs/payments-api/take-payments-and-collect-fees#permissions).
-
-
-            Supported only in the US.'
-        statement_description_identifier:
-          type:
-          - string
-          - 'null'
-          description: 'Optional additional payment information to include on the customer''s card statement as
-
-            part of the statement description. This can be, for example, an invoice number, ticket number,
-
-            or short description that uniquely identifies the purchase. Supported only in the US.'
-          maxLength: 20
-          x-release-status: BETA
-        tip_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount designated as a tip, in addition to `amount_money`. This may only be set for a
-
-            checkout that has tipping disabled (`tip_settings.allow_tipping` is `false`). Supported only in
-
-            the US.'
-          x-release-status: BETA
-    TerminalActionQueryFilter:
-      type: object
-      x-release-status: BETA
-      properties:
-        device_id:
-          type:
-          - string
-          - 'null'
-          description: '`TerminalAction`s associated with a specific device. If no device is specified then all
-
-            `TerminalAction`s for the merchant will be displayed.'
-        created_at:
-          $ref: '#/components/schemas/TimeRange'
-          description: 'Time range for the beginning of the reporting period. Inclusive.
-
-            Default value: The current time minus one day.
-
-            Note that `TerminalAction`s are available for 30 days after creation.'
-        status:
-          type:
-          - string
-          - 'null'
-          description: 'Filter results with the desired status of the `TerminalAction`
-
-            Options: `PENDING`, `IN_PROGRESS`, `CANCEL_REQUESTED`, `CANCELED`, `COMPLETED`'
-        type:
-          $ref: '#/components/schemas/TerminalActionActionType'
-          description: 'Filter results with the requested ActionType.
-
-            See [TerminalActionActionType](#type-terminalactionactiontype) for possible values'
-    TerminalRefundQuerySort:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        sort_order:
-          type:
-          - string
-          - 'null'
-          description: 'The order in which results are listed.
-
-            - `ASC` - Oldest to newest.
-
-            - `DESC` - Newest to oldest (default).'
-    SearchTerminalRefundsRequest:
+    SearchTerminalCheckoutsRequest:
       type: object
       x-release-status: PUBLIC
       properties:
         query:
-          $ref: '#/components/schemas/TerminalRefundQuery'
-          description: 'Queries the Terminal refunds based on given conditions and the sort order. Calling
+          $ref: '#/components/schemas/TerminalCheckoutQuery'
+          description: 'Queries Terminal checkouts based on given conditions and the sort order.
 
-            `SearchTerminalRefunds` without an explicit query parameter returns all available
-
-            refunds with the default sort order.'
+            Leaving these unset returns all checkouts with the default sort order.'
         cursor:
           type: string
           description: 'A pagination cursor returned by a previous call to this endpoint.
 
-            Provide this cursor to retrieve the next set of results for the original query.'
+            Provide this cursor to retrieve the next set of results for the original query.
+
+            See [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information.'
         limit:
           type: integer
           description: Limits the number of results returned for a single request.
           minimum: 1
           maximum: 100
       example:
-        limit: 1
+        limit: 2
         query:
           filter:
             status: COMPLETED
-    TerminalCheckoutQuery:
+    QrCodeOptions:
+      type: object
+      description: Fields to describe the action that displays QR-Codes.
+      x-release-status: BETA
+      required:
+      - title
+      - body
+      - barcode_contents
+      properties:
+        title:
+          type: string
+          description: The title text to display in the QR code flow on the Terminal.
+          minLength: 1
+          maxLength: 250
+        body:
+          type: string
+          description: The body text to display in the QR code flow on the Terminal.
+          minLength: 1
+          maxLength: 10000
+        barcode_contents:
+          type: string
+          description: 'The text representation of the data to show in the QR code
+
+            as UTF8-encoded data.'
+          minLength: 1
+          maxLength: 1024
+    DismissTerminalRefundResponse:
+      type: object
+      x-release-status: BETA
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information on errors encountered during the request.
+        refund:
+          $ref: '#/components/schemas/TerminalRefund'
+          description: Current state of the refund to be dismissed.
+      example:
+        refund:
+          amount_money:
+            amount: 111
+            currency: CAD
+          app_id: APP_ID
+          card:
+            bin: '411111'
+            card_brand: VISA
+            card_type: DEBIT
+            exp_month: 12
+            exp_year: 2024
+            fingerprint: sq-1-ElNeDpZZqUBNDI7yNghyKO-o0yLXASp4qQDGIPtxnFvTTWoqdfdP6TV8gLsSxoztXA
+            last_4: '1111'
+            prepaid_type: NOT_PREPAID
+          card_details:
+            auth_result_code: RNy6Lf
+            avs_status: AVS_ACCEPTED
+            card:
+              bin: '411111'
+              card_brand: VISA
+              card_type: DEBIT
+              exp_month: 12
+              exp_year: 2024
+              fingerprint: sq-1-ElNeDpZZqUBNDI7yNghyKO-o0yLXASp3qQDGIPtxnFvTTWoqdfdP6TV9gLsSxoztXA
+              last_4: '1111'
+              prepaid_type: NOT_PREPAID
+            card_payment_timeline:
+              authorized_at: '2023-11-30T16:15:06.645Z'
+              captured_at: '2023-11-30T16:15:13.272Z'
+            cvv_status: CVV_ACCEPTED
+            device_details:
+              device_credential:
+                name: Terminal API Device created on Nov 2, 2023
+                token: 9BFDXEYKB7H8Y
+              device_id: f72dfb8e-4d65-4e56-aade-ec3fb8d33291
+              device_installation_id: 0ef67d8e-61a3-4418-a0be-c143bfe6108d
+            entry_method: SWIPED
+            statement_description: SQ TREATS
+            status: CAPTURED
+          created_at: '2023-11-30T16:16:39.299Z'
+          deadline_duration: PT5M
+          device_id: 47776348fd8b32b9
+          id: vjkNb2HD-xq5kiWWiJ7RhwrQnkxIn2N0l1nPZY
+          order_id: s8OMhQcpEp1b61YywlccSHWqUaQZY
+          payment_id: xq5kiWWiJ7RhwrQnkxIn2N0l1nPZY
+          reason: Returning item
+          status: IN_PROGRESS
+          updated_at: '2023-11-30T16:16:57.863Z'
+    ConfirmationOptions:
+      type: object
+      x-release-status: BETA
+      required:
+      - title
+      - body
+      - agree_button_text
+      properties:
+        title:
+          type: string
+          description: The title text to display in the confirmation screen flow on the Terminal.
+          minLength: 1
+          maxLength: 250
+        body:
+          type: string
+          description: The agreement details to display in the confirmation flow on the Terminal.
+          minLength: 1
+          maxLength: 10000
+        agree_button_text:
+          type: string
+          description: The button text to display indicating the customer agrees to the displayed terms.
+          minLength: 1
+          maxLength: 250
+        disagree_button_text:
+          type:
+          - string
+          - 'null'
+          description: The button text to display indicating the customer does not agree to the displayed terms.
+          minLength: 1
+          maxLength: 250
+        decision:
+          $ref: '#/components/schemas/ConfirmationDecision'
+          description: The result of the buyer’s actions when presented with the confirmation screen.
+          readOnly: true
+    TerminalRefundQuery:
       type: object
       x-release-status: PUBLIC
       properties:
         filter:
-          $ref: '#/components/schemas/TerminalCheckoutQueryFilter'
-          description: Options for filtering returned `TerminalCheckout` objects.
+          $ref: '#/components/schemas/TerminalRefundQueryFilter'
+          description: The filter for the Terminal refund query.
         sort:
-          $ref: '#/components/schemas/TerminalCheckoutQuerySort'
-          description: Option for sorting returned `TerminalCheckout` objects.
+          $ref: '#/components/schemas/TerminalRefundQuerySort'
+          description: The sort order for the Terminal refund query.
+    CancelTerminalRefundResponse:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+        refund:
+          $ref: '#/components/schemas/TerminalRefund'
+          description: The updated `TerminalRefund`.
+      example:
+        refund:
+          amount_money:
+            amount: 100
+            currency: CAD
+          app_id: sandbox-sq0idb-c2OuYt13YaCAeJq_2cd8OQ
+          cancel_reason: SELLER_CANCELED
+          card:
+            bin: '411111'
+            card_brand: INTERAC
+            card_type: CREDIT
+            exp_month: 1
+            exp_year: 2022
+            fingerprint: sq-1-B1fP9MNNmZgVVaPKRND6oDKYbz25S2cTvg9Mzwg3RMTK1zT1PiGRT-AE3nTA8vSmmw
+            last_4: '1111'
+          created_at: '2020-10-21T22:47:23.241Z'
+          deadline_duration: PT5M
+          device_id: 42690809-faa2-4701-a24b-19d3d34c9aaa
+          id: g6ycb6HD-5O5OvgkcNUhl7JBuINflcjKqUzXZY
+          location_id: 76C9W6K8CNNQ5
+          order_id: kcuKDKreRaI4gF4TjmEgZjHk8Z7YY
+          payment_id: 5O5OvgkcNUhl7JBuINflcjKqUzXZY
+          reason: reason
+          status: CANCELED
+          updated_at: '2020-10-21T22:47:30.096Z'
+    SelectOption:
+      type: object
+      x-release-status: BETA
+      required:
+      - reference_id
+      - title
+      properties:
+        reference_id:
+          type: string
+          description: The reference id for the option.
+          minLength: 1
+          maxLength: 40
+        title:
+          type: string
+          description: The title text that displays in the select option button.
+          minLength: 1
+          maxLength: 250
   securitySchemes:
     oauth2:
       type: oauth2

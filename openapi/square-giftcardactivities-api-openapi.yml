@@ -241,18 +241,164 @@ paths:
       - error-code: TEMPORARY_ERROR
 components:
   schemas:
-    GiftCardActivityUnblock:
+    GiftCardActivityActivate:
       type: object
-      description: Represents details about an `UNBLOCK` [gift card activity type](entity:GiftCardActivityType).
+      description: Represents details about an `ACTIVATE` [gift card activity type](entity:GiftCardActivityType).
+      x-release-status: PUBLIC
+      properties:
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: "The amount added to the gift card. This value is a positive integer.\n\nApplications that use a custom order processing system must specify this amount in the \n[CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request."
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the [order](entity:Order) that contains the `GIFT_CARD` line item.
+
+
+            Applications that use the Square Orders API to process orders must specify the order ID
+
+            [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.'
+        line_item_uid:
+          type:
+          - string
+          - 'null'
+          description: 'The UID of the `GIFT_CARD` line item in the order that represents the gift card purchase.
+
+
+            Applications that use the Square Orders API to process orders must specify the line item UID
+
+            in the [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.'
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: "A client-specified ID that associates the gift card activity with an entity in another system. \n\nApplications that use a custom order processing system can use this field to track information \nrelated to an order or payment."
+        buyer_payment_instrument_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: "The payment instrument IDs used to process the gift card purchase, such as a credit card ID \nor bank account ID. \n\nApplications that use a custom order processing system must specify payment instrument IDs in \nthe [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.\nSquare uses this information to perform compliance checks. \n\nFor applications that use the Square Orders API to process payments, Square has the necessary \ninstrument IDs to perform compliance checks.\n\nEach buyer payment instrument ID can contain a maximum of 255 characters."
+    GiftCardActivityAdjustIncrement:
+      type: object
+      description: Represents details about an `ADJUST_INCREMENT` [gift card activity type](entity:GiftCardActivityType).
+      x-release-status: PUBLIC
+      required:
+      - amount_money
+      - reason
+      properties:
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount added to the gift card balance. This value is a positive integer.
+        reason:
+          $ref: '#/components/schemas/GiftCardActivityAdjustIncrementReason'
+          description: 'The reason the gift card balance was adjusted.
+
+            See [Reason](#type-reason) for possible values'
+    GiftCardActivityBlock:
+      type: object
+      description: Represents details about a `BLOCK` [gift card activity type](entity:GiftCardActivityType).
       x-release-status: PUBLIC
       required:
       - reason
       properties:
         reason:
-          $ref: '#/components/schemas/GiftCardActivityUnblockReason'
-          description: 'The reason the gift card was unblocked.
+          $ref: '#/components/schemas/GiftCardActivityBlockReason'
+          description: 'The reason the gift card was blocked.
 
             See [Reason](#type-reason) for possible values'
+    GiftCardActivityTransferBalanceFrom:
+      type: object
+      description: Represents details about a `TRANSFER_BALANCE_FROM` [gift card activity type](entity:GiftCardActivityType).
+      x-release-status: PUBLIC
+      required:
+      - transfer_to_gift_card_id
+      - amount_money
+      properties:
+        transfer_to_gift_card_id:
+          type: string
+          description: The ID of the gift card to which the specified amount was transferred.
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount deducted from the gift card for the transfer. This value is a positive integer.
+    GiftCardActivityDeactivate:
+      type: object
+      description: Represents details about a `DEACTIVATE` [gift card activity type](entity:GiftCardActivityType).
+      x-release-status: PUBLIC
+      required:
+      - reason
+      properties:
+        reason:
+          $ref: '#/components/schemas/GiftCardActivityDeactivateReason'
+          description: 'The reason the gift card was deactivated.
+
+            See [Reason](#type-reason) for possible values'
+    GiftCardActivityLoad:
+      type: object
+      description: Represents details about a `LOAD` [gift card activity type](entity:GiftCardActivityType).
+      x-release-status: PUBLIC
+      properties:
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: "The amount added to the gift card. This value is a positive integer.\n\nApplications that use a custom order processing system must specify this amount in the \n[CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request."
+        order_id:
+          type:
+          - string
+          - 'null'
+          description: "The ID of the [order](entity:Order) that contains the `GIFT_CARD` line item.\n\nApplications that use the Square Orders API to process orders must specify the order ID in the \n[CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request."
+        line_item_uid:
+          type:
+          - string
+          - 'null'
+          description: 'The UID of the `GIFT_CARD` line item in the order that represents the additional funds for the gift card.
+
+
+            Applications that use the Square Orders API to process orders must specify the line item UID
+
+            in the [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.'
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: "A client-specified ID that associates the gift card activity with an entity in another system. \n\nApplications that use a custom order processing system can use this field to track information related to \nan order or payment."
+        buyer_payment_instrument_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: "The payment instrument IDs used to process the order for the additional funds, such as a credit card ID \nor bank account ID. \n\nApplications that use a custom order processing system must specify payment instrument IDs in \nthe [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.\nSquare uses this information to perform compliance checks. \n\nFor applications that use the Square Orders API to process payments, Square has the necessary \ninstrument IDs to perform compliance checks.\n\nEach buyer payment instrument ID can contain a maximum of 255 characters."
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     ErrorCode:
       type: string
       enum:
@@ -999,46 +1145,9 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    GiftCardActivityRefund:
+    ListGiftCardActivitiesResponse:
       type: object
-      description: Represents details about a `REFUND` [gift card activity type](entity:GiftCardActivityType).
-      x-release-status: PUBLIC
-      properties:
-        redeem_activity_id:
-          type:
-          - string
-          - 'null'
-          description: "The ID of the refunded `REDEEM` gift card activity. Square populates this field if the \n`payment_id` in the corresponding [RefundPayment](api-endpoint:Refunds-RefundPayment) request \nrepresents a gift card redemption.\n\nFor applications that use a custom payment processing system, this field is required when creating\na `REFUND` activity. The provided `REDEEM` activity ID must be linked to the same gift card."
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: 'The amount added to the gift card for the refund. This value is a positive integer.
-
-
-            This field is required when creating a `REFUND` activity. The amount can represent a full or partial refund.'
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: A client-specified ID that associates the gift card activity with an entity in another system.
-        payment_id:
-          type: string
-          description: "The ID of the refunded payment. Square populates this field if the refund is for a \npayment processed by Square. This field matches the `payment_id` in the corresponding\n[RefundPayment](api-endpoint:Refunds-RefundPayment) request."
-          readOnly: true
-    GiftCardActivityImportReversal:
-      type: object
-      description: Represents details about an `IMPORT_REVERSAL` [gift card activity type](entity:GiftCardActivityType).
-      x-release-status: PUBLIC
-      required:
-      - amount_money
-      properties:
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: "The amount of money cleared from the third-party gift card when \nthe import was reversed."
-    CreateGiftCardActivityResponse:
-      type: object
-      description: 'A response that contains a `GiftCardActivity` that was created.
-
-        The response might contain a set of `Error` objects if the request resulted in errors.'
+      description: "A response that contains a list of `GiftCardActivity` objects. If the request resulted in errors, \nthe response contains a set of `Error` objects."
       x-release-status: PUBLIC
       properties:
         errors:
@@ -1046,12 +1155,38 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
-        gift_card_activity:
-          $ref: '#/components/schemas/GiftCardActivity'
-          description: The gift card activity that was created.
+        gift_card_activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/GiftCardActivity'
+          description: The requested gift card activities or an empty object if none are found.
+        cursor:
+          type: string
+          description: 'When a response is truncated, it includes a cursor that you can use in a
+
+            subsequent request to retrieve the next set of activities. If a cursor is not present, this is
+
+            the final response.
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
       example:
-        gift_card_activity:
-          activate_activity_details:
+        gift_card_activities:
+        - created_at: '2021-06-02T22:26:38.000Z'
+          gift_card_balance_money:
+            amount: 700
+            currency: USD
+          gift_card_gan: '7783320002929081'
+          gift_card_id: gftc:6d55a72470d940c6ba09c0ab8ad08d20
+          id: gcact_897698f894b44b3db46c6147e26a0e19
+          location_id: 81FN9BNFZTKS4
+          payment_id: dEv2eksNPy6GqdYiLe4ZBNk6HqXZY
+          redeem_activity_details:
+            amount_money:
+              amount: 300
+              currency: USD
+          status: COMPLETED
+          type: REDEEM
+        - activate_activity_details:
             amount_money:
               amount: 1000
               currency: USD
@@ -1063,9 +1198,41 @@ components:
             currency: USD
           gift_card_gan: '7783320002929081'
           gift_card_id: gftc:6d55a72470d940c6ba09c0ab8ad08d20
-          id: gcact_c8f8cbf1f24b448d8ecf39ed03f97864
+          id: gcact_b968ebfc7d46437b945be7b9e09123b4
           location_id: 81FN9BNFZTKS4
           type: ACTIVATE
+    GiftCardActivityAdjustDecrementReason:
+      type: string
+      enum:
+      - SUSPICIOUS_ACTIVITY
+      - BALANCE_ACCIDENTALLY_INCREASED
+      - SUPPORT_ISSUE
+      - PURCHASE_WAS_REFUNDED
+      x-enum-elements:
+      - name: SUSPICIOUS_ACTIVITY
+        description: 'The balance was decreased because the seller detected suspicious or fraudulent activity
+
+          on the gift card.'
+      - name: BALANCE_ACCIDENTALLY_INCREASED
+        description: The balance was decreased to reverse an unintentional balance increase.
+      - name: SUPPORT_ISSUE
+        description: The balance was decreased to accommodate support issues.
+      - name: PURCHASE_WAS_REFUNDED
+        description: 'The balance was decreased because the order used to purchase or reload the
+
+          gift card was refunded.'
+      description: Indicates the reason for deducting money from a [gift card](entity:GiftCard).
+      x-release-status: PUBLIC
+    GiftCardActivityImportReversal:
+      type: object
+      description: Represents details about an `IMPORT_REVERSAL` [gift card activity type](entity:GiftCardActivityType).
+      x-release-status: PUBLIC
+      required:
+      - amount_money
+      properties:
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: "The amount of money cleared from the third-party gift card when \nthe import was reversed."
     GiftCardActivityClearBalance:
       type: object
       description: Represents details about a `CLEAR_BALANCE` [gift card activity type](entity:GiftCardActivityType).
@@ -1078,39 +1245,80 @@ components:
           description: 'The reason the gift card balance was cleared.
 
             See [Reason](#type-reason) for possible values'
-    GiftCardActivityUnlinkedActivityRefund:
-      type: object
-      description: Represents details about an `UNLINKED_ACTIVITY_REFUND` [gift card activity type](entity:GiftCardActivityType).
-      x-release-status: PUBLIC
-      required:
-      - amount_money
-      properties:
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount added to the gift card for the refund. This value is a positive integer.
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: A client-specified ID that associates the gift card activity with an entity in another system.
-        payment_id:
-          type: string
-          description: The ID of the refunded payment. This field is not used starting in Square version 2022-06-16.
-          readOnly: true
-    GiftCardActivityRedeemStatus:
+    GiftCardActivityType:
       type: string
       enum:
-      - PENDING
-      - COMPLETED
-      - CANCELED
+      - ACTIVATE
+      - LOAD
+      - REDEEM
+      - CLEAR_BALANCE
+      - DEACTIVATE
+      - ADJUST_INCREMENT
+      - ADJUST_DECREMENT
+      - REFUND
+      - UNLINKED_ACTIVITY_REFUND
+      - IMPORT
+      - BLOCK
+      - UNBLOCK
+      - IMPORT_REVERSAL
+      - TRANSFER_BALANCE_FROM
+      - TRANSFER_BALANCE_TO
       x-enum-elements:
-      - name: PENDING
-        description: "The gift card redemption is pending. `PENDING` is a temporary status that applies when a \ngift card is redeemed from Square Point of Sale or another Square product. A `PENDING` status is updated to \n`COMPLETED` if the payment is captured or `CANCELED` if the authorization is voided."
-      - name: COMPLETED
-        description: The gift card redemption is completed.
-      - name: CANCELED
-        description: "The gift card redemption is canceled. A redemption is canceled if the authorization \non the gift card is voided."
-      description: "Indicates the status of a [gift card](entity:GiftCard) redemption. This status is relevant only for\nredemptions made from Square products (such as Square Point of Sale) because Square products use a \ntwo-state process. Gift cards redeemed using the Gift Card Activities API always have a `COMPLETED` status."
+      - name: ACTIVATE
+        description: "Activated a gift card with a balance. When a gift card is activated, Square changes \nthe gift card state from `PENDING` to `ACTIVE`. A gift card must be in the `ACTIVE` state \nto be used for other balance-changing activities."
+      - name: LOAD
+        description: Loaded a gift card with additional funds.
+      - name: REDEEM
+        description: Redeemed a gift card for a purchase.
+      - name: CLEAR_BALANCE
+        description: Set the balance of a gift card to zero.
+      - name: DEACTIVATE
+        description: Permanently blocked a gift card from balance-changing activities.
+      - name: ADJUST_INCREMENT
+        description: Added money to a gift card outside of a typical `ACTIVATE`, `LOAD`, or `REFUND` activity flow.
+      - name: ADJUST_DECREMENT
+        description: Deducted money from a gift card outside of a typical `REDEEM` activity flow.
+      - name: REFUND
+        description: "Added money to a gift card from a refunded transaction. A `REFUND` activity might be linked to \na Square payment, depending on how the payment and refund are processed. For example:\n- A payment processed by Square can be refunded to a `PENDING` or `ACTIVE` gift card using the Square\nSeller Dashboard, Square Point of Sale, or Refunds API.\n- A payment processed using a custom processing system can be refunded to the same gift card."
+      - name: UNLINKED_ACTIVITY_REFUND
+        description: 'Added money to a gift card from a refunded transaction that was processed using a custom payment
+
+          processing system and not linked to the gift card.'
+      - name: IMPORT
+        description: "Imported a third-party gift card with a balance. `IMPORT` activities are managed \nby Square and cannot be created using the Gift Card Activities API."
+      - name: BLOCK
+        description: "Temporarily blocked a gift card from balance-changing activities. `BLOCK` activities \nare managed by Square and cannot be created using the Gift Card Activities API."
+      - name: UNBLOCK
+        description: "Unblocked a gift card, which enables it to resume balance-changing activities. `UNBLOCK` \nactivities are managed by Square and cannot be created using the Gift Card Activities API."
+      - name: IMPORT_REVERSAL
+        description: "Reversed the import of a third-party gift card, which sets the gift card state to \n`PENDING` and clears the balance. `IMPORT_REVERSAL` activities are managed by Square and \ncannot be created using the Gift Card Activities API."
+      - name: TRANSFER_BALANCE_FROM
+        description: 'Deducted money from a gift card as the result of a transfer to the balance of another gift card.
+
+          `TRANSFER_BALANCE_FROM` activities are managed by Square and cannot be created using the Gift Card Activities API.'
+      - name: TRANSFER_BALANCE_TO
+        description: 'Added money to a gift card as the result of a transfer from the balance of another gift card.
+
+          `TRANSFER_BALANCE_TO` activities are managed by Square and cannot be created using the Gift Card Activities API.'
+      description: Indicates the type of [gift card activity](entity:GiftCardActivity).
+      x-release-status: PUBLIC
+    GiftCardActivityClearBalanceReason:
+      type: string
+      enum:
+      - SUSPICIOUS_ACTIVITY
+      - REUSE_GIFTCARD
+      - UNKNOWN_REASON
+      x-enum-elements:
+      - name: SUSPICIOUS_ACTIVITY
+        description: The seller suspects suspicious activity.
+      - name: REUSE_GIFTCARD
+        description: The seller cleared the balance to reuse the gift card.
+      - name: UNKNOWN_REASON
+        description: 'The gift card balance was cleared for an unknown reason.
+
+
+          This reason is read-only and cannot be used to create a `CLEAR_BALANCE` activity using the Gift Card Activities API.'
+      description: Indicates the reason for clearing the balance of a [gift card](entity:GiftCard).
       x-release-status: PUBLIC
     GiftCardActivityRedeem:
       type: object
@@ -1135,54 +1343,118 @@ components:
           $ref: '#/components/schemas/GiftCardActivityRedeemStatus'
           description: "The status of the gift card redemption. Gift cards redeemed from Square Point of Sale or the \nSquare Seller Dashboard use a two-state process: `PENDING` \nto `COMPLETED` or `PENDING` to  `CANCELED`. Gift cards redeemed using the Gift Card Activities API \nalways have a `COMPLETED` status.\nSee [Status](#type-status) for possible values"
           readOnly: true
-    GiftCardActivityAdjustDecrementReason:
+    GiftCardActivityBlockReason:
       type: string
       enum:
-      - SUSPICIOUS_ACTIVITY
-      - BALANCE_ACCIDENTALLY_INCREASED
-      - SUPPORT_ISSUE
-      - PURCHASE_WAS_REFUNDED
+      - CHARGEBACK_BLOCK
       x-enum-elements:
-      - name: SUSPICIOUS_ACTIVITY
-        description: 'The balance was decreased because the seller detected suspicious or fraudulent activity
-
-          on the gift card.'
-      - name: BALANCE_ACCIDENTALLY_INCREASED
-        description: The balance was decreased to reverse an unintentional balance increase.
-      - name: SUPPORT_ISSUE
-        description: The balance was decreased to accommodate support issues.
-      - name: PURCHASE_WAS_REFUNDED
-        description: 'The balance was decreased because the order used to purchase or reload the
-
-          gift card was refunded.'
-      description: Indicates the reason for deducting money from a [gift card](entity:GiftCard).
+      - name: CHARGEBACK_BLOCK
+        description: The gift card is blocked because the buyer initiated a chargeback on the gift card purchase.
+      description: Indicates the reason for blocking a [gift card](entity:GiftCard).
       x-release-status: PUBLIC
-    GiftCardActivityTransferBalanceTo:
-      type: object
-      description: Represents details about a `TRANSFER_BALANCE_TO` [gift card activity type](entity:GiftCardActivityType).
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
       x-release-status: PUBLIC
-      required:
-      - transfer_from_gift_card_id
-      - amount_money
-      properties:
-        transfer_from_gift_card_id:
-          type: string
-          description: The ID of the gift card from which the specified amount was transferred.
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount added to the gift card balance for the transfer. This value is a positive integer.
-    GiftCardActivityBlock:
+    GiftCardActivityUnblock:
       type: object
-      description: Represents details about a `BLOCK` [gift card activity type](entity:GiftCardActivityType).
+      description: Represents details about an `UNBLOCK` [gift card activity type](entity:GiftCardActivityType).
       x-release-status: PUBLIC
       required:
       - reason
       properties:
         reason:
-          $ref: '#/components/schemas/GiftCardActivityBlockReason'
-          description: 'The reason the gift card was blocked.
+          $ref: '#/components/schemas/GiftCardActivityUnblockReason'
+          description: 'The reason the gift card was unblocked.
 
             See [Reason](#type-reason) for possible values'
+    GiftCardActivityImport:
+      type: object
+      description: "Represents details about an `IMPORT` [gift card activity type](entity:GiftCardActivityType).\nThis activity type is used when Square imports a third-party gift card, in which case the \n`gan_source` of the gift card is set to `OTHER`."
+      x-release-status: PUBLIC
+      required:
+      - amount_money
+      properties:
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The balance amount on the imported gift card.
+    GiftCardActivityUnlinkedActivityRefund:
+      type: object
+      description: Represents details about an `UNLINKED_ACTIVITY_REFUND` [gift card activity type](entity:GiftCardActivityType).
+      x-release-status: PUBLIC
+      required:
+      - amount_money
+      properties:
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount added to the gift card for the refund. This value is a positive integer.
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: A client-specified ID that associates the gift card activity with an entity in another system.
+        payment_id:
+          type: string
+          description: The ID of the refunded payment. This field is not used starting in Square version 2022-06-16.
+          readOnly: true
+    GiftCardActivityAdjustIncrementReason:
+      type: string
+      enum:
+      - COMPLIMENTARY
+      - SUPPORT_ISSUE
+      - TRANSACTION_VOIDED
+      x-enum-elements:
+      - name: COMPLIMENTARY
+        description: The seller gifted a complimentary gift card balance increase.
+      - name: SUPPORT_ISSUE
+        description: "The seller increased the gift card balance \nto accommodate support issues."
+      - name: TRANSACTION_VOIDED
+        description: The transaction is voided.
+      description: Indicates the reason for adding money to a [gift card](entity:GiftCard).
+      x-release-status: PUBLIC
     Money:
       type: object
       description: 'Represents an amount of money. `Money` fields can be signed or unsigned.
@@ -1220,32 +1492,48 @@ components:
             See [Currency](entity:Currency) for possible values.
 
             See [Currency](#type-currency) for possible values'
-    GiftCardActivityAdjustIncrement:
+    GiftCardActivityRedeemStatus:
+      type: string
+      enum:
+      - PENDING
+      - COMPLETED
+      - CANCELED
+      x-enum-elements:
+      - name: PENDING
+        description: "The gift card redemption is pending. `PENDING` is a temporary status that applies when a \ngift card is redeemed from Square Point of Sale or another Square product. A `PENDING` status is updated to \n`COMPLETED` if the payment is captured or `CANCELED` if the authorization is voided."
+      - name: COMPLETED
+        description: The gift card redemption is completed.
+      - name: CANCELED
+        description: "The gift card redemption is canceled. A redemption is canceled if the authorization \non the gift card is voided."
+      description: "Indicates the status of a [gift card](entity:GiftCard) redemption. This status is relevant only for\nredemptions made from Square products (such as Square Point of Sale) because Square products use a \ntwo-state process. Gift cards redeemed using the Gift Card Activities API always have a `COMPLETED` status."
+      x-release-status: PUBLIC
+    CreateGiftCardActivityRequest:
       type: object
-      description: Represents details about an `ADJUST_INCREMENT` [gift card activity type](entity:GiftCardActivityType).
+      description: A request to create a gift card activity.
       x-release-status: PUBLIC
       required:
-      - amount_money
-      - reason
+      - idempotency_key
+      - gift_card_activity
       properties:
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount added to the gift card balance. This value is a positive integer.
-        reason:
-          $ref: '#/components/schemas/GiftCardActivityAdjustIncrementReason'
-          description: 'The reason the gift card balance was adjusted.
+        idempotency_key:
+          type: string
+          description: A unique string that identifies the `CreateGiftCardActivity` request.
+          minLength: 1
+          maxLength: 128
+        gift_card_activity:
+          $ref: '#/components/schemas/GiftCardActivity'
+          description: 'The activity to create for the gift card. This activity must specify `gift_card_id` or `gift_card_gan` for the target
 
-            See [Reason](#type-reason) for possible values'
-    GiftCardActivityImport:
-      type: object
-      description: "Represents details about an `IMPORT` [gift card activity type](entity:GiftCardActivityType).\nThis activity type is used when Square imports a third-party gift card, in which case the \n`gan_source` of the gift card is set to `OTHER`."
-      x-release-status: PUBLIC
-      required:
-      - amount_money
-      properties:
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The balance amount on the imported gift card.
+            gift card, the `location_id` where the activity occurred, and the activity `type` along with the corresponding activity details.'
+      example:
+        gift_card_activity:
+          activate_activity_details:
+            line_item_uid: eIWl7X0nMuO9Ewbh0ChIx
+            order_id: jJNGHm4gLI6XkFbwtiSLqK72KkAZY
+          gift_card_id: gftc:6d55a72470d940c6ba09c0ab8ad08d20
+          location_id: 81FN9BNFZTKS4
+          type: ACTIVATE
+        idempotency_key: U16kfr-kA70er-q4Rsym-7U7NnY
     Currency:
       type: string
       enum:
@@ -1803,290 +2091,36 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
-    GiftCardActivityTransferBalanceFrom:
+    GiftCardActivityRefund:
       type: object
-      description: Represents details about a `TRANSFER_BALANCE_FROM` [gift card activity type](entity:GiftCardActivityType).
-      x-release-status: PUBLIC
-      required:
-      - transfer_to_gift_card_id
-      - amount_money
-      properties:
-        transfer_to_gift_card_id:
-          type: string
-          description: The ID of the gift card to which the specified amount was transferred.
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount deducted from the gift card for the transfer. This value is a positive integer.
-    ErrorCategory:
-      type: string
-      enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
-      x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
-      x-release-status: PUBLIC
-    GiftCardActivityType:
-      type: string
-      enum:
-      - ACTIVATE
-      - LOAD
-      - REDEEM
-      - CLEAR_BALANCE
-      - DEACTIVATE
-      - ADJUST_INCREMENT
-      - ADJUST_DECREMENT
-      - REFUND
-      - UNLINKED_ACTIVITY_REFUND
-      - IMPORT
-      - BLOCK
-      - UNBLOCK
-      - IMPORT_REVERSAL
-      - TRANSFER_BALANCE_FROM
-      - TRANSFER_BALANCE_TO
-      x-enum-elements:
-      - name: ACTIVATE
-        description: "Activated a gift card with a balance. When a gift card is activated, Square changes \nthe gift card state from `PENDING` to `ACTIVE`. A gift card must be in the `ACTIVE` state \nto be used for other balance-changing activities."
-      - name: LOAD
-        description: Loaded a gift card with additional funds.
-      - name: REDEEM
-        description: Redeemed a gift card for a purchase.
-      - name: CLEAR_BALANCE
-        description: Set the balance of a gift card to zero.
-      - name: DEACTIVATE
-        description: Permanently blocked a gift card from balance-changing activities.
-      - name: ADJUST_INCREMENT
-        description: Added money to a gift card outside of a typical `ACTIVATE`, `LOAD`, or `REFUND` activity flow.
-      - name: ADJUST_DECREMENT
-        description: Deducted money from a gift card outside of a typical `REDEEM` activity flow.
-      - name: REFUND
-        description: "Added money to a gift card from a refunded transaction. A `REFUND` activity might be linked to \na Square payment, depending on how the payment and refund are processed. For example:\n- A payment processed by Square can be refunded to a `PENDING` or `ACTIVE` gift card using the Square\nSeller Dashboard, Square Point of Sale, or Refunds API.\n- A payment processed using a custom processing system can be refunded to the same gift card."
-      - name: UNLINKED_ACTIVITY_REFUND
-        description: 'Added money to a gift card from a refunded transaction that was processed using a custom payment
-
-          processing system and not linked to the gift card.'
-      - name: IMPORT
-        description: "Imported a third-party gift card with a balance. `IMPORT` activities are managed \nby Square and cannot be created using the Gift Card Activities API."
-      - name: BLOCK
-        description: "Temporarily blocked a gift card from balance-changing activities. `BLOCK` activities \nare managed by Square and cannot be created using the Gift Card Activities API."
-      - name: UNBLOCK
-        description: "Unblocked a gift card, which enables it to resume balance-changing activities. `UNBLOCK` \nactivities are managed by Square and cannot be created using the Gift Card Activities API."
-      - name: IMPORT_REVERSAL
-        description: "Reversed the import of a third-party gift card, which sets the gift card state to \n`PENDING` and clears the balance. `IMPORT_REVERSAL` activities are managed by Square and \ncannot be created using the Gift Card Activities API."
-      - name: TRANSFER_BALANCE_FROM
-        description: 'Deducted money from a gift card as the result of a transfer to the balance of another gift card.
-
-          `TRANSFER_BALANCE_FROM` activities are managed by Square and cannot be created using the Gift Card Activities API.'
-      - name: TRANSFER_BALANCE_TO
-        description: 'Added money to a gift card as the result of a transfer from the balance of another gift card.
-
-          `TRANSFER_BALANCE_TO` activities are managed by Square and cannot be created using the Gift Card Activities API.'
-      description: Indicates the type of [gift card activity](entity:GiftCardActivity).
-      x-release-status: PUBLIC
-    GiftCardActivityClearBalanceReason:
-      type: string
-      enum:
-      - SUSPICIOUS_ACTIVITY
-      - REUSE_GIFTCARD
-      - UNKNOWN_REASON
-      x-enum-elements:
-      - name: SUSPICIOUS_ACTIVITY
-        description: The seller suspects suspicious activity.
-      - name: REUSE_GIFTCARD
-        description: The seller cleared the balance to reuse the gift card.
-      - name: UNKNOWN_REASON
-        description: 'The gift card balance was cleared for an unknown reason.
-
-
-          This reason is read-only and cannot be used to create a `CLEAR_BALANCE` activity using the Gift Card Activities API.'
-      description: Indicates the reason for clearing the balance of a [gift card](entity:GiftCard).
-      x-release-status: PUBLIC
-    GiftCardActivityAdjustIncrementReason:
-      type: string
-      enum:
-      - COMPLIMENTARY
-      - SUPPORT_ISSUE
-      - TRANSACTION_VOIDED
-      x-enum-elements:
-      - name: COMPLIMENTARY
-        description: The seller gifted a complimentary gift card balance increase.
-      - name: SUPPORT_ISSUE
-        description: "The seller increased the gift card balance \nto accommodate support issues."
-      - name: TRANSACTION_VOIDED
-        description: The transaction is voided.
-      description: Indicates the reason for adding money to a [gift card](entity:GiftCard).
-      x-release-status: PUBLIC
-    GiftCardActivityActivate:
-      type: object
-      description: Represents details about an `ACTIVATE` [gift card activity type](entity:GiftCardActivityType).
+      description: Represents details about a `REFUND` [gift card activity type](entity:GiftCardActivityType).
       x-release-status: PUBLIC
       properties:
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: "The amount added to the gift card. This value is a positive integer.\n\nApplications that use a custom order processing system must specify this amount in the \n[CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request."
-        order_id:
+        redeem_activity_id:
           type:
           - string
           - 'null'
-          description: 'The ID of the [order](entity:Order) that contains the `GIFT_CARD` line item.
+          description: "The ID of the refunded `REDEEM` gift card activity. Square populates this field if the \n`payment_id` in the corresponding [RefundPayment](api-endpoint:Refunds-RefundPayment) request \nrepresents a gift card redemption.\n\nFor applications that use a custom payment processing system, this field is required when creating\na `REFUND` activity. The provided `REDEEM` activity ID must be linked to the same gift card."
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: 'The amount added to the gift card for the refund. This value is a positive integer.
 
 
-            Applications that use the Square Orders API to process orders must specify the order ID
-
-            [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.'
-        line_item_uid:
-          type:
-          - string
-          - 'null'
-          description: 'The UID of the `GIFT_CARD` line item in the order that represents the gift card purchase.
-
-
-            Applications that use the Square Orders API to process orders must specify the line item UID
-
-            in the [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.'
+            This field is required when creating a `REFUND` activity. The amount can represent a full or partial refund.'
         reference_id:
           type:
           - string
           - 'null'
-          description: "A client-specified ID that associates the gift card activity with an entity in another system. \n\nApplications that use a custom order processing system can use this field to track information \nrelated to an order or payment."
-        buyer_payment_instrument_ids:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: "The payment instrument IDs used to process the gift card purchase, such as a credit card ID \nor bank account ID. \n\nApplications that use a custom order processing system must specify payment instrument IDs in \nthe [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.\nSquare uses this information to perform compliance checks. \n\nFor applications that use the Square Orders API to process payments, Square has the necessary \ninstrument IDs to perform compliance checks.\n\nEach buyer payment instrument ID can contain a maximum of 255 characters."
-    CreateGiftCardActivityRequest:
-      type: object
-      description: A request to create a gift card activity.
-      x-release-status: PUBLIC
-      required:
-      - idempotency_key
-      - gift_card_activity
-      properties:
-        idempotency_key:
+          description: A client-specified ID that associates the gift card activity with an entity in another system.
+        payment_id:
           type: string
-          description: A unique string that identifies the `CreateGiftCardActivity` request.
-          minLength: 1
-          maxLength: 128
-        gift_card_activity:
-          $ref: '#/components/schemas/GiftCardActivity'
-          description: 'The activity to create for the gift card. This activity must specify `gift_card_id` or `gift_card_gan` for the target
-
-            gift card, the `location_id` where the activity occurred, and the activity `type` along with the corresponding activity details.'
-      example:
-        gift_card_activity:
-          activate_activity_details:
-            line_item_uid: eIWl7X0nMuO9Ewbh0ChIx
-            order_id: jJNGHm4gLI6XkFbwtiSLqK72KkAZY
-          gift_card_id: gftc:6d55a72470d940c6ba09c0ab8ad08d20
-          location_id: 81FN9BNFZTKS4
-          type: ACTIVATE
-        idempotency_key: U16kfr-kA70er-q4Rsym-7U7NnY
-    GiftCardActivityUnblockReason:
-      type: string
-      enum:
-      - CHARGEBACK_UNBLOCK
-      x-enum-elements:
-      - name: CHARGEBACK_UNBLOCK
-        description: The gift card is unblocked because a chargeback was ruled in favor of the seller.
-      description: Indicates the reason for unblocking a [gift card](entity:GiftCard).
-      x-release-status: PUBLIC
-    GiftCardActivityBlockReason:
-      type: string
-      enum:
-      - CHARGEBACK_BLOCK
-      x-enum-elements:
-      - name: CHARGEBACK_BLOCK
-        description: The gift card is blocked because the buyer initiated a chargeback on the gift card purchase.
-      description: Indicates the reason for blocking a [gift card](entity:GiftCard).
-      x-release-status: PUBLIC
-    GiftCardActivityAdjustDecrement:
+          description: "The ID of the refunded payment. Square populates this field if the refund is for a \npayment processed by Square. This field matches the `payment_id` in the corresponding\n[RefundPayment](api-endpoint:Refunds-RefundPayment) request."
+          readOnly: true
+    CreateGiftCardActivityResponse:
       type: object
-      description: Represents details about an `ADJUST_DECREMENT` [gift card activity type](entity:GiftCardActivityType).
-      x-release-status: PUBLIC
-      required:
-      - amount_money
-      - reason
-      properties:
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount deducted from the gift card balance. This value is a positive integer.
-        reason:
-          $ref: '#/components/schemas/GiftCardActivityAdjustDecrementReason'
-          description: 'The reason the gift card balance was adjusted.
+      description: 'A response that contains a `GiftCardActivity` that was created.
 
-            See [Reason](#type-reason) for possible values'
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
-
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
-      x-release-status: PUBLIC
-      required:
-      - category
-      - code
-      properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    ListGiftCardActivitiesResponse:
-      type: object
-      description: "A response that contains a list of `GiftCardActivity` objects. If the request resulted in errors, \nthe response contains a set of `Error` objects."
+        The response might contain a set of `Error` objects if the request resulted in errors.'
       x-release-status: PUBLIC
       properties:
         errors:
@@ -2094,38 +2128,12 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
-        gift_card_activities:
-          type: array
-          items:
-            $ref: '#/components/schemas/GiftCardActivity'
-          description: The requested gift card activities or an empty object if none are found.
-        cursor:
-          type: string
-          description: 'When a response is truncated, it includes a cursor that you can use in a
-
-            subsequent request to retrieve the next set of activities. If a cursor is not present, this is
-
-            the final response.
-
-            For more information, see [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination).'
+        gift_card_activity:
+          $ref: '#/components/schemas/GiftCardActivity'
+          description: The gift card activity that was created.
       example:
-        gift_card_activities:
-        - created_at: '2021-06-02T22:26:38.000Z'
-          gift_card_balance_money:
-            amount: 700
-            currency: USD
-          gift_card_gan: '7783320002929081'
-          gift_card_id: gftc:6d55a72470d940c6ba09c0ab8ad08d20
-          id: gcact_897698f894b44b3db46c6147e26a0e19
-          location_id: 81FN9BNFZTKS4
-          payment_id: dEv2eksNPy6GqdYiLe4ZBNk6HqXZY
-          redeem_activity_details:
-            amount_money:
-              amount: 300
-              currency: USD
-          status: COMPLETED
-          type: REDEEM
-        - activate_activity_details:
+        gift_card_activity:
+          activate_activity_details:
             amount_money:
               amount: 1000
               currency: USD
@@ -2137,21 +2145,30 @@ components:
             currency: USD
           gift_card_gan: '7783320002929081'
           gift_card_id: gftc:6d55a72470d940c6ba09c0ab8ad08d20
-          id: gcact_b968ebfc7d46437b945be7b9e09123b4
+          id: gcact_c8f8cbf1f24b448d8ecf39ed03f97864
           location_id: 81FN9BNFZTKS4
           type: ACTIVATE
-    GiftCardActivityDeactivate:
-      type: object
-      description: Represents details about a `DEACTIVATE` [gift card activity type](entity:GiftCardActivityType).
-      x-release-status: PUBLIC
-      required:
-      - reason
-      properties:
-        reason:
-          $ref: '#/components/schemas/GiftCardActivityDeactivateReason'
-          description: 'The reason the gift card was deactivated.
+    GiftCardActivityDeactivateReason:
+      type: string
+      enum:
+      - SUSPICIOUS_ACTIVITY
+      - UNKNOWN_REASON
+      - CHARGEBACK_DEACTIVATE
+      x-enum-elements:
+      - name: SUSPICIOUS_ACTIVITY
+        description: The seller suspects suspicious activity.
+      - name: UNKNOWN_REASON
+        description: 'The gift card was deactivated for an unknown reason.
 
-            See [Reason](#type-reason) for possible values'
+
+          This reason is read-only and cannot be used to create a `DEACTIVATE` activity using the Gift Card Activities API.'
+      - name: CHARGEBACK_DEACTIVATE
+        description: 'A chargeback on the gift card purchase (or the gift card load) was ruled in favor of the buyer.
+
+
+          This reason is read-only and cannot be used to create a `DEACTIVATE` activity using the Gift Card Activities API.'
+      description: Indicates the reason for deactivating a [gift card](entity:GiftCard).
+      x-release-status: PUBLIC
     GiftCardActivity:
       type: object
       description: "Represents an action performed on a [gift card](entity:GiftCard) that affects its state or balance. \nA gift card activity contains information about a specific activity type. For example, a `REDEEM` activity\nincludes a `redeem_activity_details` field that contains information about the redemption."
@@ -2245,62 +2262,45 @@ components:
 
             a gift as the result of a transfer to another gift card.'
           readOnly: true
-    GiftCardActivityDeactivateReason:
-      type: string
-      enum:
-      - SUSPICIOUS_ACTIVITY
-      - UNKNOWN_REASON
-      - CHARGEBACK_DEACTIVATE
-      x-enum-elements:
-      - name: SUSPICIOUS_ACTIVITY
-        description: The seller suspects suspicious activity.
-      - name: UNKNOWN_REASON
-        description: 'The gift card was deactivated for an unknown reason.
-
-
-          This reason is read-only and cannot be used to create a `DEACTIVATE` activity using the Gift Card Activities API.'
-      - name: CHARGEBACK_DEACTIVATE
-        description: 'A chargeback on the gift card purchase (or the gift card load) was ruled in favor of the buyer.
-
-
-          This reason is read-only and cannot be used to create a `DEACTIVATE` activity using the Gift Card Activities API.'
-      description: Indicates the reason for deactivating a [gift card](entity:GiftCard).
-      x-release-status: PUBLIC
-    GiftCardActivityLoad:
+    GiftCardActivityAdjustDecrement:
       type: object
-      description: Represents details about a `LOAD` [gift card activity type](entity:GiftCardActivityType).
+      description: Represents details about an `ADJUST_DECREMENT` [gift card activity type](entity:GiftCardActivityType).
       x-release-status: PUBLIC
+      required:
+      - amount_money
+      - reason
       properties:
         amount_money:
           $ref: '#/components/schemas/Money'
-          description: "The amount added to the gift card. This value is a positive integer.\n\nApplications that use a custom order processing system must specify this amount in the \n[CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request."
-        order_id:
-          type:
-          - string
-          - 'null'
-          description: "The ID of the [order](entity:Order) that contains the `GIFT_CARD` line item.\n\nApplications that use the Square Orders API to process orders must specify the order ID in the \n[CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request."
-        line_item_uid:
-          type:
-          - string
-          - 'null'
-          description: 'The UID of the `GIFT_CARD` line item in the order that represents the additional funds for the gift card.
+          description: The amount deducted from the gift card balance. This value is a positive integer.
+        reason:
+          $ref: '#/components/schemas/GiftCardActivityAdjustDecrementReason'
+          description: 'The reason the gift card balance was adjusted.
 
-
-            Applications that use the Square Orders API to process orders must specify the line item UID
-
-            in the [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.'
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: "A client-specified ID that associates the gift card activity with an entity in another system. \n\nApplications that use a custom order processing system can use this field to track information related to \nan order or payment."
-        buyer_payment_instrument_ids:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: "The payment instrument IDs used to process the order for the additional funds, such as a credit card ID \nor bank account ID. \n\nApplications that use a custom order processing system must specify payment instrument IDs in \nthe [CreateGiftCardActivity](api-endpoint:GiftCardActivities-CreateGiftCardActivity) request.\nSquare uses this information to perform compliance checks. \n\nFor applications that use the Square Orders API to process payments, Square has the necessary \ninstrument IDs to perform compliance checks.\n\nEach buyer payment instrument ID can contain a maximum of 255 characters."
+            See [Reason](#type-reason) for possible values'
+    GiftCardActivityTransferBalanceTo:
+      type: object
+      description: Represents details about a `TRANSFER_BALANCE_TO` [gift card activity type](entity:GiftCardActivityType).
+      x-release-status: PUBLIC
+      required:
+      - transfer_from_gift_card_id
+      - amount_money
+      properties:
+        transfer_from_gift_card_id:
+          type: string
+          description: The ID of the gift card from which the specified amount was transferred.
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount added to the gift card balance for the transfer. This value is a positive integer.
+    GiftCardActivityUnblockReason:
+      type: string
+      enum:
+      - CHARGEBACK_UNBLOCK
+      x-enum-elements:
+      - name: CHARGEBACK_UNBLOCK
+        description: The gift card is unblocked because a chargeback was ruled in favor of the seller.
+      description: Indicates the reason for unblocking a [gift card](entity:GiftCard).
+      x-release-status: PUBLIC
   securitySchemes:
     oauth2:
       type: oauth2

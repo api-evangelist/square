@@ -290,7 +290,269 @@ paths:
                 $ref: '#/components/schemas/ListPayoutEntriesResponse'
 components:
   schemas:
-    PaymentBalanceActivityReserveHoldDetail:
+    ActivityType:
+      type: string
+      enum:
+      - ADJUSTMENT
+      - APP_FEE_REFUND
+      - APP_FEE_REVENUE
+      - AUTOMATIC_SAVINGS
+      - AUTOMATIC_SAVINGS_REVERSED
+      - CHARGE
+      - DEPOSIT_FEE
+      - DEPOSIT_FEE_REVERSED
+      - DISPUTE
+      - ESCHEATMENT
+      - FEE
+      - FREE_PROCESSING
+      - HOLD_ADJUSTMENT
+      - INITIAL_BALANCE_CHANGE
+      - MONEY_TRANSFER
+      - MONEY_TRANSFER_REVERSAL
+      - OPEN_DISPUTE
+      - OTHER
+      - OTHER_ADJUSTMENT
+      - PAID_SERVICE_FEE
+      - PAID_SERVICE_FEE_REFUND
+      - REDEMPTION_CODE
+      - REFUND
+      - RELEASE_ADJUSTMENT
+      - RESERVE_HOLD
+      - RESERVE_RELEASE
+      - RETURNED_PAYOUT
+      - SQUARE_CAPITAL_PAYMENT
+      - SQUARE_CAPITAL_REVERSED_PAYMENT
+      - SUBSCRIPTION_FEE
+      - SUBSCRIPTION_FEE_PAID_REFUND
+      - SUBSCRIPTION_FEE_REFUND
+      - TAX_ON_FEE
+      - THIRD_PARTY_FEE
+      - THIRD_PARTY_FEE_REFUND
+      - PAYOUT
+      - AUTOMATIC_BITCOIN_CONVERSIONS
+      - AUTOMATIC_BITCOIN_CONVERSIONS_REVERSED
+      - CREDIT_CARD_REPAYMENT
+      - CREDIT_CARD_REPAYMENT_REVERSED
+      - LOCAL_OFFERS_CASHBACK
+      - LOCAL_OFFERS_FEE
+      - PERCENTAGE_PROCESSING_ENROLLMENT
+      - PERCENTAGE_PROCESSING_DEACTIVATION
+      - PERCENTAGE_PROCESSING_REPAYMENT
+      - PERCENTAGE_PROCESSING_REPAYMENT_REVERSED
+      - PROCESSING_FEE
+      - PROCESSING_FEE_REFUND
+      - UNDO_PROCESSING_FEE_REFUND
+      - GIFT_CARD_LOAD_FEE
+      - GIFT_CARD_LOAD_FEE_REFUND
+      - UNDO_GIFT_CARD_LOAD_FEE_REFUND
+      - BALANCE_FOLDERS_TRANSFER
+      - BALANCE_FOLDERS_TRANSFER_REVERSED
+      - GIFT_CARD_POOL_TRANSFER
+      - GIFT_CARD_POOL_TRANSFER_REVERSED
+      - SQUARE_PAYROLL_TRANSFER
+      - SQUARE_PAYROLL_TRANSFER_REVERSED
+      x-enum-elements:
+      - name: ADJUSTMENT
+        description: A manual adjustment applied to the seller's account by Square.
+      - name: APP_FEE_REFUND
+        description: A refund for an application fee on a payment.
+      - name: APP_FEE_REVENUE
+        description: Revenue generated from an application fee on a payment.
+      - name: AUTOMATIC_SAVINGS
+        description: An automatic transfer from the payment processing balance to the Square Savings account. These are generally proportional to the seller's sales.
+      - name: AUTOMATIC_SAVINGS_REVERSED
+        description: An automatic transfer from the Square Savings account back to the processing balance. These are generally proportional to the seller's refunds.
+      - name: CHARGE
+        description: A credit card payment capture.
+      - name: DEPOSIT_FEE
+        description: A fee assessed because of a deposit, such as an instant deposit.
+      - name: DEPOSIT_FEE_REVERSED
+        description: Indicates that Square returned a fee that was previously assessed because of a deposit, such as an instant deposit, back to the seller's account.
+      - name: DISPUTE
+        description: The balance change due to a dispute event.
+      - name: ESCHEATMENT
+        description: An escheatment entry for remittance.
+      - name: FEE
+        description: The cost plus adjustment fee.
+      - name: FREE_PROCESSING
+        description: 'Square offers free payments processing for a variety of business scenarios, including seller
+
+          referrals or when Square wants to apologize (for example, for a bug, customer service, or repricing complication).
+
+          This entry represents a credit to the seller for the purposes of free processing.'
+      - name: HOLD_ADJUSTMENT
+        description: An adjustment made by Square related to holding a payment.
+      - name: INITIAL_BALANCE_CHANGE
+        description: An external change to a seller's balance (initial, in the sense that it causes the creation of the other activity types, such as a hold and refund).
+      - name: MONEY_TRANSFER
+        description: The balance change from a money transfer.
+      - name: MONEY_TRANSFER_REVERSAL
+        description: The reversal of a money transfer.
+      - name: OPEN_DISPUTE
+        description: The balance change for a chargeback that's been filed.
+      - name: OTHER
+        description: Any other type that doesn't belong in the rest of the types.
+      - name: OTHER_ADJUSTMENT
+        description: Any other type of adjustment that doesn't fall under existing types.
+      - name: PAID_SERVICE_FEE
+        description: A fee paid to a third-party seller.
+      - name: PAID_SERVICE_FEE_REFUND
+        description: A fee refunded to a third-party seller.
+      - name: REDEMPTION_CODE
+        description: Repayment for a redemption code.
+      - name: REFUND
+        description: A refund for an existing card payment.
+      - name: RELEASE_ADJUSTMENT
+        description: An adjustment made by Square related to releasing a payment.
+      - name: RESERVE_HOLD
+        description: Fees paid for a funding risk reserve.
+      - name: RESERVE_RELEASE
+        description: Fees released from a risk reserve.
+      - name: RETURNED_PAYOUT
+        description: 'An entry created when Square receives a response for the ACH file that Square sent indicating that the
+
+          settlement of the original entry failed.'
+      - name: SQUARE_CAPITAL_PAYMENT
+        description: A capital merchant cash advance (MCA) assessment. These are generally proportional to the merchant's sales but can be issued for other reasons related to the MCA.
+      - name: SQUARE_CAPITAL_REVERSED_PAYMENT
+        description: A capital merchant cash advance (MCA) assessment refund. These are generally proportional to the merchant's refunds but can be issued for other reasons related to the MCA.
+      - name: SUBSCRIPTION_FEE
+        description: A fee charged for subscription to a Square product.
+      - name: SUBSCRIPTION_FEE_PAID_REFUND
+        description: A Square subscription fee that's been refunded.
+      - name: SUBSCRIPTION_FEE_REFUND
+        description: The refund of a previously charged Square product subscription fee.
+      - name: TAX_ON_FEE
+        description: The tax paid on fee amounts.
+      - name: THIRD_PARTY_FEE
+        description: Fees collected by a third-party platform.
+      - name: THIRD_PARTY_FEE_REFUND
+        description: Refunded fees from a third-party platform.
+      - name: PAYOUT
+        description: The balance change due to a money transfer. Note that this type is never returned by the Payouts API.
+      - name: AUTOMATIC_BITCOIN_CONVERSIONS
+        description: Indicates that the portion of each payment withheld by Square was automatically converted into bitcoin using Cash App. The seller manages their bitcoin in their Cash App account.
+      - name: AUTOMATIC_BITCOIN_CONVERSIONS_REVERSED
+        description: Indicates that a withheld payment, which was scheduled to be converted into bitcoin using Cash App, was deposited back to the Square payments balance.
+      - name: CREDIT_CARD_REPAYMENT
+        description: Indicates that a repayment toward the outstanding balance on the seller's Square credit card was made.
+      - name: CREDIT_CARD_REPAYMENT_REVERSED
+        description: Indicates that a repayment toward the outstanding balance on the seller's Square credit card was reversed.
+      - name: LOCAL_OFFERS_CASHBACK
+        description: Cashback amount given by a Square Local Offers seller to their customer for a purchase.
+      - name: LOCAL_OFFERS_FEE
+        description: A commission fee paid by a Square Local Offers seller to Square for a purchase discovered through Square Local Offers.
+      - name: PERCENTAGE_PROCESSING_ENROLLMENT
+        description: When activating Percentage Processing, a credit is applied to the seller’s account to offset any negative balance caused by a dispute.
+      - name: PERCENTAGE_PROCESSING_DEACTIVATION
+        description: Deducting the outstanding Percentage Processing balance from the seller’s account. It's the final installment in repaying the dispute-induced negative balance through percentage processing.
+      - name: PERCENTAGE_PROCESSING_REPAYMENT
+        description: Withheld funds from a payment to cover a negative balance. It's an installment to repay the amount from a dispute that had been offset during Percentage Processing enrollment.
+      - name: PERCENTAGE_PROCESSING_REPAYMENT_REVERSED
+        description: The reversal of a percentage processing repayment that happens for example when a refund is issued for a payment.
+      - name: PROCESSING_FEE
+        description: The processing fee for a payment. If sellers opt for Gross Settlement, i.e., direct bank withdrawal instead of deducting fees from daily sales, the processing fee is recorded separately as a new payout entry, not part of the CHARGE payout entry.
+      - name: PROCESSING_FEE_REFUND
+        description: The processing fee for a payment refund issued by sellers enrolled in Gross Settlement. The refunded processing fee is recorded separately as a new payout entry, not part of the REFUND payout entry.
+      - name: UNDO_PROCESSING_FEE_REFUND
+        description: When undoing a processing fee refund in a Gross Settlement payment, this payout entry type is used.
+      - name: GIFT_CARD_LOAD_FEE
+        description: Fee collected during the sale or reload of a gift card. This fee, which is a portion of the amount loaded on the gift card, is deducted from the merchant's payment balance.
+      - name: GIFT_CARD_LOAD_FEE_REFUND
+        description: Refund for fee charged during the sale or reload of a gift card.
+      - name: UNDO_GIFT_CARD_LOAD_FEE_REFUND
+        description: The undo of a refund for a fee charged during the sale or reload of a gift card.
+      - name: BALANCE_FOLDERS_TRANSFER
+        description: A transfer of funds to a banking folder. In the United States, the folder name is 'Checking Folder'; in Canada, it's 'Balance Folder.'
+      - name: BALANCE_FOLDERS_TRANSFER_REVERSED
+        description: A reversal of transfer of funds from a banking folder. In the United States, the folder name is 'Checking Folder'; in Canada, it's 'Balance Folder.'
+      - name: GIFT_CARD_POOL_TRANSFER
+        description: A transfer of gift card funds to a central gift card pool account. In franchises, when gift cards are loaded or reloaded at any location, the money transfers to the franchisor's account.
+      - name: GIFT_CARD_POOL_TRANSFER_REVERSED
+        description: A reversal of transfer of gift card funds from a central gift card pool account. In franchises, when gift cards are loaded or reloaded at any location, the money transfers to the franchisor's account.
+      - name: SQUARE_PAYROLL_TRANSFER
+        description: A payroll payment that was transferred to a team member’s bank account.
+      - name: SQUARE_PAYROLL_TRANSFER_REVERSED
+        description: A payroll payment to a team member’s bank account that was deposited back to the seller’s account by Square.
+      x-release-status: PUBLIC
+    ListPayoutsResponse:
+      type: object
+      description: The response to retrieve payout records entries.
+      x-release-status: PUBLIC
+      properties:
+        payouts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payout'
+          description: The requested list of payouts.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example:
+        cursor: EMPCyStibo64hS8wLayZPp3oedR3AeEUNd3z7u6zphi72LQZFIEMbkKVvot9eefpU
+        payouts:
+        - amount_money:
+            amount: 6259
+            currency_code: USD
+          arrival_date: '2022-03-29'
+          created_at: '2022-03-29T16:12:31Z'
+          destination:
+            id: ccof:ZPp3oedR3AeEUNd3z7
+            type: CARD
+          end_to_end_id: L2100000005
+          id: po_b345d2c7-90b3-4f0b-a2aa-df1def7f8afc
+          location_id: L88917AVBK2S5
+          payout_fee:
+          - amount_money:
+              amount: 95
+              currency_code: USD
+            effective_at: '2022-03-29T16:12:31Z'
+            type: TRANSFER_FEE
+          status: PAID
+          type: BATCH
+          updated_at: '2022-03-30T01:07:22.875Z'
+          version: 2
+        - amount_money:
+            amount: -103
+            currency_code: USD
+          arrival_date: '2022-03-24'
+          created_at: '2022-03-24T03:07:09Z'
+          destination:
+            id: bact:ZPp3oedR3AeEUNd3z7
+            type: BANK_ACCOUNT
+          end_to_end_id: L2100000006
+          id: po_f3c0fb38-a5ce-427d-b858-52b925b72e45
+          location_id: L88917AVBK2S5
+          status: PAID
+          type: BATCH
+          updated_at: '2022-03-24T03:07:09Z'
+          version: 1
+    PayoutFee:
+      type: object
+      description: Represents a payout fee that can incur as part of a payout.
+      x-release-status: PUBLIC
+      properties:
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The money amount of the payout fee.
+        effective_at:
+          type:
+          - string
+          - 'null'
+          description: The timestamp of when the fee takes effect, in RFC 3339 format.
+        type:
+          $ref: '#/components/schemas/PayoutFeeType'
+          description: 'The type of fee assessed as part of the payout.
+
+            See [PayoutFeeType](#type-payoutfeetype) for possible values'
+    PaymentBalanceActivityAutomaticSavingsDetail:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -299,48 +561,11 @@ components:
           - string
           - 'null'
           description: The ID of the payment associated with this activity.
-    PaymentBalanceActivityFreeProcessingDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-    PaymentBalanceActivityDepositFeeDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
         payout_id:
           type:
           - string
           - 'null'
-          description: The ID of the payout that triggered this deposit fee activity.
-    SortOrder:
-      type: string
-      enum:
-      - DESC
-      - ASC
-      x-enum-elements:
-      - name: DESC
-        description: The results are returned in descending (e.g., newest-first or Z-A) order.
-      - name: ASC
-        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
-      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
-      x-release-status: PUBLIC
-    PayoutFeeType:
-      type: string
-      enum:
-      - TRANSFER_FEE
-      - TAX_ON_TRANSFER_FEE
-      x-enum-elements:
-      - name: TRANSFER_FEE
-        description: Fee type associated with transfers.
-      - name: TAX_ON_TRANSFER_FEE
-        description: Taxes associated with the transfer fee.
-      description: Represents the type of payout fee that can incur as part of a payout.
-      x-release-status: PUBLIC
+          description: The ID of the payout associated with this activity.
     DestinationType:
       type: string
       enum:
@@ -359,7 +584,7 @@ components:
         description: Square Checking or Savings account (US), Square Card (CA)
       description: List of possible destinations against which a payout can be made.
       x-release-status: PUBLIC
-    PaymentBalanceActivityHoldAdjustmentDetail:
+    PaymentBalanceActivityOpenDisputeDetail:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -368,6 +593,100 @@ components:
           - string
           - 'null'
           description: The ID of the payment associated with this activity.
+        dispute_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the dispute associated with this activity.
+    Destination:
+      type: object
+      description: Information about the destination against which the payout was made.
+      x-release-status: PUBLIC
+      properties:
+        type:
+          $ref: '#/components/schemas/DestinationType'
+          description: 'Type of the destination such as a bank account or debit card.
+
+            See [DestinationType](#type-destinationtype) for possible values'
+        id:
+          type: string
+          description: Square issued unique ID (also known as the instrument ID) associated with this destination.
+    PayoutStatus:
+      type: string
+      enum:
+      - SENT
+      - FAILED
+      - PAID
+      x-enum-elements:
+      - name: SENT
+        description: Indicates that the payout was successfully sent to the banking destination.
+      - name: FAILED
+        description: Indicates that the payout was rejected by the banking destination.
+      - name: PAID
+        description: Indicates that the payout has successfully completed.
+      description: Payout status types
+      x-release-status: PUBLIC
+    PaymentBalanceActivityChargeDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+    PaymentBalanceActivityDisputeDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+        dispute_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the dispute associated with this activity.
+    PaymentBalanceActivityThirdPartyFeeDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+    Error:
+      type: object
+      description: 'Represents an error encountered during a request to the Connect API.
+
+
+        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+      x-release-status: PUBLIC
+      required:
+      - category
+      - code
+      properties:
+        category:
+          $ref: '#/components/schemas/ErrorCategory'
+          description: 'The high-level category for the error.
+
+            See [ErrorCategory](#type-errorcategory) for possible values'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: 'The specific code of the error.
+
+            See [ErrorCode](#type-errorcode) for possible values'
+        detail:
+          type: string
+          description: A human-readable description of the error for debugging purposes.
+        field:
+          type: string
+          description: 'The name of the field provided in the original request (if any) that
+
+            the error pertains to.'
     ErrorCode:
       type: string
       enum:
@@ -1114,7 +1433,7 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    PaymentBalanceActivityDisputeDetail:
+    PaymentBalanceActivitySquarePayrollTransferReversedDetail:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -1123,27 +1442,7 @@ components:
           - string
           - 'null'
           description: The ID of the payment associated with this activity.
-        dispute_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the dispute associated with this activity.
-    PayoutStatus:
-      type: string
-      enum:
-      - SENT
-      - FAILED
-      - PAID
-      x-enum-elements:
-      - name: SENT
-        description: Indicates that the payout was successfully sent to the banking destination.
-      - name: FAILED
-        description: Indicates that the payout was rejected by the banking destination.
-      - name: PAID
-        description: Indicates that the payout has successfully completed.
-      description: Payout status types
-      x-release-status: PUBLIC
-    PaymentBalanceActivityReserveReleaseDetail:
+    PaymentBalanceActivityOtherDetail:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -1152,116 +1451,97 @@ components:
           - string
           - 'null'
           description: The ID of the payment associated with this activity.
-    PaymentBalanceActivityTaxOnFeeDetail:
+    PaymentBalanceActivityDepositFeeDetail:
       type: object
       x-release-status: PUBLIC
       properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-        tax_rate_description:
-          type:
-          - string
-          - 'null'
-          description: 'The description of the tax rate being applied. For example: "GST", "HST".'
-    PaymentBalanceActivityAutomaticSavingsDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
         payout_id:
           type:
           - string
           - 'null'
-          description: The ID of the payout associated with this activity.
-    Payout:
+          description: The ID of the payout that triggered this deposit fee activity.
+    PaymentBalanceActivityThirdPartyFeeRefundDetail:
       type: object
-      description: 'An accounting of the amount owed the seller and record of the actual transfer to their
-
-        external bank account or to the Square balance.'
       x-release-status: PUBLIC
-      required:
-      - id
-      - location_id
       properties:
-        id:
-          type: string
-          description: A unique ID for the payout.
-          minLength: 1
-        status:
-          $ref: '#/components/schemas/PayoutStatus'
-          description: 'Indicates the payout status.
-
-            See [PayoutStatus](#type-payoutstatus) for possible values'
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+        refund_id:
+          type:
+          - string
+          - 'null'
+          description: The public refund id associated with this activity.
+    PaymentBalanceActivityAppFeeRevenueDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
         location_id:
-          type: string
-          description: The ID of the location associated with the payout.
-          minLength: 1
-        created_at:
-          type: string
-          description: The timestamp of when the payout was created and submitted for deposit to the seller's banking destination, in RFC 3339 format.
-        updated_at:
-          type: string
-          description: The timestamp of when the payout was last updated, in RFC 3339 format.
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The amount of money involved in the payout. A positive amount indicates a deposit, and a negative amount indicates a withdrawal. This amount is never zero.
-        destination:
-          $ref: '#/components/schemas/Destination'
-          description: 'Information about the banking destination (such as a bank account, Square checking account, or debit card)
-
-            against which the payout was made.'
-        version:
-          type: integer
-          description: 'The version number, which is incremented each time an update is made to this payout record.
-
-            The version number helps developers receive event notifications or feeds out of order.'
-        type:
-          $ref: '#/components/schemas/PayoutType'
-          description: 'Indicates the payout type.
-
-            See [PayoutType](#type-payouttype) for possible values'
-        payout_fee:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/PayoutFee'
-          description: A list of transfer fees and any taxes on the fees assessed by Square for this payout.
-        arrival_date:
           type:
           - string
           - 'null'
-          description: The calendar date, in ISO 8601 format (YYYY-MM-DD), when the payout is due to arrive in the seller’s banking destination.
-        end_to_end_id:
-          type:
-          - string
-          - 'null'
-          description: A unique ID for each `Payout` object that might also appear on the seller’s bank statement. You can use this ID to automate the process of reconciling each payout with the corresponding line item on the bank statement.
-    PayoutFee:
+          description: The ID of the location of the merchant associated with the payment activity
+    ListPayoutEntriesResponse:
       type: object
-      description: Represents a payout fee that can incur as part of a payout.
+      description: The response to retrieve payout records entries.
       x-release-status: PUBLIC
       properties:
-        amount_money:
-          $ref: '#/components/schemas/Money'
-          description: The money amount of the payout fee.
-        effective_at:
-          type:
-          - string
-          - 'null'
-          description: The timestamp of when the fee takes effect, in RFC 3339 format.
-        type:
-          $ref: '#/components/schemas/PayoutFeeType'
-          description: 'The type of fee assessed as part of the payout.
+        payout_entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayoutEntry'
+          description: The requested list of payout entries, ordered with the given or default sort order.
+        cursor:
+          type: string
+          description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.
 
-            See [PayoutFeeType](#type-payoutfeetype) for possible values'
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Information about errors encountered during the request.
+      example:
+        cursor: TbfI80z98Xc2LdApCyZ2NvCYLpkPurYLR16GRIttpMJ55mrSIMzHgtkcRQdT0mOnTtfHO
+        payout_entries:
+        - effective_at: '2021-12-14T23:31:49Z'
+          fee_amount_money:
+            amount: -2
+            currency_code: USD
+          gross_amount_money:
+            amount: -50
+            currency_code: USD
+          id: poe_ZQWcw41d0SGJS6IWd4cSi8mKHk
+          net_amount_money:
+            amount: -48
+            currency_code: USD
+          payout_id: po_4d28e6c4-7dd5-4de4-8ec9-a059277646a6
+          type: REFUND
+          type_refund_details:
+            payment_id: HVdG62HeMlti8YYf94oxrN
+            refund_id: HVdG62HeMlti8YYf94oxrN_dR8Nztxg7umf94oxrN12Ji5r2KW14FAY
+        - effective_at: '2021-12-14T23:31:49Z'
+          fee_amount_money:
+            amount: 19
+            currency_code: USD
+          gross_amount_money:
+            amount: 100
+            currency_code: USD
+          id: poe_EibbY9Ob1d0SGJS6IWd4cSiSi6wkaPk
+          net_amount_money:
+            amount: 81
+            currency_code: USD
+          payout_id: po_4d28e6c4-7dd5-4de4-8ec9-a059277646a6
+          type: CHARGE
+          type_charge_details:
+            payment_id: HVdG62H5K3291d0SGJS6IWd4cSi8YY
     PayoutEntry:
       type: object
       description: 'One or more PayoutEntries that make up a Payout. Each one has a date, amount, and type of activity.
@@ -1374,7 +1654,95 @@ components:
         type_square_payroll_transfer_reversed_details:
           $ref: '#/components/schemas/PaymentBalanceActivitySquarePayrollTransferReversedDetail'
           description: Details of a payroll payment to a team member’s bank account that was deposited back to the seller’s account by Square.
-    PaymentBalanceActivityThirdPartyFeeDetail:
+    PaymentBalanceActivityReserveReleaseDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+    PaymentBalanceActivitySquareCapitalPaymentDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+    ErrorCategory:
+      type: string
+      enum:
+      - API_ERROR
+      - AUTHENTICATION_ERROR
+      - INVALID_REQUEST_ERROR
+      - RATE_LIMIT_ERROR
+      - PAYMENT_METHOD_ERROR
+      - REFUND_ERROR
+      - MERCHANT_SUBSCRIPTION_ERROR
+      - EXTERNAL_VENDOR_ERROR
+      x-enum-elements:
+      - name: API_ERROR
+        description: An error occurred with the Connect API itself.
+      - name: AUTHENTICATION_ERROR
+        description: 'An authentication error occurred. Most commonly, the request had
+
+          a missing, malformed, or otherwise invalid `Authorization` header.'
+      - name: INVALID_REQUEST_ERROR
+        description: 'The request was invalid. Most commonly, a required parameter was
+
+          missing, or a provided parameter had an invalid value.'
+      - name: RATE_LIMIT_ERROR
+        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
+
+          to Square APIs in a short period of time.
+
+
+          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
+
+          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
+      - name: PAYMENT_METHOD_ERROR
+        description: 'An error occurred while processing a payment method. Most commonly,
+
+          the details of the payment method were invalid (such as a card''s CVV
+
+          or expiration date).'
+      - name: REFUND_ERROR
+        description: An error occurred while attempting to process a refund.
+      - name: MERCHANT_SUBSCRIPTION_ERROR
+        description: An error occurred when checking a merchant subscription status
+      - name: EXTERNAL_VENDOR_ERROR
+        description: An error that is returned from an external vendor's API
+      description: 'Indicates which high-level category of error has occurred during a
+
+        request to the Connect API.'
+      x-release-status: PUBLIC
+    PaymentBalanceActivityReleaseAdjustmentDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+    PaymentBalanceActivityRefundDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+        refund_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the refund associated with this activity.
+    PaymentBalanceActivityHoldAdjustmentDetail:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -1420,102 +1788,39 @@ components:
             See [Currency](entity:Currency) for possible values.
 
             See [Currency](#type-currency) for possible values'
-    ListPayoutEntriesResponse:
+    PaymentBalanceActivityFreeProcessingDetail:
       type: object
-      description: The response to retrieve payout records entries.
       x-release-status: PUBLIC
       properties:
-        payout_entries:
-          type: array
-          items:
-            $ref: '#/components/schemas/PayoutEntry'
-          description: The requested list of payout entries, ordered with the given or default sort order.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+    PaymentBalanceActivityReserveHoldDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+    PaymentBalanceActivityFeeDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: 'The ID of the payment associated with this activity
 
-            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-      example:
-        cursor: TbfI80z98Xc2LdApCyZ2NvCYLpkPurYLR16GRIttpMJ55mrSIMzHgtkcRQdT0mOnTtfHO
-        payout_entries:
-        - effective_at: '2021-12-14T23:31:49Z'
-          fee_amount_money:
-            amount: -2
-            currency_code: USD
-          gross_amount_money:
-            amount: -50
-            currency_code: USD
-          id: poe_ZQWcw41d0SGJS6IWd4cSi8mKHk
-          net_amount_money:
-            amount: -48
-            currency_code: USD
-          payout_id: po_4d28e6c4-7dd5-4de4-8ec9-a059277646a6
-          type: REFUND
-          type_refund_details:
-            payment_id: HVdG62HeMlti8YYf94oxrN
-            refund_id: HVdG62HeMlti8YYf94oxrN_dR8Nztxg7umf94oxrN12Ji5r2KW14FAY
-        - effective_at: '2021-12-14T23:31:49Z'
-          fee_amount_money:
-            amount: 19
-            currency_code: USD
-          gross_amount_money:
-            amount: 100
-            currency_code: USD
-          id: poe_EibbY9Ob1d0SGJS6IWd4cSiSi6wkaPk
-          net_amount_money:
-            amount: 81
-            currency_code: USD
-          payout_id: po_4d28e6c4-7dd5-4de4-8ec9-a059277646a6
-          type: CHARGE
-          type_charge_details:
-            payment_id: HVdG62H5K3291d0SGJS6IWd4cSi8YY
-    PaymentBalanceActivityRefundDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-        refund_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the refund associated with this activity.
-    PaymentBalanceActivityAppFeeRefundDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-        refund_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the refund associated with this activity.
-        location_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the location of the merchant associated with the payment refund activity
-    PaymentBalanceActivityDepositFeeReversedDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payout_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payout that triggered this deposit fee activity.
+            This will only be populated when a principal LedgerEntryToken is also populated.
+
+            If the fee is independent (there is no principal LedgerEntryToken) then this will likely not
+
+            be populated.'
     Currency:
       type: string
       enum:
@@ -2073,75 +2378,39 @@ components:
 
         to [ISO 4217](https://wikipedia.org/wiki/ISO_4217).'
       x-release-status: PUBLIC
-    PaymentBalanceActivitySquareCapitalPaymentDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-    ListPayoutsResponse:
-      type: object
-      description: The response to retrieve payout records entries.
-      x-release-status: PUBLIC
-      properties:
-        payouts:
-          type: array
-          items:
-            $ref: '#/components/schemas/Payout'
-          description: The requested list of payouts.
-        cursor:
-          type: string
-          description: 'The pagination cursor to be used in a subsequent request. If empty, this is the final response.
+    PayoutType:
+      type: string
+      enum:
+      - BATCH
+      - SIMPLE
+      x-enum-elements:
+      - name: BATCH
+        description: Payouts that include a list of payout entries that can be considered settled.
+      - name: SIMPLE
+        description: 'Payouts that do not have any payout entries associated with them and will
 
-            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Information about errors encountered during the request.
-      example:
-        cursor: EMPCyStibo64hS8wLayZPp3oedR3AeEUNd3z7u6zphi72LQZFIEMbkKVvot9eefpU
-        payouts:
-        - amount_money:
-            amount: 6259
-            currency_code: USD
-          arrival_date: '2022-03-29'
-          created_at: '2022-03-29T16:12:31Z'
-          destination:
-            id: ccof:ZPp3oedR3AeEUNd3z7
-            type: CARD
-          end_to_end_id: L2100000005
-          id: po_b345d2c7-90b3-4f0b-a2aa-df1def7f8afc
-          location_id: L88917AVBK2S5
-          payout_fee:
-          - amount_money:
-              amount: 95
-              currency_code: USD
-            effective_at: '2022-03-29T16:12:31Z'
-            type: TRANSFER_FEE
-          status: PAID
-          type: BATCH
-          updated_at: '2022-03-30T01:07:22.875Z'
-          version: 2
-        - amount_money:
-            amount: -103
-            currency_code: USD
-          arrival_date: '2022-03-24'
-          created_at: '2022-03-24T03:07:09Z'
-          destination:
-            id: bact:ZPp3oedR3AeEUNd3z7
-            type: BANK_ACCOUNT
-          end_to_end_id: L2100000006
-          id: po_f3c0fb38-a5ce-427d-b858-52b925b72e45
-          location_id: L88917AVBK2S5
-          status: PAID
-          type: BATCH
-          updated_at: '2022-03-24T03:07:09Z'
-          version: 1
-    PaymentBalanceActivityAppFeeRevenueDetail:
+          show up as one of the payout entries in a future BATCH payout.'
+      description: 'The type of payout: “BATCH” or “SIMPLE”.
+
+        BATCH payouts include a list of payout entries that can be considered settled.
+
+        SIMPLE payouts do not have any payout entries associated with them
+
+        and will show up as one of the payout entries in a future BATCH payout.'
+      x-release-status: PUBLIC
+    PayoutFeeType:
+      type: string
+      enum:
+      - TRANSFER_FEE
+      - TAX_ON_TRANSFER_FEE
+      x-enum-elements:
+      - name: TRANSFER_FEE
+        description: Fee type associated with transfers.
+      - name: TAX_ON_TRANSFER_FEE
+        description: Taxes associated with the transfer fee.
+      description: Represents the type of payout fee that can incur as part of a payout.
+      x-release-status: PUBLIC
+    PaymentBalanceActivityAppFeeRefundDetail:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -2150,11 +2419,16 @@ components:
           - string
           - 'null'
           description: The ID of the payment associated with this activity.
+        refund_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the refund associated with this activity.
         location_id:
           type:
           - string
           - 'null'
-          description: The ID of the location of the merchant associated with the payment activity
+          description: The ID of the location of the merchant associated with the payment refund activity
     PaymentBalanceActivitySquarePayrollTransferDetail:
       type: object
       x-release-status: PUBLIC
@@ -2164,94 +2438,41 @@ components:
           - string
           - 'null'
           description: The ID of the payment associated with this activity.
-    ErrorCategory:
+    PaymentBalanceActivityTaxOnFeeDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+        tax_rate_description:
+          type:
+          - string
+          - 'null'
+          description: 'The description of the tax rate being applied. For example: "GST", "HST".'
+    PaymentBalanceActivitySquareCapitalReversedPaymentDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payment_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payment associated with this activity.
+    SortOrder:
       type: string
       enum:
-      - API_ERROR
-      - AUTHENTICATION_ERROR
-      - INVALID_REQUEST_ERROR
-      - RATE_LIMIT_ERROR
-      - PAYMENT_METHOD_ERROR
-      - REFUND_ERROR
-      - MERCHANT_SUBSCRIPTION_ERROR
-      - EXTERNAL_VENDOR_ERROR
+      - DESC
+      - ASC
       x-enum-elements:
-      - name: API_ERROR
-        description: An error occurred with the Connect API itself.
-      - name: AUTHENTICATION_ERROR
-        description: 'An authentication error occurred. Most commonly, the request had
-
-          a missing, malformed, or otherwise invalid `Authorization` header.'
-      - name: INVALID_REQUEST_ERROR
-        description: 'The request was invalid. Most commonly, a required parameter was
-
-          missing, or a provided parameter had an invalid value.'
-      - name: RATE_LIMIT_ERROR
-        description: 'Your application reached the Square API rate limit. You might receive this error if your application sends a high number of requests
-
-          to Square APIs in a short period of time.
-
-
-          Your application should monitor responses for `429 RATE_LIMITED` errors and use a retry mechanism with an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-
-          schedule to resend the requests at an increasingly slower rate. It is also a good practice to use a randomized delay (jitter) in your retry schedule.'
-      - name: PAYMENT_METHOD_ERROR
-        description: 'An error occurred while processing a payment method. Most commonly,
-
-          the details of the payment method were invalid (such as a card''s CVV
-
-          or expiration date).'
-      - name: REFUND_ERROR
-        description: An error occurred while attempting to process a refund.
-      - name: MERCHANT_SUBSCRIPTION_ERROR
-        description: An error occurred when checking a merchant subscription status
-      - name: EXTERNAL_VENDOR_ERROR
-        description: An error that is returned from an external vendor's API
-      description: 'Indicates which high-level category of error has occurred during a
-
-        request to the Connect API.'
+      - name: DESC
+        description: The results are returned in descending (e.g., newest-first or Z-A) order.
+      - name: ASC
+        description: The results are returned in ascending (e.g., oldest-first or A-Z) order.
+      description: The order (e.g., chronological or alphabetical) in which results from a request are returned.
       x-release-status: PUBLIC
-    PaymentBalanceActivityReleaseAdjustmentDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-    PaymentBalanceActivitySquarePayrollTransferReversedDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-    PaymentBalanceActivityOtherAdjustmentDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-    PaymentBalanceActivityAutomaticSavingsReversedDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-        payout_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payout associated with this activity.
     GetPayoutResponse:
       type: object
       x-release-status: PUBLIC
@@ -2280,7 +2501,7 @@ components:
           type: BATCH
           updated_at: '2022-03-24T03:07:09Z'
           version: 1
-    PaymentBalanceActivityOtherDetail:
+    PaymentBalanceActivityAutomaticSavingsReversedDetail:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -2289,7 +2510,12 @@ components:
           - string
           - 'null'
           description: The ID of the payment associated with this activity.
-    PaymentBalanceActivityThirdPartyFeeRefundDetail:
+        payout_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payout associated with this activity.
+    PaymentBalanceActivityOtherAdjustmentDetail:
       type: object
       x-release-status: PUBLIC
       properties:
@@ -2298,305 +2524,79 @@ components:
           - string
           - 'null'
           description: The ID of the payment associated with this activity.
-        refund_id:
-          type:
-          - string
-          - 'null'
-          description: The public refund id associated with this activity.
-    PaymentBalanceActivityChargeDetail:
+    Payout:
       type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-    Error:
-      type: object
-      description: 'Represents an error encountered during a request to the Connect API.
+      description: 'An accounting of the amount owed the seller and record of the actual transfer to their
 
-
-        See [Handling errors](https://developer.squareup.com/docs/build-basics/handling-errors) for more information.'
+        external bank account or to the Square balance.'
       x-release-status: PUBLIC
       required:
-      - category
-      - code
+      - id
+      - location_id
       properties:
-        category:
-          $ref: '#/components/schemas/ErrorCategory'
-          description: 'The high-level category for the error.
-
-            See [ErrorCategory](#type-errorcategory) for possible values'
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: 'The specific code of the error.
-
-            See [ErrorCode](#type-errorcode) for possible values'
-        detail:
-          type: string
-          description: A human-readable description of the error for debugging purposes.
-        field:
-          type: string
-          description: 'The name of the field provided in the original request (if any) that
-
-            the error pertains to.'
-    PaymentBalanceActivityOpenDisputeDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-        dispute_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the dispute associated with this activity.
-    ActivityType:
-      type: string
-      enum:
-      - ADJUSTMENT
-      - APP_FEE_REFUND
-      - APP_FEE_REVENUE
-      - AUTOMATIC_SAVINGS
-      - AUTOMATIC_SAVINGS_REVERSED
-      - CHARGE
-      - DEPOSIT_FEE
-      - DEPOSIT_FEE_REVERSED
-      - DISPUTE
-      - ESCHEATMENT
-      - FEE
-      - FREE_PROCESSING
-      - HOLD_ADJUSTMENT
-      - INITIAL_BALANCE_CHANGE
-      - MONEY_TRANSFER
-      - MONEY_TRANSFER_REVERSAL
-      - OPEN_DISPUTE
-      - OTHER
-      - OTHER_ADJUSTMENT
-      - PAID_SERVICE_FEE
-      - PAID_SERVICE_FEE_REFUND
-      - REDEMPTION_CODE
-      - REFUND
-      - RELEASE_ADJUSTMENT
-      - RESERVE_HOLD
-      - RESERVE_RELEASE
-      - RETURNED_PAYOUT
-      - SQUARE_CAPITAL_PAYMENT
-      - SQUARE_CAPITAL_REVERSED_PAYMENT
-      - SUBSCRIPTION_FEE
-      - SUBSCRIPTION_FEE_PAID_REFUND
-      - SUBSCRIPTION_FEE_REFUND
-      - TAX_ON_FEE
-      - THIRD_PARTY_FEE
-      - THIRD_PARTY_FEE_REFUND
-      - PAYOUT
-      - AUTOMATIC_BITCOIN_CONVERSIONS
-      - AUTOMATIC_BITCOIN_CONVERSIONS_REVERSED
-      - CREDIT_CARD_REPAYMENT
-      - CREDIT_CARD_REPAYMENT_REVERSED
-      - LOCAL_OFFERS_CASHBACK
-      - LOCAL_OFFERS_FEE
-      - PERCENTAGE_PROCESSING_ENROLLMENT
-      - PERCENTAGE_PROCESSING_DEACTIVATION
-      - PERCENTAGE_PROCESSING_REPAYMENT
-      - PERCENTAGE_PROCESSING_REPAYMENT_REVERSED
-      - PROCESSING_FEE
-      - PROCESSING_FEE_REFUND
-      - UNDO_PROCESSING_FEE_REFUND
-      - GIFT_CARD_LOAD_FEE
-      - GIFT_CARD_LOAD_FEE_REFUND
-      - UNDO_GIFT_CARD_LOAD_FEE_REFUND
-      - BALANCE_FOLDERS_TRANSFER
-      - BALANCE_FOLDERS_TRANSFER_REVERSED
-      - GIFT_CARD_POOL_TRANSFER
-      - GIFT_CARD_POOL_TRANSFER_REVERSED
-      - SQUARE_PAYROLL_TRANSFER
-      - SQUARE_PAYROLL_TRANSFER_REVERSED
-      x-enum-elements:
-      - name: ADJUSTMENT
-        description: A manual adjustment applied to the seller's account by Square.
-      - name: APP_FEE_REFUND
-        description: A refund for an application fee on a payment.
-      - name: APP_FEE_REVENUE
-        description: Revenue generated from an application fee on a payment.
-      - name: AUTOMATIC_SAVINGS
-        description: An automatic transfer from the payment processing balance to the Square Savings account. These are generally proportional to the seller's sales.
-      - name: AUTOMATIC_SAVINGS_REVERSED
-        description: An automatic transfer from the Square Savings account back to the processing balance. These are generally proportional to the seller's refunds.
-      - name: CHARGE
-        description: A credit card payment capture.
-      - name: DEPOSIT_FEE
-        description: A fee assessed because of a deposit, such as an instant deposit.
-      - name: DEPOSIT_FEE_REVERSED
-        description: Indicates that Square returned a fee that was previously assessed because of a deposit, such as an instant deposit, back to the seller's account.
-      - name: DISPUTE
-        description: The balance change due to a dispute event.
-      - name: ESCHEATMENT
-        description: An escheatment entry for remittance.
-      - name: FEE
-        description: The cost plus adjustment fee.
-      - name: FREE_PROCESSING
-        description: 'Square offers free payments processing for a variety of business scenarios, including seller
-
-          referrals or when Square wants to apologize (for example, for a bug, customer service, or repricing complication).
-
-          This entry represents a credit to the seller for the purposes of free processing.'
-      - name: HOLD_ADJUSTMENT
-        description: An adjustment made by Square related to holding a payment.
-      - name: INITIAL_BALANCE_CHANGE
-        description: An external change to a seller's balance (initial, in the sense that it causes the creation of the other activity types, such as a hold and refund).
-      - name: MONEY_TRANSFER
-        description: The balance change from a money transfer.
-      - name: MONEY_TRANSFER_REVERSAL
-        description: The reversal of a money transfer.
-      - name: OPEN_DISPUTE
-        description: The balance change for a chargeback that's been filed.
-      - name: OTHER
-        description: Any other type that doesn't belong in the rest of the types.
-      - name: OTHER_ADJUSTMENT
-        description: Any other type of adjustment that doesn't fall under existing types.
-      - name: PAID_SERVICE_FEE
-        description: A fee paid to a third-party seller.
-      - name: PAID_SERVICE_FEE_REFUND
-        description: A fee refunded to a third-party seller.
-      - name: REDEMPTION_CODE
-        description: Repayment for a redemption code.
-      - name: REFUND
-        description: A refund for an existing card payment.
-      - name: RELEASE_ADJUSTMENT
-        description: An adjustment made by Square related to releasing a payment.
-      - name: RESERVE_HOLD
-        description: Fees paid for a funding risk reserve.
-      - name: RESERVE_RELEASE
-        description: Fees released from a risk reserve.
-      - name: RETURNED_PAYOUT
-        description: 'An entry created when Square receives a response for the ACH file that Square sent indicating that the
-
-          settlement of the original entry failed.'
-      - name: SQUARE_CAPITAL_PAYMENT
-        description: A capital merchant cash advance (MCA) assessment. These are generally proportional to the merchant's sales but can be issued for other reasons related to the MCA.
-      - name: SQUARE_CAPITAL_REVERSED_PAYMENT
-        description: A capital merchant cash advance (MCA) assessment refund. These are generally proportional to the merchant's refunds but can be issued for other reasons related to the MCA.
-      - name: SUBSCRIPTION_FEE
-        description: A fee charged for subscription to a Square product.
-      - name: SUBSCRIPTION_FEE_PAID_REFUND
-        description: A Square subscription fee that's been refunded.
-      - name: SUBSCRIPTION_FEE_REFUND
-        description: The refund of a previously charged Square product subscription fee.
-      - name: TAX_ON_FEE
-        description: The tax paid on fee amounts.
-      - name: THIRD_PARTY_FEE
-        description: Fees collected by a third-party platform.
-      - name: THIRD_PARTY_FEE_REFUND
-        description: Refunded fees from a third-party platform.
-      - name: PAYOUT
-        description: The balance change due to a money transfer. Note that this type is never returned by the Payouts API.
-      - name: AUTOMATIC_BITCOIN_CONVERSIONS
-        description: Indicates that the portion of each payment withheld by Square was automatically converted into bitcoin using Cash App. The seller manages their bitcoin in their Cash App account.
-      - name: AUTOMATIC_BITCOIN_CONVERSIONS_REVERSED
-        description: Indicates that a withheld payment, which was scheduled to be converted into bitcoin using Cash App, was deposited back to the Square payments balance.
-      - name: CREDIT_CARD_REPAYMENT
-        description: Indicates that a repayment toward the outstanding balance on the seller's Square credit card was made.
-      - name: CREDIT_CARD_REPAYMENT_REVERSED
-        description: Indicates that a repayment toward the outstanding balance on the seller's Square credit card was reversed.
-      - name: LOCAL_OFFERS_CASHBACK
-        description: Cashback amount given by a Square Local Offers seller to their customer for a purchase.
-      - name: LOCAL_OFFERS_FEE
-        description: A commission fee paid by a Square Local Offers seller to Square for a purchase discovered through Square Local Offers.
-      - name: PERCENTAGE_PROCESSING_ENROLLMENT
-        description: When activating Percentage Processing, a credit is applied to the seller’s account to offset any negative balance caused by a dispute.
-      - name: PERCENTAGE_PROCESSING_DEACTIVATION
-        description: Deducting the outstanding Percentage Processing balance from the seller’s account. It's the final installment in repaying the dispute-induced negative balance through percentage processing.
-      - name: PERCENTAGE_PROCESSING_REPAYMENT
-        description: Withheld funds from a payment to cover a negative balance. It's an installment to repay the amount from a dispute that had been offset during Percentage Processing enrollment.
-      - name: PERCENTAGE_PROCESSING_REPAYMENT_REVERSED
-        description: The reversal of a percentage processing repayment that happens for example when a refund is issued for a payment.
-      - name: PROCESSING_FEE
-        description: The processing fee for a payment. If sellers opt for Gross Settlement, i.e., direct bank withdrawal instead of deducting fees from daily sales, the processing fee is recorded separately as a new payout entry, not part of the CHARGE payout entry.
-      - name: PROCESSING_FEE_REFUND
-        description: The processing fee for a payment refund issued by sellers enrolled in Gross Settlement. The refunded processing fee is recorded separately as a new payout entry, not part of the REFUND payout entry.
-      - name: UNDO_PROCESSING_FEE_REFUND
-        description: When undoing a processing fee refund in a Gross Settlement payment, this payout entry type is used.
-      - name: GIFT_CARD_LOAD_FEE
-        description: Fee collected during the sale or reload of a gift card. This fee, which is a portion of the amount loaded on the gift card, is deducted from the merchant's payment balance.
-      - name: GIFT_CARD_LOAD_FEE_REFUND
-        description: Refund for fee charged during the sale or reload of a gift card.
-      - name: UNDO_GIFT_CARD_LOAD_FEE_REFUND
-        description: The undo of a refund for a fee charged during the sale or reload of a gift card.
-      - name: BALANCE_FOLDERS_TRANSFER
-        description: A transfer of funds to a banking folder. In the United States, the folder name is 'Checking Folder'; in Canada, it's 'Balance Folder.'
-      - name: BALANCE_FOLDERS_TRANSFER_REVERSED
-        description: A reversal of transfer of funds from a banking folder. In the United States, the folder name is 'Checking Folder'; in Canada, it's 'Balance Folder.'
-      - name: GIFT_CARD_POOL_TRANSFER
-        description: A transfer of gift card funds to a central gift card pool account. In franchises, when gift cards are loaded or reloaded at any location, the money transfers to the franchisor's account.
-      - name: GIFT_CARD_POOL_TRANSFER_REVERSED
-        description: A reversal of transfer of gift card funds from a central gift card pool account. In franchises, when gift cards are loaded or reloaded at any location, the money transfers to the franchisor's account.
-      - name: SQUARE_PAYROLL_TRANSFER
-        description: A payroll payment that was transferred to a team member’s bank account.
-      - name: SQUARE_PAYROLL_TRANSFER_REVERSED
-        description: A payroll payment to a team member’s bank account that was deposited back to the seller’s account by Square.
-      x-release-status: PUBLIC
-    PaymentBalanceActivitySquareCapitalReversedPaymentDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the payment associated with this activity.
-    PaymentBalanceActivityFeeDetail:
-      type: object
-      x-release-status: PUBLIC
-      properties:
-        payment_id:
-          type:
-          - string
-          - 'null'
-          description: 'The ID of the payment associated with this activity
-
-            This will only be populated when a principal LedgerEntryToken is also populated.
-
-            If the fee is independent (there is no principal LedgerEntryToken) then this will likely not
-
-            be populated.'
-    PayoutType:
-      type: string
-      enum:
-      - BATCH
-      - SIMPLE
-      x-enum-elements:
-      - name: BATCH
-        description: Payouts that include a list of payout entries that can be considered settled.
-      - name: SIMPLE
-        description: 'Payouts that do not have any payout entries associated with them and will
-
-          show up as one of the payout entries in a future BATCH payout.'
-      description: 'The type of payout: “BATCH” or “SIMPLE”.
-
-        BATCH payouts include a list of payout entries that can be considered settled.
-
-        SIMPLE payouts do not have any payout entries associated with them
-
-        and will show up as one of the payout entries in a future BATCH payout.'
-      x-release-status: PUBLIC
-    Destination:
-      type: object
-      description: Information about the destination against which the payout was made.
-      x-release-status: PUBLIC
-      properties:
-        type:
-          $ref: '#/components/schemas/DestinationType'
-          description: 'Type of the destination such as a bank account or debit card.
-
-            See [DestinationType](#type-destinationtype) for possible values'
         id:
           type: string
-          description: Square issued unique ID (also known as the instrument ID) associated with this destination.
+          description: A unique ID for the payout.
+          minLength: 1
+        status:
+          $ref: '#/components/schemas/PayoutStatus'
+          description: 'Indicates the payout status.
+
+            See [PayoutStatus](#type-payoutstatus) for possible values'
+        location_id:
+          type: string
+          description: The ID of the location associated with the payout.
+          minLength: 1
+        created_at:
+          type: string
+          description: The timestamp of when the payout was created and submitted for deposit to the seller's banking destination, in RFC 3339 format.
+        updated_at:
+          type: string
+          description: The timestamp of when the payout was last updated, in RFC 3339 format.
+        amount_money:
+          $ref: '#/components/schemas/Money'
+          description: The amount of money involved in the payout. A positive amount indicates a deposit, and a negative amount indicates a withdrawal. This amount is never zero.
+        destination:
+          $ref: '#/components/schemas/Destination'
+          description: 'Information about the banking destination (such as a bank account, Square checking account, or debit card)
+
+            against which the payout was made.'
+        version:
+          type: integer
+          description: 'The version number, which is incremented each time an update is made to this payout record.
+
+            The version number helps developers receive event notifications or feeds out of order.'
+        type:
+          $ref: '#/components/schemas/PayoutType'
+          description: 'Indicates the payout type.
+
+            See [PayoutType](#type-payouttype) for possible values'
+        payout_fee:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PayoutFee'
+          description: A list of transfer fees and any taxes on the fees assessed by Square for this payout.
+        arrival_date:
+          type:
+          - string
+          - 'null'
+          description: The calendar date, in ISO 8601 format (YYYY-MM-DD), when the payout is due to arrive in the seller’s banking destination.
+        end_to_end_id:
+          type:
+          - string
+          - 'null'
+          description: A unique ID for each `Payout` object that might also appear on the seller’s bank statement. You can use this ID to automate the process of reconciling each payout with the corresponding line item on the bank statement.
+    PaymentBalanceActivityDepositFeeReversedDetail:
+      type: object
+      x-release-status: PUBLIC
+      properties:
+        payout_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the payout that triggered this deposit fee activity.
   securitySchemes:
     oauth2:
       type: oauth2
