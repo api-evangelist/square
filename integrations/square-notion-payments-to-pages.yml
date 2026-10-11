@@ -1,0 +1,71 @@
+arazzo: 1.0.1
+info:
+  title: Square Payments to Notion Database
+  summary: Record the newest Square payment as a page in a Notion database.
+  description: Record the newest Square payment as a page in a Notion database. Recreated
+    as forkable Arazzo from the integration evidence; polling/trigger semantics are
+    left to the runner.
+  version: 1.0.0
+x-integration:
+  partner: notion
+  edge_evidence: https://zapier.com/apps/square/integrations/notion
+  edge_type: marketplace
+  method: generated
+  generated: '2026-10-12'
+  generator: pipeline step 25b (payments-integration-arazzo)
+sourceDescriptions:
+- name: squarePaymentsApi
+  url: https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/openapi/square-payments-api-openapi.yml
+  type: openapi
+- name: notionPagesApi
+  url: https://raw.githubusercontent.com/api-evangelist/notion/refs/heads/main/openapi/notion-pages-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: square-notion-payments-to-pages
+  summary: Record the newest Square payment as a page in a Notion database.
+  inputs:
+    type: object
+    properties:
+      databaseId:
+        type: string
+  steps:
+  - stepId: list-payments
+    description: List the most recent Square payment.
+    operationId: $sourceDescriptions.squarePaymentsApi.ListPayments
+    parameters:
+    - name: sort_order
+      in: query
+      value: DESC
+    - name: limit
+      in: query
+      value: 1
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      paymentId: $response.body#/payments/0/id
+      amount: $response.body#/payments/0/amount_money/amount
+      currency: $response.body#/payments/0/amount_money/currency
+      status: $response.body#/payments/0/status
+      createdAt: $response.body#/payments/0/created_at
+  - stepId: create-page
+    description: Create a database page for the payment.
+    operationId: $sourceDescriptions.notionPagesApi.createPage
+    requestBody:
+      contentType: application/json
+      payload:
+        parent:
+          database_id: $inputs.databaseId
+        properties:
+          Name:
+            title:
+            - text:
+                content: $steps.list-payments.outputs.paymentId
+          Amount:
+            number: $steps.list-payments.outputs.amount
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      pageId: $response.body#/id
+  outputs:
+    squarePaymentId: $steps.list-payments.outputs.paymentId
+    notionPageId: $steps.create-page.outputs.pageId

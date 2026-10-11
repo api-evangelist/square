@@ -1,0 +1,68 @@
+arazzo: 1.0.1
+info:
+  title: Square Customers to Shopify
+  summary: Create a Shopify customer from the newest Square customer.
+  description: Create a Shopify customer from the newest Square customer. Recreated
+    as forkable Arazzo from the integration evidence; polling/trigger semantics are
+    left to the runner.
+  version: 1.0.0
+x-integration:
+  partner: shopify
+  edge_evidence: https://zapier.com/apps/square/integrations/shopify
+  edge_type: marketplace
+  method: generated
+  generated: '2026-10-12'
+  generator: pipeline step 25b (payments-integration-arazzo)
+sourceDescriptions:
+- name: squareCustomersApi
+  url: https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/openapi/square-customers-api-openapi.yml
+  type: openapi
+- name: shopifyCustomersApi
+  url: https://raw.githubusercontent.com/api-evangelist/shopify/refs/heads/main/openapi/shopify-customers-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: square-shopify-sync-customers
+  summary: Create a Shopify customer from the newest Square customer.
+  inputs:
+    type: object
+    properties: {}
+  steps:
+  - stepId: list-customers
+    description: List Square customers, most recently created first.
+    operationId: $sourceDescriptions.squareCustomersApi.ListCustomers
+    parameters:
+    - name: sort_field
+      in: query
+      value: CREATED_AT
+    - name: sort_order
+      in: query
+      value: DESC
+    - name: limit
+      in: query
+      value: 1
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      customerId: $response.body#/customers/0/id
+      email: $response.body#/customers/0/email_address
+      givenName: $response.body#/customers/0/given_name
+      familyName: $response.body#/customers/0/family_name
+      phone: $response.body#/customers/0/phone_number
+  - stepId: create-customer
+    description: Create the customer in Shopify.
+    operationId: $sourceDescriptions.shopifyCustomersApi.createCustomer
+    requestBody:
+      contentType: application/json
+      payload:
+        customer:
+          email: $steps.list-customers.outputs.email
+          first_name: $steps.list-customers.outputs.givenName
+          last_name: $steps.list-customers.outputs.familyName
+          phone: $steps.list-customers.outputs.phone
+    successCriteria:
+    - condition: $statusCode == 201
+    outputs:
+      shopifyCustomerId: $response.body#/customer/id
+  outputs:
+    squareCustomerId: $steps.list-customers.outputs.customerId
+    shopifyCustomerId: $steps.create-customer.outputs.shopifyCustomerId
