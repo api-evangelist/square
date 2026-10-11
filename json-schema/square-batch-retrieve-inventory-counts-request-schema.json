@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-batch-retrieve-inventory-counts-request-schema.json",
+  "title": "BatchRetrieveInventoryCountsRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-inventory-api-openapi.yml#/components/schemas/BatchRetrieveInventoryCountsRequest",
+  "type": "object",
+  "x-release-status": "PUBLIC",
+  "properties": {
+    "catalog_object_ids": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "The filter to return results by `CatalogObject` ID.\nThe filter is applicable only when set.  The default is null."
+    },
+    "location_ids": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "The filter to return results by `Location` ID.\nThis filter is applicable only when set. The default is null."
+    },
+    "updated_after": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The filter to return results with their `calculated_at` value\nafter the given time as specified in an RFC 3339 timestamp.\nThe default value is the UNIX epoch of (`1970-01-01T00:00:00Z`)."
+    },
+    "cursor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "A pagination cursor returned by a previous call to this endpoint.\nProvide this to retrieve the next set of results for the original query.\n\nSee the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information."
+    },
+    "states": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/InventoryState"
+      },
+      "description": "The filter to return results by `InventoryState`. The filter is only applicable when set.\nIgnored are untracked states of `NONE`, `SOLD`, and `UNLINKED_RETURN`.\nThe default is null."
+    },
+    "limit": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The number of [records](entity:InventoryCount) to return.",
+      "minimum": 1,
+      "maximum": 1000
+    }
+  },
+  "x-sq-sdk-sample-code": {
+    "csharp": "/sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.csharp",
+    "java": "/sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.java",
+    "javascript": "/sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.javascript",
+    "php": "/sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.php",
+    "python": "/sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.python",
+    "ruby": "/sdk_samples/Inventory/BatchRetrieveInventoryCounts/BatchRetrieveInventoryCountsRequest.ruby"
+  },
+  "$defs": {
+    "InventoryState": {
+      "type": "string",
+      "enum": [
+        "CUSTOM",
+        "IN_STOCK",
+        "SOLD",
+        "RETURNED_BY_CUSTOMER",
+        "RESERVED_FOR_SALE",
+        "SOLD_ONLINE",
+        "ORDERED_FROM_VENDOR",
+        "RECEIVED_FROM_VENDOR",
+        "IN_TRANSIT_TO",
+        "NONE",
+        "WASTE",
+        "UNLINKED_RETURN",
+        "COMPOSED",
+        "DECOMPOSED",
+        "SUPPORTED_BY_NEWER_VERSION",
+        "IN_TRANSIT"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "CUSTOM",
+          "description": "The related quantity of items are in a custom state. **READ-ONLY**:\nthe Inventory API cannot move quantities to or from this state."
+        },
+        {
+          "name": "IN_STOCK",
+          "description": "The related quantity of items are on hand and available for sale."
+        },
+        {
+          "name": "SOLD",
+          "description": "The related quantity of items were sold as part of an itemized\ntransaction. Quantities in the `SOLD` state are no longer tracked."
+        },
+        {
+          "name": "RETURNED_BY_CUSTOMER",
+          "description": "The related quantity of items were returned through the Square Point\nof Sale application, but are not yet available for sale. **READ-ONLY**:\nthe Inventory API cannot move quantities to or from this state."
+        },
+        {
+          "name": "RESERVED_FOR_SALE",
+          "description": "The related quantity of items are on hand, but not currently\navailable for sale. **READ-ONLY**: the Inventory API cannot move\nquantities to or from this state."
+        },
+        {
+          "name": "SOLD_ONLINE",
+          "description": "The related quantity of items were sold online. **READ-ONLY**: the\nInventory API cannot move quantities to or from this state."
+        },
+        {
+          "name": "ORDERED_FROM_VENDOR",
+          "description": "The related quantity of items were ordered from a vendor but not yet\nreceived. **READ-ONLY**: the Inventory API cannot move quantities to or\nfrom this state."
+        },
+        {
+          "name": "RECEIVED_FROM_VENDOR",
+          "description": "The related quantity of items were received from a vendor but are\nnot yet available for sale. **READ-ONLY**: the Inventory API cannot move\nquantities to or from this state."
+        },
+        {
+          "name": "IN_TRANSIT_TO",
+          "description": "Replaced by `IN_TRANSIT` to represent quantities\nof items that are in transit between locations."
+        },
+        {
+          "name": "NONE",
+          "description": "A placeholder indicating that the related quantity of items are not\ncurrently tracked in Square. Transferring quantities from the `NONE` state\nto a tracked state (e.g., `IN_STOCK`) introduces stock into the system."
+        },
+        {
+          "name": "WASTE",
+          "description": "The related quantity of items are lost or damaged and cannot be\nsold."
+        },
+        {
+          "name": "UNLINKED_RETURN",
+          "description": "The related quantity of items were returned but not linked to a\nprevious transaction. Unlinked returns are not tracked in Square.\nTransferring a quantity from `UNLINKED_RETURN` to a tracked state (e.g.,\n`IN_STOCK`) introduces new stock into the system."
+        },
+        {
+          "name": "COMPOSED",
+          "description": "The related quantity of items that are part of a composition consisting one or more components."
+        },
+        {
+          "name": "DECOMPOSED",
+          "description": "The related quantity of items that are part of a component."
+        },
+        {
+          "name": "SUPPORTED_BY_NEWER_VERSION",
+          "description": "This state is not supported by this version of the Square API. We recommend that you upgrade the client to use the appropriate version of the Square API supporting this state."
+        },
+        {
+          "name": "IN_TRANSIT",
+          "description": "The related quantity of items are in transit between locations. **READ-ONLY:** the Inventory API cannot currently be used to move quantities to or from this inventory state."
+        }
+      ],
+      "description": "Indicates the state of a tracked item quantity in the lifecycle of goods.",
+      "x-release-status": "PUBLIC"
+    }
+  }
+}

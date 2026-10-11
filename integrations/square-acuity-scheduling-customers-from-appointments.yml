@@ -1,0 +1,63 @@
+arazzo: 1.0.1
+info:
+  title: Acuity Scheduling Appointments to Square Customers
+  summary: Create a Square customer from the most recent Acuity Scheduling appointment.
+  description: Create a Square customer from the most recent Acuity Scheduling appointment.
+    Recreated from the named Zapier template as forkable Arazzo; polling/trigger semantics
+    are left to the runner.
+  version: 1.0.0
+x-integration:
+  partner: acuity-scheduling
+  template: https://zapier.com/apps/acuity-scheduling/integrations/square/24514/create-square-customers-from-new-acuity-scheduling-appointments
+  edge_evidence: https://zapier.com/apps/acuity-scheduling/integrations/square/24514/create-square-customers-from-new-acuity-scheduling-appointments
+  edge_type: marketplace
+  method: generated
+  generated: '2026-10-12'
+  generator: claude-opus enrichment pass local-v5
+sourceDescriptions:
+- name: acuityAppointmentsApi
+  url: https://raw.githubusercontent.com/api-evangelist/acuity-scheduling/refs/heads/main/openapi/acuity-scheduling-appointments-api-openapi.yml
+  type: openapi
+- name: squareCustomersApi
+  url: https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/openapi/square-customers-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: acuity-appointment-to-square-customer
+  summary: Create a Square customer from the most recent Acuity Scheduling appointment.
+  inputs:
+    type: object
+    properties: {}
+  steps:
+  - stepId: list-appointments
+    description: List the most recent Acuity appointment.
+    operationId: $sourceDescriptions.acuityAppointmentsApi.getAppointments
+    parameters:
+    - name: max
+      in: query
+      value: 1
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      appointmentId: $response.body#/0/id
+      firstName: $response.body#/0/firstName
+      lastName: $response.body#/0/lastName
+      email: $response.body#/0/email
+      phone: $response.body#/0/phone
+  - stepId: create-customer
+    description: Create the Square customer.
+    operationId: $sourceDescriptions.squareCustomersApi.CreateCustomer
+    requestBody:
+      contentType: application/json
+      payload:
+        idempotency_key: $steps.list-appointments.outputs.appointmentId
+        given_name: $steps.list-appointments.outputs.firstName
+        family_name: $steps.list-appointments.outputs.lastName
+        email_address: $steps.list-appointments.outputs.email
+        phone_number: $steps.list-appointments.outputs.phone
+        reference_id: $steps.list-appointments.outputs.appointmentId
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      customerId: $response.body#/customer/id
+  outputs:
+    customerId: $steps.create-customer.outputs.customerId

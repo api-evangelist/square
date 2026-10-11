@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-search-subscriptions-request-schema.json",
+  "title": "SearchSubscriptionsRequest",
+  "description": "Defines input parameters in a request to the \n[SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-subscriptions-api-openapi.yml#/components/schemas/SearchSubscriptionsRequest",
+  "type": "object",
+  "x-release-status": "PUBLIC",
+  "properties": {
+    "cursor": {
+      "type": "string",
+      "description": "When the total number of resulting subscriptions exceeds the limit of a paged response, \nspecify the cursor returned from a preceding response here to fetch the next set of results.\nIf the cursor is unset, the response contains the last page of the results.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination)."
+    },
+    "limit": {
+      "type": "integer",
+      "description": "The upper limit on the number of subscriptions to return\nin a paged response.",
+      "minimum": 1
+    },
+    "query": {
+      "$ref": "#/$defs/SearchSubscriptionsQuery",
+      "description": "A subscription query consisting of specified filtering conditions.\n\nIf this `query` field is unspecified, the `SearchSubscriptions` call will return all subscriptions."
+    },
+    "include": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "An option to include related information in the response. \n\nThe supported values are: \n\n- `actions`: to include scheduled actions on the targeted subscriptions.",
+      "x-release-status": "BETA"
+    }
+  },
+  "$defs": {
+    "SearchSubscriptionsFilter": {
+      "type": "object",
+      "description": "Represents a set of query expressions (filters) to narrow the scope of targeted subscriptions returned by \nthe [SearchSubscriptions](api-endpoint:Subscriptions-SearchSubscriptions) endpoint.",
+      "x-release-status": "PUBLIC",
+      "properties": {
+        "customer_ids": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "A filter to select subscriptions based on the subscribing customer IDs."
+        },
+        "location_ids": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "A filter to select subscriptions based on the location."
+        },
+        "source_names": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "A filter to select subscriptions based on the source application.",
+          "x-release-status": "BETA"
+        }
+      }
+    },
+    "SearchSubscriptionsQuery": {
+      "type": "object",
+      "description": "Represents a query, consisting of specified query expressions, used to search for subscriptions.",
+      "x-release-status": "PUBLIC",
+      "properties": {
+        "filter": {
+          "$ref": "#/$defs/SearchSubscriptionsFilter",
+          "description": "A list of query expressions."
+        }
+      }
+    }
+  }
+}

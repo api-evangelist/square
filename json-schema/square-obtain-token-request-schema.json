@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-obtain-token-request-schema.json",
+  "title": "ObtainTokenRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-oauth-api-openapi.yml#/components/schemas/ObtainTokenRequest",
+  "type": "object",
+  "x-release-status": "PUBLIC",
+  "required": [
+    "client_id",
+    "grant_type"
+  ],
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "The Square-issued ID of your application, which is available on the **OAuth** page in the\n[Developer Dashboard](https://developer.squareup.com/apps).",
+      "maxLength": 191
+    },
+    "client_secret": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The Square-issued application secret for your application, which is available on the **OAuth** page\nin the [Developer Dashboard](https://developer.squareup.com/apps). This parameter is only required when \nyou're not using the [OAuth PKCE (Proof Key for Code Exchange) flow](https://developer.squareup.com/docs/oauth-api/overview#pkce-flow).\nThe PKCE flow requires a `code_verifier` instead of a `client_secret` when `grant_type` is set to `authorization_code`. \nIf `grant_type` is set to `refresh_token` and the `refresh_token` is obtained uaing PKCE, the PKCE flow only requires `client_id`, \n`grant_type`, and `refresh_token`.",
+      "minLength": 2,
+      "maxLength": 1024
+    },
+    "code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The authorization code to exchange.\nThis code is required if `grant_type` is set to `authorization_code` to indicate that\nthe application wants to exchange an authorization code for an OAuth access token.",
+      "maxLength": 191
+    },
+    "redirect_uri": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The redirect URL assigned on the **OAuth** page for your application in the [Developer Dashboard](https://developer.squareup.com/apps).",
+      "maxLength": 2048
+    },
+    "grant_type": {
+      "type": "string",
+      "description": "Specifies the method to request an OAuth access token.\nValid values are `authorization_code`, `refresh_token`, and `migration_token`.",
+      "minLength": 10,
+      "maxLength": 20
+    },
+    "refresh_token": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "A valid refresh token for generating a new OAuth access token.\n\nA valid refresh token is required if `grant_type` is set to `refresh_token`\nto indicate that the application wants a replacement for an expired OAuth access token.",
+      "minLength": 2,
+      "maxLength": 1024
+    },
+    "migration_token": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "A legacy OAuth access token obtained using a Connect API version prior\nto 2019-03-13. This parameter is required if `grant_type` is set to\n`migration_token` to indicate that the application wants to get a replacement\nOAuth access token. The response also returns a refresh token.\nFor more information, see [Migrate to Using Refresh Tokens](https://developer.squareup.com/docs/oauth-api/migrate-to-refresh-tokens).",
+      "minLength": 2,
+      "maxLength": 1024
+    },
+    "scopes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "A JSON list of strings representing the permissions that the application is requesting.\nFor example, \"`[\"MERCHANT_PROFILE_READ\",\"PAYMENTS_READ\",\"BANK_ACCOUNTS_READ\"]`\".\n\nThe access token returned in the response is granted the permissions\nthat comprise the intersection between the requested list of permissions and those\nthat belong to the provided refresh token."
+    },
+    "short_lived": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "A Boolean indicating a request for a short-lived access token.\n\nThe short-lived access token returned in the response expires in 24 hours."
+    },
+    "code_verifier": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Must be provided when using the PKCE OAuth flow if `grant_type` is set to `authorization_code`. The `code_verifier` is used to verify against the\n`code_challenge` associated with the `authorization_code`."
+    }
+  },
+  "x-sq-sdk-sample-code": {
+    "csharp": "/sdk_samples/ObtainToken/ObtainTokenRequest.csharp",
+    "java": "/sdk_samples/ObtainToken/ObtainTokenRequest.java",
+    "javascript": "/sdk_samples/ObtainToken/ObtainTokenRequest.javascript",
+    "php": "/sdk_samples/ObtainToken/ObtainTokenRequest.php",
+    "python": "/sdk_samples/ObtainToken/ObtainTokenRequest.python",
+    "ruby": "/sdk_samples/ObtainToken/ObtainTokenRequest.ruby"
+  }
+}

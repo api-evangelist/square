@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-create-device-code-request-schema.json",
+  "title": "CreateDeviceCodeRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-devices-api-openapi.yml#/components/schemas/CreateDeviceCodeRequest",
+  "type": "object",
+  "x-release-status": "PUBLIC",
+  "required": [
+    "idempotency_key",
+    "device_code"
+  ],
+  "properties": {
+    "idempotency_key": {
+      "type": "string",
+      "description": "A unique string that identifies this CreateDeviceCode request. Keys can\nbe any valid string but must be unique for every CreateDeviceCode request.\n\nSee [Idempotency keys](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency) for more information.",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "device_code": {
+      "$ref": "#/$defs/DeviceCode",
+      "description": "The device code to create."
+    }
+  },
+  "$defs": {
+    "DeviceCode": {
+      "type": "object",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "product_type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique id for this device code.",
+          "readOnly": true
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "An optional user-defined name for the device code.",
+          "maxLength": 128
+        },
+        "code": {
+          "type": "string",
+          "description": "The unique code that can be used to login.",
+          "readOnly": true
+        },
+        "device_id": {
+          "type": "string",
+          "description": "The unique id of the device that used this code. Populated when the device is paired up.",
+          "readOnly": true
+        },
+        "product_type": {
+          "$ref": "#/$defs/ProductType",
+          "description": "The targeting product type of the device code."
+        },
+        "location_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The location assigned to this code.",
+          "maxLength": 50
+        },
+        "status": {
+          "$ref": "#/$defs/DeviceCodeStatus",
+          "description": "The pairing status of the device code.\nSee [DeviceCodeStatus](#type-devicecodestatus) for possible values",
+          "readOnly": true
+        },
+        "pair_by": {
+          "type": "string",
+          "description": "When this DeviceCode will expire and no longer login. Timestamp in RFC 3339 format.",
+          "readOnly": true
+        },
+        "created_at": {
+          "type": "string",
+          "description": "When this DeviceCode was created. Timestamp in RFC 3339 format.",
+          "readOnly": true
+        },
+        "status_changed_at": {
+          "type": "string",
+          "description": "When this DeviceCode's status was last changed. Timestamp in RFC 3339 format.",
+          "readOnly": true
+        },
+        "paired_at": {
+          "type": "string",
+          "description": "When this DeviceCode was paired. Timestamp in RFC 3339 format.",
+          "readOnly": true
+        }
+      }
+    },
+    "DeviceCodeStatus": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "UNPAIRED",
+        "PAIRED",
+        "EXPIRED"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "UNKNOWN",
+          "description": "The status cannot be determined or does not exist."
+        },
+        {
+          "name": "UNPAIRED",
+          "description": "The device code is just created and unpaired."
+        },
+        {
+          "name": "PAIRED",
+          "description": "The device code has been signed in and paired to a device."
+        },
+        {
+          "name": "EXPIRED",
+          "description": "The device code was unpaired and expired before it was paired."
+        }
+      ],
+      "description": "DeviceCode.Status enum.",
+      "x-release-status": "PUBLIC"
+    },
+    "ProductType": {
+      "type": "string",
+      "enum": [
+        "TERMINAL_API"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "TERMINAL_API",
+          "description": ""
+        }
+      ],
+      "x-release-status": "PUBLIC"
+    }
+  }
+}

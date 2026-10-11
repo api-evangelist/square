@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-create-dispute-evidence-text-request-schema.json",
+  "title": "CreateDisputeEvidenceTextRequest",
+  "description": "Defines the parameters for a `CreateDisputeEvidenceText` request.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-disputes-api-openapi.yml#/components/schemas/CreateDisputeEvidenceTextRequest",
+  "type": "object",
+  "x-release-status": "PUBLIC",
+  "required": [
+    "idempotency_key",
+    "evidence_text"
+  ],
+  "properties": {
+    "idempotency_key": {
+      "type": "string",
+      "description": "A unique key identifying the request. For more information, see [Idempotency](https://developer.squareup.com/docs/working-with-apis/idempotency).",
+      "minLength": 1,
+      "maxLength": 45
+    },
+    "evidence_type": {
+      "$ref": "#/$defs/DisputeEvidenceType",
+      "description": "The type of evidence you are uploading.\nSee [DisputeEvidenceType](#type-disputeevidencetype) for possible values"
+    },
+    "evidence_text": {
+      "type": "string",
+      "description": "The evidence string.",
+      "minLength": 1,
+      "maxLength": 500
+    }
+  },
+  "$defs": {
+    "DisputeEvidenceType": {
+      "type": "string",
+      "enum": [
+        "GENERIC_EVIDENCE",
+        "ONLINE_OR_APP_ACCESS_LOG",
+        "AUTHORIZATION_DOCUMENTATION",
+        "CANCELLATION_OR_REFUND_DOCUMENTATION",
+        "CARDHOLDER_COMMUNICATION",
+        "CARDHOLDER_INFORMATION",
+        "PURCHASE_ACKNOWLEDGEMENT",
+        "DUPLICATE_CHARGE_DOCUMENTATION",
+        "PRODUCT_OR_SERVICE_DESCRIPTION",
+        "RECEIPT",
+        "SERVICE_RECEIVED_DOCUMENTATION",
+        "PROOF_OF_DELIVERY_DOCUMENTATION",
+        "RELATED_TRANSACTION_DOCUMENTATION",
+        "REBUTTAL_EXPLANATION",
+        "TRACKING_NUMBER"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "GENERIC_EVIDENCE",
+          "description": "Square assumes this evidence type if you do not provide a type when uploading evidence.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "ONLINE_OR_APP_ACCESS_LOG",
+          "description": "Server or activity logs that show proof of the cardholder’s identity and that the\ncardholder successfully ordered and received the goods (digitally or otherwise).\nExample evidence includes IP addresses, corresponding timestamps/dates, cardholder’s name and email\naddress linked to a cardholder profile held by the seller, proof the same device and card (used\nin dispute) were previously used in prior undisputed transaction, and any related detailed activity.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "AUTHORIZATION_DOCUMENTATION",
+          "description": "Evidence that the cardholder did provide authorization for the charge.\nExample evidence includes a signed credit card authorization.\n\nUse when uploading evidence as a file."
+        },
+        {
+          "name": "CANCELLATION_OR_REFUND_DOCUMENTATION",
+          "description": "Evidence that the cardholder acknowledged your refund or cancellation policy.\nExample evidence includes a signature or checkbox showing the cardholder’s acknowledgement of your\nrefund or cancellation policy.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "CARDHOLDER_COMMUNICATION",
+          "description": "Evidence that shows relevant communication with the cardholder.\nExample evidence includes emails or texts that show the cardholder received goods/services or\ndemonstrate cardholder satisfaction.\n\nUse when uploading evidence as a file."
+        },
+        {
+          "name": "CARDHOLDER_INFORMATION",
+          "description": "Evidence that validates the customer's identity.\nExample evidence includes personally identifiable details such as name, email address, purchaser IP\naddress, and a copy of the cardholder ID.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "PURCHASE_ACKNOWLEDGEMENT",
+          "description": "Evidence that shows proof of the sale/transaction.\nExample evidence includes an invoice, contract, or other item showing the customer’s acknowledgement\nof the purchase and your terms.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "DUPLICATE_CHARGE_DOCUMENTATION",
+          "description": "Evidence that shows the charges in question are valid and distinct from one another.\nExample evidence includes receipts, shipping labels, and invoices along with their distinct payment IDs.\n\nUse when uploading evidence as a file."
+        },
+        {
+          "name": "PRODUCT_OR_SERVICE_DESCRIPTION",
+          "description": "A description of the product or service sold.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "RECEIPT",
+          "description": "A receipt or message sent to the cardholder detailing the charge.\nNote: You do not need to upload the Square receipt; Square submits the receipt on your behalf.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "SERVICE_RECEIVED_DOCUMENTATION",
+          "description": "Evidence that the service was provided to the cardholder or the expected date that services will be rendered.\nExample evidence includes a signed delivery form, work order, expected delivery date, or other written agreements.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "PROOF_OF_DELIVERY_DOCUMENTATION",
+          "description": "Evidence that shows the product was provided to the cardholder or the expected date of delivery.\nExample evidence includes a signed delivery form or written agreement acknowledging receipt of the goods or services.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "RELATED_TRANSACTION_DOCUMENTATION",
+          "description": "Evidence that shows the cardholder previously processed transactions on the same card and did not dispute them.\nNote: Square automatically provides up to five distinct Square receipts for related transactions, when available.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "REBUTTAL_EXPLANATION",
+          "description": "An explanation of why the cardholder’s claim is invalid.\nExample evidence includes an explanation of why each distinct charge is a legitimate purchase, why the cardholder’s claim\nfor credit owed due to their attempt to cancel, return, or refund is invalid per your stated policy and cardholder\nagreement, or an explanation of how the cardholder did not attempt to remedy the issue with you first to receive credit.\n\nUse when uploading evidence as a file or string."
+        },
+        {
+          "name": "TRACKING_NUMBER",
+          "description": "The tracking number for the order provided by the shipping carrier. If you have multiple numbers, they need to be\nsubmitted individually as separate pieces of evidence.\n\nUse when uploading evidence as a string."
+        }
+      ],
+      "description": "The type of the dispute evidence.",
+      "x-release-status": "PUBLIC"
+    }
+  }
+}

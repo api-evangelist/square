@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-pause-subscription-request-schema.json",
+  "title": "PauseSubscriptionRequest",
+  "description": "Defines input parameters in a request to the\n[PauseSubscription](api-endpoint:Subscriptions-PauseSubscription) endpoint.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-subscriptions-api-openapi.yml#/components/schemas/PauseSubscriptionRequest",
+  "type": "object",
+  "x-release-status": "BETA",
+  "properties": {
+    "pause_effective_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The `YYYY-MM-DD`-formatted date when the scheduled `PAUSE` action takes place on the subscription.\n\nWhen this date is unspecified or falls within the current billing cycle, the subscription is paused\non the starting date of the next billing cycle."
+    },
+    "pause_cycle_duration": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The number of billing cycles the subscription will be paused before it is reactivated. \n\nWhen this is set, a `RESUME` action is also scheduled to take place on the subscription at \nthe end of the specified pause cycle duration. In this case, neither `resume_effective_date` \nnor `resume_change_timing` may be specified.",
+      "format": "int64"
+    },
+    "resume_effective_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The date when the subscription is reactivated by a scheduled `RESUME` action. \nThis date must be at least one billing cycle ahead of `pause_effective_date`."
+    },
+    "resume_change_timing": {
+      "$ref": "#/$defs/ChangeTiming",
+      "description": "The timing whether the subscription is reactivated immediately or at the end of the billing cycle, relative to \n`resume_effective_date`.\nSee [ChangeTiming](#type-changetiming) for possible values"
+    },
+    "pause_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The user-provided reason to pause the subscription.",
+      "maxLength": 255
+    }
+  },
+  "$defs": {
+    "ChangeTiming": {
+      "type": "string",
+      "enum": [
+        "IMMEDIATE",
+        "END_OF_BILLING_CYCLE"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "IMMEDIATE",
+          "description": "The action occurs immediately."
+        },
+        {
+          "name": "END_OF_BILLING_CYCLE",
+          "description": "The action occurs at the end of the billing cycle."
+        }
+      ],
+      "description": "Supported timings when a pending change, as an action, takes place to a subscription.",
+      "x-release-status": "BETA"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+arazzo: 1.0.1
+info:
+  title: Square Customers to Constant Contact Contacts
+  summary: Create a Constant Contact contact from the newest Square customer.
+  description: Create a Constant Contact contact from the newest Square customer.
+    Recreated from the named Zapier template as forkable Arazzo; polling/trigger semantics
+    are left to the runner.
+  version: 1.0.0
+x-integration:
+  partner: constant-contact
+  template: https://zapier.com/apps/constant-contact/integrations/square/851425/create-contacts-in-constant-contact-from-new-square-customers
+  edge_evidence: https://zapier.com/apps/constant-contact/integrations/square/851425/create-contacts-in-constant-contact-from-new-square-customers
+  edge_type: marketplace
+  method: generated
+  generated: '2026-10-12'
+  generator: claude-opus enrichment pass local-v5
+sourceDescriptions:
+- name: squareCustomersApi
+  url: https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/openapi/square-customers-api-openapi.yml
+  type: openapi
+- name: constantContactContactsApi
+  url: https://raw.githubusercontent.com/api-evangelist/constant-contact/refs/heads/main/openapi/constant-contact-contacts-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: square-customer-to-constant-contact
+  summary: Create a Constant Contact contact from the newest Square customer.
+  inputs:
+    type: object
+    properties:
+      listId:
+        type: string
+  steps:
+  - stepId: list-customers
+    description: List Square customers, most recently created first.
+    operationId: $sourceDescriptions.squareCustomersApi.ListCustomers
+    parameters:
+    - name: sort_field
+      in: query
+      value: CREATED_AT
+    - name: sort_order
+      in: query
+      value: DESC
+    - name: limit
+      in: query
+      value: 1
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      customerId: $response.body#/customers/0/id
+      email: $response.body#/customers/0/email_address
+      givenName: $response.body#/customers/0/given_name
+      familyName: $response.body#/customers/0/family_name
+  - stepId: create-contact
+    description: Create the contact in Constant Contact.
+    operationId: $sourceDescriptions.constantContactContactsApi.createContact
+    requestBody:
+      contentType: application/json
+      payload:
+        email_address:
+          address: $steps.list-customers.outputs.email
+          permission_to_send: implicit
+        first_name: $steps.list-customers.outputs.givenName
+        last_name: $steps.list-customers.outputs.familyName
+        create_source: Account
+        list_memberships:
+        - $inputs.listId
+    successCriteria:
+    - condition: $statusCode == 201
+    outputs:
+      contactId: $response.body#/contact_id
+  outputs:
+    customerId: $steps.list-customers.outputs.customerId
+    contactId: $steps.create-contact.outputs.contactId

@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-search-events-request-schema.json",
+  "title": "SearchEventsRequest",
+  "description": "Searches [Event](entity:Event)s for your application.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-events-api-openapi.yml#/components/schemas/SearchEventsRequest",
+  "type": "object",
+  "x-release-status": "BETA",
+  "properties": {
+    "cursor": {
+      "type": "string",
+      "description": "A pagination cursor returned by a previous call to this endpoint. Provide this cursor to retrieve the next set of events for your original query.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).",
+      "maxLength": 256
+    },
+    "limit": {
+      "type": "integer",
+      "description": "The maximum number of events to return in a single page. The response might contain fewer events. The default value is 100, which is also the maximum allowed value.\n\nFor more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).\n\nDefault: 100",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "query": {
+      "$ref": "#/$defs/SearchEventsQuery",
+      "description": "The filtering and sorting criteria for the search request. To retrieve additional pages using a cursor, you must use the original query."
+    }
+  },
+  "$defs": {
+    "SearchEventsFilter": {
+      "type": "object",
+      "description": "Criteria to filter events by.",
+      "x-release-status": "BETA",
+      "properties": {
+        "event_types": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Filter events by event types."
+        },
+        "merchant_ids": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Filter events by merchant."
+        },
+        "location_ids": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Filter events by location."
+        },
+        "created_at": {
+          "$ref": "#/$defs/TimeRange",
+          "description": "Filter events by when they were created."
+        }
+      }
+    },
+    "SearchEventsQuery": {
+      "type": "object",
+      "description": "Contains query criteria for the search.",
+      "x-release-status": "BETA",
+      "properties": {
+        "filter": {
+          "$ref": "#/$defs/SearchEventsFilter",
+          "description": "Criteria to filter events by."
+        },
+        "sort": {
+          "$ref": "#/$defs/SearchEventsSort",
+          "description": "Criteria to sort events by."
+        }
+      }
+    },
+    "SearchEventsSort": {
+      "type": "object",
+      "description": "Criteria to sort events by.",
+      "x-release-status": "BETA",
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/SearchEventsSortField",
+          "description": "Sort events by event types.\nSee [SearchEventsSortField](#type-searcheventssortfield) for possible values"
+        },
+        "order": {
+          "$ref": "#/$defs/SortOrder",
+          "description": "The order to use for sorting the events.\nSee [SortOrder](#type-sortorder) for possible values"
+        }
+      }
+    },
+    "SearchEventsSortField": {
+      "type": "string",
+      "enum": [
+        "DEFAULT"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "DEFAULT",
+          "description": "Use the default sort key. The default behavior is to sort events by when they were created (`created_at`)."
+        }
+      ],
+      "description": "Specifies the sort key for events returned from a search.",
+      "x-release-status": "BETA"
+    },
+    "SortOrder": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "DESC",
+          "description": "The results are returned in descending (e.g., newest-first or Z-A) order."
+        },
+        {
+          "name": "ASC",
+          "description": "The results are returned in ascending (e.g., oldest-first or A-Z) order."
+        }
+      ],
+      "description": "The order (e.g., chronological or alphabetical) in which results from a request are returned.",
+      "x-release-status": "PUBLIC"
+    },
+    "TimeRange": {
+      "type": "object",
+      "description": "Represents a generic time range. The start and end values are\nrepresented in RFC 3339 format. Time ranges are customized to be\ninclusive or exclusive based on the needs of a particular endpoint.\nRefer to the relevant endpoint-specific documentation to determine\nhow time ranges are handled.",
+      "x-release-status": "PUBLIC",
+      "properties": {
+        "start_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A datetime value in RFC 3339 format indicating when the time range\nstarts."
+        },
+        "end_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A datetime value in RFC 3339 format indicating when the time range\nends."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,434 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-search-catalog-objects-request-schema.json",
+  "title": "SearchCatalogObjectsRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-catalog-api-openapi.yml#/components/schemas/SearchCatalogObjectsRequest",
+  "type": "object",
+  "x-release-status": "PUBLIC",
+  "properties": {
+    "cursor": {
+      "type": "string",
+      "description": "The pagination cursor returned in the previous response. Leave unset for an initial request.\nSee [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination) for more information."
+    },
+    "object_types": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CatalogObjectType"
+      },
+      "description": "The desired set of object types to appear in the search results.\n\nIf this is unspecified, the operation returns objects of all the top level types at the version\nof the Square API used to make the request. Object types that are nested onto other object types\nare not included in the defaults.\n\nAt the current API version the default object types are:\nITEM, CATEGORY, TAX, DISCOUNT, MODIFIER_LIST, \nPRICING_RULE, PRODUCT_SET, TIME_PERIOD, MEASUREMENT_UNIT,\nSUBSCRIPTION_PLAN, ITEM_OPTION, CUSTOM_ATTRIBUTE_DEFINITION, QUICK_AMOUNT_SETTINGS.\n\nNote that if you wish for the query to return objects belonging to nested types (i.e., COMPONENT, IMAGE,\nITEM_OPTION_VAL, ITEM_VARIATION, or MODIFIER), you must explicitly include all the types of interest\nin this field."
+    },
+    "include_deleted_objects": {
+      "type": "boolean",
+      "description": "If `true`, deleted objects will be included in the results. Defaults to `false`. Deleted objects will have their `is_deleted` field set to `true`. If `include_deleted_objects` is `true`, then the `include_category_path_to_root` request parameter must be `false`. Both properties cannot be `true` at the same time."
+    },
+    "include_related_objects": {
+      "type": "boolean",
+      "description": "If `true`, the response will include additional objects that are related to the\nrequested objects. Related objects are objects that are referenced by object ID by the objects\nin the response. This is helpful if the objects are being fetched for immediate display to a user.\nThis process only goes one level deep. Objects referenced by the related objects will not be included.\nFor example:\n\nIf the `objects` field of the response contains a CatalogItem, its associated\nCatalogCategory objects, CatalogTax objects, CatalogImage objects and\nCatalogModifierLists will be returned in the `related_objects` field of the\nresponse. If the `objects` field of the response contains a CatalogItemVariation,\nits parent CatalogItem will be returned in the `related_objects` field of\nthe response.\n\nDefault value: `false`"
+    },
+    "begin_time": {
+      "type": "string",
+      "description": "Return objects modified after this [timestamp](https://developer.squareup.com/docs/build-basics/working-with-dates), in RFC 3339\nformat, e.g., `2016-09-04T23:59:33.123Z`. The timestamp is exclusive - objects with a\ntimestamp equal to `begin_time` will not be included in the response."
+    },
+    "query": {
+      "$ref": "#/$defs/CatalogQuery",
+      "description": "A query to be used to filter or sort the results. If no query is specified, the entire catalog will be returned."
+    },
+    "limit": {
+      "type": "integer",
+      "description": "A limit on the number of results to be returned in a single page. The limit is advisory -\nthe implementation may return more or fewer results. If the supplied limit is negative, zero, or\nis higher than the maximum limit of 1,000, it will be ignored."
+    },
+    "include_category_path_to_root": {
+      "type": "boolean",
+      "description": "Specifies whether or not to include the `path_to_root` list for each returned category instance. The `path_to_root` list consists of `CategoryPathToRootNode` objects and specifies the path that starts with the immediate parent category of the returned category and ends with its root category. If the returned category is a top-level category, the `path_to_root` list is empty and is not returned in the response payload. If `include_category_path_to_root` is `true`, then the `include_deleted_objects` request parameter must be `false`. Both properties cannot be `true` at the same time."
+    }
+  },
+  "x-sq-sdk-sample-code": {
+    "csharp": "/sdk_samples/Catalog/SearchCatalogObjects/SearchCatalogObjectsRequest.csharp",
+    "java": "/sdk_samples/Catalog/SearchCatalogObjects/SearchCatalogObjectsRequest.java",
+    "javascript": "/sdk_samples/Catalog/SearchCatalogObjects/SearchCatalogObjectsRequest.javascript",
+    "php": "/sdk_samples/Catalog/SearchCatalogObjects/SearchCatalogObjectsRequest.php",
+    "python": "/sdk_samples/Catalog/SearchCatalogObjects/SearchCatalogObjectsRequest.python",
+    "ruby": "/sdk_samples/Catalog/SearchCatalogObjects/SearchCatalogObjectsRequest.ruby"
+  },
+  "$defs": {
+    "CatalogObjectType": {
+      "type": "string",
+      "enum": [
+        "ITEM",
+        "IMAGE",
+        "CATEGORY",
+        "ITEM_VARIATION",
+        "TAX",
+        "DISCOUNT",
+        "MODIFIER_LIST",
+        "MODIFIER",
+        "PRICING_RULE",
+        "PRODUCT_SET",
+        "TIME_PERIOD",
+        "MEASUREMENT_UNIT",
+        "SUBSCRIPTION_PLAN_VARIATION",
+        "ITEM_OPTION",
+        "ITEM_OPTION_VAL",
+        "CUSTOM_ATTRIBUTE_DEFINITION",
+        "QUICK_AMOUNTS_SETTINGS",
+        "SUBSCRIPTION_PLAN",
+        "AVAILABILITY_PERIOD"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "ITEM",
+          "description": "The `CatalogObject` instance is of the [CatalogItem](entity:CatalogItem) type and represents an item. The item-specific data\nmust be set on the `item_data` field."
+        },
+        {
+          "name": "IMAGE",
+          "description": "The `CatalogObject` instance is of the [CatalogImage](entity:CatalogImage) type and represents an image. The image-specific data\nmust be set on the `image_data` field."
+        },
+        {
+          "name": "CATEGORY",
+          "description": "The `CatalogObject` instance is of the [CatalogCategory](entity:CatalogCategory) type and represents a category. The category-specific data\nmust be set on the `category_data` field."
+        },
+        {
+          "name": "ITEM_VARIATION",
+          "description": "The `CatalogObject` instance is of the  [CatalogItemVariation](entity:CatalogItemVariation) type and represents an item variation, also referred to as variation.\nThe item variation-specific data must be set on the `item_variation_data` field."
+        },
+        {
+          "name": "TAX",
+          "description": "The `CatalogObject` instance is of the [CatalogTax](entity:CatalogTax) type and represents a tax. The tax-specific data\nmust be set on the `tax_data` field."
+        },
+        {
+          "name": "DISCOUNT",
+          "description": "The `CatalogObject` instance is of the [CatalogDiscount](entity:CatalogDiscount) type and represents a discount. The discount-specific data\nmust be set on the `discount_data` field."
+        },
+        {
+          "name": "MODIFIER_LIST",
+          "description": "The `CatalogObject` instance is of the [CatalogModifierList](entity:CatalogModifierList) type and represents a modifier list.\nThe modifier-list-specific data must be set on the `modifier_list_data` field."
+        },
+        {
+          "name": "MODIFIER",
+          "description": "The `CatalogObject` instance is of the [CatalogModifier](entity:CatalogModifier) type and represents a modifier. The modifier-specific data\nmust be set on the `modifier_data` field."
+        },
+        {
+          "name": "PRICING_RULE",
+          "description": "The `CatalogObject` instance is of the [CatalogPricingRule](entity:CatalogPricingRule) type and represents a pricing rule. The pricing-rule-specific data\nmust be set on the `pricing_rule_data` field."
+        },
+        {
+          "name": "PRODUCT_SET",
+          "description": "The `CatalogObject` instance is of the [CatalogProductSet](entity:CatalogProductSet) type and represents a product set.\nThe product-set-specific data will be stored in the `product_set_data` field."
+        },
+        {
+          "name": "TIME_PERIOD",
+          "description": "The `CatalogObject` instance is of the [CatalogTimePeriod](entity:CatalogTimePeriod) type and represents a time period.\nThe time-period-specific data must be set on the `time_period_data` field."
+        },
+        {
+          "name": "MEASUREMENT_UNIT",
+          "description": "The `CatalogObject` instance is of the [CatalogMeasurementUnit](entity:CatalogMeasurementUnit) type and represents a measurement unit specifying the unit of\nmeasure and precision in which an item variation is sold. The measurement-unit-specific data must set on the `measurement_unit_data` field."
+        },
+        {
+          "name": "SUBSCRIPTION_PLAN_VARIATION",
+          "description": "The `CatalogObject` instance is of the [CatalogSubscriptionPlan](entity:CatalogSubscriptionPlan) type and represents a subscription plan.\nThe subscription-plan-specific data must be stored on the `subscription_plan_data` field."
+        },
+        {
+          "name": "ITEM_OPTION",
+          "description": "The `CatalogObject` instance is of the [CatalogItemOption](entity:CatalogItemOption) type and represents a list of options (such as a color or size of a T-shirt)\nthat can be assigned to item variations. The item-option-specific data must be on the `item_option_data` field."
+        },
+        {
+          "name": "ITEM_OPTION_VAL",
+          "description": "The `CatalogObject` instance is of the [CatalogItemOptionValue](entity:CatalogItemOptionValue) type and represents a value associated with one or more item options.\nFor example, an item option of \"Size\" may have item option values such as \"Small\" or \"Medium\".\nThe item-option-value-specific data must be on the `item_option_value_data` field."
+        },
+        {
+          "name": "CUSTOM_ATTRIBUTE_DEFINITION",
+          "description": "The `CatalogObject` instance is of the [CatalogCustomAttributeDefinition](entity:CatalogCustomAttributeDefinition) type and represents the definition of a custom attribute.\nThe custom-attribute-definition-specific data must be set on the `custom_attribute_definition_data` field."
+        },
+        {
+          "name": "QUICK_AMOUNTS_SETTINGS",
+          "description": "The `CatalogObject` instance is of the [CatalogQuickAmountsSettings](entity:CatalogQuickAmountsSettings) type and represents settings to configure preset charges for quick payments at each location.\nFor example, a location may have a list of both AUTO and MANUAL quick amounts that are set to DISABLED.\nThe quick-amounts-settings-specific data must be set on the `quick_amounts_settings_data` field."
+        },
+        {
+          "name": "SUBSCRIPTION_PLAN",
+          "description": "The `CatalogObject` instance is of the [CatalogSubscriptionPlan](entity:CatalogSubscriptionPlan) type and represents a subscription plan.\nThe subscription plan specific data must be stored on the `subscription_plan_data` field."
+        },
+        {
+          "name": "AVAILABILITY_PERIOD",
+          "description": "The `CatalogObject` instance is of the [CatalogAvailabilityPeriod](entity:CatalogAvailabilityPeriod) type and represents an availability period.\nThe availability period specific data must be stored on the `availability_period_data` field."
+        }
+      ],
+      "description": "Possible types of CatalogObjects returned from the catalog, each\ncontaining type-specific properties in the `*_data` field corresponding to the specified object type.",
+      "x-release-status": "PUBLIC"
+    },
+    "CatalogQuery": {
+      "type": "object",
+      "description": "A query composed of one or more different types of filters to narrow the scope of targeted objects when calling the `SearchCatalogObjects` endpoint.\n\nAlthough a query can have multiple filters, only certain query types can be combined per call to [SearchCatalogObjects](api-endpoint:Catalog-SearchCatalogObjects).\nAny combination of the following types may be used together:\n- [exact_query](entity:CatalogQueryExact)\n- [prefix_query](entity:CatalogQueryPrefix)\n- [range_query](entity:CatalogQueryRange)\n- [sorted_attribute_query](entity:CatalogQuerySortedAttribute)\n- [text_query](entity:CatalogQueryText)\n\nAll other query types cannot be combined with any others.\n\nWhen a query filter is based on an attribute, the attribute must be searchable.\nSearchable attributes are listed as follows, along their parent types that can be searched for with applicable query filters.\n\nSearchable attribute and objects queryable by searchable attributes:\n- `name`:  `CatalogItem`, `CatalogItemVariation`, `CatalogCategory`, `CatalogTax`, `CatalogDiscount`, `CatalogModifier`, `CatalogModifierList`, `CatalogItemOption`, `CatalogItemOptionValue`\n- `description`: `CatalogItem`, `CatalogItemOptionValue`\n- `abbreviation`: `CatalogItem`\n- `upc`: `CatalogItemVariation`\n- `sku`: `CatalogItemVariation`\n- `caption`: `CatalogImage`\n- `display_name`: `CatalogItemOption`\n\nFor example, to search for [CatalogItem](entity:CatalogItem) objects by searchable attributes, you can use\nthe `\"name\"`, `\"description\"`, or `\"abbreviation\"` attribute in an applicable query filter.",
+      "x-release-status": "PUBLIC",
+      "properties": {
+        "sorted_attribute_query": {
+          "$ref": "#/$defs/CatalogQuerySortedAttribute",
+          "description": "A query expression to sort returned query result by the given attribute."
+        },
+        "exact_query": {
+          "$ref": "#/$defs/CatalogQueryExact",
+          "description": "An exact query expression to return objects with attribute name and value\nmatching the specified attribute name and value exactly. Value matching is case insensitive."
+        },
+        "set_query": {
+          "$ref": "#/$defs/CatalogQuerySet",
+          "description": "A set query expression to return objects with attribute name and value\nmatching the specified attribute name and any of the specified attribute values exactly.\nValue matching is case insensitive."
+        },
+        "prefix_query": {
+          "$ref": "#/$defs/CatalogQueryPrefix",
+          "description": "A prefix query expression to return objects with attribute values\nthat have a prefix matching the specified string value. Value matching is case insensitive."
+        },
+        "range_query": {
+          "$ref": "#/$defs/CatalogQueryRange",
+          "description": "A range query expression to return objects with numeric values\nthat lie in the specified range."
+        },
+        "text_query": {
+          "$ref": "#/$defs/CatalogQueryText",
+          "description": "A text query expression to return objects whose searchable attributes contain all of the given\nkeywords, irrespective of their order. For example, if a `CatalogItem` contains custom attribute values of\n`{\"name\": \"t-shirt\"}` and `{\"description\": \"Small, Purple\"}`, the query filter of `{\"keywords\": [\"shirt\", \"sma\", \"purp\"]}`\nreturns this item."
+        },
+        "items_for_tax_query": {
+          "$ref": "#/$defs/CatalogQueryItemsForTax",
+          "description": "A query expression to return items that have any of the specified taxes (as identified by the corresponding `CatalogTax` object IDs) enabled."
+        },
+        "items_for_modifier_list_query": {
+          "$ref": "#/$defs/CatalogQueryItemsForModifierList",
+          "description": "A query expression to return items that have any of the given modifier list (as identified by the corresponding `CatalogModifierList`s IDs) enabled."
+        },
+        "items_for_item_options_query": {
+          "$ref": "#/$defs/CatalogQueryItemsForItemOptions",
+          "description": "A query expression to return items that contains the specified item options (as identified the corresponding `CatalogItemOption` IDs)."
+        },
+        "item_variations_for_item_option_values_query": {
+          "$ref": "#/$defs/CatalogQueryItemVariationsForItemOptionValues",
+          "description": "A query expression to return item variations (of the [CatalogItemVariation](entity:CatalogItemVariation) type) that\ncontain all of the specified `CatalogItemOption` IDs."
+        }
+      }
+    },
+    "CatalogQueryExact": {
+      "type": "object",
+      "description": "The query filter to return the search result by exact match of the specified attribute name and value.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "attribute_name",
+        "attribute_value"
+      ],
+      "properties": {
+        "attribute_name": {
+          "type": "string",
+          "description": "The name of the attribute to be searched. Matching of the attribute name is exact.",
+          "minLength": 1
+        },
+        "attribute_value": {
+          "type": "string",
+          "description": "The desired value of the search attribute. Matching of the attribute value is case insensitive and can be partial.\nFor example, if a specified value of \"sma\", objects with the named attribute value of \"Small\", \"small\" are both matched."
+        }
+      }
+    },
+    "CatalogQueryItemVariationsForItemOptionValues": {
+      "type": "object",
+      "description": "The query filter to return the item variations containing the specified item option value IDs.",
+      "x-release-status": "PUBLIC",
+      "properties": {
+        "item_option_value_ids": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "A set of `CatalogItemOptionValue` IDs to be used to find associated\n`CatalogItemVariation`s. All ItemVariations that contain all of the given\nItem Option Values (in any order) will be returned."
+        }
+      }
+    },
+    "CatalogQueryItemsForItemOptions": {
+      "type": "object",
+      "description": "The query filter to return the items containing the specified item option IDs.",
+      "x-release-status": "PUBLIC",
+      "properties": {
+        "item_option_ids": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "A set of `CatalogItemOption` IDs to be used to find associated\n`CatalogItem`s. All Items that contain all of the given Item Options (in any order)\nwill be returned."
+        }
+      }
+    },
+    "CatalogQueryItemsForModifierList": {
+      "type": "object",
+      "description": "The query filter to return the items containing the specified modifier list IDs.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "modifier_list_ids"
+      ],
+      "properties": {
+        "modifier_list_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A set of `CatalogModifierList` IDs to be used to find associated `CatalogItem`s."
+        }
+      }
+    },
+    "CatalogQueryItemsForTax": {
+      "type": "object",
+      "description": "The query filter to return the items containing the specified tax IDs.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "tax_ids"
+      ],
+      "properties": {
+        "tax_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A set of `CatalogTax` IDs to be used to find associated `CatalogItem`s."
+        }
+      }
+    },
+    "CatalogQueryPrefix": {
+      "type": "object",
+      "description": "The query filter to return the search result whose named attribute values are prefixed by the specified attribute value.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "attribute_name",
+        "attribute_prefix"
+      ],
+      "properties": {
+        "attribute_name": {
+          "type": "string",
+          "description": "The name of the attribute to be searched.",
+          "minLength": 1
+        },
+        "attribute_prefix": {
+          "type": "string",
+          "description": "The desired prefix of the search attribute value.",
+          "minLength": 1
+        }
+      }
+    },
+    "CatalogQueryRange": {
+      "type": "object",
+      "description": "The query filter to return the search result whose named attribute values fall between the specified range.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "attribute_name"
+      ],
+      "properties": {
+        "attribute_name": {
+          "type": "string",
+          "description": "The name of the attribute to be searched.",
+          "minLength": 1
+        },
+        "attribute_min_value": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The desired minimum value for the search attribute (inclusive).",
+          "format": "int64"
+        },
+        "attribute_max_value": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The desired maximum value for the search attribute (inclusive).",
+          "format": "int64"
+        }
+      }
+    },
+    "CatalogQuerySet": {
+      "type": "object",
+      "description": "The query filter to return the search result(s) by exact match of the specified `attribute_name` and any of\nthe `attribute_values`.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "attribute_name",
+        "attribute_values"
+      ],
+      "properties": {
+        "attribute_name": {
+          "type": "string",
+          "description": "The name of the attribute to be searched. Matching of the attribute name is exact.",
+          "minLength": 1
+        },
+        "attribute_values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The desired values of the search attribute. Matching of the attribute values is exact and case insensitive.\nA maximum of 250 values may be searched in a request."
+        }
+      }
+    },
+    "CatalogQuerySortedAttribute": {
+      "type": "object",
+      "description": "The query expression to specify the key to sort search results.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "attribute_name"
+      ],
+      "properties": {
+        "attribute_name": {
+          "type": "string",
+          "description": "The attribute whose value is used as the sort key.",
+          "minLength": 1
+        },
+        "initial_attribute_value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The first attribute value to be returned by the query. Ascending sorts will return only\nobjects with this value or greater, while descending sorts will return only objects with this value\nor less. If unset, start at the beginning (for ascending sorts) or end (for descending sorts)."
+        },
+        "sort_order": {
+          "$ref": "#/$defs/SortOrder",
+          "description": "The desired sort order, `\"ASC\"` (ascending) or `\"DESC\"` (descending).\nSee [SortOrder](#type-sortorder) for possible values"
+        }
+      }
+    },
+    "CatalogQueryText": {
+      "type": "object",
+      "description": "The query filter to return the search result whose searchable attribute values contain all of the specified keywords or tokens, independent of the token order or case.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "keywords"
+      ],
+      "properties": {
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of 1, 2, or 3 search keywords. Keywords with fewer than 3 alphanumeric characters are ignored."
+        }
+      }
+    },
+    "SortOrder": {
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "x-enum-elements": [
+        {
+          "name": "DESC",
+          "description": "The results are returned in descending (e.g., newest-first or Z-A) order."
+        },
+        {
+          "name": "ASC",
+          "description": "The results are returned in ascending (e.g., oldest-first or A-Z) order."
+        }
+      ],
+      "description": "The order (e.g., chronological or alphabetical) in which results from a request are returned.",
+      "x-release-status": "PUBLIC"
+    }
+  }
+}

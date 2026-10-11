@@ -1,0 +1,74 @@
+arazzo: 1.0.1
+info:
+  title: Square Customers to Mailchimp Audience
+  summary: Add the newest Square customer to a Mailchimp audience as a list member.
+  description: Add the newest Square customer to a Mailchimp audience as a list member.
+    Recreated from the named Zapier template as forkable Arazzo; polling/trigger semantics
+    are left to the runner.
+  version: 1.0.0
+x-integration:
+  partner: mailchimp
+  template: https://zapier.com/apps/mailchimp/integrations/square/24509/add-new-square-customers-to-mailchimp
+  edge_evidence: https://zapier.com/apps/mailchimp/integrations/square/24509/add-new-square-customers-to-mailchimp
+  edge_type: marketplace
+  method: generated
+  generated: '2026-10-12'
+  generator: claude-opus enrichment pass local-v5
+sourceDescriptions:
+- name: squareCustomersApi
+  url: https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/openapi/square-customers-api-openapi.yml
+  type: openapi
+- name: mailchimpListsApi
+  url: https://raw.githubusercontent.com/api-evangelist/mailchimp/refs/heads/main/openapi/mailchimp-lists-api-openapi.yml
+  type: openapi
+workflows:
+- workflowId: square-customer-to-mailchimp
+  summary: Add the newest Square customer to a Mailchimp audience as a list member.
+  inputs:
+    type: object
+    properties:
+      listId:
+        type: string
+  steps:
+  - stepId: list-customers
+    description: List Square customers, most recently created first.
+    operationId: $sourceDescriptions.squareCustomersApi.ListCustomers
+    parameters:
+    - name: sort_field
+      in: query
+      value: CREATED_AT
+    - name: sort_order
+      in: query
+      value: DESC
+    - name: limit
+      in: query
+      value: 1
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      customerId: $response.body#/customers/0/id
+      email: $response.body#/customers/0/email_address
+      givenName: $response.body#/customers/0/given_name
+      familyName: $response.body#/customers/0/family_name
+  - stepId: add-member
+    description: Add the customer to the Mailchimp list.
+    operationId: $sourceDescriptions.mailchimpListsApi.postListsIdMembers
+    parameters:
+    - name: list_id
+      in: path
+      value: $inputs.listId
+    requestBody:
+      contentType: application/json
+      payload:
+        email_address: $steps.list-customers.outputs.email
+        status: subscribed
+        merge_fields:
+          FNAME: $steps.list-customers.outputs.givenName
+          LNAME: $steps.list-customers.outputs.familyName
+    successCriteria:
+    - condition: $statusCode == 200
+    outputs:
+      memberId: $response.body#/id
+  outputs:
+    customerId: $steps.list-customers.outputs.customerId
+    memberId: $steps.add-member.outputs.memberId

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/square/main/json-schema/square-upsert-snippet-request-schema.json",
+  "title": "UpsertSnippetRequest",
+  "description": "Represents an `UpsertSnippet` request.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/square-snippets-api-openapi.yml#/components/schemas/UpsertSnippetRequest",
+  "type": "object",
+  "x-release-status": "PUBLIC",
+  "required": [
+    "snippet"
+  ],
+  "properties": {
+    "snippet": {
+      "$ref": "#/$defs/Snippet",
+      "description": "The snippet for the site."
+    }
+  },
+  "$defs": {
+    "Snippet": {
+      "type": "object",
+      "description": "Represents the snippet that is added to a Square Online site. The snippet code is injected into the `head` element of all pages on the site, except for checkout pages.",
+      "x-release-status": "PUBLIC",
+      "required": [
+        "content"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The Square-assigned ID for the snippet.",
+          "maxLength": 48,
+          "readOnly": true
+        },
+        "site_id": {
+          "type": "string",
+          "description": "The ID of the site that contains the snippet.",
+          "readOnly": true
+        },
+        "content": {
+          "type": "string",
+          "description": "The snippet code, which can contain valid HTML, JavaScript, or both.",
+          "minLength": 1,
+          "maxLength": 65535
+        },
+        "created_at": {
+          "type": "string",
+          "description": "The timestamp of when the snippet was initially added to the site, in RFC 3339 format.",
+          "readOnly": true
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "The timestamp of when the snippet was last updated on the site, in RFC 3339 format.",
+          "readOnly": true
+        }
+      }
+    }
+  }
+}
