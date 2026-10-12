@@ -1,0 +1,521 @@
+# DERIVED by derive-integration-map.py (roadmap#949): each integration workflow, step by step,
+# resolved to spec file -> tag -> business capability (Turbo EA, CC BY 4.0) and the operation's
+# phrasing intent. Read from our own files; an unmapped link says why.
+slug: square
+workflows:
+- file: square-acuity-scheduling-customers-from-appointments.yml
+  title: Acuity Scheduling Appointments to Square Customers
+  partner: acuity-scheduling
+  template: https://zapier.com/apps/acuity-scheduling/integrations/square/24514/create-square-customers-from-new-acuity-scheduling-appointments
+  repos:
+  - acuity-scheduling
+  - square
+  steps:
+  - step: list-appointments
+    repo: acuity-scheduling
+    spec_file: acuity-scheduling-appointments-api-openapi.yml
+    operationId: getAppointments
+    tag: Appointments
+    capability_id: null
+    capability: null
+    capability_l1: null
+    intent: null
+    effect: null
+    unmapped: no capability edge for this spec file
+  - step: create-customer
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: CreateCustomer
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: Create a customer profile
+    effect: write
+    unmapped: null
+  connects:
+    acuity-scheduling:
+      capabilities: []
+      tags:
+      - Appointments
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+  intents:
+  - Create a customer profile
+- file: square-airtable-payments-to-records.yml
+  title: Square Payments to Airtable Records
+  partner: airtable
+  template: null
+  repos:
+  - square
+  - airtable
+  steps:
+  - step: list-payments
+    repo: square
+    spec_file: square-payments-api-openapi.yml
+    operationId: ListPayments
+    tag: Payments
+    capability_id: BC-1340.70
+    capability: Card Transaction Processing Management
+    capability_l1: BC-1340
+    intent: List payments
+    effect: read
+    unmapped: null
+  - step: create-record
+    repo: airtable
+    spec_file: airtable-records-api-openapi.yml
+    operationId: createRecords
+    tag: Records
+    capability_id: null
+    capability: null
+    capability_l1: null
+    intent: null
+    effect: null
+    unmapped: no capability edge for this spec file
+  connects:
+    square:
+      capabilities:
+      - BC-1340.70
+      tags:
+      - Payments
+    airtable:
+      capabilities: []
+      tags:
+      - Records
+  intents:
+  - List payments
+- file: square-brevo-customers-to-contacts.yml
+  title: Square Customers to Brevo Contacts
+  partner: brevo
+  template: null
+  repos:
+  - square
+  - brevo
+  steps:
+  - step: list-customers
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: ListCustomers
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: List customer profiles
+    effect: read
+    unmapped: null
+  - step: create-contact
+    repo: brevo
+    spec_file: brevo-contacts-api-openapi.yml
+    operationId: createContact
+    tag: contacts
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: Create a contact
+    effect: write
+    unmapped: null
+  connects:
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+    brevo:
+      capabilities:
+      - BC-420.10
+      tags:
+      - contacts
+  intents:
+  - List customer profiles
+  - Create a contact
+- file: square-constant-contact-create-contacts.yml
+  title: Square Customers to Constant Contact Contacts
+  partner: constant-contact
+  template: https://zapier.com/apps/constant-contact/integrations/square/851425/create-contacts-in-constant-contact-from-new-square-customers
+  repos:
+  - square
+  - constant-contact
+  steps:
+  - step: list-customers
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: ListCustomers
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: List customer profiles
+    effect: read
+    unmapped: null
+  - step: create-contact
+    repo: constant-contact
+    spec_file: constant-contact-contacts-api-openapi.yml
+    operationId: createContact
+    tag: Contacts
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: Create a new contact
+    effect: write
+    unmapped: null
+  connects:
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+    constant-contact:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Contacts
+  intents:
+  - List customer profiles
+  - Create a new contact
+- file: square-google-sheets-save-transactions-to-rows.yml
+  title: Square Payments to Google Sheets Rows
+  partner: google-sheets
+  template: https://zapier.com/apps/google-sheets/integrations/square/24510/save-new-square-transactions-to-google-sheets-rows
+  repos:
+  - square
+  - google-sheets
+  steps:
+  - step: list-payments
+    repo: square
+    spec_file: square-payments-api-openapi.yml
+    operationId: ListPayments
+    tag: Payments
+    capability_id: BC-1340.70
+    capability: Card Transaction Processing Management
+    capability_l1: BC-1340
+    intent: List payments
+    effect: read
+    unmapped: null
+  - step: append-row
+    repo: google-sheets
+    spec_file: google-sheets-values-api-openapi.yml
+    operationId: appendValues
+    tag: Values
+    capability_id: null
+    capability: null
+    capability_l1: null
+    intent: null
+    effect: null
+    unmapped: no capability edge for this spec file
+  connects:
+    square:
+      capabilities:
+      - BC-1340.70
+      tags:
+      - Payments
+    google-sheets:
+      capabilities: []
+      tags:
+      - Values
+  intents:
+  - List payments
+- file: square-mailchimp-add-new-customers.yml
+  title: Square Customers to Mailchimp Audience
+  partner: mailchimp
+  template: https://zapier.com/apps/mailchimp/integrations/square/24509/add-new-square-customers-to-mailchimp
+  repos:
+  - square
+  - mailchimp
+  steps:
+  - step: list-customers
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: ListCustomers
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: List customer profiles
+    effect: read
+    unmapped: null
+  - step: add-member
+    repo: mailchimp
+    spec_file: mailchimp-lists-api-openapi.yml
+    operationId: postListsIdMembers
+    tag: Lists
+    capability_id: null
+    capability: null
+    capability_l1: null
+    intent: Add a new subscriber to an audience
+    effect: write
+    unmapped: no capability edge for this spec file
+  connects:
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+    mailchimp:
+      capabilities: []
+      tags:
+      - Lists
+  intents:
+  - List customer profiles
+  - Add a new subscriber to an audience
+- file: square-mailerlite-customers-to-subscribers.yml
+  title: Square Customers to MailerLite Subscribers
+  partner: mailerlite
+  template: null
+  repos:
+  - square
+  - mailerlite
+  steps:
+  - step: list-customers
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: ListCustomers
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: List customer profiles
+    effect: read
+    unmapped: null
+  - step: upsert-subscriber
+    repo: mailerlite
+    spec_file: mailerlite-subscribers-api-openapi.yml
+    operationId: upsertSubscriber
+    tag: Subscribers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: Add or update a subscriber by email
+    effect: write
+    unmapped: null
+  connects:
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+    mailerlite:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Subscribers
+  intents:
+  - List customer profiles
+  - Add or update a subscriber by email
+- file: square-notion-payments-to-pages.yml
+  title: Square Payments to Notion Database
+  partner: notion
+  template: null
+  repos:
+  - square
+  - notion
+  steps:
+  - step: list-payments
+    repo: square
+    spec_file: square-payments-api-openapi.yml
+    operationId: ListPayments
+    tag: Payments
+    capability_id: BC-1340.70
+    capability: Card Transaction Processing Management
+    capability_l1: BC-1340
+    intent: List payments
+    effect: read
+    unmapped: null
+  - step: create-page
+    repo: notion
+    spec_file: notion-pages-api-openapi.yml
+    operationId: createPage
+    tag: Pages
+    capability_id: null
+    capability: null
+    capability_l1: null
+    intent: null
+    effect: null
+    unmapped: no capability edge for this spec file
+  connects:
+    square:
+      capabilities:
+      - BC-1340.70
+      tags:
+      - Payments
+    notion:
+      capabilities: []
+      tags:
+      - Pages
+  intents:
+  - List payments
+- file: square-pipedrive-customers-to-persons.yml
+  title: Square Customers to Pipedrive Persons
+  partner: pipedrive
+  template: null
+  repos:
+  - square
+  - pipedrive
+  steps:
+  - step: list-customers
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: ListCustomers
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: List customer profiles
+    effect: read
+    unmapped: null
+  - step: add-person
+    repo: pipedrive
+    spec_file: pipedrive-persons-api-openapi.yml
+    operationId: addPerson
+    tag: Persons
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: null
+    effect: null
+    unmapped: null
+  connects:
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+    pipedrive:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Persons
+  intents:
+  - List customer profiles
+- file: square-shopify-sync-customers.yml
+  title: Square Customers to Shopify
+  partner: shopify
+  template: null
+  repos:
+  - square
+  - shopify
+  steps:
+  - step: list-customers
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: ListCustomers
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: List customer profiles
+    effect: read
+    unmapped: null
+  - step: create-customer
+    repo: shopify
+    spec_file: shopify-customers-api-openapi.yml
+    operationId: createCustomer
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: Create a customer
+    effect: write
+    unmapped: null
+  connects:
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+    shopify:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+  intents:
+  - List customer profiles
+  - Create a customer
+- file: square-trainerize-customers-to-clients.yml
+  title: Square Customers to Trainerize Clients
+  partner: trainerize
+  template: https://zapier.com/apps/abc-trainerize/integrations/square/75664/create-clients-in-trainerize-when-new-customers-are-added-in-square
+  repos:
+  - square
+  - trainerize
+  steps:
+  - step: list-customers
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: ListCustomers
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: List customer profiles
+    effect: read
+    unmapped: null
+  - step: add-client
+    repo: trainerize
+    spec_file: trainerize-clients-api-openapi.yml
+    operationId: addOrUpdateClient
+    tag: Clients
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: null
+    effect: null
+    unmapped: null
+  connects:
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+    trainerize:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Clients
+  intents:
+  - List customer profiles
+- file: square-woocommerce-sync-customers.yml
+  title: Square Customers to WooCommerce
+  partner: woocommerce
+  template: null
+  repos:
+  - square
+  - woocommerce
+  steps:
+  - step: list-customers
+    repo: square
+    spec_file: square-customers-api-openapi.yml
+    operationId: ListCustomers
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: List customer profiles
+    effect: read
+    unmapped: null
+  - step: create-customer
+    repo: woocommerce
+    spec_file: woocommerce-customers-api-openapi.yml
+    operationId: createCustomer
+    tag: Customers
+    capability_id: BC-420.10
+    capability: Customer Data Management
+    capability_l1: BC-420
+    intent: null
+    effect: null
+    unmapped: null
+  connects:
+    square:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+    woocommerce:
+      capabilities:
+      - BC-420.10
+      tags:
+      - Customers
+  intents:
+  - List customer profiles
