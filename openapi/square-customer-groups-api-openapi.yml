@@ -283,6 +283,21 @@ paths:
                 $ref: '#/components/schemas/UpdateCustomerGroupResponse'
 components:
   schemas:
+    UpdateCustomerGroupRequest:
+      type: object
+      description: 'Defines the body parameters that can be included in a request to the
+
+        [UpdateCustomerGroup](api-endpoint:CustomerGroups-UpdateCustomerGroup) endpoint.'
+      x-release-status: PUBLIC
+      required:
+      - group
+      properties:
+        group:
+          $ref: '#/components/schemas/CustomerGroup'
+          description: The `CustomerGroup` object including all the updates you want to make.
+      example:
+        group:
+          name: Loyal Customers
     CreateCustomerGroupResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -307,69 +322,24 @@ components:
           id: 2TAT3CMH4Q0A9M87XJZED0WMR3
           name: Loyal Customers
           updated_at: '2020-04-13T21:54:58Z'
-    ListCustomerGroupsResponse:
+    CreateCustomerGroupRequest:
       type: object
-      description: 'Defines the fields that are included in the response body of
+      description: 'Defines the body parameters that can be included in a request to the
 
-        a request to the [ListCustomerGroups](api-endpoint:CustomerGroups-ListCustomerGroups) endpoint.
-
-
-        Either `errors` or `groups` is present in a given response (never both).'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomerGroup'
-          description: A list of customer groups belonging to the current seller.
-        cursor:
-          type: string
-          description: 'A pagination cursor to retrieve the next set of results for your
-
-            original query to the endpoint. This value is present only if the request
-
-            succeeded and additional results are available.
-
-
-            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
-      example:
-        groups:
-        - created_at: '2020-04-13T21:54:57.863Z'
-          id: 2TAT3CMH4Q0A9M87XJZED0WMR3
-          name: Loyal Customers
-          updated_at: '2020-04-13T21:54:58Z'
-        - created_at: '2020-04-13T21:55:18.795Z'
-          id: 4XMEHESXJBNE9S9JAKZD2FGB14
-          name: Super Loyal Customers
-          updated_at: '2020-04-13T21:55:19Z'
-    CustomerGroup:
-      type: object
-      description: "Represents a group of customer profiles. \n\nCustomer groups can be created, be modified, and have their membership defined using \nthe Customers API or within the Customer Directory in the Square Seller Dashboard or Point of Sale."
+        [CreateCustomerGroup](api-endpoint:CustomerGroups-CreateCustomerGroup) endpoint.'
       x-release-status: PUBLIC
       required:
-      - name
+      - group
       properties:
-        id:
+        idempotency_key:
           type: string
-          description: A unique Square-generated ID for the customer group.
-          maxLength: 255
-          readOnly: true
-        name:
-          type: string
-          description: The name of the customer group.
-        created_at:
-          type: string
-          description: The timestamp when the customer group was created, in RFC 3339 format.
-          readOnly: true
-        updated_at:
-          type: string
-          description: The timestamp when the customer group was last updated, in RFC 3339 format.
-          readOnly: true
+          description: The idempotency key for the request. For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).
+        group:
+          $ref: '#/components/schemas/CustomerGroup'
+          description: The customer group to create.
+      example:
+        group:
+          name: Loyal Customers
     RetrieveCustomerGroupResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -388,30 +358,6 @@ components:
         group:
           $ref: '#/components/schemas/CustomerGroup'
           description: The retrieved customer group.
-      example:
-        group:
-          created_at: '2020-04-13T21:54:57.863Z'
-          id: 2TAT3CMH4Q0A9M87XJZED0WMR3
-          name: Loyal Customers
-          updated_at: '2020-04-13T21:54:58Z'
-    UpdateCustomerGroupResponse:
-      type: object
-      description: 'Defines the fields that are included in the response body of
-
-        a request to the [UpdateCustomerGroup](api-endpoint:CustomerGroups-UpdateCustomerGroup) endpoint.
-
-
-        Either `errors` or `group` is present in a given response (never both).'
-      x-release-status: PUBLIC
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-          description: Any errors that occurred during the request.
-        group:
-          $ref: '#/components/schemas/CustomerGroup'
-          description: The successfully updated customer group.
       example:
         group:
           created_at: '2020-04-13T21:54:57.863Z'
@@ -1193,39 +1139,46 @@ components:
 
         Square API.'
       x-release-status: PUBLIC
-    UpdateCustomerGroupRequest:
+    ListCustomerGroupsResponse:
       type: object
-      description: 'Defines the body parameters that can be included in a request to the
+      description: 'Defines the fields that are included in the response body of
 
-        [UpdateCustomerGroup](api-endpoint:CustomerGroups-UpdateCustomerGroup) endpoint.'
-      x-release-status: PUBLIC
-      required:
-      - group
-      properties:
-        group:
-          $ref: '#/components/schemas/CustomerGroup'
-          description: The `CustomerGroup` object including all the updates you want to make.
-      example:
-        group:
-          name: Loyal Customers
-    CreateCustomerGroupRequest:
-      type: object
-      description: 'Defines the body parameters that can be included in a request to the
+        a request to the [ListCustomerGroups](api-endpoint:CustomerGroups-ListCustomerGroups) endpoint.
 
-        [CreateCustomerGroup](api-endpoint:CustomerGroups-CreateCustomerGroup) endpoint.'
+
+        Either `errors` or `groups` is present in a given response (never both).'
       x-release-status: PUBLIC
-      required:
-      - group
       properties:
-        idempotency_key:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerGroup'
+          description: A list of customer groups belonging to the current seller.
+        cursor:
           type: string
-          description: The idempotency key for the request. For more information, see [Idempotency](https://developer.squareup.com/docs/build-basics/common-api-patterns/idempotency).
-        group:
-          $ref: '#/components/schemas/CustomerGroup'
-          description: The customer group to create.
+          description: 'A pagination cursor to retrieve the next set of results for your
+
+            original query to the endpoint. This value is present only if the request
+
+            succeeded and additional results are available.
+
+
+            For more information, see [Pagination](https://developer.squareup.com/docs/build-basics/common-api-patterns/pagination).'
       example:
-        group:
+        groups:
+        - created_at: '2020-04-13T21:54:57.863Z'
+          id: 2TAT3CMH4Q0A9M87XJZED0WMR3
           name: Loyal Customers
+          updated_at: '2020-04-13T21:54:58Z'
+        - created_at: '2020-04-13T21:55:18.795Z'
+          id: 4XMEHESXJBNE9S9JAKZD2FGB14
+          name: Super Loyal Customers
+          updated_at: '2020-04-13T21:55:19Z'
     ErrorCategory:
       type: string
       enum:
@@ -1286,6 +1239,53 @@ components:
             $ref: '#/components/schemas/Error'
           description: Any errors that occurred during the request.
       example: {}
+    CustomerGroup:
+      type: object
+      description: "Represents a group of customer profiles. \n\nCustomer groups can be created, be modified, and have their membership defined using \nthe Customers API or within the Customer Directory in the Square Seller Dashboard or Point of Sale."
+      x-release-status: PUBLIC
+      required:
+      - name
+      properties:
+        id:
+          type: string
+          description: A unique Square-generated ID for the customer group.
+          maxLength: 255
+          readOnly: true
+        name:
+          type: string
+          description: The name of the customer group.
+        created_at:
+          type: string
+          description: The timestamp when the customer group was created, in RFC 3339 format.
+          readOnly: true
+        updated_at:
+          type: string
+          description: The timestamp when the customer group was last updated, in RFC 3339 format.
+          readOnly: true
+    UpdateCustomerGroupResponse:
+      type: object
+      description: 'Defines the fields that are included in the response body of
+
+        a request to the [UpdateCustomerGroup](api-endpoint:CustomerGroups-UpdateCustomerGroup) endpoint.
+
+
+        Either `errors` or `group` is present in a given response (never both).'
+      x-release-status: PUBLIC
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          description: Any errors that occurred during the request.
+        group:
+          $ref: '#/components/schemas/CustomerGroup'
+          description: The successfully updated customer group.
+      example:
+        group:
+          created_at: '2020-04-13T21:54:57.863Z'
+          id: 2TAT3CMH4Q0A9M87XJZED0WMR3
+          name: Loyal Customers
+          updated_at: '2020-04-13T21:54:58Z'
   securitySchemes:
     oauth2:
       type: oauth2

@@ -167,6 +167,29 @@ paths:
                 $ref: '#/components/schemas/RegisterDomainResponse'
 components:
   schemas:
+    RegisterDomainRequest:
+      type: object
+      description: 'Defines the parameters that can be included in the body of
+
+        a request to the [RegisterDomain](api-endpoint:ApplePay-RegisterDomain) endpoint.'
+      x-release-status: PUBLIC
+      required:
+      - domain_name
+      properties:
+        domain_name:
+          type: string
+          description: A domain name as described in RFC-1034 that will be registered with ApplePay.
+          minLength: 1
+          maxLength: 255
+      example:
+        domain_name: example.com
+      x-sq-sdk-sample-code:
+        csharp: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.csharp
+        java: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.java
+        javascript: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.javascript
+        php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.php
+        python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.python
+        ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.ruby
     RegisterDomainResponse:
       type: object
       description: 'Defines the fields that are included in the response body of
@@ -199,41 +222,6 @@ components:
         php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.php
         python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.python
         ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainResponse.ruby
-    RegisterDomainResponseStatus:
-      type: string
-      enum:
-      - PENDING
-      - VERIFIED
-      x-enum-elements:
-      - name: PENDING
-        description: The domain is added, but not verified.
-      - name: VERIFIED
-        description: The domain is added and verified. It can be used to accept Apple Pay transactions.
-      description: The status of the domain registration.
-      x-release-status: PUBLIC
-    RegisterDomainRequest:
-      type: object
-      description: 'Defines the parameters that can be included in the body of
-
-        a request to the [RegisterDomain](api-endpoint:ApplePay-RegisterDomain) endpoint.'
-      x-release-status: PUBLIC
-      required:
-      - domain_name
-      properties:
-        domain_name:
-          type: string
-          description: A domain name as described in RFC-1034 that will be registered with ApplePay.
-          minLength: 1
-          maxLength: 255
-      example:
-        domain_name: example.com
-      x-sq-sdk-sample-code:
-        csharp: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.csharp
-        java: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.java
-        javascript: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.javascript
-        php: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.php
-        python: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.python
-        ruby: /sdk_samples/ApplePay/RegisterDomain/RegisterDomainRequest.ruby
     Error:
       type: object
       description: 'Represents an error encountered during a request to the Connect API.
@@ -1055,6 +1043,18 @@ components:
       description: 'Indicates which high-level category of error has occurred during a
 
         request to the Connect API.'
+      x-release-status: PUBLIC
+    RegisterDomainResponseStatus:
+      type: string
+      enum:
+      - PENDING
+      - VERIFIED
+      x-enum-elements:
+      - name: PENDING
+        description: The domain is added, but not verified.
+      - name: VERIFIED
+        description: The domain is added and verified. It can be used to accept Apple Pay transactions.
+      description: The status of the domain registration.
       x-release-status: PUBLIC
   securitySchemes:
     oauth2:
