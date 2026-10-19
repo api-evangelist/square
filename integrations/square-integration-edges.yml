@@ -6,16 +6,23 @@ source:
 - https://squareup.com/us/en/app-marketplace
 checked:
 - doordash/integrations/doordash-integration-edges.yml
+- https://api.nuget.org/v3
 - https://composio.dev/toolkits/square
 - https://connectors.airbyte.com/files/registries/v0/cloud_registry.json
 - https://connectors.airbyte.com/files/registries/v0/oss_registry.json
+- https://crates.io/api/v1
 - https://fivetran.com/docs-sitemap.xml
 - https://fivetran.com/docs/connectors/partner-built-program
 - https://github.com/PipedreamHQ/pipedream/tree/94800dd6de6640b942c65ea7ee655f71ac56d438/components/
 - https://github.com/meltano/hub
 - https://monid.ai/tools/square
 - https://n8n.io/integrations/square/
+- https://proxy.golang.org
+- https://pypi.org/pypi
 - https://registry.financialdataexchange.org/
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://squareup.com/us/en/app-marketplace
 - https://zapier.com/api/v4/apps/
 - https://zapier.com/apps/square/integrations
@@ -1057,6 +1064,75 @@ edges:
     - unknown
     builder: 'community (Meltano Hub variant maintainers: airbyte, hotgluexyz, kalai-wavicle, pk-sakthivel, singer-io)'
   detected_by: sweep-data-integration.py
+  first_seen: '2026-10-18'
+- partner_name: Maven Central
+  partner: maven-central
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Java/JVM)
+  evidence: https://central.sonatype.com/artifact/com.squareup/square
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Maven Central (public registry JSON)
+    spec_file: null
+    language: Java/JVM
+    packages:
+    - name: com.squareup:square
+      version: 48.0.0.20260916
+      released: '2026-09-15'
+      released_field: lastUpdated
+      lapsed: false
+      page: https://central.sonatype.com/artifact/com.squareup/square
+      repo_leg: shared-github-org:square
+      publisher_leg: groupId:squareup.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@square/web-sdk
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@square/web-sdk'
+      version: 2.3.0
+      released: '2026-09-01'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@square/web-sdk
+      repo_leg: shared-github-org:square
+      publisher_leg: email:squareup.com
+      matched_by: domain
+    - name: square
+      version: 46.0.0
+      released: '2026-09-15'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/square
+      repo_leg: shared-github-org:square
+      publisher_leg: email:squareup.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
   first_seen: '2026-10-18'
 templates:
 - title: Add transactions in Wave for new Square sales
