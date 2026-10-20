@@ -14,6 +14,7 @@ checked:
 - https://fivetran.com/docs-sitemap.xml
 - https://fivetran.com/docs/connectors/partner-built-program
 - https://github.com/PipedreamHQ/pipedream/tree/94800dd6de6640b942c65ea7ee655f71ac56d438/components/
+- https://github.com/PipedreamHQ/pipedream/tree/d5872355ef27b4efa769f05352f2820c299a456e/components/
 - https://github.com/meltano/hub
 - https://monid.ai/tools/square
 - https://n8n.io/integrations/square/
@@ -194,21 +195,6 @@ marketplace_apps:
   adapter: _store_square
   listed: 25
 edges:
-- partner_name: bigcommerce
-  partner: bigcommerce
-  partner_match: domain
-  type: contract
-  channel: partner-built
-  relationship: processor-connection
-  direction: partner-built
-  evidence: https://github.com/api-evangelist/bigcommerce/blob/main/openapi/bigcommerce-transactions-api-openapi.yml
-  contract_reference:
-    repo: bigcommerce
-    spec_file: bigcommerce-transactions-api-openapi.yml
-    value: square
-    property: Transaction.gateway
-    detected_by: detect-payment-method-edges.py
-    detected: '2026-10-12'
 - partner_name: Wave
   partner: wave-financial
   partner_match: domain
@@ -839,30 +825,6 @@ edges:
   direction: partner-built
   evidence: https://squareup.com/us/en/app-marketplace/app/fomo-us
   category: Square Online add-ons
-- partner_name: FDX (Financial Data Exchange)
-  partner: fdx
-  type: contract
-  channel: standard-directory
-  relationship: standard-participant
-  direction: partner-built
-  evidence: https://registry.financialdataexchange.org/
-  contract_reference:
-    register: FDX Registry
-    standard: FDX API
-    spec_file: null
-    register_api: https://registry.financialdataexchange.org/fdxregistryapi/organizations/search/listingTags
-    role: data-provider,data-recipient
-    member_type: MEMBER
-    registered_name: Square Financial Services
-    register_id: 310
-    registered_website: https://squareup.com
-    country: United States
-    fdx_version: null
-    matched_by: domain:squareup.com
-    detected_by: sweep-fdx.py
-    detected: '2026-10-14'
-  detected_by: sweep-fdx.py
-  first_seen: '2026-10-14'
 - partner_name: Olo (own)
   partner: olo
   partner_match: mirror
@@ -880,57 +842,6 @@ edges:
   detected: '2026-10-14'
   detected_by: mirror-platform-listings.py
   category: POS
-- partner_name: Zapier
-  partner: zapier
-  partner_match: aggregator
-  type: marketplace
-  marketplace: zapier-directory
-  channel: ipaas-listing
-  relationship: ipaas-bridge
-  direction: third-party
-  evidence: https://zapier.com/apps/square/integrations
-  category: null
-  contract_reference:
-    register: Zapier app directory (zapier.com/api/v4/apps)
-    spec_file: null
-    role: ipaas-connector:zapier
-    registered_name: Square
-    matched_domain: squareup.com
-    matched_by: domain
-    detected_by: sweep-workflow-automation.py
-    detected: '2026-10-15'
-    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
-    app_slug: square
-    beta: false
-    builder: unknown (not in the directory record)
-  detected_by: sweep-workflow-automation.py
-  first_seen: '2026-10-15'
-- partner_name: Pipedream
-  partner: pipedream
-  partner_match: aggregator
-  type: marketplace
-  marketplace: pipedream-components
-  channel: open-source-node
-  relationship: ipaas-bridge
-  direction: third-party
-  evidence: https://github.com/PipedreamHQ/pipedream/tree/94800dd6de6640b942c65ea7ee655f71ac56d438/components/square
-  category: null
-  contract_reference:
-    register: Pipedream components (PipedreamHQ/pipedream components/)
-    spec_file: null
-    role: ipaas-connector:pipedream
-    registered_name: square
-    matched_domain: squareup.com
-    matched_by: domain
-    detected_by: sweep-workflow-automation.py
-    detected: '2026-10-15'
-    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
-    app_slug: square
-    actions: true
-    sources: true
-    builder: Pipedream repo (component)
-  detected_by: sweep-workflow-automation.py
-  first_seen: '2026-10-15'
 - partner_name: Doordash (own)
   partner: doordash
   partner_match: mirror
@@ -970,6 +881,75 @@ edges:
   - SUPPORT_ORDER_READY_SIGNAL
   publisher_verified:
   - DoorDash Preferred Integration
+- partner_name: Maven Central
+  partner: maven-central
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Java/JVM)
+  evidence: https://central.sonatype.com/artifact/com.squareup/square
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Maven Central (public registry JSON)
+    spec_file: null
+    language: Java/JVM
+    packages:
+    - name: com.squareup:square
+      version: 48.0.0.20260916
+      released: '2026-09-15'
+      released_field: lastUpdated
+      lapsed: false
+      page: https://central.sonatype.com/artifact/com.squareup/square
+      repo_leg: shared-github-org:square
+      publisher_leg: groupId:squareup.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@square/web-sdk
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@square/web-sdk'
+      version: 2.3.0
+      released: '2026-09-01'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@square/web-sdk
+      repo_leg: shared-github-org:square
+      publisher_leg: email:squareup.com
+      matched_by: domain
+    - name: square
+      version: 46.0.0
+      released: '2026-09-15'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/square
+      repo_leg: shared-github-org:square
+      publisher_leg: email:squareup.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 - partner_name: Airbyte
   partner: airbyte
   partner_match: aggregator
@@ -1065,75 +1045,81 @@ edges:
     builder: 'community (Meltano Hub variant maintainers: airbyte, hotgluexyz, kalai-wavicle, pk-sakthivel, singer-io)'
   detected_by: sweep-data-integration.py
   first_seen: '2026-10-18'
-- partner_name: Maven Central
-  partner: maven-central
-  partner_match: register
-  type: register
-  direction: provider-built
-  category: official SDK (Java/JVM)
-  evidence: https://central.sonatype.com/artifact/com.squareup/square
-  channel: package-registry
-  relationship: distribution-channel
+- partner_name: FDX (Financial Data Exchange)
+  partner: fdx
+  type: contract
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://registry.financialdataexchange.org/
   contract_reference:
-    register: Maven Central (public registry JSON)
+    register: FDX Registry
+    standard: FDX API
     spec_file: null
-    language: Java/JVM
-    packages:
-    - name: com.squareup:square
-      version: 48.0.0.20260916
-      released: '2026-09-15'
-      released_field: lastUpdated
-      lapsed: false
-      page: https://central.sonatype.com/artifact/com.squareup/square
-      repo_leg: shared-github-org:square
-      publisher_leg: groupId:squareup.com
-      matched_by: domain
-    current: true
-    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
-      24 months'
-    detected_by: sweep-official-sdks.py
-    detected: '2026-10-18'
-  detected_by: sweep-official-sdks.py
-  first_seen: '2026-10-18'
-- partner_name: npm registry
-  partner: npm
-  partner_match: register
-  type: register
-  direction: provider-built
-  category: official SDK (JavaScript/TypeScript)
-  evidence: https://www.npmjs.com/package/@square/web-sdk
-  channel: package-registry
-  relationship: distribution-channel
+    register_api: https://registry.financialdataexchange.org/fdxregistryapi/organizations/search/listingTags
+    role: data-provider,data-recipient
+    member_type: MEMBER
+    registered_name: Square Financial Services
+    register_id: 310
+    registered_website: https://squareup.com
+    country: United States
+    fdx_version: null
+    matched_by: domain:squareup.com
+    detected_by: sweep-fdx.py
+    detected: '2026-10-19'
+  detected_by: sweep-fdx.py
+  first_seen: '2026-10-19'
+- partner_name: Zapier
+  partner: zapier
+  partner_match: aggregator
+  type: marketplace
+  marketplace: zapier-directory
+  channel: ipaas-listing
+  relationship: ipaas-bridge
+  direction: third-party
+  evidence: https://zapier.com/apps/square/integrations
+  category: null
   contract_reference:
-    register: npm registry (public registry JSON)
+    register: Zapier app directory (zapier.com/api/v4/apps)
     spec_file: null
-    language: JavaScript/TypeScript
-    packages:
-    - name: '@square/web-sdk'
-      version: 2.3.0
-      released: '2026-09-01'
-      released_field: modified
-      lapsed: false
-      page: https://www.npmjs.com/package/@square/web-sdk
-      repo_leg: shared-github-org:square
-      publisher_leg: email:squareup.com
-      matched_by: domain
-    - name: square
-      version: 46.0.0
-      released: '2026-09-15'
-      released_field: modified
-      lapsed: false
-      page: https://www.npmjs.com/package/square
-      repo_leg: shared-github-org:square
-      publisher_leg: email:squareup.com
-      matched_by: domain
-    current: true
-    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
-      24 months'
-    detected_by: sweep-official-sdks.py
-    detected: '2026-10-18'
-  detected_by: sweep-official-sdks.py
-  first_seen: '2026-10-18'
+    role: ipaas-connector:zapier
+    registered_name: Square
+    matched_domain: squareup.com
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    app_slug: square
+    beta: false
+    builder: unknown (not in the directory record)
+  detected_by: sweep-workflow-automation.py
+  first_seen: '2026-10-15'
+- partner_name: Pipedream
+  partner: pipedream
+  partner_match: aggregator
+  type: marketplace
+  marketplace: pipedream-components
+  channel: open-source-node
+  relationship: ipaas-bridge
+  direction: third-party
+  evidence: https://github.com/PipedreamHQ/pipedream/tree/d5872355ef27b4efa769f05352f2820c299a456e/components/square
+  category: null
+  contract_reference:
+    register: Pipedream components (PipedreamHQ/pipedream components/)
+    spec_file: null
+    role: ipaas-connector:pipedream
+    registered_name: square
+    matched_domain: squareup.com
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    app_slug: square
+    actions: true
+    sources: true
+    builder: Pipedream repo (component)
+  detected_by: sweep-workflow-automation.py
+  first_seen: '2026-10-15'
 templates:
 - title: Add transactions in Wave for new Square sales
   url: https://zapier.com/apps/square/integrations/wave/28346/add-transactions-in-wave-for-new-square-sales
