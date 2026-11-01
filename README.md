@@ -1,4 +1,4 @@
-# Square (square)
+# Square
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,877 +66,336 @@
 
 Square provides APIs for payment processing, point of sale, and business management solutions enabling developers to build custom commerce applications.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/square/refs/heads/main/apis.yml)
-
-## Scope
-
-- **Type:** Index
-- **Position:** Consumer
-- **Access:** 3rd-Party
-
-## Tags
-
-- Restaurant
-- Bookings
-- Catalog
-- Checkout
-- Customers
-- Disputes
-- Ecommerce
-- Financial Technology
-- Gift Cards
-- Inventory
-- Invoicing
-- Labor
-- Locations
-- Loyalty
-- Merchants
-- Orders
-- Payments
-- Point of Sale
-- Refunds
-- Retail
-- Subscriptions
-- Team
-- Terminal
-- Webhooks
-
-## Timestamps
-
-- **Created:** 2025-02-08
-- **Modified:** 2026-06-03
-
-## APIs
-
-### Square Payments API
-
-The Payments API lets applications take and manage payments by charging payment methods supported by the Web Payments SDK or In-App Payments SDK, including credit cards, gift cards, digital wallets, and ACH bank transfers. It can also record cash or external payments received outside of Square.
-
-- **Human URL:** [https://developer.squareup.com/docs/payments-overview](https://developer.squareup.com/docs/payments-overview)
-
-#### Tags
-
-- Commerce
-- Financial Technology
-- Payments
-- Point of Sale
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/payments-overview)
-- [API Reference](https://developer.squareup.com/reference/square/payments-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Orders API
-
-The Orders API lets applications itemize payments using custom line items or catalog objects, send orders to physical Point of Sale devices for fulfillment, attach customers to payments, and search through all of a seller's past sales with itemization data.
-
-- **Human URL:** [https://developer.squareup.com/docs/orders-api/what-it-does](https://developer.squareup.com/docs/orders-api/what-it-does)
-
-#### Tags
-
-- Commerce
-- Orders
-- Point of Sale
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/orders-api/what-it-does)
-- [API Reference](https://developer.squareup.com/reference/square/orders-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Catalog API
-
-The Catalog API programmatically catalogs a Square seller's products for sale and services for hire, enabling applications to create, update, and manage catalog items, categories, variations, and pricing.
-
-- **Human URL:** [https://developer.squareup.com/docs/catalog-api/what-it-does](https://developer.squareup.com/docs/catalog-api/what-it-does)
-
-#### Tags
-
-- Catalog
-- Commerce
-- Products
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/catalog-api/what-it-does)
-- [API Reference](https://developer.squareup.com/reference/square/catalog-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Inventory API
-
-The Inventory API programmatically manages a Square seller's inventory of catalog items, including updating and tracking inventory changes and retrieving inventory counts.
-
-- **Human URL:** [https://developer.squareup.com/docs/inventory-api/what-it-does](https://developer.squareup.com/docs/inventory-api/what-it-does)
-
-#### Tags
-
-- Commerce
-- Inventory
-- Retail
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/inventory-api/what-it-does)
-- [API Reference](https://developer.squareup.com/reference/square/inventory-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Customers API
-
-The Customers API lets applications create and manage customer profiles to streamline bookings, build loyalty programs, sell gift cards, and offer discounts. It enables syncing CRM systems with Square.
-
-- **Human URL:** [https://developer.squareup.com/docs/customers](https://developer.squareup.com/docs/customers)
-
-#### Tags
-
-- Commerce
-- CRM
-- Customers
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/customers)
-- [API Reference](https://developer.squareup.com/reference/square/customers-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Locations API
-
-The Locations API lets applications create and manage the locations of a seller's business, including retrieving location details and managing location settings.
-
-- **Human URL:** [https://developer.squareup.com/docs/locations-api](https://developer.squareup.com/docs/locations-api)
-
-#### Tags
-
-- Business Management
-- Commerce
-- Locations
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/locations-api)
-- [API Reference](https://developer.squareup.com/reference/square/locations-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Team API
-
-The Team API lets applications create and manage a roster of team members, configure jobs, and synchronize team member data with external platforms including accounting and payroll systems.
-
-- **Human URL:** [https://developer.squareup.com/docs/team/overview](https://developer.squareup.com/docs/team/overview)
-
-#### Tags
-
-- Business Management
-- Employees
-- Team
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/team/overview)
-- [API Reference](https://developer.squareup.com/reference/square/team-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Labor API
-
-The Labor API is the timekeeping component of Square's team management APIs, enabling applications to manage time tracking and scheduling for team members, record hours worked, and handle breaks, wages, and declared cash tips for labor cost reporting and payroll.
-
-- **Human URL:** [https://developer.squareup.com/docs/labor-api/what-it-does](https://developer.squareup.com/docs/labor-api/what-it-does)
-
-#### Tags
-
-- Business Management
-- Labor
-- Time Tracking
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/labor-api/what-it-does)
-- [API Reference](https://developer.squareup.com/reference/square/labor-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Bookings API
-
-The Bookings API enables creating reservations of services provided by a seller's staff for customers at particular locations and times. Applications can create, update, cancel, and search for available bookings.
-
-- **Human URL:** [https://developer.squareup.com/docs/bookings-api/what-it-is](https://developer.squareup.com/docs/bookings-api/what-it-is)
-
-#### Tags
-
-- Appointments
-- Bookings
-- Scheduling
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/bookings-api/what-it-is)
-- [API Reference](https://developer.squareup.com/reference/square/bookings-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Loyalty API
-
-The Loyalty API allows applications to set up and manage loyalty programs, enroll buyers, accrue points, and redeem rewards. It works with the Orders API to manage loyalty accounts and rewards at participating locations.
-
-- **Human URL:** [https://developer.squareup.com/docs/loyalty-api/overview](https://developer.squareup.com/docs/loyalty-api/overview)
-
-#### Tags
-
-- Customer Engagement
-- Loyalty
-- Rewards
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/loyalty-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/loyalty-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Gift Cards API
-
-The Gift Cards API enables sellers to launch a gifting program with digital and physical gift cards. Applications can create, retrieve, link, and unlink gift cards, and manage gift card activities such as activating, loading, and redeeming.
-
-- **Human URL:** [https://developer.squareup.com/docs/gift-cards/using-gift-cards-api](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api)
-
-#### Tags
-
-- Commerce
-- Customer Engagement
-- Gift Cards
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api)
-- [API Reference](https://developer.squareup.com/reference/square/gift-cards-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Invoices API
-
-The Invoices API lets applications request or automatically collect payments from customers for orders created using the Orders API. It supports creating, updating, publishing, and managing invoices with multiple payment schedules and methods.
-
-- **Human URL:** [https://developer.squareup.com/docs/invoices-api/overview](https://developer.squareup.com/docs/invoices-api/overview)
-
-#### Tags
-
-- Billing
-- Invoices
-- Payments
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/invoices-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/invoices-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Subscriptions API
-
-The Subscriptions API enables sellers to generate recurring revenue by offering scheduled fulfillment of products or services. Applications can create and manage subscription plans with configurable billing periods, pricing, and discounts.
-
-- **Human URL:** [https://developer.squareup.com/docs/subscriptions-api/overview](https://developer.squareup.com/docs/subscriptions-api/overview)
-
-#### Tags
-
-- Commerce
-- Recurring Payments
-- Subscriptions
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/subscriptions-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/subscriptions-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Checkout API
-
-The Checkout API creates Square-hosted checkout pages for collecting payments. Applications can generate payment links with a simple API call, supporting credit cards, debit cards, Google Pay, Apple Pay, Afterpay, and Cash App.
-
-- **Human URL:** [https://developer.squareup.com/docs/checkout-api](https://developer.squareup.com/docs/checkout-api)
-
-#### Tags
-
-- Checkout
-- Commerce
-- Payments
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/checkout-api)
-- [API Reference](https://developer.squareup.com/reference/square/checkout-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Terminal API
-
-The Terminal API lets developers integrate Square in-person payments so custom POS applications can use Square Terminal for card chip and NFC payments, with EMV certification and PCI compliance built in.
-
-- **Human URL:** [https://developer.squareup.com/docs/terminal-api/overview](https://developer.squareup.com/docs/terminal-api/overview)
-
-#### Tags
-
-- In-Person Payments
-- Point of Sale
-- Terminal
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/terminal-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/terminal-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Refunds API
-
-The Refunds API lets applications refund the entire payment amount or a portion of it for card payments, and record refunds of cash or external payments.
-
-- **Human URL:** [https://developer.squareup.com/docs/payments-refunds](https://developer.squareup.com/docs/payments-refunds)
-
-#### Tags
-
-- Commerce
-- Payments
-- Refunds
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/payments-refunds)
-- [API Reference](https://developer.squareup.com/reference/square/refunds-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Disputes API
-
-The Disputes API manages payment disputes and chargebacks, allowing applications to list disputes, retrieve dispute details, challenge disputes by submitting evidence, and accept disputes.
-
-- **Human URL:** [https://developer.squareup.com/docs/disputes-api/overview](https://developer.squareup.com/docs/disputes-api/overview)
-
-#### Tags
-
-- Chargebacks
-- Disputes
-- Payments
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/disputes-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/disputes-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Merchants API
-
-The Merchants API groups individual seller locations into larger organizations, with each merchant representing one organization or business that sells with Square.
-
-- **Human URL:** [https://developer.squareup.com/docs/merchants-api](https://developer.squareup.com/docs/merchants-api)
-
-#### Tags
-
-- Business Management
-- Commerce
-- Merchants
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/merchants-api)
-- [API Reference](https://developer.squareup.com/reference/square/merchants-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Cards API
-
-The Cards API lets applications save a credit or debit card on file for a customer, enabling faster future payments without re-entering card details.
-
-- **Human URL:** [https://developer.squareup.com/docs/cards-api/overview](https://developer.squareup.com/docs/cards-api/overview)
-
-#### Tags
-
-- Cards
-- Commerce
-- Payments
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/cards-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/cards-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Vendors API
-
-The Vendors API lets applications manage vendors and suppliers for a seller, enabling creation, retrieval, and updating of vendor information.
-
-- **Human URL:** [https://developer.squareup.com/docs/vendors-api/manage-vendors-in-apps](https://developer.squareup.com/docs/vendors-api/manage-vendors-in-apps)
-
-#### Tags
-
-- Inventory
-- Suppliers
-- Vendors
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/vendors-api/manage-vendors-in-apps)
-- [API Reference](https://developer.squareup.com/reference/square/vendors-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Cash Drawers API
-
-The Cash Drawers API is a reporting API for businesses that use a cash drawer with their Square Point of Sale terminals, providing filtered and paged lists of cash drawer shift data for a given location.
-
-- **Human URL:** [https://developer.squareup.com/docs/cashdrawershift-api/reporting](https://developer.squareup.com/docs/cashdrawershift-api/reporting)
-
-#### Tags
-
-- Cash Drawers
-- Point of Sale
-- Reporting
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/cashdrawershift-api/reporting)
-- [API Reference](https://developer.squareup.com/reference/square/cash-drawers-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Bank Accounts API
-
-The Bank Accounts API lets applications retrieve a list of a seller's bank accounts and get details about specific bank accounts linked to a Square account.
-
-- **Human URL:** [https://developer.squareup.com/docs/bank-accounts-api](https://developer.squareup.com/docs/bank-accounts-api)
-
-#### Tags
-
-- Bank Accounts
-- Financial Technology
-- Payments
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/bank-accounts-api)
-- [API Reference](https://developer.squareup.com/reference/square/bank-accounts-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Payouts API
-
-The Payouts API lets applications get a list of deposits and withdrawals from a seller's bank accounts, providing visibility into funds movement.
-
-- **Human URL:** [https://developer.squareup.com/docs/payouts-api/overview](https://developer.squareup.com/docs/payouts-api/overview)
-
-#### Tags
-
-- Financial Technology
-- Payments
-- Payouts
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/payouts-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/payouts-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Apple Pay API
-
-The Apple Pay API provides an easy way for platform developers to bulk activate Web Apple Pay with Square for merchants using their platform.
-
-- **Human URL:** [https://developer.squareup.com/docs/web-payments/apple-pay](https://developer.squareup.com/docs/web-payments/apple-pay)
-
-#### Tags
-
-- Apple Pay
-- Digital Wallets
-- Payments
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/web-payments/apple-pay)
-- [API Reference](https://developer.squareup.com/reference/square/apple-pay-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Sites API
-
-The Sites API lets applications retrieve basic details about Square Online sites belonging to a seller, such as site ID, title, and domain. It is used in combination with the Snippets API.
-
-- **Human URL:** [https://developer.squareup.com/docs/sites-api/overview](https://developer.squareup.com/docs/sites-api/overview)
-
-#### Tags
-
-- Ecommerce
-- Sites
-- Square Online
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/sites-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/sites-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Snippets API
-
-The Snippets API lets applications add custom scripts to a Square Online site. Snippets can run as modals, pop ups, or background jobs, offering a range of functionality to extend Square Online features.
-
-- **Human URL:** [https://developer.squareup.com/docs/snippets-api/overview](https://developer.squareup.com/docs/snippets-api/overview)
-
-#### Tags
-
-- Ecommerce
-- Snippets
-- Square Online
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/snippets-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/snippets-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square OAuth API
-
-The OAuth API lets applications obtain and manage access tokens that grant scoped, permissioned access to a seller's Square account, supporting the authorization code grant flow, token refresh, and token revocation for connecting third-party apps.
-
-- **Human URL:** [https://developer.squareup.com/docs/oauth-api/overview](https://developer.squareup.com/docs/oauth-api/overview)
-
-#### Tags
-
-- Authentication
-- OAuth
-- Security
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/oauth-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/oauth-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Webhook Subscriptions API
-
-The Webhook Subscriptions API lets applications programmatically create and manage webhook subscriptions to receive real-time event notifications for changes to payments, orders, customers, inventory, and other Square resources.
-
-- **Human URL:** [https://developer.squareup.com/docs/webhooks/overview](https://developer.squareup.com/docs/webhooks/overview)
-
-#### Tags
-
-- Events
-- Notifications
-- Webhooks
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/webhooks/overview)
-- [API Reference](https://developer.squareup.com/reference/square/webhook-subscriptions-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [AsyncAPI](asyncapi/square-webhooks-asyncapi.yml) — [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/latest)
-
-### Square Events API
-
-The Events API lets applications search and retrieve the history of events that have occurred in a seller's Square account, providing an audit trail and the ability to replay or backfill webhook-style event data.
-
-- **Human URL:** [https://developer.squareup.com/docs/events-api/overview](https://developer.squareup.com/docs/events-api/overview)
-
-#### Tags
-
-- Audit
-- Events
-- Webhooks
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/events-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/events-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Devices API
-
-The Devices API lets applications create device codes to pair Square hardware such as Square Terminal and Square Register, and retrieve device details for managing point-of-sale devices.
-
-- **Human URL:** [https://developer.squareup.com/docs/devices-api/overview](https://developer.squareup.com/docs/devices-api/overview)
-
-#### Tags
-
-- Devices
-- Point of Sale
-- Terminal
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/devices-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/devices-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Customer Groups API
-
-The Customer Groups API lets applications create and manage groups of customers, enabling segmentation for targeted marketing, pricing rules, and loyalty programs.
-
-- **Human URL:** [https://developer.squareup.com/docs/customer-groups-api/what-it-does](https://developer.squareup.com/docs/customer-groups-api/what-it-does)
-
-#### Tags
-
-- CRM
-- Customer Groups
-- Customers
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/customer-groups-api/what-it-does)
-- [API Reference](https://developer.squareup.com/reference/square/customer-groups-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Customer Segments API
-
-The Customer Segments API lets applications retrieve the smart, automatically maintained customer segments defined in a seller's Square Customer Directory, supporting targeted engagement based on buyer behavior.
-
-- **Human URL:** [https://developer.squareup.com/docs/customer-segments-api/what-it-does](https://developer.squareup.com/docs/customer-segments-api/what-it-does)
-
-#### Tags
-
-- CRM
-- Customer Segments
-- Customers
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/customer-segments-api/what-it-does)
-- [API Reference](https://developer.squareup.com/reference/square/customer-segments-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Gift Card Activities API
-
-The Gift Card Activities API lets applications create and list gift card activities such as activating, loading, redeeming, adjusting, and refunding balances, providing a full ledger of gift card transactions.
-
-- **Human URL:** [https://developer.squareup.com/docs/gift-cards/using-gift-card-activities-api](https://developer.squareup.com/docs/gift-cards/using-gift-card-activities-api)
-
-#### Tags
-
-- Customer Engagement
-- Gift Cards
-- Transactions
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/gift-cards/using-gift-card-activities-api)
-- [API Reference](https://developer.squareup.com/reference/square/gift-card-activities-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Custom Attributes API
-
-The Custom Attributes APIs let applications define and attach custom metadata to core Square resources, including customers, orders, bookings, merchants, and locations, enabling tailored data models and integrations on top of the Square platform.
-
-- **Human URL:** [https://developer.squareup.com/docs/customer-custom-attributes-api/overview](https://developer.squareup.com/docs/customer-custom-attributes-api/overview)
-
-#### Tags
-
-- Custom Attributes
-- Extensibility
-- Metadata
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/customer-custom-attributes-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/customer-custom-attributes-api)
-- [OpenAPI](openapi/square-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Reporting API
-
-The Reporting API (Beta) provides a new way to access all of a business's data to build custom reports and integrations, surfacing sales, payments, and operational metrics across a seller's Square account.
-
-- **Human URL:** [https://developer.squareup.com/docs/reporting-api](https://developer.squareup.com/docs/reporting-api)
-
-#### Tags
-
-- Analytics
-- Business Intelligence
-- Reporting
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/reporting-api)
-- [API Reference](https://developer.squareup.com/reference/square/reporting-api)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Channels API
-
-The Channels API lets applications represent and manage the sales channels through which a seller transacts, enabling attribution of orders and payments to specific online or in-person channels.
-
-- **Human URL:** [https://developer.squareup.com/docs/channels-api/overview](https://developer.squareup.com/docs/channels-api/overview)
-
-#### Tags
-
-- Commerce
-- Omnichannel
-- Sales Channels
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/channels-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/channels-api)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Square Transfer Orders API
-
-The Transfer Orders API lets applications create and manage transfers of inventory stock between a seller's locations, supporting multi-location retail and restaurant operations.
-
-- **Human URL:** [https://developer.squareup.com/docs/transfer-orders-api/overview](https://developer.squareup.com/docs/transfer-orders-api/overview)
-
-#### Tags
-
-- Commerce
-- Inventory
-- Transfer Orders
-
-#### Properties
-
-- [Documentation](https://developer.squareup.com/docs/transfer-orders-api/overview)
-- [API Reference](https://developer.squareup.com/reference/square/transfer-orders-api)
-- [Postman Collection](collections/square.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/square.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [LinkedIn](https://www.linkedin.com/company/joinsquare)
-- [Portal](https://developer.squareup.com/us/en)
+**Areas:** Booking · Location · Square · Restaurant · Catalog · Checkout · Customers · Disputes · E-Commerce · Financial Technology · Gift Cards · Inventory
+
+## Square on APIs.io
+
+Everything profiled for Square is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/square/](https://apis.io/providers/square/)** — or go straight to one of the APIs or properties below.
+
+### APIs (45)
+
+- [Square Reporting API](https://apis.io/apis/square/reporting-api/) — The Reporting API (Beta) provides a new way to access all of a business's data to build custom reports and integrations, surfacing sales, payments, and…
+- [Square Channels API](https://apis.io/apis/square/channels-api/) — The Channels API lets applications represent and manage the sales channels through which a seller transacts, enabling attribution of orders and payments to…
+- [Square Transfer Orders API](https://apis.io/apis/square/transfer-orders-api/) — The Transfer Orders API lets applications create and manage transfers of inventory stock between a seller's locations, supporting multi-location retail and…
+- [Square BookingCustomAttributes API](https://apis.io/apis/square/square-bookingcustomattributes-api/) — The BookingCustomAttributes API from Square — 6 operation(s) for bookingcustomattributes.
+- [Square Bookings API](https://apis.io/apis/square/square-bookings-api/) — The Bookings API from Square — 11 operation(s) for bookings.
+- [Square Cards API](https://apis.io/apis/square/square-cards-api/) — The Cards API from Square — 3 operation(s) for cards.
+- [Square Catalog API](https://apis.io/apis/square/square-catalog-api/) — The Catalog API from Square — 13 operation(s) for catalog.
+- [Square Checkout API](https://apis.io/apis/square/square-checkout-api/) — The Checkout API from Square — 5 operation(s) for checkout.
+- [Square CustomerCustomAttributes API](https://apis.io/apis/square/square-customercustomattributes-api/) — The CustomerCustomAttributes API from Square — 5 operation(s) for customercustomattributes.
+- [Square Customers API](https://apis.io/apis/square/square-customers-api/) — The Customers API from Square — 10 operation(s) for customers.
+- [Square Devices API](https://apis.io/apis/square/square-devices-api/) — The Devices API from Square — 4 operation(s) for devices.
+- [Square Disputes API](https://apis.io/apis/square/square-disputes-api/) — The Disputes API from Square — 8 operation(s) for disputes.
+- [Square Employees API](https://apis.io/apis/square/square-employees-api/) — The Employees API from Square — 2 operation(s) for employees.
+- [Square Events API](https://apis.io/apis/square/square-events-api/) — The Events API from Square — 4 operation(s) for events.
+- [Square GiftCardActivities API](https://apis.io/apis/square/square-giftcardactivities-api/) — The GiftCardActivities API from Square — 1 operation(s) for giftcardactivities.
+- [Square Inventory API](https://apis.io/apis/square/square-inventory-api/) — The Inventory API from Square — 13 operation(s) for inventory.
+- [Square Invoices API](https://apis.io/apis/square/square-invoices-api/) — The Invoices API from Square — 7 operation(s) for invoices.
+- [Square Labor API](https://apis.io/apis/square/square-labor-api/) — The Labor API from Square — 11 operation(s) for labor.
+- [Square LocationCustomAttributes API](https://apis.io/apis/square/square-locationcustomattributes-api/) — The LocationCustomAttributes API from Square — 6 operation(s) for locationcustomattributes.
+- [Square Locations API](https://apis.io/apis/square/square-locations-api/) — The Locations API from Square — 2 operation(s) for locations.
+- [Square Loyalty API](https://apis.io/apis/square/square-loyalty-api/) — The Loyalty API from Square — 16 operation(s) for loyalty.
+- [Square MerchantCustomAttributes API](https://apis.io/apis/square/square-merchantcustomattributes-api/) — The MerchantCustomAttributes API from Square — 6 operation(s) for merchantcustomattributes.
+- [Square Merchants API](https://apis.io/apis/square/square-merchants-api/) — The Merchants API from Square — 2 operation(s) for merchants.
+- [Square MobileAuthorization API](https://apis.io/apis/square/square-mobileauthorization-api/) — The MobileAuthorization API from Square — 1 operation(s) for mobileauthorization.
+- [Square OrderCustomAttributes API](https://apis.io/apis/square/square-ordercustomattributes-api/) — The OrderCustomAttributes API from Square — 6 operation(s) for ordercustomattributes.
+- [Square Orders API](https://apis.io/apis/square/square-orders-api/) — The Orders API from Square — 7 operation(s) for orders.
+- [Square Payments API](https://apis.io/apis/square/square-payments-api/) — The Payments API from Square — 5 operation(s) for payments.
+- [Square Payouts API](https://apis.io/apis/square/square-payouts-api/) — The Payouts API from Square — 3 operation(s) for payouts.
+- [Square Refunds API](https://apis.io/apis/square/square-refunds-api/) — The Refunds API from Square — 2 operation(s) for refunds.
+- [Square Sites API](https://apis.io/apis/square/square-sites-api/) — The Sites API from Square — 1 operation(s) for sites.
+- [Square Snippets API](https://apis.io/apis/square/square-snippets-api/) — The Snippets API from Square — 1 operation(s) for snippets.
+- [Square Subscriptions API](https://apis.io/apis/square/square-subscriptions-api/) — The Subscriptions API from Square — 11 operation(s) for subscriptions.
+- [Square Team API](https://apis.io/apis/square/square-team-api/) — The Team API from Square — 8 operation(s) for team.
+- [Square Terminal API](https://apis.io/apis/square/square-terminal-api/) — The Terminal API from Square — 15 operation(s) for terminal.
+- [Square Transactions API](https://apis.io/apis/square/square-transactions-api/) — The Transactions API from Square — 4 operation(s) for transactions.
+- [Square V1Transactions API](https://apis.io/apis/square/square-v1transactions-api/) — The V1Transactions API from Square — 2 operation(s) for v1transactions.
+- [Square Vendors API](https://apis.io/apis/square/square-vendors-api/) — The Vendors API from Square — 6 operation(s) for vendors.
+- [Square O Auth API](https://apis.io/apis/square/square-oauth-api/) — The OAuth API from Square — 3 operation(s) for oauth.
+- [Square Apple Pay API](https://apis.io/apis/square/square-apple-pay-api/) — The Apple Pay API from Square — 1 operation(s) for apple pay.
+- [Square Bank Accounts API](https://apis.io/apis/square/square-bank-accounts-api/) — The Bank Accounts API from Square — 3 operation(s) for bank accounts.
+- [Square Cash Drawers API](https://apis.io/apis/square/square-cash-drawers-api/) — The Cash Drawers API from Square — 3 operation(s) for cash drawers.
+- [Square Customer Groups API](https://apis.io/apis/square/square-customer-groups-api/) — The Customer Groups API from Square — 2 operation(s) for customer groups.
+- [Square Customer Segments API](https://apis.io/apis/square/square-customer-segments-api/) — The Customer Segments API from Square — 2 operation(s) for customer segments.
+- [Square Gift Cards API](https://apis.io/apis/square/square-gift-cards-api/) — The Gift Cards API from Square — 6 operation(s) for gift cards.
+- [Square Webhook Subscriptions API](https://apis.io/apis/square/square-webhook-subscriptions-api/) — The Webhook Subscriptions API from Square — 5 operation(s) for webhook subscriptions.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Square Webhooks](https://apis.io/asyncapis/square/square-webhooks-asyncapi/)
+
+#### Event channels (1)
+
+Individual events and webhooks the provider emits.
+
+- [/](https://apis.io/channels/square/untitled/)
+
+#### GraphQL (1)
+
+GraphQL schemas.
+
+- [Moved to /providers/square/](https://apis.io/graphqls/square/square-graphql/)
+
+#### MCP servers (2)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [MCP Server](https://apis.io/servers/square/mcp-server/)
+- [square](https://apis.io/servers/square/square/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Square Agentic Access](https://apis.io/agentic-access/square/square-agentic-access/)
+
+#### JSON Schema (207)
+
+The data models the API reads and writes.
+
+- [Square Catalog Item](https://apis.io/schemas/square/catalog-item/)
+- [Square Customer](https://apis.io/schemas/square/customer/)
+- [Square Location](https://apis.io/schemas/square/location/)
+- [Square Money](https://apis.io/schemas/square/money/)
+- [Square Order](https://apis.io/schemas/square/order/)
+- [Square Payment](https://apis.io/schemas/square/payment/)
+- [AcceptDisputeResponse](https://apis.io/schemas/square/square-accept-dispute-response/)
+- [BatchChangeInventoryRequest](https://apis.io/schemas/square/square-batch-change-inventory-request/)
+- [BatchRetrieveCatalogObjectsResponse](https://apis.io/schemas/square/square-batch-retrieve-catalog-objects-response/)
+- [BatchRetrieveInventoryChangesRequest](https://apis.io/schemas/square/square-batch-retrieve-inventory-changes-request/)
+- [BatchRetrieveInventoryChangesResponse](https://apis.io/schemas/square/square-batch-retrieve-inventory-changes-response/)
+- [BatchRetrieveInventoryCountsRequest](https://apis.io/schemas/square/square-batch-retrieve-inventory-counts-request/)
+- [BatchUpsertCatalogObjectsRequest](https://apis.io/schemas/square/square-batch-upsert-catalog-objects-request/)
+- [BatchUpsertCatalogObjectsResponse](https://apis.io/schemas/square/square-batch-upsert-catalog-objects-response/)
+- [BulkCreateVendorsRequest](https://apis.io/schemas/square/square-bulk-create-vendors-request/)
+- [BulkCreateVendorsResponse](https://apis.io/schemas/square/square-bulk-create-vendors-response/)
+- [BulkRetrieveBookingsResponse](https://apis.io/schemas/square/square-bulk-retrieve-bookings-response/)
+- [BulkRetrieveTeamMemberBookingProfilesResponse](https://apis.io/schemas/square/square-bulk-retrieve-team-member-booking-profiles-response/)
+- [BulkRetrieveVendorsResponse](https://apis.io/schemas/square/square-bulk-retrieve-vendors-response/)
+- [BulkUpdateTeamMembersRequest](https://apis.io/schemas/square/square-bulk-update-team-members-request/)
+- [BulkUpdateTeamMembersResponse](https://apis.io/schemas/square/square-bulk-update-team-members-response/)
+- [BulkUpdateVendorsResponse](https://apis.io/schemas/square/square-bulk-update-vendors-response/)
+- [BulkUpsertBookingCustomAttributesResponse](https://apis.io/schemas/square/square-bulk-upsert-booking-custom-attributes-response/)
+- [BulkUpsertCustomerCustomAttributesRequest](https://apis.io/schemas/square/square-bulk-upsert-customer-custom-attributes-request/)
+- [BulkUpsertCustomerCustomAttributesResponse](https://apis.io/schemas/square/square-bulk-upsert-customer-custom-attributes-response/)
+- …and 182 more published on APIs.io
+
+#### JSON Structure (7)
+
+Data models expressed in JSON Structure.
+
+- [Catalog Item Structure](https://apis.io/json-structure/square/catalog-item-structure/)
+- [Customer Structure](https://apis.io/json-structure/square/customer-structure/)
+- [Location Structure](https://apis.io/json-structure/square/location-structure/)
+- [Money Structure](https://apis.io/json-structure/square/money-structure/)
+- [Order Structure](https://apis.io/json-structure/square/order-structure/)
+- [Payment Structure](https://apis.io/json-structure/square/payment-structure/)
+- [Subscription Structure](https://apis.io/json-structure/square/subscription-structure/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Square Context](https://apis.io/jsonld/square/square-context/)
+
+#### Vocabulary (1)
+
+The provider's domain terms, defined.
+
+- [Square Vocabulary](https://apis.io/vocabularies/square/square-vocabulary/)
+
+#### Examples (7)
+
+Example requests and responses.
+
+- [Catalog Item Example](https://apis.io/examples/square/catalog-item-example/)
+- [Customer Example](https://apis.io/examples/square/customer-example/)
+- [Location Example](https://apis.io/examples/square/location-example/)
+- [Money Example](https://apis.io/examples/square/money-example/)
+- [Order Example](https://apis.io/examples/square/order-example/)
+- [Payment Example](https://apis.io/examples/square/payment-example/)
+- [Subscription Example](https://apis.io/examples/square/subscription-example/)
+
+#### Collections (85)
+
+Postman and Open Collection request collections.
+
+- [Square](https://apis.io/collections/square/open-square/)
+- [Square ApplePay API](https://apis.io/collections/square/open-square-applepay-api/)
+- [Square ApplePay BankAccounts API](https://apis.io/collections/square/open-square-bankaccounts-api/)
+- [Square ApplePay BookingCustomAttributes API](https://apis.io/collections/square/open-square-bookingcustomattributes-api/)
+- [Square ApplePay Bookings API](https://apis.io/collections/square/open-square-bookings-api/)
+- [Square ApplePay Cards API](https://apis.io/collections/square/open-square-cards-api/)
+- [Square ApplePay CashDrawers API](https://apis.io/collections/square/open-square-cashdrawers-api/)
+- [Square ApplePay Catalog API](https://apis.io/collections/square/open-square-catalog-api/)
+- [Square ApplePay Checkout API](https://apis.io/collections/square/open-square-checkout-api/)
+- [Square ApplePay CustomerCustomAttributes API](https://apis.io/collections/square/open-square-customercustomattributes-api/)
+- [Square ApplePay CustomerGroups API](https://apis.io/collections/square/open-square-customergroups-api/)
+- [Square ApplePay Customers API](https://apis.io/collections/square/open-square-customers-api/)
+- [Square ApplePay CustomerSegments API](https://apis.io/collections/square/open-square-customersegments-api/)
+- [Square ApplePay Devices API](https://apis.io/collections/square/open-square-devices-api/)
+- [Square ApplePay Disputes API](https://apis.io/collections/square/open-square-disputes-api/)
+- [Square ApplePay Employees API](https://apis.io/collections/square/open-square-employees-api/)
+- [Square ApplePay Events API](https://apis.io/collections/square/open-square-events-api/)
+- [Square ApplePay GiftCardActivities API](https://apis.io/collections/square/open-square-giftcardactivities-api/)
+- [Square ApplePay GiftCards API](https://apis.io/collections/square/open-square-giftcards-api/)
+- [Square ApplePay Inventory API](https://apis.io/collections/square/open-square-inventory-api/)
+- [Square ApplePay Invoices API](https://apis.io/collections/square/open-square-invoices-api/)
+- [Square ApplePay Labor API](https://apis.io/collections/square/open-square-labor-api/)
+- [Square ApplePay LocationCustomAttributes API](https://apis.io/collections/square/open-square-locationcustomattributes-api/)
+- [Square ApplePay Locations API](https://apis.io/collections/square/open-square-locations-api/)
+- [Square ApplePay Loyalty API](https://apis.io/collections/square/open-square-loyalty-api/)
+- …and 60 more published on APIs.io
+
+#### Overlays (42)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Square Apple Pay Api Phrasing Overlay](https://apis.io/overlays/square/square-apple-pay-api-phrasing-overlay/)
+- [Square Bank Accounts Api Phrasing Overlay](https://apis.io/overlays/square/square-bank-accounts-api-phrasing-overlay/)
+- [Square Bookingcustomattributes Api Phrasing Overlay](https://apis.io/overlays/square/square-bookingcustomattributes-api-phrasing-overlay/)
+- [Square Bookings Api Phrasing Overlay](https://apis.io/overlays/square/square-bookings-api-phrasing-overlay/)
+- [Square Cards Api Phrasing Overlay](https://apis.io/overlays/square/square-cards-api-phrasing-overlay/)
+- [Square Cash Drawers Api Phrasing Overlay](https://apis.io/overlays/square/square-cash-drawers-api-phrasing-overlay/)
+- [Square Catalog Api Phrasing Overlay](https://apis.io/overlays/square/square-catalog-api-phrasing-overlay/)
+- [Square Checkout Api Phrasing Overlay](https://apis.io/overlays/square/square-checkout-api-phrasing-overlay/)
+- [Square Customer Groups Api Phrasing Overlay](https://apis.io/overlays/square/square-customer-groups-api-phrasing-overlay/)
+- [Square Customer Segments Api Phrasing Overlay](https://apis.io/overlays/square/square-customer-segments-api-phrasing-overlay/)
+- [Square Customercustomattributes Api Phrasing Overlay](https://apis.io/overlays/square/square-customercustomattributes-api-phrasing-overlay/)
+- [Square Customers Api Phrasing Overlay](https://apis.io/overlays/square/square-customers-api-phrasing-overlay/)
+- [Square Devices Api Phrasing Overlay](https://apis.io/overlays/square/square-devices-api-phrasing-overlay/)
+- [Square Disputes Api Phrasing Overlay](https://apis.io/overlays/square/square-disputes-api-phrasing-overlay/)
+- [Square Employees Api Phrasing Overlay](https://apis.io/overlays/square/square-employees-api-phrasing-overlay/)
+- [Square Events Api Phrasing Overlay](https://apis.io/overlays/square/square-events-api-phrasing-overlay/)
+- [Square Gift Cards Api Phrasing Overlay](https://apis.io/overlays/square/square-gift-cards-api-phrasing-overlay/)
+- [Square Giftcardactivities Api Phrasing Overlay](https://apis.io/overlays/square/square-giftcardactivities-api-phrasing-overlay/)
+- [Square Inventory Api Phrasing Overlay](https://apis.io/overlays/square/square-inventory-api-phrasing-overlay/)
+- [Square Invoices Api Phrasing Overlay](https://apis.io/overlays/square/square-invoices-api-phrasing-overlay/)
+- [Square Labor Api Phrasing Overlay](https://apis.io/overlays/square/square-labor-api-phrasing-overlay/)
+- [Square Locationcustomattributes Api Phrasing Overlay](https://apis.io/overlays/square/square-locationcustomattributes-api-phrasing-overlay/)
+- [Square Locations Api Phrasing Overlay](https://apis.io/overlays/square/square-locations-api-phrasing-overlay/)
+- [Square Loyalty Api Phrasing Overlay](https://apis.io/overlays/square/square-loyalty-api-phrasing-overlay/)
+- [Square Merchantcustomattributes Api Phrasing Overlay](https://apis.io/overlays/square/square-merchantcustomattributes-api-phrasing-overlay/)
+- …and 17 more published on APIs.io
+
+#### Governance rules (4)
+
+Spectral rulesets for the provider's contracts.
+
+- [Square — asyncapi rules](https://apis.io/rules/square/square-asyncapi-spectral-rules/)
+- [Square — jsonschema rules](https://apis.io/rules/square/square-jsonschema-spectral-rules/)
+- [Square API Rules](https://apis.io/rules/square/square-rules/)
+- [Square API Rules](https://apis.io/rules/square/square-spectral-rules/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Square Authentication](https://apis.io/security/square/square-authentication/)
+- [Square Domain Security](https://apis.io/security/square/square-domain-security/)
+- [Square Trust Center](https://apis.io/security/square/square-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Square Scopes](https://apis.io/scopes/square/square-scopes/)
+
+#### Plans and pricing (2)
+
+Published plans, tiers and prices.
+
+- [Square Plans Pricing](https://apis.io/plans/square/square-plans-pricing/)
+- [Square Price Estimates](https://apis.io/plans/square/square-price-estimates/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Square Rate Limits](https://apis.io/rate-limits/square/square-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Square Finops](https://apis.io/finops/square/square-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.squareup.com/)
 - [Documentation](https://developer.squareup.com/docs)
-- [API Reference](https://developer.squareup.com/reference/square)
-- [Getting Started](https://developer.squareup.com/docs/square-get-started)
-- [Authentication](https://developer.squareup.com/docs/oauth-api/overview)
-- [Changelog](https://developer.squareup.com/docs/changelog/connect)
-- [S D Ks](https://developer.squareup.com/docs/sdks)
-- [SDK](https://developer.squareup.com/docs/devtools/postman)
-- [Webhooks](https://developer.squareup.com/docs/webhooks/webhook-subscriptions-api)
-- [AsyncAPI](asyncapi/square-webhooks-asyncapi.yml) — [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/latest)
-- [Sandbox](https://developer.squareup.com/docs/devtools/sandbox/overview)
-- [Rate Limits](https://developer.squareup.com/docs/build-basics/api-rate-limits)
-- [Documentation](https://developer.squareup.com/docs/build-basics/api-lifecycle)
-- [Getting Started](https://developer.squareup.com/docs/buildbasics)
-- [Documentation](https://developer.squareup.com/docs/development-essentials)
-- [Console](https://developer.squareup.com/explorer/square)
-- [Console](https://developer.squareup.com/docs/devtools/developer-dashboard)
-- [Sign Up](https://developer.squareup.com/apps)
-- [Blog](https://developer.squareup.com/blog/)
-- [Support](https://developer.squareup.com/forums/)
+- [Getting started](https://developer.squareup.com/docs/square-get-started)
+- [API reference](https://developer.squareup.com/reference/square)
 - [Pricing](https://squareup.com/us/en/pricing)
-- [Terms of Service](https://squareup.com/us/en/legal/general/ua)
-- [Privacy Policy](https://squareup.com/us/en/legal/general/privacy)
-- [Support](https://squareup.com/help/us/en)
-- [Partners](https://squareup.com/us/en/partnerships)
-- [Status Page](https://www.issquareup.com/)
-- [GitHub Organization](https://github.com/square)
-- [OpenAPI](https://github.com/square/connect-api-specification) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/square-connect)
-- [X (Twitter)](https://x.com/SquareDev)
-- [Support](https://discord.com/invite/squaredev)
-- [JSON Schema](json-schema/payment.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/money.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/order.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/catalog-item.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/customer.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/location.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](json-schema/subscription.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON-LD](json-ld/square-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
-- [Features](undefined)
-- [Use Cases](undefined)
-- [Integrations](undefined)
-- [SDK](https://github.com/square/square-python-sdk)
-- [SDK](https://github.com/square/square-nodejs-sdk)
-- [SDK](https://github.com/square/square-java-sdk)
-- [SDK](https://github.com/square/square-dotnet-sdk)
-- [SDK](https://github.com/square/square-ruby-sdk)
-- [SDK](https://github.com/square/square-php-sdk)
-- [SDK](https://github.com/square/square-go-sdk)
-- [SDK](https://github.com/square/web-sdk)
-- [Code Examples](https://github.com/square/web-payments-quickstart)
-- [SDK](https://github.com/square/mobile-payments-sdk-ios)
-- [SDK](https://github.com/square/mobile-payments-sdk-android)
-- [SDK](https://github.com/square/mobile-payments-sdk-flutter)
-- [SDK](https://github.com/square/mobile-payments-sdk-react-native)
-- [SDK](https://github.com/square/in-app-payments-react-native-plugin)
-- [Code Examples](https://github.com/square/in-app-payments-ios-quickstart)
-- [Code Examples](https://github.com/square/in-app-payments-android-quickstart)
-- [OpenAPI](https://github.com/square/connect-api-specification) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Rules](rules/square-spectral-rules.yml)
-- [Vocabulary](vocabulary/square-vocabulary.yaml)
-- [M C P Server](https://github.com/square/square-mcp-server)
-- [Tools](https://github.com/square/square-mcp-server)
-- [Tools](https://mcp.squareup.com/sse)
-- [Documentation](https://developer.squareup.com/docs/mcp)
-- [SDK](https://www.npmjs.com/package/square-mcp-server)
-- [L L Ms Txt](https://developer.squareup.com/llms.txt)
-- [JSON Structure](json-structure/catalog-item-structure.json)
-- [JSON Structure](json-structure/customer-structure.json)
-- [JSON Structure](json-structure/location-structure.json)
-- [JSON Structure](json-structure/money-structure.json)
-- [JSON Structure](json-structure/order-structure.json)
-- [JSON Structure](json-structure/payment-structure.json)
-- [JSON Structure](json-structure/subscription-structure.json)
-- [Example](examples/catalog-item-example.json)
-- [Example](examples/customer-example.json)
-- [Example](examples/location-example.json)
-- [Example](examples/money-example.json)
-- [Example](examples/order-example.json)
-- [Example](examples/payment-example.json)
-- [Example](examples/subscription-example.json)
-- [Plans](plans/square-plans-pricing.yml)
-- [Rate Limits](rate-limits/square-rate-limits.yml)
-- [Fin Ops](finops/square-finops.yml)
+- [Sign up](https://squareup.com/signup)
+- [Support](https://developer.squareup.com/forums/)
+- [Changelog](https://developer.squareup.com/docs/changelog/connect)
+- [Blog](https://developer.squareup.com/blog/)
+- [Compliance](https://squareup.com/us/en/payments/secure)
+- [Terms of service](https://squareup.com/us/en/legal/general/ua)
+- [Privacy policy](https://squareup.com/us/en/legal/general/privacy)
+- [GitHub](https://github.com/square)
+- [Status](https://www.issquareup.com/)
 
-## Maintainers
+## API Evangelist rating
 
-**Email:** kin@apievangelist.com
-**Email:** developers@squareup.com
-**URL:** https://squareup.com
+**Kin Score 78.1** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 60.0 |
+| Contract quality | 72.9 |
+| Contract governance | 31.8 |
+| Operational transparency | 52.6 |
+| Developer ergonomics | 82.1 |
+| Access clarity | 92.1 |
+
+**Agent readiness 62.8** — agent-native
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | verified |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | verified |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | derived (partial credit) |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | paginated |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 39.3** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/square/](https://apis.io/providers/square/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Square: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/square/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
